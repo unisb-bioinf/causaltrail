@@ -5,7 +5,7 @@
 
 class Network{
 	public:
-		Network(std::string filename);
+		Network();
 		void readNetwork(std::string filename);
 		std::vector<unsigned int> getParents(unsigned int id);
 		std::vector<unsigned int> getParents(std::string name);
@@ -17,6 +17,7 @@ class Network{
 		void removeEdge(std::string name1, std::string name2);
 		Node& getNode(unsigned int id);
 		Node& getNode(std::string name);
+		std::vector<Node>& getNodes();
 		unsigned int getIndex(unsigned int id);
 		unsigned int getIndex(std::string name);
 		friend std::ostream& operator<<(std::ostream& os,const Network& n);
@@ -27,6 +28,7 @@ class Network{
 		Matrix<unsigned int> AdjacencyMatrix_;
 		std::unordered_map<unsigned int, unsigned int> IDToIndex_;
 		std::unordered_map<std::string, unsigned int> NameToIndex_;
+		std::unordered_map<std::string, unsigned int> ExtensionToIndex_;
 		std::vector<Node> NodeList_;
 };
 #endif
