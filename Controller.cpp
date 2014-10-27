@@ -19,8 +19,8 @@ Controller::Controller()
  * @return void
  *
  */
-void Controller::loadNetwork(std::string filename){
-	network_.readNetwork(filename);
+void Controller::loadNetwork(std::string networkfile){
+	network_.readNetwork(networkfile);
 	}
 
 /**getNumber
@@ -60,6 +60,30 @@ std::vector<float> Controller::createSortedVector(unsigned int row){
 	return templist;
 	}
 
+/**discretiseRow
+ *
+ * @param
+ * @param 
+ * 
+ * @return void
+ *
+ * Calls the apropriate method to discretise the specified row
+ */
+void Controller::discretiseRow(unsigned int row, unsigned int method, float threshold){
+	switch(method){
+		case 0: discretiseCeil(row); break;
+		case 1: discretiseFloor(row); break;
+		case 2: discretiseRound(row); break;
+		case 3: discretiseByAMean(row); break;
+		case 4: discretiseByHMean(row); break;
+		case 5: discretiseByMedian(row); break;
+		case 6: discretiseManually(row,threshold);break;
+		case 7: discretiseBracketMedians(row,int(threshold));break;
+		case 8: discretisePearsonTukey(row); break;
+		case 9: mapNamesToInt(row);break;
+		}
+	}
+
 /**discretise
  *
  * @param filename name of the file containig the observations
@@ -69,17 +93,25 @@ std::vector<float> Controller::createSortedVector(unsigned int row){
  * Loads the observations, and performs discretisation according to the user input
  *
  */ 
-void Controller::discretise(std::string filename){
-	originalObservations_.readMatrix(filename,false,true,"NA");
+void Controller::discretise(std::string datafile, std::string controlFile){
+	originalObservations_.readMatrix(datafile,false,true,"NA");
 	observations_.resize(originalObservations_.getColCount(), originalObservations_.getRowCount(), -1);
 	observations_.setRowNames(originalObservations_.getRowNames());
 	observations_.setColNames(originalObservations_.getColNames());
-	mapNamesToInt(0);
-	mapNamesToInt(1);
-	mapNamesToInt(2);
-	mapNamesToInt(3);
-	mapNamesToInt(4);
-//	std::cout<<observations_;
+	std::ifstream input(controlFile,std::ifstream::in);
+	std::string line;
+	unsigned int row;
+	unsigned int method;
+	float threshold;
+	while(std::getline(input,line)){
+		std::stringstream buffer;
+		threshold=0.0;
+		buffer<<line;
+		buffer>>row>>method>>threshold;
+		std::cout<<row<<method<<std::endl;
+		discretiseRow(row,method,threshold);
+		}
+	input.close();
 	}
 
 /**discretiseFloor
@@ -94,7 +126,9 @@ void Controller::discretise(std::string filename){
 void Controller::discretiseFloor(unsigned int row){
 	for (int col=0;col<originalObservations_.getColCount();col++){
 		float value=getNumber(col,row);
-		observations_.setData(floor(value),col,row);
+		int dvalue=floor(value);
+		observations_.setData(dvalue,col,row);
+		createNameEntry(dvalue,row);
 		}
 	}
 
@@ -110,7 +144,9 @@ void Controller::discretiseFloor(unsigned int row){
 void Controller::discretiseCeil(unsigned int row){
 	for (int col=0;col<originalObservations_.getColCount();col++){
 		float value=getNumber(col,row);
-		observations_.setData(ceil(value),col,row);
+		int dvalue= ceil(value);
+		observations_.setData(dvalue,col,row);
+		createNameEntry(dvalue,row);
 		} 
 	}
 
@@ -126,7 +162,9 @@ void Controller::discretiseCeil(unsigned int row){
 void Controller::discretiseRound(unsigned int row){
 	for (int col=0;col<originalObservations_.getColCount();col++){
 		float value=getNumber(col,row);
-		observations_.setData(round(value),col,row);
+		int dvalue=round(value);
+		observations_.setData(dvalue,col,row);
+		createNameEntry(dvalue,row);
 		}   
 	}  
 
@@ -150,9 +188,11 @@ void Controller::discretiseByAMean(unsigned int row){
 			float value=getNumber(col,row);
 			if (value > mean){
 				observations_.setData(1,col,row);
+				createNameEntry(1,row);
 			}
 			else {
 				observations_.setData(0,col,row);
+				createNameEntry(0,row);
 			}
 		}
     }   
@@ -177,9 +217,11 @@ void Controller::discretiseByHMean(unsigned int row){
             float value=getNumber(col,row);
             if (value > mean){
                 observations_.setData(1,col,row);
+				createNameEntry(1,row);
             }   
             else {
                 observations_.setData(0,col,row);
+				createNameEntry(0,row);
             }   
         }   
     }
@@ -206,9 +248,11 @@ void Controller::discretiseByMedian(unsigned int row){
 		float value=getNumber(col,row);
 		if (value > median){
 			observations_.setData(1,col,row);
+			createNameEntry(1,row);
 			}
 		else {
 			observations_.setData(0,col,row);	
+			createNameEntry(0,row);
 			}
 		}
     }   
@@ -228,9 +272,11 @@ void Controller::discretiseManually(unsigned int row, float threshold){
 		float value=getNumber(col,row);
 		if (value> threshold){
 			observations_.setData(1,col,row);
+			createNameEntry(1,row);
 			}
 		else{
 			observations_.setData(0,col,row);
+			createNameEntry(0,row);
 			}	
 		}
     }   
@@ -261,6 +307,7 @@ void Controller::discretiseBracketMedians(unsigned int row, unsigned int number)
 			value=templist[col];
 			if ((value >= borderValues[i-1]) and (value<borderValues[i])){
 				observations_.setData(i-1,col,row);
+				createNameEntry(i-1,row);
 				break;
 				}
 			}
@@ -291,6 +338,7 @@ void Controller::discretisePearsonTukey(unsigned int row){
 			value=templist[col];
 			if ((value >= borderValues[i-1]) and (value<borderValues[i])){
 				observations_.setData(i-1,col,row);
+				createNameEntry(i-1,row);
 				break;
 				}   
 			} 	
@@ -322,6 +370,24 @@ void Controller::mapNamesToInt(unsigned int row){
 		}
 	}
 
+/**createNameEntry
+ *
+ * @param value
+ * @param row
+ * 
+ * @return void
+ * 
+ * Creates an name entry for the discretised value
+ */
+void Controller::createNameEntry(int value, unsigned int row){
+	std::stringstream ss;
+	std::string ssvalue;
+	ss<<value;
+	ss>>ssvalue;
+	observationsMap_[ssvalue]=value;
+	observationsMapR_[std::make_pair(value,row)]=ssvalue;
+	}
+
 /**distributeObservations
  *
  * @return void
@@ -346,9 +412,11 @@ void Controller::distributeObservations(){
 		nodeValueNamesProb.clear();
 		parentNames.clear();
 		parentNameInts.clear();
+		uniqueParentValues.clear();
 		obsRow = observations_.findRow(n.getName());
 		auto parentIDs =  network_.getParents(n.getID());
 		parentCombinations=1;
+		//TODO: No original names..!!!
 		//Number of columns
 		uniqueNodeValues=observations_.getUniqueRowValues(obsRow);
 		nodeValueCounts=uniqueNodeValues.size();
@@ -362,9 +430,9 @@ void Controller::distributeObservations(){
 		for (auto parentID : parentIDs){
 			//Number of rows
 			parentRow=observations_.findRow(network_.getNode(parentID).getName());
-			uniqueParentValues=observations_.getUniqueRowValues(parentRow);
-			parentCombinations*=(uniqueParentValues.size()-(int)observations_.containsElement(1,parentRow,-1));
-			//Row names
+			uniqueParentValues=observations_.getUniqueRowValues(parentRow,-1);
+			parentCombinations*=uniqueParentValues.size();
+			//Row names	
 			parentValues[parentID]=uniqueParentValues;
 			}
 		if (parentIDs.size() > 1){
@@ -396,17 +464,24 @@ void Controller::distributeObservations(){
 		Matrix<float> probMatrix = Matrix<float>(nodeValueCounts-(int)observations_.containsElement(1,obsRow,-1),parentCombinations,0.0);
 		probMatrix.setColNames(nodeValueNamesProb);	
 		probMatrix.setRowNames(parentNames);
+		std::cout<<obsMatrix<<std::endl;	
+		int row;
+		std::string rowName;
+		std::string colName;
 		//Count observations
 		for (unsigned int sample = 0; sample<observations_.getColCount();sample++){
-			std::string rowName="";
-			std::string colName=originalObservations_(sample,originalObservations_.findRow(n.getName()));
+			rowName="";
+			colName=observationsMapR_[std::make_pair(observations_(sample,observations_.findRow(n.getName())),obsRow)];
 			for (auto parentID:parentIDs){
-				rowName+=originalObservations_(sample,originalObservations_.findRow(network_.getNode(parentID).getName()));
+				row=observations_.findRow(network_.getNode(parentID).getName());	
+				rowName+=observationsMapR_[std::make_pair(observations_(sample,row),row)];
 				}
 			if (rowName==""){
 				rowName="1";
 				}
-			obsMatrix.setData(obsMatrix.getValueByNames(colName,rowName)+1,obsMatrix.findCol(colName),obsMatrix.findRow(rowName));
+			if ((rowName.find("NA")==std::string::npos) and (rowName.find("na")==std::string::npos) and (rowName.find("-")==std::string::npos)){
+						obsMatrix.setData(obsMatrix.getValueByNames(colName,rowName)+1,obsMatrix.findCol(colName),obsMatrix.findRow(rowName));
+						}
 			}
 		n.setObservations(obsMatrix);
 		n.setProbability(probMatrix);

@@ -7,10 +7,11 @@
 class Controller{
 	public:
 	Controller();
-	void loadNetwork(std::string filename);
-	void discretise(std::string filename);
+	void loadNetwork(std::string networkfile);
+	void discretise(std::string datafile,std::string controlFile);
     void distributeObservations();
 	private:
+	void discretiseRow(unsigned int row, unsigned int method, float threshold);
 	void discretiseFloor(unsigned int row);
 	void discretiseCeil(unsigned int row);
 	void discretiseRound(unsigned int row);
@@ -22,6 +23,7 @@ class Controller{
 	void discretisePearsonTukey(unsigned int row);
 	void mapNamesToInt(unsigned int row);
 	float getNumber(unsigned int col, unsigned int row);
+	void createNameEntry(int value, unsigned int row);
 	std::vector<float> createSortedVector(unsigned int row);
 	Network network_;
 	Matrix<std::string> originalObservations_;

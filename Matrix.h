@@ -31,6 +31,8 @@ class Matrix {
 		int findRow(const std::string& element);
 		int findCol(const std::string& element);
 		std::vector<T> getUniqueRowValues(unsigned int row);
+		std::vector<T> getUniqueRowValues(unsigned int row, T exclud);
+		std::vector<T> getUniqueColValues(unsigned int col, T exclud);
 		std::vector<T> getUniqueColValues(unsigned int col);
 		bool contains(const T& query);
 		void readMatrix(std::string& filename, bool colNames, bool rowNames,T initialValue);
@@ -298,6 +300,26 @@ std::vector<T> Matrix<T>::getUniqueRowValues(unsigned int row){
 	return std::vector<T> (tempSet.begin(),tempSet.end());
 	}
 
+/**getUniqueRowValues
+ *
+ * @param row index
+ * @param exclud
+ *
+ * @return vector containing the unique elements stored in the query row of the matrix
+ * 
+ * This function returns the unique elements which are stored in the specified row of the matrix
+ */
+template<typename T>
+std::vector<T> Matrix<T>::getUniqueRowValues(unsigned int row, T exclud){
+    std::set<T> tempSet;
+    for (int col=0;col<colCount_;col++) {
+		if (exclud!=data_[col+row*colCount_]){
+	        tempSet.insert(data_[col+row*colCount_]);
+			}
+        }   
+    return std::vector<T> (tempSet.begin(),tempSet.end());
+    }
+
 /**getUniqueColValues
  *
  * @param col index
@@ -314,6 +336,26 @@ std::vector<T> Matrix<T>::getUniqueColValues(unsigned int col){
 		}
 	return std::vector<T> (tempSet.begin(),tempSet.end());
 	}
+
+/**getUniqueColValues
+ *
+ * @param col index
+ *
+ * @return vector containing the unique elements stored in the query col of the matrix
+ * 
+ * This function returns the unique elements which are stored in the specified col of the matrix
+ */
+template<typename T>
+std::vector<T> Matrix<T>::getUniqueColValues(unsigned int col, T exclud){
+    std::set<T> tempSet;
+    for (int row=0;row<rowCount_;row++){
+		if (exclud!=data_[col+row*colCount_]){	
+	    	tempSet.insert(data_[col+row*colCount_]);
+			}
+        }
+    return std::vector<T> (tempSet.begin(),tempSet.end());
+    }
+
 
 /**contains
  *
