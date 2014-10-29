@@ -11,7 +11,7 @@
  *Creates a Node using its position in the nodelist(index), a node identifier and a node name
  */
 Node::Node(unsigned int index, unsigned int id, std::string name)
-	:index_(index),id_(id),name_(name),ProbabilityMatrix_(Matrix<float>(0,0,0.0)),ObservationMatrix_(Matrix<int>(0,0,0))
+	:index_(index),id_(id),name_(name),ProbabilityMatrix_(Matrix<float>(0,0,0.0)),ObservationMatrix_(Matrix<int>(0,0,0)),ObservationBackup_(Matrix<int>(0,0,0))
 	{
 	}
 
@@ -27,6 +27,11 @@ Node::Node(unsigned int index, unsigned int id, std::string name)
 float Node::getProbability(unsigned int nv, unsigned int pv){
 	return ProbabilityMatrix_(nv,pv);
 	}
+
+
+void Node::setProbability(float value, unsigned int nv, unsigned int pv){
+	ProbabilityMatrix_.setData(value,nv,pv);
+	}
  
 /**getProbability
  *
@@ -41,6 +46,11 @@ float Node::getProbability(std::string nv, std::string pv){
 	return ProbabilityMatrix_.getValueByNames(nv,pv);
 	}
 
+void Node::setProbability(float value, std::string nv, std::string pv){	
+	 ProbabilityMatrix_.setData(value,ProbabilityMatrix_.findCol(nv),ProbabilityMatrix_.findRow(pv));
+	}
+
+
 /**getObservations
  *
  * @param index of the value of the current node
@@ -52,6 +62,10 @@ float Node::getProbability(std::string nv, std::string pv){
  */
 unsigned int Node::getObservations(unsigned int nv, unsigned int pv){
 	return ObservationMatrix_(nv,pv);
+	}
+
+void Node::setObservations(int value, unsigned int nv, unsigned int pv){
+	ObservationMatrix_.setData(value, nv, pv);
 	}
   
 /**getObservations
@@ -66,7 +80,11 @@ unsigned int Node::getObservations(unsigned int nv, unsigned int pv){
 unsigned int Node::getObservations(std::string nv, std::string pv){
 	return ObservationMatrix_.getValueByNames(nv,pv);
 	}
-  
+ 
+void Node::setObservations(int value, std::string nv, std::string pv){
+	ObservationMatrix_.setData(value,ObservationMatrix_.findCol(nv),ObservationMatrix_.findRow(pv));
+	} 
+	
 /**setProbability()
  *
  * @param m A matrix of type float containing Probabilities
@@ -88,6 +106,11 @@ void Node::setProbability(Matrix<float> m){
  *
  */
 void Node::setObservations(Matrix<int> m){
+	ObservationMatrix_=m;
+	}
+
+
+void Node::setObservationBackup(Matrix<int> m){
 	ObservationMatrix_=m;
 	}
 
@@ -141,7 +164,7 @@ bool Node::hasValue(std::string v){
  * 
  *
  */
-const Matrix<float>& Node::getProbabilityMatrix(){
+Matrix<float>& Node::getProbabilityMatrix(){
 	return ProbabilityMatrix_;
 	}
 
@@ -151,7 +174,7 @@ const Matrix<float>& Node::getProbabilityMatrix(){
  * 
  *
  */
-const Matrix<int>& Node::getObservationMatrix(){
+Matrix<int>& Node::getObservationMatrix(){
 	return ObservationMatrix_;
 	}
 
@@ -167,4 +190,12 @@ const Matrix<int>& Node::getObservationMatrix(){
 std::ostream& operator<<(std::ostream& os,const Node& n){
 	os<<n.name_<<" "<<n.id_<<"\n"<<n.ObservationMatrix_<<"\n"<<n.ProbabilityMatrix_<<std::endl;
 	return os;
+	}
+
+void Node::createBackup(){
+	ObservationBackup_=ObservationMatrix_;
+	}
+
+void Node::loadBackup(){
+	ObservationMatrix_=ObservationBackup_;
 	}

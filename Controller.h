@@ -10,6 +10,7 @@ class Controller{
 	void loadNetwork(std::string networkfile);
 	void discretise(std::string datafile,std::string controlFile);
     void distributeObservations();
+	void performEM();
 	private:
 	void discretiseRow(unsigned int row, unsigned int method, float threshold);
 	void discretiseFloor(unsigned int row);
@@ -24,7 +25,13 @@ class Controller{
 	void mapNamesToInt(unsigned int row);
 	float getNumber(unsigned int col, unsigned int row);
 	void createNameEntry(int value, unsigned int row);
+	float calculateProbabilityEM(Node& n, unsigned int col, unsigned int row);
 	std::vector<float> createSortedVector(unsigned int row);
+	void ePhase();
+	float mPhase();
+	void initialise(unsigned int method);
+	std::vector<std::string> split(std::string& str, char delim);
+	float computeTotalProbability(unsigned int key, std::string value);
 	Network network_;
 	Matrix<std::string> originalObservations_;
 	Matrix<int> observations_;

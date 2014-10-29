@@ -30,6 +30,8 @@ class Matrix {
 		std::vector<std::string>& getColNames() const;
 		int findRow(const std::string& element);
 		int findCol(const std::string& element);
+		float calculateRowSum(unsigned int row);
+		float calculateColSum(unsigned int col);
 		std::vector<T> getUniqueRowValues(unsigned int row);
 		std::vector<T> getUniqueRowValues(unsigned int row, T exclud);
 		std::vector<T> getUniqueColValues(unsigned int col, T exclud);
@@ -39,6 +41,8 @@ class Matrix {
 		unsigned int countElement(unsigned int colrow,unsigned int number, T t);
 		bool containsElement(unsigned int colrow, unsigned int number, T t);
 		void resize(unsigned int colCount,unsigned int rowCount, T initalValue);
+		bool hasNACol();
+		bool hasNARow();
 		void clear();
 		private:
 		unsigned int rowCount_;
@@ -367,11 +371,12 @@ std::vector<T> Matrix<T>::getUniqueColValues(unsigned int col, T exclud){
  */
 template<typename T>
 bool Matrix<T>::contains(const T& query){
-	auto res=data_.find(query);
-	if (res == data_.end()){
-		return false;
+	for (auto res : data_){
+		if (res == query){
+			return true;
+			}
 		}
-	return true;
+	return false;
 	}
 
 /**countElement
@@ -545,6 +550,61 @@ void Matrix<T>::resize(unsigned int colCount, unsigned int rowCount,T initialVal
 	rowCount_=rowCount;
 	}
 
+/**calculateRowSum
+ *
+ * @param row
+ * 
+ * @return 
+ *
+ *
+ */
+template<typename T>
+float Matrix<T>::calculateRowSum(unsigned int row){
+	float sum = 0;
+	for (int col=0;col<colCount_;col++)
+		sum+=(float)data_[col+row*colCount_];
+	return sum;
+	}
+
+/**calculateColSum
+ *
+ * @param col
+ * 
+ * @return
+ * 
+ *
+ */
+template<typename T>
+float Matrix<T>::calculateColSum(unsigned int col){
+	float sum = 0;
+	for (int row=0;row<rowCount_;row++)
+		sum+=(float)data_[col+row*colCount_];
+	return sum;	
+	}
+
+/**hasNACol
+ *
+ * return true if NA (or variants) are columnNames
+ */
+template<typename T>
+bool Matrix<T>::hasNACol(){
+	if ((findCol("NA") ==-1) and (findCol("na")==-1) and (findCol("-")==-1) and (findCol("-1")==-1)){
+		return false;
+		}
+	return true;
+}
+
+/**hasNARow
+ *
+ *return true if NA (or variants) are rowNames
+ */
+template<typename T>
+bool Matrix<T>::hasNARow(){
+	if ((findRow("NA") ==-1) and (findRow("na")==-1) and (findRow("-")==-1) and (findRow("-1")==-1)){
+		return false;
+		}   
+    return true;
+	}
 /**clear
  *
  * @return void

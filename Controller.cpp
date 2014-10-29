@@ -108,7 +108,6 @@ void Controller::discretise(std::string datafile, std::string controlFile){
 		threshold=0.0;
 		buffer<<line;
 		buffer>>row>>method>>threshold;
-		std::cout<<row<<method<<std::endl;
 		discretiseRow(row,method,threshold);
 		}
 	input.close();
@@ -416,7 +415,6 @@ void Controller::distributeObservations(){
 		obsRow = observations_.findRow(n.getName());
 		auto parentIDs =  network_.getParents(n.getID());
 		parentCombinations=1;
-		//TODO: No original names..!!!
 		//Number of columns
 		uniqueNodeValues=observations_.getUniqueRowValues(obsRow);
 		nodeValueCounts=uniqueNodeValues.size();
@@ -443,8 +441,9 @@ void Controller::distributeObservations(){
 				std::string temp="";
 				for (unsigned int key=0; key<parentIDs.size();key++){
 					parentRow=observations_.findRow(network_.getNode(parentIDs[key]).getName());
-					temp+=observationsMapR_[std::make_pair(vec[key],parentRow)];
+					temp=temp+observationsMapR_[std::make_pair(vec[key],parentRow)]+",";
 					}
+				temp.erase(temp.end()-1);
 				parentNames.push_back(temp);
 				}
 			}
@@ -464,7 +463,6 @@ void Controller::distributeObservations(){
 		Matrix<float> probMatrix = Matrix<float>(nodeValueCounts-(int)observations_.containsElement(1,obsRow,-1),parentCombinations,0.0);
 		probMatrix.setColNames(nodeValueNamesProb);	
 		probMatrix.setRowNames(parentNames);
-		std::cout<<obsMatrix<<std::endl;	
 		int row;
 		std::string rowName;
 		std::string colName;
@@ -474,17 +472,239 @@ void Controller::distributeObservations(){
 			colName=observationsMapR_[std::make_pair(observations_(sample,observations_.findRow(n.getName())),obsRow)];
 			for (auto parentID:parentIDs){
 				row=observations_.findRow(network_.getNode(parentID).getName());	
-				rowName+=observationsMapR_[std::make_pair(observations_(sample,row),row)];
+				rowName=rowName+observationsMapR_[std::make_pair(observations_(sample,row),row)]+",";
 				}
 			if (rowName==""){
 				rowName="1";
 				}
 			if ((rowName.find("NA")==std::string::npos) and (rowName.find("na")==std::string::npos) and (rowName.find("-")==std::string::npos)){
+						if (rowName != "1"){
+							rowName.erase(rowName.end()-1);
+							}
 						obsMatrix.setData(obsMatrix.getValueByNames(colName,rowName)+1,obsMatrix.findCol(colName),obsMatrix.findRow(rowName));
 						}
 			}
 		n.setObservations(obsMatrix);
+		n.setObservationBackup(obsMatrix);
 		n.setProbability(probMatrix);
-		std::cout<<n;
+		n.createBackup();
+		}
+	}
+
+
+/**split
+ *
+ * @param strint to split
+ * @param character to split at
+ *
+ * @return a vector of substrings
+ *
+ * splits the given string at the specified delimeters and returns a substring
+ */
+std::vector<std::string> Controller::split(std::string& str, char delim){
+    std::stringstream ss(str);
+    std::string item;
+    std::vector<std::string> result;
+    while(std::getline(ss,item,delim)){
+        result.push_back(item);
+        }
+    return result;
+    }
+
+
+
+/**performEM
+ *
+ * @return void
+ *
+ * Calls the appropiate methods to train the model.
+ */
+
+void Controller::performEM(){
+	float difference=1.0;
+	int runs=0;
+	//Check completness of the data
+	if (observations_.contains(-1)){
+		//Initialize and iterate E/M-Phase
+		initialise(0);
+		while ((difference > 0.001) and (runs < 10000)){
+			ePhase();
+			difference=mPhase();
+			std::cout<<difference<<std::endl;
+			runs++;
+			}
+		std::cout<<"Runs: "<<runs<<std::endl;
+		std::cout<<"Difference: "<<difference<<std::endl;
+		}
+	else
+	//Calculat parameters directly
+	mPhase();
+	std::cout<<network_<<std::endl;	
+}
+
+
+/**computeTotalProbability
+ *
+ * @param identifier of the query node
+ * @param value of the query node
+ *
+ * @return totalProbability for the given value
+ * 
+ * Recursively calculates the total probability for a given query
+ */
+float Controller::computeTotalProbability(unsigned int nodeID, std::string value){ //TODO Finish this
+	//GetNode
+	Node& n = network_.getNode(nodeID);
+	//Get Parents
+	auto parentIDs= network_.getParents(nodeID);
+	Matrix<float> probMatrix = n.getProbabilityMatrix();
+	//Check Existens
+	if (parentIDs.size()!=0){
+	//Yes -> Call recursively for all parent values
+		float result = 0;
+		for (int row=0;row<probMatrix.getRowCount();row++){
+			auto values = split(probMatrix.getRowNames()[row],',');
+			float temp=1.0;
+			for (int index=0; index<values.size();index++){
+				temp*=computeTotalProbability(parentIDs[index],values[index]);
+				}
+			result+=(temp*probMatrix(probMatrix.findCol(value),row));
+			}
+		return result;
+		}
+	//No -> return value
+	else {
+		return probMatrix(probMatrix.findCol(value),0);
+		}
+	}
+
+/**calculateProbabilityEM
+ * 
+ * @param a reference to the query node
+ * @param the query col
+ * @param the query row
+ *
+ * @return the calculated probability, normalized to 1
+ * 
+ * Calculates the probability to observe a certain value
+ */
+float Controller::calculateProbabilityEM(Node& n, unsigned int col, unsigned int row){
+	//get Parents
+	auto ParentIDs = network_.getParents(n.getID());
+	Matrix<float>& probMatrix = n.getProbabilityMatrix();
+	//get Parent values
+	std::vector<std::string> parentValues = split(probMatrix.getRowNames()[row],',');
+	std::vector<std::string>& nodeValues= probMatrix.getColNames();
+	//compute TotProbParentsRec
+	float totProbParents=1.0;
+	for (int key = 0; key<ParentIDs.size();key++){
+		totProbParents*=computeTotalProbability(ParentIDs[key],parentValues[key]); //TODO computeTotalProbability
+	}
+	//computeNormalizingProb
+	float denominator=0.0;
+	for (auto v : nodeValues){
+		denominator+=probMatrix(probMatrix.findCol(v),row)*totProbParents;
+		}
+	//return result
+	float nominator=probMatrix(col-1,row)*totProbParents;
+	return nominator/denominator;
+	}
+
+/**ePhase
+ * 
+ * @return void
+ * 
+ * Performs the ePhase of the expectation maximization algorithm
+ */
+void Controller::ePhase(){
+	for (auto& n:network_.getNodes()){
+		Matrix<int>& obMatrix = n.getObservationMatrix();
+		for (int row=0; row<obMatrix.getRowCount();row++){
+			if (obMatrix.hasNACol()){
+				for (int col=1;col<obMatrix.getColCount();col++){
+					float value=obMatrix(col,row)+calculateProbabilityEM(n,col,row)*obMatrix(0,row);
+					obMatrix.setData(value,col,row);
+					}
+				}
+			else {
+				for (int col=0;col<obMatrix.getColCount();col++){
+					float value=obMatrix(col,row);
+					obMatrix.setData(value,col,row);
+					}
+				}
+			}
+		}
+	}
+
+/**mPhase
+ *
+ * @return difference between the current and the previous parameters, normalised by the number of parameters
+ * 
+ * Carries out the mPhase of the EM algorithm. Also used to perform maxium likelihood estimation in the case of complete data
+ */
+float Controller::mPhase(){
+	float difference=0.0;
+	float probability=0.0;
+	int counter=0;
+	for (auto& n:network_.getNodes()){
+		Matrix<int>& obMatrix = n.getObservationMatrix();
+		for (int row=0; row<obMatrix.getRowCount(); row++){
+				float rowsum=obMatrix.calculateRowSum(row);
+				if (obMatrix.hasNACol())
+				//Shift about 1
+				for (int col=1;col<obMatrix.getColCount();col++){
+					probability=n.getObservationMatrix()(col,row)/(rowsum-obMatrix(0,row));
+					difference+=fabs(n.getProbability(col-1,row)-probability);
+					n.setProbability(probability,col-1,row);
+					counter++;
+					}
+				else
+				//Data complet
+				for (int col=0;col<obMatrix.getColCount();col++){
+					probability=n.getObservationMatrix()(col,row)/rowsum;
+					difference+=fabs(n.getProbability(col,row)-probability);
+					n.setProbability(probability,col,row);
+					counter++;
+					}
+			}
+		n.loadBackup();
+		}
+	return difference/counter;
+	}
+
+/**initialise
+ *
+ * @param method encodes the method used for initilisation
+ *
+ * @return void 
+ *
+ * Performs initialising 0: Initialise with 1/#possible values, 1: Initialise with #Observation/#KnownObservations, 2: Initialise with (#Observations+#NA/#KnownObservations)/#RowSum
+ */
+void Controller::initialise(unsigned int method){
+	for (auto&n:network_.getNodes()){
+		Matrix<int>& obMatrix=n.getObservationMatrix();
+		Matrix<float>& probMatrix=n.getProbabilityMatrix();
+		for (int row=0; row<probMatrix.getRowCount();row++){
+			float rowsum=obMatrix.calculateRowSum(row);
+			for (int col=0;col<probMatrix.getColCount();col++){
+				switch(method){
+					case 0: n.setProbability(1.0/probMatrix.getColCount(),col,row);break;
+					case 1: if (obMatrix.hasNACol()){
+								n.setProbability(n.getObservationMatrix()(col+1,row)/(rowsum-n.getObservationMatrix()(0,row)),col,row);
+								}
+							 else {
+								n.setProbability(n.getObservationMatrix()(col,row)/rowsum,col,row);
+								}
+							break;
+					case 2:	if (obMatrix.hasNACol()){
+								n.setProbability(((n.getObservationMatrix()(col+1,row)+(n.getObservationMatrix()(0,row)*(n.getObservationMatrix()(col+1,row)/(rowsum-n.getObservationMatrix()(0,row)))))/rowsum),col,row);
+								} 
+							else {
+								n.setProbability(n.getObservationMatrix()(col,row)/rowsum,col,row);
+								}
+							break;
+						}	
+					}
+				}			
 		}
 	}

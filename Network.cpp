@@ -197,7 +197,11 @@ Node& Network::getNode(std::string name){
  * Prints the AdjacencyMatrix of the network
  */
 std::ostream& operator<<(std::ostream& os, const Network& n){
-	return os<<n.AdjacencyMatrix_;
+	os<<n.AdjacencyMatrix_<<"\n";
+	for (Node node: n.NodeList_){
+		os<<node;
+		}
+	return os;
 	}
 
 /**readNetwork
