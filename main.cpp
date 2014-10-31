@@ -3,11 +3,13 @@
 
 
 int main(int argc, char *argv[]){
+	std::string datafile=argv[1];
+	std::string controlfile=argv[2];
 	Controller c= Controller();
 	c.loadNetwork("TestA.na");
 	c.loadNetwork("TestSif.sif");
-//	c.discretise("data.txt","control.txt");
-	c.discretise("../../Prototyp/data_incomp60.txt","control.txt");
+	std::cout<<datafile<<" "<<controlfile<<std::endl;
+	c.discretise(datafile,controlfile);
 	c.distributeObservations();
 	c.performEM();
 	return 0;

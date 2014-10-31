@@ -9,6 +9,7 @@ class Network{
 		void readNetwork(std::string filename);
 		std::vector<unsigned int> getParents(unsigned int id);
 		std::vector<unsigned int> getParents(std::string name);
+		std::vector<unsigned int> getParents(Node& n);
 		void cutParents(unsigned int id);
 		void cutParents(std::string name);
 		void addEdge(unsigned int id1, unsigned int id2);

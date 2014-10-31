@@ -30,8 +30,16 @@ class Controller{
 	void ePhase();
 	float mPhase();
 	void initialise(unsigned int method);
+	void initialise1();
+	void initialise2();
+	void initialise3();
 	std::vector<std::string> split(std::string& str, char delim);
 	float computeTotalProbability(unsigned int key, std::string value);
+/*	float computeConditionalProbability(std::vector<unsigned int> qNodes, std::vector<std::string> qValues, std::vector<unsigned int> oNodes, std::vector<std::string>oValues);
+	float computeJointProbability(std::vector<unsigned int> qNodes, std::vector<std::string> qValue);
+	void doIntervention(unsigned int key, std::string value);
+	void addRelation(unsigned int nodeID1, unsigned int nodeID2);
+	void removeRelation(unsigned int nodeID1, unsigned int nodeID2);*/
 	Network network_;
 	Matrix<std::string> originalObservations_;
 	Matrix<int> observations_;

@@ -66,6 +66,17 @@ std::vector<unsigned int> Network::getParents(unsigned int id){
 	}
 
 /**getParents
+ * 
+ * @param Node n
+ * 
+ * @return vector containing the identifiers of the parents from the query node
+ *
+ */
+std::vector<unsigned int> Network::getParents(Node& n){
+	return getParents(n.getID());
+	}
+
+/**getParents
  *
  * @param name name of the query node
  *

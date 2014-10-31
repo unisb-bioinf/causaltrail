@@ -102,10 +102,9 @@ void Controller::discretise(std::string datafile, std::string controlFile){
 	std::string line;
 	unsigned int row;
 	unsigned int method;
-	float threshold;
 	while(std::getline(input,line)){
 		std::stringstream buffer;
-		threshold=0.0;
+		float threshold=0.0;
 		buffer<<line;
 		buffer>>row>>method>>threshold;
 		discretiseRow(row,method,threshold);
@@ -325,7 +324,6 @@ void Controller::discretiseBracketMedians(unsigned int row, unsigned int number)
 void Controller::discretisePearsonTukey(unsigned int row){
 	std::vector<float> templist=createSortedVector(row);
 	std::vector<float> borderValues;
-	float value;
 	//Calculate borders
 	borderValues.push_back(templist[0]);
 	borderValues.push_back(templist[ceil(0.185*templist.size())]);
@@ -334,7 +332,7 @@ void Controller::discretisePearsonTukey(unsigned int row){
 	//Fill intervals
 	for (int col=0;col<templist.size();col++){
 		for (int i=1;i<=3;i++){
-			value=templist[col];
+			float value=templist[col];
 			if ((value >= borderValues[i-1]) and (value<borderValues[i])){
 				observations_.setData(i-1,col,row);
 				createNameEntry(i-1,row);
@@ -387,6 +385,23 @@ void Controller::createNameEntry(int value, unsigned int row){
 	observationsMapR_[std::make_pair(value,row)]=ssvalue;
 	}
 
+/**tempNodeInfo
+ *
+ * Struct to store information used in the distributeObservations method
+ */
+
+struct tempNodeInfo {
+	std::vector<std::string> nodeValueNames;
+	std::vector<std::string> nodeValueNamesProb;
+	std::vector<std::vector<int>> parentNameInts;
+	std::vector<std::string> parentNames;
+	std::vector<unsigned int> parentIDs;
+	std::vector<int> uniqueValues;
+	std::vector<int> uniqueValuesExcludingNA;
+	int parentCombinations;
+	int obsRow;
+};
+
 /**distributeObservations
  *
  * @return void
@@ -394,102 +409,96 @@ void Controller::createNameEntry(int value, unsigned int row){
  * Assigns the discretised observations to the nodes in the network according to their names and the network structure
  */
 void Controller::distributeObservations(){
-	unsigned int parentCombinations;
-	unsigned int obsRow;
-	unsigned int nodeValueCounts;
-	unsigned int parentRow;
-	std::vector<int> uniqueNodeValues;
-	std::vector<int> uniqueParentValues;
-	std::vector<std::string> nodeValueNames;
-	std::vector<std::string> nodeValueNamesProb;
-	std::vector<std::vector<int>> parentNameInts;
-	std::vector<std::string> parentNames;
-	std::unordered_map<int,std::vector<int>> parentValues;
+	std::unordered_map<int,std::vector<int>> uniqueValues;
+	std::unordered_map<int,std::vector<int>> uniqueValuesExcludingNA;
+	std::unordered_map<int,int> observationRow;
+	//ComputeUniqueNodeValues
+	for (auto& n:network_.getNodes()){
+		int obsRow=observations_.findRow(n.getName());
+		observationRow[n.getID()]=obsRow;
+		uniqueValues[n.getID()]=observations_.getUniqueRowValues(obsRow);
+		uniqueValuesExcludingNA[n.getID()]=observations_.getUniqueRowValues(obsRow,-1);
+	}
+	
 	//Generating matrices
 	for (auto& n:network_.getNodes()){
-		nodeValueNames.clear();
-		nodeValueNamesProb.clear();
-		parentNames.clear();
-		parentNameInts.clear();
-		uniqueParentValues.clear();
-		obsRow = observations_.findRow(n.getName());
-		auto parentIDs =  network_.getParents(n.getID());
-		parentCombinations=1;
-		//Number of columns
-		uniqueNodeValues=observations_.getUniqueRowValues(obsRow);
-		nodeValueCounts=uniqueNodeValues.size();
-		//Column names
-		for (auto value: uniqueNodeValues){
-			nodeValueNames.push_back(observationsMapR_[std::make_pair(value,obsRow)]);
+		tempNodeInfo tni;
+		tni.parentIDs = network_.getParents(n);
+		tni.parentCombinations=1;
+		tni.obsRow=observationRow[n.getID()];
+		tni.uniqueValues=uniqueValues[n.getID()];
+		tni.uniqueValuesExcludingNA=uniqueValuesExcludingNA[n.getID()];
+		for (auto value: tni.uniqueValues){
+			tni.nodeValueNames.push_back(observationsMapR_[std::make_pair(value,tni.obsRow)]); 		//TODO: Add security
 			if (value != -1){
-				nodeValueNamesProb.push_back(observationsMapR_[std::make_pair(value,obsRow)]);
+				tni.nodeValueNamesProb.push_back(observationsMapR_[std::make_pair(value,tni.obsRow)]);
 				}
 			}
-		for (auto parentID : parentIDs){
+		//Function PARENTVALUES
+		for (auto parentID : tni.parentIDs){
 			//Number of rows
-			parentRow=observations_.findRow(network_.getNode(parentID).getName());
-			uniqueParentValues=observations_.getUniqueRowValues(parentRow,-1);
-			parentCombinations*=uniqueParentValues.size();
-			//Row names	
-			parentValues[parentID]=uniqueParentValues;
+			tni.parentCombinations*=uniqueValuesExcludingNA[parentID].size();
 			}
-		if (parentIDs.size() > 1){
-			Combinations<int> comb = Combinations<int>(parentIDs,parentValues);
+		if (tni.parentIDs.size() > 1){
+			Combinations<int> comb = Combinations<int>(tni.parentIDs,uniqueValuesExcludingNA);
 			comb.createCombinations(0);
-			parentNameInts=comb.getResult();
-			for (auto vec : parentNameInts){
+			tni.parentNameInts=comb.getResult();
+		//FUNCTION PARENTNAMES
+			for (auto vec : tni.parentNameInts){
 				std::string temp="";
-				for (unsigned int key=0; key<parentIDs.size();key++){
-					parentRow=observations_.findRow(network_.getNode(parentIDs[key]).getName());
+				for (unsigned int key=0; key<tni.parentIDs.size();key++){
+					int parentRow=observationRow[tni.parentIDs[key]];
 					temp=temp+observationsMapR_[std::make_pair(vec[key],parentRow)]+",";
-					}
-				temp.erase(temp.end()-1);
-				parentNames.push_back(temp);
 				}
+				temp.erase(temp.end()-1);
+				tni.parentNames.push_back(temp);
 			}
-		else if (parentIDs.size()==1){
-				parentRow=observations_.findRow(network_.getNode(parentIDs[0]).getName());
-				for (auto v : uniqueParentValues){
-					parentNames.push_back(observationsMapR_[std::make_pair(v,parentRow)]);				
+		}
+		else if (tni.parentIDs.size()==1){
+			//FUNCTION PARENTNAMES SIMPLE
+				int parentRow=observationRow[tni.parentIDs[0]];
+				for (auto v : uniqueValuesExcludingNA[tni.parentIDs[0]]){
+					tni.parentNames.push_back(observationsMapR_[std::make_pair(v,parentRow)]);				
 					}
 				}	
 		else {
-			parentNames.push_back("1");
+			tni.parentNames.push_back("1");
 			}
+
 		//Generating suitable objects
-		Matrix<int> obsMatrix = Matrix<int>(nodeValueCounts,parentCombinations,0);
-		obsMatrix.setColNames(nodeValueNames);
-		obsMatrix.setRowNames(parentNames);
-		Matrix<float> probMatrix = Matrix<float>(nodeValueCounts-(int)observations_.containsElement(1,obsRow,-1),parentCombinations,0.0);
-		probMatrix.setColNames(nodeValueNamesProb);	
-		probMatrix.setRowNames(parentNames);
-		int row;
-		std::string rowName;
-		std::string colName;
+		Matrix<int> obsMatrix = Matrix<int>(tni.uniqueValues.size(),tni.parentCombinations,0);
+		obsMatrix.setColNames(tni.nodeValueNames);
+		obsMatrix.setRowNames(tni.parentNames);
+		std::cout<<obsMatrix<<std::endl;
+		Matrix<float> probMatrix = Matrix<float>(tni.uniqueValuesExcludingNA.size(),tni.parentCombinations,0.0);
+		probMatrix.setColNames(tni.nodeValueNamesProb);	
+		probMatrix.setRowNames(tni.parentNames);
+		std::cout<<probMatrix<<std::endl;	
+	
 		//Count observations
 		for (unsigned int sample = 0; sample<observations_.getColCount();sample++){
-			rowName="";
-			colName=observationsMapR_[std::make_pair(observations_(sample,observations_.findRow(n.getName())),obsRow)];
-			for (auto parentID:parentIDs){
-				row=observations_.findRow(network_.getNode(parentID).getName());	
+			std::string rowName="";
+			std::string colName=observationsMapR_[std::make_pair(observations_(sample,tni.obsRow),tni.obsRow)];
+			for (auto parentID : tni.parentIDs){
+				int row=observationRow[parentID];	
 				rowName=rowName+observationsMapR_[std::make_pair(observations_(sample,row),row)]+",";
-				}
+			}
 			if (rowName==""){
 				rowName="1";
-				}
-			if ((rowName.find("NA")==std::string::npos) and (rowName.find("na")==std::string::npos) and (rowName.find("-")==std::string::npos)){
-						if (rowName != "1"){
-							rowName.erase(rowName.end()-1);
-							}
-						obsMatrix.setData(obsMatrix.getValueByNames(colName,rowName)+1,obsMatrix.findCol(colName),obsMatrix.findRow(rowName));
-						}
 			}
-		n.setObservations(obsMatrix);
-		n.setObservationBackup(obsMatrix);
-		n.setProbability(probMatrix);
-		n.createBackup();
+			if ((rowName.find("NA")==std::string::npos) and (rowName.find("na")==std::string::npos) and (rowName.find("-")==std::string::npos)){
+				if (rowName != "1"){
+					rowName.erase(rowName.end()-1);
+				}
+				obsMatrix.setData(obsMatrix.getValueByNames(colName,rowName)+1,obsMatrix.findCol(colName),obsMatrix.findRow(rowName));
+			}
 		}
+	n.setObservations(obsMatrix);
+	n.setObservationBackup(obsMatrix);
+	n.setProbability(probMatrix);
+	n.createBackup();
 	}
+}
 
 
 /**split
@@ -511,6 +520,40 @@ std::vector<std::string> Controller::split(std::string& str, char delim){
     return result;
     }
 
+/**computeTotalProbability
+ *
+ * @param identifier of the query node
+ * @param value of the query node
+ *
+ * @return totalProbability for the given value
+ * 
+ * Recursively calculates the total probability for a given query
+ */
+float Controller::computeTotalProbability(unsigned int nodeID, std::string value){ 
+    //GetNode
+    Node& n = network_.getNode(nodeID);
+    //Get Parents
+    auto parentIDs= network_.getParents(n);
+    Matrix<float> probMatrix = n.getProbabilityMatrix();
+    //Check Existens
+    if (parentIDs.size()!=0){
+    //Yes -> Call recursively for all parent values
+        float result = 0;
+        for (int row=0;row<probMatrix.getRowCount();row++){
+            auto values = split(probMatrix.getRowNames()[row],',');
+            float temp=1.0;
+            for (int index=0; index<values.size();index++){
+                temp*=computeTotalProbability(parentIDs[index],values[index]);
+                }   
+            result+=(temp*probMatrix(probMatrix.findCol(value),row));
+            }   
+        return result;
+        }   
+    //No -> return value
+    else {
+        return probMatrix(probMatrix.findCol(value),0);
+        }   
+    }  
 
 
 /**performEM
@@ -543,41 +586,6 @@ void Controller::performEM(){
 }
 
 
-/**computeTotalProbability
- *
- * @param identifier of the query node
- * @param value of the query node
- *
- * @return totalProbability for the given value
- * 
- * Recursively calculates the total probability for a given query
- */
-float Controller::computeTotalProbability(unsigned int nodeID, std::string value){ //TODO Finish this
-	//GetNode
-	Node& n = network_.getNode(nodeID);
-	//Get Parents
-	auto parentIDs= network_.getParents(nodeID);
-	Matrix<float> probMatrix = n.getProbabilityMatrix();
-	//Check Existens
-	if (parentIDs.size()!=0){
-	//Yes -> Call recursively for all parent values
-		float result = 0;
-		for (int row=0;row<probMatrix.getRowCount();row++){
-			auto values = split(probMatrix.getRowNames()[row],',');
-			float temp=1.0;
-			for (int index=0; index<values.size();index++){
-				temp*=computeTotalProbability(parentIDs[index],values[index]);
-				}
-			result+=(temp*probMatrix(probMatrix.findCol(value),row));
-			}
-		return result;
-		}
-	//No -> return value
-	else {
-		return probMatrix(probMatrix.findCol(value),0);
-		}
-	}
-
 /**calculateProbabilityEM
  * 
  * @param a reference to the query node
@@ -598,7 +606,7 @@ float Controller::calculateProbabilityEM(Node& n, unsigned int col, unsigned int
 	//compute TotProbParentsRec
 	float totProbParents=1.0;
 	for (int key = 0; key<ParentIDs.size();key++){
-		totProbParents*=computeTotalProbability(ParentIDs[key],parentValues[key]); //TODO computeTotalProbability
+		totProbParents*=computeTotalProbability(ParentIDs[key],parentValues[key]); 
 	}
 	//computeNormalizingProb
 	float denominator=0.0;
@@ -681,30 +689,75 @@ float Controller::mPhase(){
  * Performs initialising 0: Initialise with 1/#possible values, 1: Initialise with #Observation/#KnownObservations, 2: Initialise with (#Observations+#NA/#KnownObservations)/#RowSum
  */
 void Controller::initialise(unsigned int method){
+	switch(method){
+		case 0: initialise1();
+				break;
+		case 1: initialise2();
+				break;
+		case 2:	initialise3();
+				break;
+		}	
+	}
+
+
+/*initialise1
+ *
+ * Initiliase with 1/#possible values
+ */
+void Controller::initialise1(){
 	for (auto&n:network_.getNodes()){
 		Matrix<int>& obMatrix=n.getObservationMatrix();
 		Matrix<float>& probMatrix=n.getProbabilityMatrix();
 		for (int row=0; row<probMatrix.getRowCount();row++){
 			float rowsum=obMatrix.calculateRowSum(row);
-			for (int col=0;col<probMatrix.getColCount();col++){
-				switch(method){
-					case 0: n.setProbability(1.0/probMatrix.getColCount(),col,row);break;
-					case 1: if (obMatrix.hasNACol()){
-								n.setProbability(n.getObservationMatrix()(col+1,row)/(rowsum-n.getObservationMatrix()(0,row)),col,row);
-								}
-							 else {
-								n.setProbability(n.getObservationMatrix()(col,row)/rowsum,col,row);
-								}
-							break;
-					case 2:	if (obMatrix.hasNACol()){
-								n.setProbability(((n.getObservationMatrix()(col+1,row)+(n.getObservationMatrix()(0,row)*(n.getObservationMatrix()(col+1,row)/(rowsum-n.getObservationMatrix()(0,row)))))/rowsum),col,row);
-								} 
-							else {
-								n.setProbability(n.getObservationMatrix()(col,row)/rowsum,col,row);
-								}
-							break;
-						}	
-					}
-				}			
+			for(int col=0;col<probMatrix.getColCount();col++){
+				n.setProbability(n.getObservationMatrix()(col+1,row)/(rowsum-n.getObservationMatrix()(0,row)),col,row);
+				}  
+			}
 		}
 	}
+
+
+/*initialise2
+ *
+ *Initialise with #Observations/#KnownObservations
+ */
+void Controller::initialise2(){
+    for (auto&n:network_.getNodes()){
+        Matrix<int>& obMatrix=n.getObservationMatrix();
+        Matrix<float>& probMatrix=n.getProbabilityMatrix();
+        for (int row=0; row<probMatrix.getRowCount();row++){
+            float rowsum=obMatrix.calculateRowSum(row);
+            for(int col=0;col<probMatrix.getColCount();col++){
+				if(obMatrix.hasNACol()){
+					n.setProbability(n.getObservationMatrix()(col+1,row)/(rowsum-n.getObservationMatrix()(0,row)),col,row);
+				}
+				else {
+					n.setProbability(n.getObservationMatrix()(col,row)/rowsum,col,row);
+				}
+			}
+        }
+    }
+}
+
+/*initalise3
+ *
+ * Initialise with (#Observations+#NA/#KnownObservations)/RowSum
+ */
+void Controller::initialise3(){
+	for (auto&n:network_.getNodes()){
+		Matrix<int>& obMatrix=n.getObservationMatrix();
+		Matrix<float>& probMatrix=n.getProbabilityMatrix();
+		for (int row=0; row<probMatrix.getRowCount();row++){
+			float rowsum=obMatrix.calculateRowSum(row);
+			for(int col=0;col<probMatrix.getColCount();col++){
+    			if (obMatrix.hasNACol()){
+					n.setProbability(((n.getObservationMatrix()(col+1,row)+(n.getObservationMatrix()(0,row)*(n.getObservationMatrix()(col+1,row)/(rowsum-n.getObservationMatrix()(0,row)))))/rowsum),col,row);
+				}
+				else {
+					n.setProbability(n.getObservationMatrix()(col,row)/rowsum,col,row);
+				}
+        	}
+        }
+    }
+}
