@@ -233,6 +233,7 @@ void Network::readNetwork(std::string filename){
 		case 2 :readSIF(filename); break;
 		default : throw std::invalid_argument("Unsupported file type");
 		}
+	assignParents();
 	}
 
 /**readTGF
@@ -279,7 +280,7 @@ void Network::readTGF(std::string filename){
 		addEdge(id2,id1);
 	}
 	input.close();
-	}
+}
 
 /**readSIF
  *
@@ -346,4 +347,10 @@ void Network::readNA(std::string filename){
 	AdjacencyMatrix_.resize(NodeList_.size(),NodeList_.size(),0);
 	AdjacencyMatrix_.setRowNames(names);
 	AdjacencyMatrix_.setColNames(names);
+}
+
+void Network::assignParents(){
+	for (auto& n : NodeList_){
+		n.setParents(getParents(n));
 	}
+}

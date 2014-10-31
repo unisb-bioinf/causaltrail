@@ -26,12 +26,12 @@ Node::Node(unsigned int index, unsigned int id, std::string name)
  */
 float Node::getProbability(unsigned int nv, unsigned int pv){
 	return ProbabilityMatrix_(nv,pv);
-	}
+}
 
 
 void Node::setProbability(float value, unsigned int nv, unsigned int pv){
 	ProbabilityMatrix_.setData(value,nv,pv);
-	}
+}
  
 /**getProbability
  *
@@ -44,11 +44,11 @@ void Node::setProbability(float value, unsigned int nv, unsigned int pv){
  */
 float Node::getProbability(std::string nv, std::string pv){
 	return ProbabilityMatrix_.getValueByNames(nv,pv);
-	}
+}
 
 void Node::setProbability(float value, std::string nv, std::string pv){	
 	 ProbabilityMatrix_.setData(value,ProbabilityMatrix_.findCol(nv),ProbabilityMatrix_.findRow(pv));
-	}
+}
 
 
 /**getObservations
@@ -62,11 +62,11 @@ void Node::setProbability(float value, std::string nv, std::string pv){
  */
 unsigned int Node::getObservations(unsigned int nv, unsigned int pv){
 	return ObservationMatrix_(nv,pv);
-	}
+}
 
 void Node::setObservations(int value, unsigned int nv, unsigned int pv){
 	ObservationMatrix_.setData(value, nv, pv);
-	}
+}
   
 /**getObservations
  *
@@ -79,11 +79,11 @@ void Node::setObservations(int value, unsigned int nv, unsigned int pv){
  */
 unsigned int Node::getObservations(std::string nv, std::string pv){
 	return ObservationMatrix_.getValueByNames(nv,pv);
-	}
+}
  
 void Node::setObservations(int value, std::string nv, std::string pv){
 	ObservationMatrix_.setData(value,ObservationMatrix_.findCol(nv),ObservationMatrix_.findRow(pv));
-	} 
+} 
 	
 /**setProbability()
  *
@@ -95,7 +95,7 @@ void Node::setObservations(int value, std::string nv, std::string pv){
  */
 void Node::setProbability(Matrix<float> m){
 	ProbabilityMatrix_=m;
-	}
+}
   
 /**setObservations
  *
@@ -107,12 +107,12 @@ void Node::setProbability(Matrix<float> m){
  */
 void Node::setObservations(Matrix<int> m){
 	ObservationMatrix_=m;
-	}
+}
 
 
 void Node::setObservationBackup(Matrix<int> m){
 	ObservationMatrix_=m;
-	}
+}
 
 /**getName
  *
@@ -122,7 +122,7 @@ void Node::setObservationBackup(Matrix<int> m){
  */
 std::string& Node::getName(){
 	return name_;
-	}
+}
 
 /**getIndex
  *
@@ -132,7 +132,7 @@ std::string& Node::getName(){
  */
 unsigned int&  Node::getIndex(){
 	return index_;
-	}
+}
 
 /**getID
  *
@@ -142,7 +142,7 @@ unsigned int&  Node::getIndex(){
  */
 unsigned int&  Node::getID(){
 	return id_;
-	}
+}
 
 /**hasValue
  *
@@ -156,27 +156,25 @@ bool Node::hasValue(std::string v){
 	if (ObservationMatrix_.findCol(v)>-1)
 		return true;
 	return false;
-	}
+}
 
 /**getProbabilityMatrix
  *
  * @return A reference to the probability matrix of the current node
  * 
- *
  */
 Matrix<float>& Node::getProbabilityMatrix(){
 	return ProbabilityMatrix_;
-	}
+}
 
 /**getObservationMatrix
  *
  * @return A reference to the observation matrix of the current node
  * 
- *
  */
 Matrix<int>& Node::getObservationMatrix(){
 	return ObservationMatrix_;
-	}
+}
 
 /**operator<<
  *
@@ -190,12 +188,88 @@ Matrix<int>& Node::getObservationMatrix(){
 std::ostream& operator<<(std::ostream& os,const Node& n){
 	os<<n.name_<<" "<<n.id_<<"\n"<<n.ObservationMatrix_<<"\n"<<n.ProbabilityMatrix_<<std::endl;
 	return os;
-	}
+}
 
 void Node::createBackup(){
 	ObservationBackup_=ObservationMatrix_;
-	}
+}
 
 void Node::loadBackup(){
 	ObservationMatrix_=ObservationBackup_;
-	}
+}
+
+std::vector<unsigned int>& Node::getParents(){
+	return Parents_;
+}
+
+void Node::setParents(std::vector<unsigned int> parents){
+	Parents_=parents;
+}
+
+void Node::setUniqueValues(std::vector<int> uniqueValues){
+	uniqueValues_=uniqueValues;
+}
+
+std::vector<int>& Node::getUniqueValues(){
+	return uniqueValues_;
+}
+
+void Node::setUniqueValuesExcludingNA(std::vector<int> uniqueValues){
+	uniqueValuesExcludingNA_=uniqueValues;
+}
+
+std::vector<int>& Node::getUniqueValuesExcludingNA(){
+	return uniqueValuesExcludingNA_;
+}
+
+void Node::setObservationRow(int row){
+	observationRow_=row;
+}
+
+int Node::getObservationRow(){
+	return observationRow_;
+}
+
+void Node::setParentCombinations(int combinations){
+	parentCombinations_=combinations;
+}
+
+int Node::getParentCombinations(){
+	return parentCombinations_;
+}
+
+void Node::setValueNames(std::vector<std::string> valueNames){
+	valueNames_=valueNames;
+}
+
+void Node::addValueName(std::string name){
+	valueNames_.push_back(name);
+}
+
+std::vector<std::string>& Node::getValueNames(){
+	return valueNames_;
+}
+
+void Node::setValueNamesProb(std::vector<std::string> valueNames){
+	valueNamesProb_=valueNames;
+}
+
+void Node::addValueNameProb(std::string names){
+	valueNamesProb_.push_back(names);
+}
+
+std::vector<std::string>& Node::getValueNamesProb(){
+	return valueNamesProb_;
+}
+
+void Node::setParentValueNames(std::vector<std::string> valueNames){
+	parentValueNames_=valueNames;
+}
+
+void Node::addParentValueName(std::string names){
+	parentValueNames_.push_back(names);
+}
+
+std::vector<std::string>& Node::getParentValueNames(){
+	return parentValueNames_;
+}	

@@ -20,6 +20,25 @@ class Node {
 	unsigned int& getIndex();
 	unsigned int& getID();
 	bool hasValue(std::string v);
+	std::vector<unsigned int>& getParents();
+	void setParents(std::vector<unsigned int> parents);
+	void setUniqueValues(std::vector<int> uniqueValues);
+	std::vector<int>& getUniqueValues();
+	void setUniqueValuesExcludingNA(std::vector<int>);
+	std::vector<int>& getUniqueValuesExcludingNA();
+	void setObservationRow(int row);
+	int getObservationRow();
+	void setParentCombinations(int row);
+	int getParentCombinations();
+	void setValueNames(std::vector<std::string> valueNames);
+	void addValueName(std::string name);
+	std::vector<std::string>& getValueNames();
+	void setValueNamesProb(std::vector<std::string> valueNames);
+	void addValueNameProb(std::string name);
+	std::vector<std::string>& getValueNamesProb();
+	void setParentValueNames(std::vector<std::string> valueNames);
+	void addParentValueName(std::string name);
+	std::vector<std::string>& getParentValueNames();		
 	Matrix<float>& getProbabilityMatrix();
 	Matrix<int>& getObservationMatrix();
 	void createBackup();
@@ -28,9 +47,17 @@ class Node {
 	private:
 	unsigned int index_;
 	unsigned int id_;
+	std::vector<unsigned int> Parents_;
 	std::string name_;
 	Matrix<float> ProbabilityMatrix_;
 	Matrix<int> ObservationMatrix_;
 	Matrix<int> ObservationBackup_;
+	std::vector<int> uniqueValues_;
+	std::vector<std::string> valueNames_;
+	std::vector<std::string> valueNamesProb_;
+	std::vector<std::string> parentValueNames_;
+	std::vector<int> uniqueValuesExcludingNA_;
+	int observationRow_;
+	int parentCombinations_;
 };
 #endif

@@ -23,6 +23,7 @@ class Network{
 		unsigned int getIndex(std::string name);
 		friend std::ostream& operator<<(std::ostream& os,const Network& n);
 	private:
+		void assignParents();
 		void readTGF(std::string filename);
 		void readSIF(std::string filename);
 		void readNA(std::string filename);

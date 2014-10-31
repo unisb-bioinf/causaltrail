@@ -34,7 +34,12 @@ class Controller{
 	void initialise2();
 	void initialise3();
 	std::vector<std::string> split(std::string& str, char delim);
+	void assignObservationsToNodes();
+	int computeParentCombinations(std::vector<unsigned int> parents);
+	void assignValueNames(Node& n);
+	void assignParentNames(Node& n);
 	float computeTotalProbability(unsigned int key, std::string value);
+	void countObservations(Matrix<int>& obsMatrix, Node& n);
 /*	float computeConditionalProbability(std::vector<unsigned int> qNodes, std::vector<std::string> qValues, std::vector<unsigned int> oNodes, std::vector<std::string>oValues);
 	float computeJointProbability(std::vector<unsigned int> qNodes, std::vector<std::string> qValue);
 	void doIntervention(unsigned int key, std::string value);
