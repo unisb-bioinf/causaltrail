@@ -10,7 +10,6 @@ int main(int argc, char *argv[]){
 	c.loadNetwork("TestSif.sif");
 	std::cout<<datafile<<" "<<controlfile<<std::endl;
 	c.discretise(datafile,controlfile);
-	c.distributeObservations();
-	c.performEM();
+	c.trainNetwork();
 	return 0;
 }
