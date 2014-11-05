@@ -1,5 +1,4 @@
 #include "Network.h"
-#include <boost/filesystem.hpp>
 
 /**Detailed Constructor
  *
@@ -77,6 +76,17 @@ std::vector<unsigned int> Network::getParents(Node& n){
 	}
 
 /**getParents
+ * 
+ * @param Node n
+ * 
+ * @return vector containing the identifiers of the parents from the query node
+ *
+ */
+std::vector<unsigned int> Network::getParents(const Node& n){
+	return getParents(n.getID());
+	}
+
+/**getParents
  *
  * @param name name of the query node
  *
@@ -110,6 +120,7 @@ void Network::cutParents(unsigned int id){
 	for (auto n:parentIDs){
 		AdjacencyMatrix_.setData(0,getIndex(n),index);
 		}
+	getNode(id).cutParents();
 	}
 
 /**cutParents
@@ -135,6 +146,7 @@ void Network::cutParents(std::string name){
  */
 void Network::addEdge(unsigned int id1, unsigned int id2){
 	AdjacencyMatrix_.setData(1,getIndex(id1),getIndex(id2));
+	getNode(id1).setParents(getParents(id1));
 	}
 
 /**addEdge
@@ -161,6 +173,7 @@ void Network::addEdge(std::string name1, std::string name2){
  */
 void Network::removeEdge(unsigned int id1, unsigned int id2){
 	AdjacencyMatrix_.setData(0,getIndex(id1),getIndex(id2));
+	getNode(id1).setParents(getParents(id1));
 	}
 
 /**removeEdge
@@ -353,4 +366,28 @@ void Network::assignParents(){
 	for (auto& n : NodeList_){
 		n.setParents(getParents(n));
 	}
+}
+
+std::unordered_map<std::string,int>& Network::getObservationsMap(){
+	return observationsMap_;
+}
+std::map<std::pair<int,int>, std::string>& Network::getObservationsMapR(){
+	return observationsMapR_;
+}
+
+void Network::setAllUnvisited(){
+	for (auto& n: NodeList_){
+		n.setUnvisited();
+	}		
+}
+
+void Network::performDFS(unsigned int id, std::vector<unsigned int>& visitedNodes){
+	Node& n = getNode(id);
+	if (not n.isVisited()){
+		n.visit();
+		visitedNodes.push_back(n.getID());
+		for (int pid : n.getParents()){
+			performDFS(pid,visitedNodes);
+		}
+	}	
 }

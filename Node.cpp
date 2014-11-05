@@ -11,7 +11,9 @@
  *Creates a Node using its position in the nodelist(index), a node identifier and a node name
  */
 Node::Node(unsigned int index, unsigned int id, std::string name)
-	:index_(index),id_(id),name_(name),ProbabilityMatrix_(Matrix<float>(0,0,0.0)),ObservationMatrix_(Matrix<int>(0,0,0)),ObservationBackup_(Matrix<int>(0,0,0))
+	:index_(index),id_(id),name_(name),
+	 ProbabilityMatrix_(Matrix<float>(0,0,0.0)), ProbabilityMatrixBackup_(Matrix<float>(0,0,0.0)),
+	 ObservationMatrix_(Matrix<int>(0,0,0)),ObservationBackup_(Matrix<int>(0,0,0))
 	{
 	}
 
@@ -144,6 +146,15 @@ unsigned int&  Node::getID(){
 	return id_;
 }
 
+/**getID
+ *
+ * @return identifier of the node
+ * 
+ *
+ */
+const unsigned int&  Node::getID() const{
+	return id_;
+}
 /**hasValue
  *
  * @param query element v
@@ -166,6 +177,16 @@ bool Node::hasValue(std::string v){
 Matrix<float>& Node::getProbabilityMatrix(){
 	return ProbabilityMatrix_;
 }
+
+/**getProbabilityMatrix
+ *
+ * @return A reference to the probability matrix of the current node
+ * 
+ */
+const Matrix<float>& Node::getProbabilityMatrix() const{
+	return ProbabilityMatrix_;
+}
+
 
 /**getObservationMatrix
  *
@@ -202,8 +223,16 @@ std::vector<unsigned int>& Node::getParents(){
 	return Parents_;
 }
 
+const std::vector<unsigned int>& Node::getParents() const{
+	return Parents_;
+}
+
 void Node::setParents(std::vector<unsigned int> parents){
 	Parents_=parents;
+}
+
+void Node::cutParents(){
+	Parents_.clear();
 }
 
 void Node::setUniqueValues(std::vector<int> uniqueValues){
@@ -272,4 +301,29 @@ void Node::addParentValueName(std::string names){
 
 std::vector<std::string>& Node::getParentValueNames(){
 	return parentValueNames_;
+}
+
+void Node::setUnvisited(){
+	visited_=false;
+}
+
+void Node::visit(){
+	visited_=true;
+}
+
+bool Node::isVisited(){
+	return visited_;
+}
+
+void Node::createBackupDoIntervention(){
+	ProbabilityMatrixBackup_=ProbabilityMatrix_;
+	ParentsBackup_=Parents_;
+}
+
+void Node::loadBackupDoIntervention(){
+	ProbabilityMatrix_=ProbabilityMatrixBackup_;
+	Parents_=ParentsBackup_;
+	ParentsBackup_.clear();
+	ProbabilityMatrixBackup_=Matrix<float>(0,0,0.0);
 }	
+

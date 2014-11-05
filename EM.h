@@ -1,17 +1,18 @@
 #ifndef EM_H
 #define EM_H
-#include "Network.h"
+#include "ProbabilityHandler.h"
+#include <boost/algorithm/string/split.hpp>
 #include <cmath>
 
 class EM{
 	public:
-	EM(unsigned int method, Network& network, Matrix<int>& observations_);
+	EM(unsigned int method, Network& network, Matrix<int>& observations_,float differenceThreshold_ = 0.0001f, unsigned int maxRuns_=10000);
 	void performEM();
 	private:
 	float calculateProbabilityEM(Node& n, unsigned int col, unsigned int row);
-	float computeTotalProbability(unsigned int key, std::string value);
-	std::vector<std::string> split(std::string& str, char delim);
+	void calculateExpectedValue(unsigned int row, Node& n, Matrix<int>& obMatrix);
 	void ePhase();
+	void calculateMaximumLikelihood(unsigned int row, unsigned int& counter, float& difference, Node& n, const Matrix<int> & obMatrix);
 	float mPhase();
 	void initalise();
 	void initalise1();
@@ -20,6 +21,9 @@ class EM{
 	Network& network_;
 	unsigned int method_;
 	Matrix<int>& observations_;
+	ProbabilityHandler probHandler_;
+	float differenceThreshold_;
+	unsigned int maxRuns_;
 };
 
 #endif

@@ -1,17 +1,19 @@
-#ifndef OBSERVATIONHANDLER_H
-#define OBSERVATIONHANDLER_H
+#ifndef DATADISTRIBUTION_H 
+#define DATADISTRIBUTION_H
 
 #include"Network.h"
 #include"Combinations.h"
 #include<map>
 
-class ObservationHandler{
+class DataDistribution{
 	public:
-	ObservationHandler(Network& network, Matrix<int>& observations, std::unordered_map<std::string,int>& observationsMap, std::map<std::pair<int,int>, std::string>& observationsMapR);
+	DataDistribution(Network& network, Matrix<int>& observations);
 	private:
 	void assignObservationsToNodes();
 	int computeParentCombinations(std::vector<unsigned int> parents);
 	void assignValueNames(Node& n);
+	unsigned int getObservationColIndex(unsigned int sample, Node& n, Matrix<int>& obsMatrix);
+	int getObservationRowIndex(unsigned int sample, Node& n, Matrix<int>& obsMatrix);
 	void assignParentNames(Node& n);
 	void countObservations(Matrix<int>& obsMatrix, Node& n);
 	void distributeObservations();

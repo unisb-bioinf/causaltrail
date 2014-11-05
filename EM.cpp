@@ -1,30 +1,34 @@
 #include "EM.h"
 
-
-EM::EM(unsigned int method, Network& network, Matrix<int>& observations)
-	:method_(method),network_(network),observations_(observations){
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+EM::EM(unsigned int method, Network& network, Matrix<int>& observations, float difference, unsigned int runs)
+	:method_(method),network_(network),observations_(observations),probHandler_(ProbabilityHandler(network)), differenceThreshold_(difference), maxRuns_(runs){
+	performEM();
 }
 
-
-std::vector<std::string> EM::split(std::string& str, char delim){
-    std::stringstream ss(str);
-    std::string item;
-    std::vector<std::string> result;
-    while(std::getline(ss,item,delim)){
-        result.push_back(item);
-    }
-    return result;
-}
-
-
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 void EM::performEM(){
-    float difference=1.0;
-    int runs=0;
+	unsigned int runs=0;
+	float difference=1.0f;
     //Check completness of the data
     if (observations_.contains(-1)){
         //Initialize and iterate E/M-Phase
         initalise();
-        while ((difference > 0.001) and (runs < 10000)){
+        while ((difference > differenceThreshold_) and (runs < maxRuns_)){
             ePhase();
             difference=mPhase();
             std::cout<<difference<<std::endl;
@@ -39,104 +43,137 @@ void EM::performEM(){
     std::cout<<network_<<std::endl;
 }
 
-float EM::computeTotalProbability(unsigned int nodeID, std::string value){
-    //GetNode
-    Node& n = network_.getNode(nodeID);
-    //Get Parents
-    auto parentIDs= network_.getParents(n);
-    Matrix<float> probMatrix = n.getProbabilityMatrix();
-    //Check Existens
-    if (parentIDs.size()!=0){
-    //Yes -> Call recursively for all parent values
-        float result = 0;
-        for (int row=0;row<probMatrix.getRowCount();row++){
-            auto values = split(probMatrix.getRowNames()[row],',');
-            float temp=1.0;
-            for (int index=0; index<values.size();index++){
-                temp*=computeTotalProbability(parentIDs[index],values[index]);
-            }
-            result+=(temp*probMatrix(probMatrix.findCol(value),row));
-        }
-        return result;
-    }
-    //No -> return value
-    else {
-        return probMatrix(probMatrix.findCol(value),0);
-	}
-}
-
-
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 float EM::calculateProbabilityEM(Node& n, unsigned int col, unsigned int row){
     //get Parents
     auto ParentIDs = network_.getParents(n.getID());
-    Matrix<float>& probMatrix = n.getProbabilityMatrix();
+	Matrix<float>& probMatrix = n.getProbabilityMatrix();
+
     //get Parent values
-    std::vector<std::string> parentValues = split(probMatrix.getRowNames()[row],',');
+	std::vector<std::string> parentValues;
+	boost::algorithm::split(parentValues,probMatrix.getRowNames()[row],boost::algorithm::is_any_of(","));
     std::vector<std::string>& nodeValues= probMatrix.getColNames();
+
     //compute TotProbParentsRec
     float totProbParents=1.0;
     for (int key = 0; key<ParentIDs.size();key++){
-        totProbParents*=computeTotalProbability(ParentIDs[key],parentValues[key]);
+        totProbParents*=probHandler_.computeTotalProbability(network_.getNode(ParentIDs[key]),parentValues[key]);
     }
+
     //computeNormalizingProb
     float denominator=0.0;
     for (auto v : nodeValues){
         denominator+=probMatrix(probMatrix.findCol(v),row)*totProbParents;
 	}
+
     //return result
     float nominator=probMatrix(col-1,row)*totProbParents;
     return nominator/denominator;
 }
 
-void EM::ePhase(){
-	for (auto& n:network_.getNodes()){
-		Matrix<int>& obMatrix = n.getObservationMatrix();
-		for (int row=0; row<obMatrix.getRowCount();row++){
-			if (obMatrix.hasNACol()){
-				for (int col=1;col<obMatrix.getColCount();col++){
-					float value=obMatrix(col,row)+calculateProbabilityEM(n,col,row)*obMatrix(0,row);
-					obMatrix.setData(value,col,row);
-					}
-				}
-            else {
-                for (int col=0;col<obMatrix.getColCount();col++){
-                    float value=obMatrix(col,row);
-                    obMatrix.setData(value,col,row);
-				}
-			}
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+void EM::calculateExpectedValue(unsigned int row, Node& n, Matrix<int>& obMatrix){
+	if (obMatrix.hasNACol()){
+		for (int col=1;col<obMatrix.getColCount();col++){
+			float value=obMatrix(col,row)+calculateProbabilityEM(n,col,row)*obMatrix(0,row);
+			obMatrix.setData(value,col,row);
+		}
+	}
+	else {
+		for (int col=0;col<obMatrix.getColCount();col++){
+			float value=obMatrix(col,row);
+			obMatrix.setData(value,col,row);
 		}
 	}
 }
 
-float EM::mPhase(){
-	float difference=0.0;	
-	float probability=0.0;
-	int counter=0;	
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+void EM::ePhase(){
 	for (auto& n:network_.getNodes()){
 		Matrix<int>& obMatrix = n.getObservationMatrix();
-		for (int row=0; row<obMatrix.getRowCount(); row++){
-			float rowsum=obMatrix.calculateRowSum(row);
-			if (obMatrix.hasNACol())
-				for (int col=1;col<obMatrix.getColCount();col++){
-					probability=n.getObservationMatrix()(col,row)/(rowsum-obMatrix(0,row));
-					difference+=fabs(n.getProbability(col-1,row)-probability);
-					n.setProbability(probability,col-1,row);	
-					counter++;
-				}
-			else {
-				for (int col=0;col<obMatrix.getColCount();col++){
-					probability=n.getObservationMatrix()(col,row)/rowsum;
-					difference+=fabs(n.getProbability(col,row)-probability);
-					n.setProbability(probability,col,row);
-					counter++;
-					}
-				}
-			}
+		for (unsigned int row=0; row<obMatrix.getRowCount();row++){
+			calculateExpectedValue(row,n,obMatrix);
+		}
+	}
+}
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+void EM::calculateMaximumLikelihood(unsigned int row, unsigned int& counter, float& difference, Node& n, const Matrix<int>& obMatrix){
+	float rowsum=obMatrix.calculateRowSum(row); 
+	if (obMatrix.hasNACol())
+		for (unsigned int col=1;col<obMatrix.getColCount();col++){
+			float probability=n.getObservationMatrix()(col,row)/(rowsum-obMatrix(0,row));	
+			difference+=fabs(n.getProbability(col-1,row)-probability);
+			n.setProbability(probability,col-1,row);	
+			counter++;
+		}
+	else {
+		for (unsigned int col=0;col<obMatrix.getColCount();col++){
+			float probability=n.getObservationMatrix()(col,row)/rowsum;
+			difference+=fabs(n.getProbability(col,row)-probability);
+			n.setProbability(probability,col,row);
+			counter++;
+		}
+	}
+}
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+float EM::mPhase(){
+	float difference=0.0f;	
+	float probability=0.0f;
+	unsigned int counter=0;	
+	for (auto& n:network_.getNodes()){
+		const Matrix<int>& obMatrix = n.getObservationMatrix();
+		for (unsigned int row=0; row<obMatrix.getRowCount(); row++)
+			calculateMaximumLikelihood(row, counter, difference, n, obMatrix);
         n.loadBackup();
 		}
 	return difference/counter;
 }
 
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 void EM::initalise(){
 	switch(method_){
 		case 0: initalise1(); break;
@@ -145,9 +182,17 @@ void EM::initalise(){
 	}
 }
 
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 void EM::initalise1(){
 	for (auto&n:network_.getNodes()){	
-	Matrix<int>& obMatrix=n.getObservationMatrix();
+		const Matrix<int>& obMatrix=n.getObservationMatrix();
 		Matrix<float>& probMatrix=n.getProbabilityMatrix();
 		for (int row=0; row<probMatrix.getRowCount();row++){	
 			float rowsum=obMatrix.calculateRowSum(row);
@@ -158,15 +203,25 @@ void EM::initalise1(){
 	}   
 }
 
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 void EM::initalise2(){
     for (auto&n:network_.getNodes()){
-        Matrix<int>& obMatrix=n.getObservationMatrix();
+        const Matrix<int>& obMatrix=n.getObservationMatrix();
         Matrix<float>& probMatrix=n.getProbabilityMatrix();
         for (int row=0; row<probMatrix.getRowCount();row++){
             float rowsum=obMatrix.calculateRowSum(row);
             for(int col=0;col<probMatrix.getColCount();col++){
                 if(obMatrix.hasNACol()){
-                    n.setProbability(n.getObservationMatrix()(col+1,row)/(rowsum-n.getObservationMatrix()(0,row)),col,row);
+                    n.setProbability(n.getObservationMatrix()(col+1,row)/
+									(rowsum-n.getObservationMatrix()(0,row))
+									,col,row);
                 }   
                 else {
                     n.setProbability(n.getObservationMatrix()(col,row)/rowsum,col,row);
@@ -176,15 +231,26 @@ void EM::initalise2(){
     }  
 }
 
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 void EM::initalise3(){
 	for (auto&n:network_.getNodes()){
-		Matrix<int>& obMatrix=n.getObservationMatrix();
+		const Matrix<int>& obMatrix=n.getObservationMatrix();
 		Matrix<float>& probMatrix=n.getProbabilityMatrix();
 		for (int row=0; row<probMatrix.getRowCount();row++){
 			float rowsum=obMatrix.calculateRowSum(row);
 			for(int col=0;col<probMatrix.getColCount();col++){
 				if (obMatrix.hasNACol()){
-					n.setProbability(((n.getObservationMatrix()(col+1,row)+(n.getObservationMatrix()(0,row)*(n.getObservationMatrix()(col+1,row)/(rowsum-n.getObservationMatrix()(0,row)))))/rowsum),col,row);
+					n.setProbability(((n.getObservationMatrix()(col+1,row)+
+									(n.getObservationMatrix()(0,row)*(n.getObservationMatrix()(col+1,row)/
+									(rowsum-n.getObservationMatrix()(0,row)))))/rowsum)
+									,col,row);
 				}   
 				else {
 				n.setProbability(n.getObservationMatrix()(col,row)/rowsum,col,row);

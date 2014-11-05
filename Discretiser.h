@@ -6,8 +6,8 @@
 
 class Discretiser{
 	public: 
-	Discretiser(std::string datafile, Matrix<int>& obsMatrix, std::unordered_map<std::string, int>&  observationsMap, std::map<std::pair<int,int>, std::string>& observationsMapR);
-	Discretiser(std::string datafile, std::string filename, Matrix<int>& obsMatrix, std::unordered_map<std::string, int>& observationsMap, std::map<std::pair<int,int>, std::string>&  observationsMapR);
+	Discretiser(std::string datafile, Matrix<int>& obsMatrix, Network& network);
+	Discretiser(std::string datafile, std::string filename, Matrix<int>& obsMatrix, Network& network);
 	void discretiseRow(unsigned int row, unsigned int method, float threshold);
 	private:
 	void discretise(std::string filename);
@@ -23,6 +23,7 @@ class Discretiser{
 	void mapNamesToInt(unsigned int row);
 	float getNumber(unsigned int col, unsigned int row);
 	void createNameEntry(int value, unsigned int row);
+	void adaptFormat();
 	std::vector<float> createSortedVector(unsigned int row);
 	Matrix<std::string> originalObservations_;
 	Matrix<int>& observations_;

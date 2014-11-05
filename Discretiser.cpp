@@ -13,10 +13,11 @@
  *
  *
  */
-Discretiser::Discretiser(std::string datafile, Matrix<int>& obsMatrix, std::unordered_map<std::string, int>&  observationsMap, std::map<std::pair<int,int>, std::string>&  observationsMapR)
-	:originalObservations_(Matrix<std::string>(0,0,"NA")), observations_(obsMatrix), observationsMap_(observationsMap), observationsMapR_(observationsMapR)
+Discretiser::Discretiser(std::string datafile, Matrix<int>& obsMatrix, Network& network)
+	:originalObservations_(Matrix<std::string>(0,0,"NA")), observations_(obsMatrix), observationsMap_(network.getObservationsMap()), observationsMapR_(network.getObservationsMapR())
 	{
 	originalObservations_.readMatrix(datafile,false,true,"NA");
+	adaptFormat();
 	observations_.resize(originalObservations_.getColCount(), originalObservations_.getRowCount(), -1);
 	observations_.setRowNames(originalObservations_.getRowNames());
 	observations_.setColNames(originalObservations_.getColNames());
@@ -35,10 +36,11 @@ Discretiser::Discretiser(std::string datafile, Matrix<int>& obsMatrix, std::unor
  *
  *
  */
-Discretiser::Discretiser(std::string datafile, std::string filename,  Matrix<int>& obsMatrix, std::unordered_map<std::string, int>& observationsMap, std::map<std::pair<int,int>, std::string>& observationsMapR)
-	:originalObservations_(Matrix<std::string>(0,0,"NA")), observations_(obsMatrix), observationsMap_(observationsMap), observationsMapR_(observationsMapR)
+Discretiser::Discretiser(std::string datafile, std::string filename,  Matrix<int>& obsMatrix, Network& network)
+	:originalObservations_(Matrix<std::string>(0,0,"NA")), observations_(obsMatrix), observationsMap_(network.getObservationsMap()), observationsMapR_(network.getObservationsMapR())
 	{
 	originalObservations_.readMatrix(datafile,false,true,"NA");
+	adaptFormat();
 	observations_.resize(originalObservations_.getColCount(), originalObservations_.getRowCount(), -1);
 	observations_.setRowNames(originalObservations_.getRowNames());
 	observations_.setColNames(originalObservations_.getColNames());
@@ -59,7 +61,7 @@ float Discretiser::getNumber(unsigned int col, unsigned int row){
 	std::string temp;
 	float value;
 	temp=originalObservations_(col,row);
-	if ((temp=="NA") or (temp=="na") or (temp=="-"))
+	if (temp=="NA")
 		return -1;
 	ss<<temp;
 	ss>>value;
@@ -81,6 +83,7 @@ std::vector<float> Discretiser::createSortedVector(unsigned int row){
     std::sort(templist.begin(), templist.end());
 	return templist;
 }
+
 /**discretiseRow
  *
  * @param
@@ -171,7 +174,7 @@ void Discretiser::discretiseCeil(unsigned int row){
  *
  * @return voi
  *
- * Performs classical rounding on each each in the specified row
+ * Performs classical rounding on each value in the specified row
  *
  */
 void Discretiser::discretiseRound(unsigned int row){
@@ -309,25 +312,24 @@ void Discretiser::discretiseManually(unsigned int row, float threshold){
 void Discretiser::discretiseBracketMedians(unsigned int row, unsigned int number){
 	std::vector<float> templist=createSortedVector(row);
 	std::vector<float> borderValues;
-	float value;
+	borderValues.reserve(number + 1);
 	borderValues.push_back(templist[0]);
 	//Calculat Borders
 	for (int i=1; i<number;i++){
 		borderValues.push_back(templist[div(templist.size(),number).quot*i]);
 	}
-	borderValues.push_back(templist[templist.size()-1]);
+	borderValues.push_back(templist.back());
 	//Fill intervals
 	for (int col=0;col<templist.size();col++){
 		for (int i=1;i<=number;i++){
-			value=templist[col];
-			if ((value >= borderValues[i-1]) and (value<borderValues[i])){
-				observations_.setData(i-1,col,row);
-				createNameEntry(i-1,row);
+			if ((templist[col] >= borderValues[i-1]) and (templist[col]<borderValues[i])){
+				observations_.setData(i-1, col, row);
+				createNameEntry(i-1, row);
 				break;
-				}
 			}
 		}
-	}   
+	}
+}   
 
 /**discretisePearsonTukey
  *
@@ -340,12 +342,13 @@ void Discretiser::discretiseBracketMedians(unsigned int row, unsigned int number
  */
 void Discretiser::discretisePearsonTukey(unsigned int row){
 	std::vector<float> templist=createSortedVector(row);
-	std::vector<float> borderValues;
-	//Calculate borders
-	borderValues.push_back(templist[0]);
-	borderValues.push_back(templist[ceil(0.185*templist.size())]);
-	borderValues.push_back(templist[ceil(0.815*templist.size())]);
-	borderValues.push_back(templist[templist.size()-1]);
+	std::vector<float> borderValues = {
+		//Calculate borders
+		templist[0],
+		templist[ceil(0.185*templist.size())],
+		templist[ceil(0.815*templist.size())],
+		templist.back()
+	};
 	//Fill intervals
 	for (int col=0;col<templist.size();col++){
 		for (int i=1;i<=3;i++){
@@ -369,7 +372,7 @@ void Discretiser::mapNamesToInt(unsigned int row){
 	float index=0;
 	std::vector<std::string> uniqueValues = originalObservations_.getUniqueRowValues(row);
 	for (auto value : uniqueValues){
-		if ((value != "NA") and (value != "na") and (value != "-")){
+		if ((value != "NA")){
 			observationsMap_[value]=index;
 			observationsMapR_[std::make_pair(index,row)]=value;
 			index++;	
@@ -400,4 +403,23 @@ void Discretiser::createNameEntry(int value, unsigned int row){
 	ss>>ssvalue;
 	observationsMap_[ssvalue]=value;
 	observationsMapR_[std::make_pair(value,row)]=ssvalue;
+}
+
+/**adaptFormat
+ *
+ * @param value
+ * @param row
+ * 
+ * @return void
+ * 
+ * Unifies the format of the original observations matrix
+ */
+void Discretiser::adaptFormat(){
+	for (unsigned int col=0; col<originalObservations_.getColCount(); col++){
+		for (unsigned int row=0; row<originalObservations_.getRowCount(); row++){
+			std::string value=originalObservations_(col,row);
+			if ((value == "NA") or (value =="na") or (value=="-") or (value == "/"))
+				originalObservations_.setData("NA",col,row);
+		}
+	}
 }
