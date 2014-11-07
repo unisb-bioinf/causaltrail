@@ -14,6 +14,7 @@ class Node {
 	void setObservations(int value, unsigned int nv, unsigned int pv);
 	void setObservations(int value, std::string nv, std::string pv);
 	void setProbability(Matrix<float> m);	
+	void setProbabilityTo1(std::string value);
 	void createBackupDoIntervention();
 	void loadBackupDoIntervention();
 	void setObservations(Matrix<int> m);

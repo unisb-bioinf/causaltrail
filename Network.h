@@ -29,12 +29,15 @@ class Network{
 		friend std::ostream& operator<<(std::ostream& os,const Network& n);
 		std::unordered_map<std::string,int>& getObservationsMap();
 		std::map<std::pair<int,int>, std::string>& getObservationsMapR();
+		void createBackup();
+		void loadBackup();
 	private:
 		void assignParents();
 		void readTGF(std::string filename);
 		void readSIF(std::string filename);
 		void readNA(std::string filename);
 		Matrix<unsigned int> AdjacencyMatrix_;
+		Matrix<unsigned int> AdjacencyMatrixBackup_;
 		std::unordered_map<unsigned int, unsigned int> IDToIndex_;
 		std::unordered_map<std::string, unsigned int> NameToIndex_;
 		std::unordered_map<std::string, unsigned int> ExtensionToIndex_;

@@ -5,6 +5,7 @@
 class Interventions{
 	public:
 	Interventions(NetworkController& c);
+	void createBackupOfNetworkStructure();
 	void doIntervention(std::string NodeName, std::string value);
 	void reverseDoIntervention(std::string NodeName, std::string value);
 	void addEdge(std::string source, std::string target);

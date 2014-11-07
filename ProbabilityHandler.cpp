@@ -203,8 +203,8 @@ float ProbabilityHandler::computeJointProbability(std::vector<unsigned int>& que
 
 /*computeConditionalProbability
  *
- * @param std::vector<int> a vector of Node references for the nominator
- * @param std::vector<int> a vector of Node references for the denominator
+ * @param std::vector<int> a vector of node identifieres for the nominator
+ * @param std::vector<int> a vector of node identifieres for the denominator
  * @param std::unordered_map<int,std::string> a map from node identifiers to node values
  *
  * @return float the conditional probability for the given nodes and values
@@ -212,3 +212,10 @@ float ProbabilityHandler::computeJointProbability(std::vector<unsigned int>& que
 float ProbabilityHandler::computeConditionalProbability(std::vector<unsigned int>& nodesNominator, std::vector<unsigned int>& nodesDenominator,std::unordered_map<unsigned int, std::string>& valuesNominator, std::unordered_map<unsigned int, std::string>& valuesDenominator){
 	return computeJointProbability(nodesNominator, valuesNominator) / computeJointProbability(nodesDenominator, valuesDenominator);
 }
+
+/*maxSearch
+ *
+ * @param std::vector<int> a vector of node identifiers
+ *
+ * @return std:vector<std::string> a vector of values
+ */

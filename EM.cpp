@@ -53,7 +53,7 @@ void EM::performEM(){
  */
 float EM::calculateProbabilityEM(Node& n, unsigned int col, unsigned int row){
     //get Parents
-    auto ParentIDs = network_.getParents(n.getID());
+    auto ParentIDs = n.getParents();
 	Matrix<float>& probMatrix = n.getProbabilityMatrix();
 
     //get Parent values
@@ -260,3 +260,7 @@ void EM::initalise3(){
 	}  	 
 }
 
+/*calculateLikelihoodOfTheData
+ *
+ *
+ */

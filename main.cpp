@@ -1,4 +1,6 @@
 #include "NetworkController.h"
+#include "Interventions.h"
+#include "Parser.h"
 #include <iostream>
 
 
@@ -34,6 +36,19 @@ int main(int argc, char *argv[]){
 	std::vector<unsigned int> nominator = {3,2};
 	std::vector<unsigned int> denominator = {2};
 	std::cout<<prob.computeConditionalProbability(nominator,denominator,testValues,testValues2)<<std::endl;
+
+	Interventions Int = Interventions(c);
+	Int.createBackupOfNetworkStructure();
+	Int.doIntervention("Grade","g1");
+	std::cout<<prob.computeTotalProbability(c.getNetwork().getNode(4),"l1")<<std::endl;
+	Int.reverseDoIntervention("Grade","g1");
+	std::cout<<prob.computeTotalProbability(c.getNetwork().getNode(4),"l1")<<std::endl;
+	
+	
+	Parser p = Parser("? Grade = g1 ! do Intelligence = i0 do Letter = l1 | SAT = s1",c.getNetwork());
+	Parser p2 = Parser("? Grade = g2",c.getNetwork());
+	Parser p3 = Parser("? Grade = g1 | heureka Intelligence = i0",c.getNetwork());
+
 
 	return 0;
 }

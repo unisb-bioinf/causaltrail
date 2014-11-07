@@ -327,3 +327,14 @@ void Node::loadBackupDoIntervention(){
 	ProbabilityMatrixBackup_=Matrix<float>(0,0,0.0);
 }	
 
+void Node::setProbabilityTo1(std::string value){
+	for(unsigned int col=0; col<ProbabilityMatrix_.getColCount();col++){
+		for(unsigned int row=0; row<ProbabilityMatrix_.getRowCount();row++){
+			ProbabilityMatrix_.setData(0.0f,col,row);
+		}
+	}
+	unsigned int col=ProbabilityMatrix_.findCol(value);
+	for(unsigned int row=0; row<ProbabilityMatrix_.getRowCount();row++){
+		ProbabilityMatrix_.setData(1.0f,col,row);
+	} 
+}

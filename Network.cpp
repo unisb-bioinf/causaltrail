@@ -6,7 +6,7 @@
  *  
  */
 Network::Network()
-	:AdjacencyMatrix_(Matrix<unsigned int>(0,0,0)){
+	:AdjacencyMatrix_(Matrix<unsigned int>(0,0,0)),AdjacencyMatrixBackup_(Matrix<unsigned int>(0,0,0)){
 	ExtensionToIndex_[".tgf"]=0;
 	ExtensionToIndex_[".na"]=1;
 	ExtensionToIndex_[".sif"]=2;
@@ -390,4 +390,13 @@ void Network::performDFS(unsigned int id, std::vector<unsigned int>& visitedNode
 			performDFS(pid,visitedNodes);
 		}
 	}	
+}
+
+void Network::createBackup(){
+	AdjacencyMatrixBackup_=AdjacencyMatrix_;
+}
+
+void Network::loadBackup(){
+	AdjacencyMatrix_=AdjacencyMatrixBackup_;
+	AdjacencyMatrixBackup_=Matrix<unsigned int>(0,0,0);
 }
