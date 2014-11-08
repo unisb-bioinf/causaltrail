@@ -31,6 +31,7 @@ float ProbabilityHandler::computeTotalProbability(const Node& node, std::string 
     if (parentIDs.size()!=0){
 	    //Yes -> Call recursively for all parent values
         float result = 0.0f;
+		unsigned int column = probMatrix.findCol(value);
         for (unsigned int row=0; row<probMatrix.getRowCount(); row++){
             std::vector<std::string> values;
 			boost::algorithm::split(values,probMatrix.getRowNames()[row],boost::algorithm::is_any_of(","));
@@ -38,9 +39,8 @@ float ProbabilityHandler::computeTotalProbability(const Node& node, std::string 
             for (unsigned int index=0; index<values.size();index++){
                 temp*=computeTotalProbability(network_.getNode(parentIDs[index]), values[index]);
             }
-			unsigned int column = probMatrix.findCol(value);
 			if (column != -1){
-	            result+=(temp*probMatrix(probMatrix.findCol(value), row)); 
+	            result+=(temp*probMatrix(column, row)); 
 			}
 			else {
 			throw std::invalid_argument("The current node does contain the query value");
@@ -51,6 +51,45 @@ float ProbabilityHandler::computeTotalProbability(const Node& node, std::string 
 
     //No -> return value
     return probMatrix(probMatrix.findCol(value),0);
+}
+
+/*computeTotalProbability
+ *
+ * @param node
+ * @param value
+ *
+ * @return total probability for the specified value
+ *
+ * This method computes recursively the total probability for a given value at a specified node
+ */
+float ProbabilityHandler::computeTotalProbability(const Node& node, int index){
+    //Get Parents
+    const auto& parentIDs = node.getParents();
+    const auto& probMatrix = node.getProbabilityMatrix();
+    //Check Existens
+    if (parentIDs.size()!=0){
+	    //Yes -> Call recursively for all parent values
+        float result = 0.0f;
+        for (unsigned int row=0; row<probMatrix.getRowCount(); row++){
+			//TODO Change here
+            std::vector<std::string> values;
+			boost::algorithm::split(values,probMatrix.getRowNames()[row],boost::algorithm::is_any_of(","));
+            float temp=1.0f;
+            for (unsigned int index=0; index<values.size();index++){
+                temp*=computeTotalProbability(network_.getNode(parentIDs[index]), values[index]);
+            }
+			if (index != -1){
+	            result+=(temp*probMatrix(index, row)); 
+			}
+			else {
+			throw std::invalid_argument("The current node does contain the query value");
+			}
+        }
+        return result;
+    }
+
+    //No -> return value
+    return probMatrix(index,0);
 }
 
 /*createFactorisation

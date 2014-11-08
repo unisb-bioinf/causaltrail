@@ -12,7 +12,7 @@ class DataDistribution{
 	void assignObservationsToNodes();
 	int computeParentCombinations(std::vector<unsigned int> parents);
 	void assignValueNames(Node& n);
-	unsigned int getObservationColIndex(unsigned int sample, Node& n, Matrix<int>& obsMatrix);
+	int getObservationColIndex(unsigned int sample, Node& n);
 	int getObservationRowIndex(unsigned int sample, Node& n, Matrix<int>& obsMatrix);
 	void assignParentNames(Node& n);
 	void countObservations(Matrix<int>& obsMatrix, Node& n);

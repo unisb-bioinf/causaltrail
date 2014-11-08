@@ -417,7 +417,7 @@ void Discretiser::createNameEntry(int value, unsigned int row){
 void Discretiser::adaptFormat(){
 	for (unsigned int col=0; col<originalObservations_.getColCount(); col++){
 		for (unsigned int row=0; row<originalObservations_.getRowCount(); row++){
-			std::string value=originalObservations_(col,row);
+			const std::string value=originalObservations_(col,row);
 			if ((value == "NA") or (value =="na") or (value=="-") or (value == "/"))
 				originalObservations_.setData("NA",col,row);
 		}

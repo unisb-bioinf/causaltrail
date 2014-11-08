@@ -120,13 +120,13 @@ void DataDistribution::assignParentNames(Node& n){
  *
  *
  */
-unsigned int DataDistribution::getObservationColIndex(unsigned int sample, Node& n, Matrix<int>& obsMatrix){
-	const std::string& colName = observationsMapR_[std::make_pair(
-			observations_(sample, n.getObservationRow()),
-			n.getObservationRow()
-		)];
-	return obsMatrix.findCol(colName);
-
+int DataDistribution::getObservationColIndex(unsigned int sample, Node& n){
+	if (n.getUniqueValues().size() != n.getUniqueValuesExcludingNA().size()){	
+		return observations_(sample,n.getObservationRow())+1;
+		}
+	else{
+		return observations_(sample,n.getObservationRow());
+	}
 }
 
 /*
@@ -141,16 +141,16 @@ int DataDistribution::getObservationRowIndex(unsigned int sample, Node& n, Matri
 	if (n.getParents().empty()){
 		return 0;
 	}
-	std::string rowName="";
+	int index = 0;
 	for (auto parentID : n.getParents()){
-			int row=network_.getNode(parentID).getObservationRow();	
-			rowName=rowName+observationsMapR_[std::make_pair(observations_(sample,row),row)]+",";
-	}
-	if ((rowName.find("NA")==std::string::npos)){
-		rowName.erase(rowName.end()-1);
-		return obsMatrix.findRow(rowName);
-	}
-	return -1;
+		Node& pn = network_.getNode(parentID);
+		int value = observations_(sample, pn.getObservationRow());
+		if (value==-1){
+			return -1;
+			}
+		index+=network_.computeFactor(n,parentID)*value;
+		}	
+	return index;
 }
 
 /*
@@ -162,9 +162,13 @@ int DataDistribution::getObservationRowIndex(unsigned int sample, Node& n, Matri
  *
  */
 void DataDistribution::countObservations(Matrix<int>& obsMatrix, Node& n){
+	std::cout<<n.getName()<<std::endl;
 	for (unsigned int sample = 0; sample<observations_.getColCount();sample++){
-		unsigned int column = getObservationColIndex(sample,n, obsMatrix);
+		
+		int column = getObservationColIndex(sample,n);
+
 		int row = getObservationRowIndex(sample,n,obsMatrix);
+
 		if (row != -1){
 			obsMatrix(column,row)++;		
 		}

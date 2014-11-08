@@ -48,9 +48,9 @@ struct query_parser : boost::spirit::qi::grammar<Iterator,boost::spirit::ascii::
 			>>	'='
 			>>	valueName;
 
-		nodeName = lexeme[*(char_ -' ' -'=' - ')' - ',')];//"Grade";
+		nodeName = lexeme[*(char_ -' ' -'=' - ')' - ',')];
 
-		valueName = lexeme[*(char_-' ' -"do" -'+' -'-')];//"g";
+		valueName = lexeme[*(char_-' ' -"do" -'+' -'-')];
 
 			
 	}

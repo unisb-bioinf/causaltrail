@@ -9,10 +9,6 @@ class Network{
 	public:
 		Network();
 		void readNetwork(std::string filename);
-		std::vector<unsigned int> getParents(unsigned int id);
-		std::vector<unsigned int> getParents(std::string name);
-		std::vector<unsigned int> getParents(Node& n);
-		std::vector<unsigned int> getParents(const Node& n);	
 		void cutParents(unsigned int id);
 		void cutParents(std::string name);
 		void addEdge(unsigned int id1, unsigned int id2);
@@ -31,7 +27,12 @@ class Network{
 		std::map<std::pair<int,int>, std::string>& getObservationsMapR();
 		void createBackup();
 		void loadBackup();
+		int computeFactor(const Node& n, int parentID);
 	private:
+		std::vector<unsigned int> getParents(unsigned int id);
+		std::vector<unsigned int> getParents(std::string name);
+		std::vector<unsigned int> getParents(Node& n);
+		std::vector<unsigned int> getParents(const Node& n);		
 		void assignParents();
 		void readTGF(std::string filename);
 		void readSIF(std::string filename);

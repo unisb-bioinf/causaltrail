@@ -8,6 +8,7 @@ class ProbabilityHandler{
 	public:
 	ProbabilityHandler(Network& network);
 	float computeTotalProbability(const Node& node, std::string value);
+	float computeTotalProbability(const Node& node, int value);
 	float computeJointProbability(std::vector<unsigned int>& nodes, std::unordered_map<unsigned int,std::string>& values);
 	float computeConditionalProbability(std::vector<unsigned int>& nodesNominator, std::vector<unsigned int>& nodesDenominator,
 		 std::unordered_map<unsigned int, std::string>& valuesNominator, std::unordered_map<unsigned int, std::string>& valuesDenominator);

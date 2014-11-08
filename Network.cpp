@@ -400,3 +400,17 @@ void Network::loadBackup(){
 	AdjacencyMatrix_=AdjacencyMatrixBackup_;
 	AdjacencyMatrixBackup_=Matrix<unsigned int>(0,0,0);
 }
+
+int Network::computeFactor(const Node& n, int parentID){
+	bool flag = false;
+	int factor = 1;
+	for (auto key : n.getParents()){
+		if (flag){
+			factor*=getNode(key).getUniqueValuesExcludingNA().size();
+		}
+		if (key==parentID){
+			flag=true;
+		}
+	}
+	return factor;
+}

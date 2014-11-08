@@ -37,6 +37,7 @@ int main(int argc, char *argv[]){
 	std::vector<unsigned int> denominator = {2};
 	std::cout<<prob.computeConditionalProbability(nominator,denominator,testValues,testValues2)<<std::endl;
 
+	std::cout<<prob.computeTotalProbability(c.getNetwork().getNode(4),"l1")<<std::endl;
 	Interventions Int = Interventions(c);
 	Int.createBackupOfNetworkStructure();
 	Int.doIntervention("Grade","g1");

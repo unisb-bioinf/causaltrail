@@ -46,6 +46,5 @@ void NetworkController::loadObservations(std::string datafile, std::string contr
 void NetworkController::trainNetwork(){
 	DataDistribution datadu= DataDistribution(network_, observations_);
 	EM em = EM(0,network_,observations_);
-	em.performEM();
 }
 

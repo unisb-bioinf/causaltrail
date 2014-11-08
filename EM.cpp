@@ -64,13 +64,13 @@ float EM::calculateProbabilityEM(Node& n, unsigned int col, unsigned int row){
     //compute TotProbParentsRec
     float totProbParents=1.0;
     for (int key = 0; key<ParentIDs.size();key++){
-        totProbParents*=probHandler_.computeTotalProbability(network_.getNode(ParentIDs[key]),parentValues[key]);
+        totProbParents*=probHandler_.computeTotalProbability(network_.getNode(ParentIDs[key]), row/network_.computeFactor(n,ParentIDs[key]));
     }
 
     //computeNormalizingProb
     float denominator=0.0;
-    for (auto v : nodeValues){
-        denominator+=probMatrix(probMatrix.findCol(v),row)*totProbParents;
+    for (unsigned int col = 0; col<probMatrix.getColCount(); col++){
+        denominator+=probMatrix(col,row)*totProbParents;
 	}
 
     //return result
