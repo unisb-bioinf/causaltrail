@@ -4,6 +4,7 @@
 #include "NetworkController.h"
 class Interventions{
 	public:
+	Interventions();
 	Interventions(NetworkController& c);
 	void createBackupOfNetworkStructure();
 	void doIntervention(std::string NodeName, std::string value);

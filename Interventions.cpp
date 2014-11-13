@@ -68,7 +68,6 @@ void Interventions::reverseDoIntervention(std::string NodeName, std::string valu
 void Interventions::addEdge(std::string source, std::string target){
 	Network& network = controller_.getNetwork();
 	network.addEdge(source,target);
-	controller_.trainNetwork();
 }
 
 /*removeEdge
@@ -82,7 +81,6 @@ void Interventions::addEdge(std::string source, std::string target){
 void Interventions::removeEdge(std::string source, std::string target){
 	Network& network = controller_.getNetwork();
 	network.removeEdge(source,target);
-	controller_.trainNetwork();
 }
 
 

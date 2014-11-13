@@ -1,11 +1,15 @@
+#ifndef PARSER_H
+#define PARSER_H
+
 #include "Network.h"
+#include "QueryExecuter.h"
 #include "boost/algorithm/string/split.hpp" 
 #include "boost/algorithm/string/classification.hpp"
 
 class Parser
 {
 	public:
-	Parser(std::string userInput, Network& network);
+	Parser(std::string userInput, NetworkController& networkController);
 	bool parseQuery(const std::vector<std::string>& query);
 
 	private:
@@ -34,14 +38,8 @@ class Parser
 
 	std::string userInput_;
 	std::vector<std::string> query_;
-	std::vector<int> nonInterventionNodeID_;
-	std::unordered_map<int, unsigned int> nonInterventionValues_;
-	std::vector<int> conditionNodeID_;
-	std::unordered_map<int, unsigned int> conditionValues_;
-	std::vector<int> doInterventionNodeID_;
-	std::unordered_map<int, unsigned int> doInterventionValues_;
-	std::vector<std::pair<int, int>> addEdgeNodeIDs_;
-	std::vector<std::pair<int, int>> removeEdgeNodeIDs_;
-	std::vector<int> argmaxNodeIDs_;
 	Network& network_;
+	QueryExecuter qe_;
 };
+
+#endif

@@ -49,13 +49,13 @@ int main(int argc, char *argv[]){
 	std::cout<<prob.maxSearch(denominator).first<<" "<<prob.maxSearch(denominator).second[0]<<std::endl;
 
 	std::cout<<"test1"<<std::endl;	
-	Parser p = Parser("? Grade = g1",c.getNetwork());
+	Parser p = Parser("? Grade = g1",c);
 	std::cout<<"test2"<<std::endl;
-	Parser p1 = Parser("? Grade = g1 ! do Intelligence = i0 do Letter = l1",c.getNetwork());
+	Parser p1 = Parser("? Grade = g1 ! do Intelligence = i0 do Letter = l1",c);
 	std::cout<<"test3"<<std::endl;
-	Parser p2 = Parser("? argmax ( Grade )",c.getNetwork());
+	Parser p2 = Parser("? argmax ( Grade )",c);
 	std::cout<<"test4"<<std::endl;
-	Parser p3 = Parser("? Grade = g1 | heureka Intelligence = i0",c.getNetwork());
+	Parser p3 = Parser("? Grade = g1 | heureka Intelligence = i0",c);
 
 
 	return 0;
