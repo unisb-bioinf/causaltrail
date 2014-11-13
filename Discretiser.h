@@ -22,6 +22,7 @@ class Discretiser{
 	void discretisePearsonTukey(unsigned int row);
 	void mapNamesToInt(unsigned int row);
 	float getNumber(unsigned int col, unsigned int row);
+	void convertToDenseNumbers(unsigned int row);
 	void createNameEntry(int value, unsigned int row);
 	void adaptFormat();
 	std::vector<float> createSortedVector(unsigned int row);

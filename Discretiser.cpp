@@ -79,9 +79,21 @@ std::vector<float> Discretiser::createSortedVector(unsigned int row){
     std::vector<float> templist;
     for (int col=0;col<originalObservations_.getColCount();col++){
         templist.push_back(getNumber(col,row));
-        }   
-    std::sort(templist.begin(), templist.end());
+	}   	
+	std::sort(templist.begin(), templist.end());
 	return templist;
+}
+
+void Discretiser::convertToDenseNumbers(unsigned int row){
+	std::vector<float> originalData = createSortedVector(row);
+	for (unsigned int key = 0; key<originalData.size(); key++){
+		for (unsigned int col=0;col<observations_.getColCount();col++){
+			if (originalData[key]==observations_(col,row)){
+				observations_.setData(key,col,row);	
+				createNameEntry(key,row);
+			}
+		}
+	}
 }
 
 /**discretiseRow
@@ -95,9 +107,9 @@ std::vector<float> Discretiser::createSortedVector(unsigned int row){
  */
 void Discretiser::discretiseRow(unsigned int row, unsigned int method, float threshold){
 	switch(method){
-		case 0: discretiseCeil(row); break;
-		case 1: discretiseFloor(row); break;
-		case 2: discretiseRound(row); break;
+		case 0: discretiseCeil(row); convertToDenseNumbers(row); break;
+		case 1: discretiseFloor(row); convertToDenseNumbers(row); break;
+		case 2: discretiseRound(row); convertToDenseNumbers(row); break;
 		case 3: discretiseByAMean(row); break;
 		case 4: discretiseByHMean(row); break;
 		case 5: discretiseByMedian(row); break;
@@ -146,7 +158,6 @@ void Discretiser::discretiseFloor(unsigned int row){
 		float value=getNumber(col,row);
 		int dvalue=floor(value);
 		observations_.setData(dvalue,col,row);
-		createNameEntry(dvalue,row);
 		}
 	}
 
@@ -164,7 +175,6 @@ void Discretiser::discretiseCeil(unsigned int row){
 		float value=getNumber(col,row);
 		int dvalue= ceil(value);
 		observations_.setData(dvalue,col,row);
-		createNameEntry(dvalue,row);
 		} 
 	}
 
@@ -182,7 +192,6 @@ void Discretiser::discretiseRound(unsigned int row){
 		float value=getNumber(col,row);
 		int dvalue=round(value);
 		observations_.setData(dvalue,col,row);
-		createNameEntry(dvalue,row);
 		}   
 	}  
 

@@ -338,3 +338,7 @@ void Node::setProbabilityTo1(std::string value){
 		ProbabilityMatrix_.setData(1.0f,col,row);
 	} 
 }
+
+int Node::getIndex(std::string value){
+	return ProbabilityMatrix_.findCol(value);
+}

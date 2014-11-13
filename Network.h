@@ -19,7 +19,10 @@ class Network{
 		void performDFS(unsigned int id, std::vector<unsigned int>& visitedNodes);
 		Node& getNode(unsigned int id);
 		Node& getNode(std::string name);
+		bool hasNode(std::string name);
+		bool hasValue(std::string name, std::string value);
 		std::vector<Node>& getNodes();
+		std::vector<unsigned int> getNodeIDs();
 		unsigned int getIndex(unsigned int id);
 		unsigned int getIndex(std::string name);
 		friend std::ostream& operator<<(std::ostream& os,const Network& n);
@@ -28,6 +31,7 @@ class Network{
 		void createBackup();
 		void loadBackup();
 		int computeFactor(const Node& n, int parentID);
+		int reverseFactor(const Node& n, int parentID, int row);
 	private:
 		std::vector<unsigned int> getParents(unsigned int id);
 		std::vector<unsigned int> getParents(std::string name);

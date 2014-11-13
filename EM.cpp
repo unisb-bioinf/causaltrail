@@ -8,8 +8,8 @@
  *
  *
  */
-EM::EM(unsigned int method, Network& network, Matrix<int>& observations, float difference, unsigned int runs)
-	:method_(method),network_(network),observations_(observations),probHandler_(ProbabilityHandler(network)), differenceThreshold_(difference), maxRuns_(runs){
+EM::EM(Network& network, Matrix<int>& observations, float difference, unsigned int runs)
+	:network_(network),observations_(observations),probHandler_(ProbabilityHandler(network)), differenceThreshold_(difference), maxRuns_(runs){
 	performEM();
 }
 
@@ -24,22 +24,41 @@ EM::EM(unsigned int method, Network& network, Matrix<int>& observations, float d
 void EM::performEM(){
 	unsigned int runs=0;
 	float difference=1.0f;
+	float maxprob=0.0;
+	unsigned int maxmethod=0;
     //Check completness of the data
     if (observations_.contains(-1)){
-        //Initialize and iterate E/M-Phase
-        initalise();
-        while ((difference > differenceThreshold_) and (runs < maxRuns_)){
-            ePhase();
-            difference=mPhase();
-            std::cout<<difference<<std::endl;
-            runs++;
+		for (int method=0; method<3; method++){
+	        //Initialize and iterate E/M-Phase
+			method_=method;
+	        initalise();
+	        while ((difference > differenceThreshold_) and (runs < maxRuns_)){
+	            ePhase();
+	            difference=mPhase();
+	            runs++;
+			}
+	        std::cout<<"Runs: "<<runs<<std::endl;
+	        std::cout<<"Difference: "<<difference<<std::endl;
+			float prob = calculateLikelihoodOfTheData();
+			std::cout<<"Probability of the data: "<<prob<<std::endl;
+			if (prob > maxprob){
+				maxmethod=method;
+			}
 		}
-        std::cout<<"Runs: "<<runs<<std::endl;
-        std::cout<<"Difference: "<<difference<<std::endl;
+		method_=maxmethod;
+		initalise();
+		difference=1.0f;
+		runs=0;
+		while ((difference > differenceThreshold_) and (runs < maxRuns_)){
+			ePhase();
+			difference=mPhase();
+			runs++;
+		}
 	}
-    else
+    else{
     //Calculat parameters directly
-    mPhase();
+	    mPhase();
+	}
     std::cout<<network_<<std::endl;
 }
 
@@ -56,15 +75,10 @@ float EM::calculateProbabilityEM(Node& n, unsigned int col, unsigned int row){
     auto ParentIDs = n.getParents();
 	Matrix<float>& probMatrix = n.getProbabilityMatrix();
 
-    //get Parent values
-	std::vector<std::string> parentValues;
-	boost::algorithm::split(parentValues,probMatrix.getRowNames()[row],boost::algorithm::is_any_of(","));
-    std::vector<std::string>& nodeValues= probMatrix.getColNames();
-
     //compute TotProbParentsRec
     float totProbParents=1.0;
     for (int key = 0; key<ParentIDs.size();key++){
-        totProbParents*=probHandler_.computeTotalProbability(network_.getNode(ParentIDs[key]), row/network_.computeFactor(n,ParentIDs[key]));
+        totProbParents*=probHandler_.computeTotalProbability(ParentIDs[key], network_.reverseFactor(n,ParentIDs[key],row));
     }
 
     //computeNormalizingProb
@@ -90,12 +104,6 @@ void EM::calculateExpectedValue(unsigned int row, Node& n, Matrix<int>& obMatrix
 	if (obMatrix.hasNACol()){
 		for (int col=1;col<obMatrix.getColCount();col++){
 			float value=obMatrix(col,row)+calculateProbabilityEM(n,col,row)*obMatrix(0,row);
-			obMatrix.setData(value,col,row);
-		}
-	}
-	else {
-		for (int col=0;col<obMatrix.getColCount();col++){
-			float value=obMatrix(col,row);
 			obMatrix.setData(value,col,row);
 		}
 	}
@@ -197,7 +205,7 @@ void EM::initalise1(){
 		for (int row=0; row<probMatrix.getRowCount();row++){	
 			float rowsum=obMatrix.calculateRowSum(row);
 			for(int col=0;col<probMatrix.getColCount();col++){
-				n.setProbability(1/n.getUniqueValuesExcludingNA().size(),col,row);
+				n.setProbability(1.0f/n.getUniqueValuesExcludingNA().size(),col,row);
         	}   
     	}   
 	}   
@@ -260,7 +268,37 @@ void EM::initalise3(){
 	}  	 
 }
 
+/**loadSample
+ *
+ * @nodes
+ * 
+ * @return values
+ *
+ **/
+std::unordered_map<unsigned int, int> EM::loadSample(std::vector<unsigned int> nodes, unsigned int sample){
+	std::unordered_map<unsigned int, int> sampleValues;
+	for (auto& id : nodes){
+		Node& n = network_.getNode(id);
+		int obsRow = n.getObservationRow();
+		sampleValues[id]=observations_(sample,obsRow);
+	}
+	return sampleValues;
+}
+
+
 /*calculateLikelihoodOfTheData
  *
  *
  */
+float EM::calculateLikelihoodOfTheData(){
+	float prob = 0.0f;
+	std::vector<unsigned int> nodes = network_.getNodeIDs();
+	for (unsigned int sample=0; sample<observations_.getColCount();sample++){
+		if (not observations_.containsElement(0,sample,-1))
+		{
+			std::unordered_map<unsigned int, int> values=loadSample(nodes, sample);
+			prob += probHandler_.computeJointProbability(nodes,values);
+		}
+	}
+	return prob;
+}

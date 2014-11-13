@@ -519,10 +519,10 @@ bool Matrix<T>::containsElement(unsigned int colrow, unsigned int number, T t){
 		for (unsigned int col = 0; col<colCount_;col++){
 			if (data_[col+number*colCount_]==t){
 				return true;
-				}
 			}
-		return false;
 		}
+		return false;
+	}
 	else if (colrow==0){
 			for(unsigned int row=0;row<rowCount_;row++){
 				if (data_[number+row*colCount_]==t){
@@ -530,8 +530,8 @@ bool Matrix<T>::containsElement(unsigned int colrow, unsigned int number, T t){
 					}
 				}
 			return false;
-			}
-		throw std::invalid_argument("First argument must be 0 (col) or 1(row)");
+		}
+	throw std::invalid_argument("First argument must be 0 (col) or 1(row)");
 	}
 
 

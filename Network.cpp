@@ -106,6 +106,14 @@ std::vector<Node>& Network::getNodes(){
 	return NodeList_;
 	}
 
+std::vector<unsigned int> Network::getNodeIDs(){
+	std::vector<unsigned int> temp;
+	for (auto& n: NodeList_){
+		temp.push_back(n.getID());
+	}
+	return temp;
+}
+
 /**cutParents
  *
  * @param id identifier of the query node
@@ -413,4 +421,37 @@ int Network::computeFactor(const Node& n, int parentID){
 		}
 	}
 	return factor;
+}
+
+int Network::reverseFactor(const Node& n, int parentID, int row){
+	int value = row;
+	int result = -1;
+	bool flag = true;
+	for (auto key : n.getParents()){
+		int factor = computeFactor(n,key);
+		int result = value / factor;
+		value = (value % computeFactor(n,key));
+		if (key == parentID){
+			return result;
+		}
+	}
+	return -1;
+}
+
+bool Network::hasNode(std::string name){
+	auto res=NameToIndex_.find(name);
+	if (res==NameToIndex_.end()){
+		return false;
+		}
+	return true;
+	
+}
+
+bool Network::hasValue(std::string nodeName, std::string valueName){
+	std::vector<std::string>& valueNames = getNode(nodeName).getValueNamesProb();
+	auto it = std::find(valueNames.begin(), valueNames.end(),valueName);
+	if (it == valueNames.end())
+		return false;
+	return true;
+	
 }

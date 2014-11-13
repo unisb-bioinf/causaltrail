@@ -47,6 +47,7 @@ class Node {
 	std::vector<std::string>& getParentValueNames();		
 	Matrix<float>& getProbabilityMatrix();
 	const Matrix<float>& getProbabilityMatrix() const;
+	int getIndex(std::string value);
 	Matrix<int>& getObservationMatrix();
 	void createBackup();
 	void loadBackup();
