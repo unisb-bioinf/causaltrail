@@ -13,10 +13,9 @@
  *
  *
  */
-Discretiser::Discretiser(std::string datafile, Matrix<int>& obsMatrix, Network& network)
-	:originalObservations_(Matrix<std::string>(0,0,"NA")), observations_(obsMatrix), observationsMap_(network.getObservationsMap()), observationsMapR_(network.getObservationsMapR())
+Discretiser::Discretiser(Matrix<std::string>& originalObservations, Matrix<int>& obsMatrix, Network& network)
+	:originalObservations_(originalObservations), observations_(obsMatrix), observationsMap_(network.getObservationsMap()), observationsMapR_(network.getObservationsMapR())
 	{
-	originalObservations_.readMatrix(datafile,false,true,"NA");
 	adaptFormat();
 	observations_.resize(originalObservations_.getColCount(), originalObservations_.getRowCount(), -1);
 	observations_.setRowNames(originalObservations_.getRowNames());
@@ -36,10 +35,9 @@ Discretiser::Discretiser(std::string datafile, Matrix<int>& obsMatrix, Network& 
  *
  *
  */
-Discretiser::Discretiser(std::string datafile, std::string filename,  Matrix<int>& obsMatrix, Network& network)
-	:originalObservations_(Matrix<std::string>(0,0,"NA")), observations_(obsMatrix), observationsMap_(network.getObservationsMap()), observationsMapR_(network.getObservationsMapR())
+Discretiser::Discretiser(Matrix<std::string>& originalObservations, std::string filename,  Matrix<int>& obsMatrix, Network& network)
+	:originalObservations_(originalObservations), observations_(obsMatrix), observationsMap_(network.getObservationsMap()), observationsMapR_(network.getObservationsMapR())
 	{
-	originalObservations_.readMatrix(datafile,false,true,"NA");
 	adaptFormat();
 	observations_.resize(originalObservations_.getColCount(), originalObservations_.getRowCount(), -1);
 	observations_.setRowNames(originalObservations_.getRowNames());

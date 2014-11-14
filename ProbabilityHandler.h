@@ -9,7 +9,7 @@ class ProbabilityHandler{
 	ProbabilityHandler();
 	ProbabilityHandler(Network& network);
 	float computeTotalProbability(int nodeID, int value);
-	float computeJointProbability(std::vector<unsigned int>& nodes, std::unordered_map<unsigned int,int>& values);
+	float computeJointProbability(std::vector<unsigned int>& nodes, std::unordered_map<unsigned int, int>& values);
 	float computeConditionalProbability(std::vector<unsigned int>& nodesNominator, std::vector<unsigned int>& nodesDenominator,
 		 std::unordered_map<unsigned int, int>& valuesNominator, std::unordered_map<unsigned int, int>& valuesDenominator);
 	std::pair<float,std::vector<std::string>> maxSearch(std::vector<unsigned int> queryNodes);

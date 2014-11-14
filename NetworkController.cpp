@@ -33,7 +33,9 @@ Network& NetworkController::getNetwork(){
 }
 
 void NetworkController::loadObservations(std::string datafile, std::string controlFile){
-	Discretiser disc = Discretiser(datafile, controlFile, observations_, network_);
+	Matrix<std::string> originalObservations (0,0,"NA"); 
+	originalObservations.readMatrix(datafile,false,true,"NA");
+	Discretiser disc = Discretiser(originalObservations, controlFile, observations_, network_);
 }
 
 /**trainNetwork

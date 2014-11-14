@@ -6,178 +6,158 @@
  * Query struct to store the parsed query information
  */
 
-bool Parser::parseQuery(const std::vector<std::string>& query)
+QueryExecuter Parser::parseQuery()
 {
 	int index = 0;
-	if(query[index] != "?") {
-		return false;
+	if(query_[index] != "?") {
+		throw std::invalid_argument("In parseQuery, query should start with ?");
 	}
-	if(query[1] == "argmax") {
+	if(query_[1] == "argmax") {
 		index = 2;
-		parseArgMax(query, index);
+		parseArgMax(index);
 	} else {
 		index = 1;
-		parseNonIntervention(query, index);
+		parseNonIntervention(index);
 	}
 
-	while(index < query.size()) {
-		if(query[index] == "!") {
+	while(index < query_.size()) {
+		if(query_[index] == "!") {
 			index++;
-			if(not parseInterventions(query, index)) {
-				return false;
-			}
-		} else {
+			parseInterventions(index);
+		} else if (query_[index] == "|") {
 			index++;
-			if(not parseCondition(query, index)) {
-				return false;
-			}
+			parseCondition(index); 
 		}
+		index++;
 	}
-	return true;
+	return qe_;
 }
 
-bool Parser::terminationSymbol(const std::vector<std::string>& sym, int index)
+bool Parser::terminationSymbol(int index)
     const
 {
-	return index != sym.size() && sym[index] != "!" && sym[index] != "|";
+	return index != query_.size() && query_[index] != "!" && query_[index] != "|";
 }
 
-bool Parser::terminationSymbolArgMax(const std::vector<std::string>& sym,
-                                     int index) const
+bool Parser::terminationSymbolArgMax(int index) const
 {
-	return index != sym.size() && sym[index] != ")";
+	return index != query_.size() && query_[index] != ")";
 }
 
-bool Parser::parseInterventions(const std::vector<std::string>& query,
-                                int& index)
+void Parser::parseInterventions(int& index)
 {
-	while(terminationSymbol(query, index)) {
-		if(query[index] == "do") {
+	while(terminationSymbol(index)) {
+		if(query_[index] == "do") {
 			index++;
-			if(not parseDoIntervention(query, index)) {
-				return false;
-			}
+			parseDoIntervention(index); 
 		}
-		if(query[index] == "+") {
+		if(query_[index] == "+") {
 			index++;
-			if(not parseAddEdge(query, index)) {
-				return false;
-			}
+			parseAddEdge(index);
 		}
-		if(query[index] == "-") {
+		if(query_[index] == "-") {
 			index++;
-			if(not parseRemoveEdge(query, index)) {
-				return false;
-			}
+			parseRemoveEdge(index);
 		}
 		index++;
 	}
-	return true;
 }
 
-bool Parser::parseNonIntervention(const std::vector<std::string>& query,
-                                  int& index)
+void Parser::parseNonIntervention(int& index)
 {
-	while(terminationSymbol(query, index)) {
-		if(not getNode(query[index])) {
-			return false;
+	while(terminationSymbol(index)) {
+		if(not getNode(query_[index])) {
+			throw std::invalid_argument("In parseNonIntervention, invalid node name "+query_[index]);
 		}
 		index++;
-		if(query[index] != "=") {
-			return false;
+		if(query_[index] != "=") {
+			throw std::invalid_argument("In parseNonIntervention, invalid sign expected = but found "+query_[index]);
 		}
 		index++;
-		if(not getValue(query[index - 2], query[index])) {
-			return false;
+		if(not getValue(query_[index - 2], query_[index])) {
+			throw std::invalid_argument("in parsenNonIntervention, invalid value "+query_[index]);
 		}
 		else{
-			qe_.setNonIntervention(getNodeID(query[index-2]),getValueID(query[index-2],query[index]));
+			qe_.setNonIntervention(getNodeID(query_[index-2]),getValueID(query_[index-2],query_[index]));
 		}
 		index++;
 	}
-	return true;
 }
 
-bool Parser::parseCondition(const std::vector<std::string>& query, int& index)
+void Parser::parseCondition(int& index)
 {
-	while(terminationSymbol(query, index)) {
-		if(not getNode(query[index])){
-			throw std::invalid_argument("In parseCondition, invalid node name "+query[index]);
+	while(terminationSymbol(index)) {
+		if(not getNode(query_[index])){
+			throw std::invalid_argument("In parseCondition, invalid node name "+query_[index]);
 		}
 		index++;
-		if(query[index] != "=")
-			throw std::invalid_argument("In parseCondition, invalid sign, expected = but found "+query[index]);
+		if(query_[index] != "=")
+			throw std::invalid_argument("In parseCondition, invalid sign, expected = but found "+query_[index]);
 		index++;
-		if(not getValue(query[index - 2], query[index])){
-			throw std::invalid_argument("In parseCondition, node "+query[index-2]+" does not have a value "+query[index]);
+		if(not getValue(query_[index - 2], query_[index])){
+			throw std::invalid_argument("In parseCondition, node "+query_[index-2]+" does not have a value "+query_[index]);
 		}
 		else{
-			qe_.setCondition(getNodeID(query[index-2]),getValueID(query[index-2],query[index]));
+			qe_.setCondition(getNodeID(query_[index-2]),getValueID(query_[index-2],query_[index]));
 		}
 		index++;
 	}
-	return true;
 }
 
-bool Parser::parseDoIntervention(const std::vector<std::string>& query,
-                                 int& index)
+void Parser::parseDoIntervention(int& index)
 {
-	if(not getNode(query[index])){
-		throw std::invalid_argument("In parseDoIntervention, invalid node name "+query[index]);
+	if(not getNode(query_[index])){
+		throw std::invalid_argument("In parseDoIntervention, invalid node name "+query_[index]);
 	}
 	index++;
-	if(query[index] != "=")
-		throw std::invalid_argument("In parseDoIntervention, invalid sign expected = but found "+query[index]);
+	if(query_[index] != "=")
+		throw std::invalid_argument("In parseDoIntervention, invalid sign expected = but found "+query_[index]);
 	index++;
-	if(not getValue(query[index - 2], query[index])){
-		throw std::invalid_argument("In parseDoIntervention, node "+query[index-2]+" does not have a value "+query[index]);
+	if(not getValue(query_[index - 2], query_[index])){
+		throw std::invalid_argument("In parseDoIntervention, node "+query_[index-2]+" does not have a value "+query_[index]);
 	}
 	else{
-		qe_.setDoIntervention(getNodeID(query[index-2]),getValueID(query[index-2],query[index]));
+		qe_.setDoIntervention(getNodeID(query_[index-2]),getValueID(query_[index-2],query_[index]));
 	}
-	return true;
 }
 
-bool Parser::parseAddEdge(const std::vector<std::string>& query, int& index)
+void Parser::parseAddEdge(int& index)
 {
-	if(not getNode(query[index])){
-		throw std::invalid_argument("In parseAddEdge, invalid node name "+query[index]);
+	if(not getNode(query_[index])){
+		throw std::invalid_argument("In parseAddEdge, invalid node name "+query_[index]);
 	}
 	index++;
-	if(not getNode(query[index])){
-		throw std::invalid_argument("In parseAddEdge, invalid node name "+query[index]);
+	if(not getNode(query_[index])){
+		throw std::invalid_argument("In parseAddEdge, invalid node name "+query_[index]);
 	}
-	qe_.setAddEdge(getNodeID(query[index-2]),getNodeID(query[index]));	
-	return true;
+	qe_.setAddEdge(getNodeID(query_[index-1]),getNodeID(query_[index]));	
 }
 
-bool Parser::parseRemoveEdge(const std::vector<std::string>& query, int& index)
+void Parser::parseRemoveEdge(int& index)
 {
-	if(not getNode(query[index])){
-		throw std::invalid_argument("In parseRemoveEdge, invalid node name "+query[index]);
+	if(not getNode(query_[index])){
+		throw std::invalid_argument("In parseRemoveEdge, invalid node name "+query_[index]);
 	}
 	index++;
-	if(not getNode(query[index])){
-		throw std::invalid_argument("In parseRemoveEdge, invalid node name "+query[index]);
+	if(not getNode(query_[index])){
+		throw std::invalid_argument("In parseRemoveEdge, invalid node name "+query_[index]);
 	}
-	qe_.setRemoveEdge(getNodeID(query[index-2]),getNodeID(query[index]));
-	return true;
+	qe_.setRemoveEdge(getNodeID(query_[index-1]),getNodeID(query_[index]));
 }
 
-bool Parser::parseArgMax(const std::vector<std::string>& query, int& index)
+void Parser::parseArgMax(int& index)
 {
-	if(query[index] != ("("))
-		throw std::invalid_argument("In parseArgMax, invalid sign expected ( but found  "+query[index]);
+	if(query_[index] != ("("))
+		throw std::invalid_argument("In parseArgMax, invalid sign expected ( but found  "+query_[index]);
 	index++;
-	while(terminationSymbolArgMax(query, index)) {
-		if(not getNode(query[index]))
-			throw std::invalid_argument("Invalid node name "+query[index]);
+	while(terminationSymbolArgMax(index)) {
+		if(not getNode(query_[index]))
+			throw std::invalid_argument("Invalid node name "+query_[index]);
 		else {
-		qe_.setArgMax(getNodeID(query[index]));
+		qe_.setArgMax(getNodeID(query_[index]));
 		}
 		index++;
 	}
-	return true;
 }
 
 bool Parser::getNode(const std::string& nodeName)
@@ -190,11 +170,11 @@ bool Parser::getValue(const std::string& nodeName, const std::string& valueName)
 	return network_.hasValue(nodeName, valueName);
 }
 
-int Parser::getNodeID(const std::string& nodeName){
+unsigned int Parser::getNodeID(const std::string& nodeName){
 	return network_.getNode(nodeName).getID();
 }
 
-int Parser::getValueID(const std::string& nodeName, const std::string& valueName){
+unsigned int Parser::getValueID(const std::string& nodeName, const std::string& valueName){
 	return network_.getNode(nodeName).getIndex(valueName);
 }
 
@@ -208,11 +188,5 @@ Parser::Parser(std::string userInput, NetworkController& networkController)
     : userInput_(userInput), network_(networkController.getNetwork()), qe_(QueryExecuter(networkController))
 {
 	boost::split(query_, userInput_, boost::is_any_of(" "));
-	try{
-	std::cout << parseQuery(query_) << std::endl;
-	}
-	catch (const std::invalid_argument& ia){
-		std::cerr<<ia.what()<<std::endl;
-		}
 }
 

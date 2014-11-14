@@ -26,6 +26,11 @@ void Interventions::createBackupOfNetworkStructure(){
 	network.createBackup();
 }
 
+void Interventions::loadBackupOfNetworkStructure(){
+	Network& network = controller_.getNetwork();
+	network.loadBackup();
+}
+
 /*doIntervention
  *
  * @param
@@ -42,6 +47,21 @@ void Interventions::doIntervention(std::string NodeName, std::string value){
 	n.setProbabilityTo1(value);
 }
 
+/*doIntervention
+ *
+ * @param
+ *
+ * @return
+ *
+ * Description
+ */	
+void Interventions::doIntervention(int nodeID, int value){
+	Network& network = controller_.getNetwork();
+	Node& n = network.getNode(nodeID);
+	n.createBackupDoIntervention();
+	network.cutParents(nodeID);
+	n.setProbabilityTo1(value);
+}
 /*reverseDoIntervention
  *
  * @param
@@ -52,8 +72,21 @@ void Interventions::doIntervention(std::string NodeName, std::string value){
  */	
 void Interventions::reverseDoIntervention(std::string NodeName, std::string value){
 	Network& network = controller_.getNetwork();
-	network.loadBackup();
 	Node& n = network.getNode(NodeName);
+	n.loadBackupDoIntervention();
+}
+
+/*reverseDoIntervention
+ *
+ * @param
+ *
+ * @return
+ *
+ * Description
+ */	
+void Interventions::reverseDoIntervention(int nodeID, int value){
+	Network& network = controller_.getNetwork();
+	Node& n = network.getNode(nodeID);
 	n.loadBackupDoIntervention();
 }
 
@@ -67,7 +100,20 @@ void Interventions::reverseDoIntervention(std::string NodeName, std::string valu
  */	
 void Interventions::addEdge(std::string source, std::string target){
 	Network& network = controller_.getNetwork();
-	network.addEdge(source,target);
+	network.addEdge(target,source);
+}
+
+/*addEdge
+ *
+ * @param
+ *
+ * @return
+ *
+ * Description
+ */	
+void Interventions::addEdge(int source, int target){
+	Network& network = controller_.getNetwork();
+	network.addEdge(target,source);
 }
 
 /*removeEdge
@@ -80,7 +126,18 @@ void Interventions::addEdge(std::string source, std::string target){
  */	
 void Interventions::removeEdge(std::string source, std::string target){
 	Network& network = controller_.getNetwork();
-	network.removeEdge(source,target);
+	network.removeEdge(target,source);
 }
 
-
+/*removeEdge
+ *
+ * @param
+ *
+ * @return
+ *
+ * Description
+ */	
+void Interventions::removeEdge(int source, int target){
+	Network& network = controller_.getNetwork();
+	network.removeEdge(target,source);
+}

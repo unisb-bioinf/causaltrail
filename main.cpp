@@ -50,13 +50,34 @@ int main(int argc, char *argv[]){
 
 	std::cout<<"test1"<<std::endl;	
 	Parser p = Parser("? Grade = g1",c);
+	QueryExecuter qe = p.parseQuery();
+	std::cout<<qe<<std::endl;
+	qe.execute();
 	std::cout<<"test2"<<std::endl;
 	Parser p1 = Parser("? Grade = g1 ! do Intelligence = i0 do Letter = l1",c);
+	QueryExecuter qe1=p1.parseQuery();//.execute();
+	std::cout<<qe1<<std::endl;
+	qe1.execute();
 	std::cout<<"test3"<<std::endl;
 	Parser p2 = Parser("? argmax ( Grade )",c);
-	std::cout<<"test4"<<std::endl;
-	Parser p3 = Parser("? Grade = g1 | heureka Intelligence = i0",c);
-
-
+	QueryExecuter qe2=p2.parseQuery();//.execute();
+	std::cout<<qe2<<std::endl;
+	qe2.execute();
+	std::string input = "";
+	std::cout<<"Please enter a query"<<std::endl;
+	std::getline(std::cin,input);
+	while (input != "exit"){
+		Parser p3 = Parser(input,c);
+		QueryExecuter qe3 = p3.parseQuery();
+		try {
+		std::cout<<qe3<<std::endl;
+		qe3.execute();
+		}
+		catch (std::exception& e){
+			std::cerr<<e.what()<<std::endl;
+		}
+		std::cout<<"Please enter a query"<<std::endl;
+		std::getline(std::cin,input);
+	}
 	return 0;
 }

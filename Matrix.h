@@ -14,6 +14,8 @@ template<typename T> std::ostream& operator << (std::ostream&, const Matrix<T>&)
 template<typename T>
 class Matrix {
 	public:
+		Matrix();
+		Matrix(std::vector<std::string> colNames={"NA"}, std::vector<std::string> rowNames={"NA"}, T initialValue = NULL);
   		Matrix(int colCount=0, int rowCount=0, T initialValue=NULL, std::vector<std::string> colNames={"NA"}, std::vector<std::string> rowNames={"NA"});
 	    inline T& operator () (unsigned int col, unsigned int row);
 		inline const T& operator () (unsigned int col, unsigned int row) const;
@@ -63,6 +65,20 @@ class Matrix {
 };
 #endif
 
+template<typename T>
+Matrix<T>::Matrix()
+	:rowCount_(0), colCount_(0)
+{
+
+}
+
+template<typename T>
+Matrix<T>::Matrix(std::vector<std::string> colNames, std::vector<std::string> rowNames, T initialValue)
+	:rowCount_(rowNames.size()), colCount_(colNames.size()), data_(rowNames.size()*colNames.size(), initialValue)
+{
+	setColNames(colNames);
+	setRowNames(rowNames);
+}
 /**Detailed Constructor
  *
  * @param colCount number of columns

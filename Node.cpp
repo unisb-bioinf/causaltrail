@@ -339,6 +339,26 @@ void Node::setProbabilityTo1(std::string value){
 	} 
 }
 
+void Node::setProbabilityTo1(int value){
+	for(unsigned int col=0; col<ProbabilityMatrix_.getColCount();col++){
+		for(unsigned int row=0; row<ProbabilityMatrix_.getRowCount();row++){
+			ProbabilityMatrix_.setData(0.0f,col,row);
+		}
+	}
+	for(unsigned int row=0; row<ProbabilityMatrix_.getRowCount();row++){
+		ProbabilityMatrix_.setData(1.0f,value,row);
+	} 
+}
+
 int Node::getIndex(std::string value){
 	return ProbabilityMatrix_.findCol(value);
+}
+
+void Node::clearNameVectors(){
+	valueNamesProb_.clear();
+	uniqueValues_.clear();
+	valueNames_.clear();
+	valueNamesProb_.clear();
+	parentValueNames_.clear();
+	uniqueValuesExcludingNA_.clear();
 }

@@ -15,6 +15,7 @@ class Node {
 	void setObservations(int value, std::string nv, std::string pv);
 	void setProbability(Matrix<float> m);	
 	void setProbabilityTo1(std::string value);
+	void setProbabilityTo1(int value);
 	void createBackupDoIntervention();
 	void loadBackupDoIntervention();
 	void setObservations(Matrix<int> m);
@@ -54,6 +55,7 @@ class Node {
 	void setUnvisited();
 	void visit();
 	bool isVisited();
+	void clearNameVectors();
 	friend std::ostream& operator<< (std::ostream& os,const Node& n);
 	private:
 	unsigned int index_;

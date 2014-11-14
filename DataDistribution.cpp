@@ -41,6 +41,7 @@ int DataDistribution::computeParentCombinations(std::vector<unsigned int> parent
  */
 void DataDistribution::assignObservationsToNodes(){
 	for (auto& n: network_.getNodes()){
+		n.clearNameVectors();
 		n.setObservationRow(observations_.findRow(n.getName()));
 		n.setUniqueValues(observations_.getUniqueRowValues(n.getObservationRow()));
 		n.setUniqueValuesExcludingNA(observations_.getUniqueRowValues(n.getObservationRow(),-1));	
