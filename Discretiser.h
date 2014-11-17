@@ -2,6 +2,7 @@
 #define DISCRETISER_H
 
 #include "Network.h"
+#include "float.h"
 #include <map>
 
 class Discretiser{

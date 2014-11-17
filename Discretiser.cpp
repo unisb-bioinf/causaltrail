@@ -89,11 +89,12 @@ std::vector<float> Discretiser::createSortedVector(unsigned int row){
 	return templist;
 }
 
+
 void Discretiser::convertToDenseNumbers(unsigned int row){
-	std::vector<float> originalData = createSortedVector(row);
-	for (unsigned int key = 0; key<originalData.size(); key++){
+	std::vector<int> obs = observations_.getUniqueRowValues(row);
+	for (unsigned int key = 0; key<obs.size(); key++){
 		for (unsigned int col=0;col<observations_.getColCount();col++){
-			if (originalData[key]==observations_(col,row)){
+			if (obs[key]==observations_(col,row)){
 				observations_.setData(key,col,row);	
 				createNameEntry(key,row);
 			}
@@ -163,7 +164,6 @@ void Discretiser::discretiseFloor(unsigned int row){
 		float value=getNumber(col,row);
 		int dvalue=floor(value);
 		observations_.setData(dvalue,col,row);
-		std::cout<<"Value set"<<std::endl;
 		}
 	}
 
@@ -271,11 +271,11 @@ void Discretiser::discretiseByHMean(unsigned int row){
 void Discretiser::discretiseByMedian(unsigned int row){
 	std::vector<float> templist=createSortedVector(row);
 	float median;
-	if (templist.size() % 2 ==0){
-		median=templist[templist.size()/2];
+	if (templist.size() % 2 !=0){
+		median=templist[ceil(templist.size()/2)];
 		}
 	else {
-		median=(templist[div(templist.size(),2).quot]+templist[div(templist.size(),2).quot+1])/2.0;
+		median=(templist[(templist.size()/2)-1]+templist[templist.size()/2])/2.0;
 		}
 	for (int col=0;col<originalObservations_.getColCount();col++){
 		float value=getNumber(col,row);
@@ -333,10 +333,10 @@ void Discretiser::discretiseBracketMedians(unsigned int row, unsigned int number
 	for (int i=1; i<number;i++){
 		borderValues.push_back(templist[div(templist.size(),number).quot*i]);
 	}
-	borderValues.push_back(templist.back());
+	borderValues.push_back(FLT_MAX);
 	//Fill intervals
 	for (int col=0;col<templist.size();col++){
-		for (int i=1;i<=number;i++){
+		for (int i=1;i<number+1;i++){
 			if ((templist[col] >= borderValues[i-1]) and (templist[col]<borderValues[i])){
 				observations_.setData(i-1, col, row);
 				createNameEntry(i-1, row);
@@ -359,15 +359,15 @@ void Discretiser::discretisePearsonTukey(unsigned int row){
 	std::vector<float> templist=createSortedVector(row);
 	std::vector<float> borderValues = {
 		//Calculate borders
-		templist[0],
+		FLT_MIN,
 		templist[ceil(0.185*templist.size())],
 		templist[ceil(0.815*templist.size())],
-		templist.back()
+		FLT_MAX
 	};
 	//Fill intervals
 	for (int col=0;col<templist.size();col++){
-		for (int i=1;i<=3;i++){
-			float value=templist[col];
+		for (int i=1;i<4;i++){
+			float value=getNumber(col,row);
 			if ((value >= borderValues[i-1]) and (value<borderValues[i])){
 				observations_.setData(i-1,col,row);
 				createNameEntry(i-1,row);
