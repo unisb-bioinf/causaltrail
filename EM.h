@@ -8,6 +8,7 @@ class EM{
 	public:
 	EM(Network& network, Matrix<int>& observations_,float differenceThreshold_ = 0.0001f, unsigned int maxRuns_=10000);
 	void performEM();
+	float calculateLikelihoodOfTheData();
 	private:
 	float calculateProbabilityEM(Node& n, unsigned int col, unsigned int row);
 	void calculateExpectedValue(unsigned int row, Node& n, Matrix<int>& obMatrix);
@@ -19,7 +20,6 @@ class EM{
 	void initalise2();
 	void initalise3();
 	std::unordered_map<unsigned int, int> loadSample(std::vector<unsigned int> nodes, unsigned int sample);
-	float calculateLikelihoodOfTheData();
 	Network& network_;
 	unsigned int method_;
 	Matrix<int>& observations_;

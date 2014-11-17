@@ -17,9 +17,9 @@ Discretiser::Discretiser(Matrix<std::string>& originalObservations, Matrix<int>&
 	:originalObservations_(originalObservations), observations_(obsMatrix), observationsMap_(network.getObservationsMap()), observationsMapR_(network.getObservationsMapR())
 	{
 	adaptFormat();
-	observations_.resize(originalObservations_.getColCount(), originalObservations_.getRowCount(), -1);
-	observations_.setRowNames(originalObservations_.getRowNames());
-	observations_.setColNames(originalObservations_.getColNames());
+	observations_.resize(originalObservations.getColCount(), originalObservations.getRowCount(), -1);
+	observations_.setRowNames(originalObservations.getRowNames());
+	observations_.setColNames(originalObservations.getColNames());
 }
 
 /**
@@ -39,11 +39,18 @@ Discretiser::Discretiser(Matrix<std::string>& originalObservations, std::string 
 	:originalObservations_(originalObservations), observations_(obsMatrix), observationsMap_(network.getObservationsMap()), observationsMapR_(network.getObservationsMapR())
 	{
 	adaptFormat();
-	observations_.resize(originalObservations_.getColCount(), originalObservations_.getRowCount(), -1);
-	observations_.setRowNames(originalObservations_.getRowNames());
-	observations_.setColNames(originalObservations_.getColNames());
+	observations_.resize(originalObservations.getColCount(), originalObservations.getRowCount(), -1);
+	observations_.setRowNames(originalObservations.getRowNames());
+	observations_.setColNames(originalObservations.getColNames());
 	discretise(filename);
 }
+
+
+int Discretiser::getEntry(unsigned int col, unsigned int row){
+	int value = observations_(col,row);
+	return value;
+}
+
 
 /**getNumber
  *
@@ -156,6 +163,7 @@ void Discretiser::discretiseFloor(unsigned int row){
 		float value=getNumber(col,row);
 		int dvalue=floor(value);
 		observations_.setData(dvalue,col,row);
+		std::cout<<"Value set"<<std::endl;
 		}
 	}
 

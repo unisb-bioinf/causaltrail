@@ -9,6 +9,7 @@ class Discretiser{
 	Discretiser(Matrix<std::string>& originalObservations, Matrix<int>& obsMatrix, Network& network);
 	Discretiser(Matrix<std::string>& originalObservations, std::string filename, Matrix<int>& obsMatrix, Network& network);
 	void discretiseRow(unsigned int row, unsigned int method, float threshold);
+	int getEntry(unsigned int col, unsigned int row);
 	private:
 	void discretise(std::string filename);
 	void discretiseFloor(unsigned int row);

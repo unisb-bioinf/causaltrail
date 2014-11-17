@@ -14,11 +14,11 @@ template<typename T> std::ostream& operator << (std::ostream&, const Matrix<T>&)
 template<typename T>
 class Matrix {
 	public:
-		Matrix();
+		Matrix(std::string filename, bool colNames, bool rowNames, T initialValue);
 		Matrix(std::vector<std::string> colNames={"NA"}, std::vector<std::string> rowNames={"NA"}, T initialValue = NULL);
   		Matrix(int colCount=0, int rowCount=0, T initialValue=NULL, std::vector<std::string> colNames={"NA"}, std::vector<std::string> rowNames={"NA"});
-	    inline T& operator () (unsigned int col, unsigned int row);
-		inline const T& operator () (unsigned int col, unsigned int row) const;
+	    T& operator () (unsigned int col, unsigned int row);
+		const T& operator () (unsigned int col, unsigned int row) const;
 		friend std::ostream& operator<< <>(std::ostream& os, const Matrix<T>& m);	
 		void setData(T value, unsigned int col, unsigned int row);
 		void setRowNames(std::vector<std::string> names);
@@ -66,12 +66,11 @@ class Matrix {
 #endif
 
 template<typename T>
-Matrix<T>::Matrix()
-	:rowCount_(0), colCount_(0)
-{
-
+Matrix<T>::Matrix(std::string filename, bool colNames, bool rowNames, T initialValue){
+	colCount_=0;
+	rowCount_=0;
+	readMatrix(filename,colNames,rowNames,initialValue);
 }
-
 template<typename T>
 Matrix<T>::Matrix(std::vector<std::string> colNames, std::vector<std::string> rowNames, T initialValue)
 	:rowCount_(rowNames.size()), colCount_(colNames.size()), data_(rowNames.size()*colNames.size(), initialValue)
@@ -107,9 +106,12 @@ Matrix<T>::Matrix(int colCount, int rowCount, T initialValue, std::vector<std::s
  * This operator returns the matrix value at the specified position
  */
 template<typename T>
-inline T& Matrix<T>::operator()(unsigned int col, unsigned int row){
-	return data_[col+row*colCount_];
+T& Matrix<T>::operator()(unsigned int col, unsigned int row){
+	if ((col > colCount_) or (row > rowCount_)){
+		throw std::invalid_argument("In Matrix(), Invalid matrix position");
 	}
+	return data_[col+row*colCount_];
+}
 
 /**Operator() const
  *
@@ -122,9 +124,12 @@ inline T& Matrix<T>::operator()(unsigned int col, unsigned int row){
  *
  */
 template<typename T>
-inline const T& Matrix<T>::operator()(unsigned int col, unsigned int row) const{
+const T& Matrix<T>::operator()(unsigned int col, unsigned int row) const{
+	if ((col > colCount_) or (row > rowCount_)){
+		throw std::invalid_argument("In Matrix() const, Invalid matrix position");
+	}
 	return data_[col+row*colCount_];
-    }
+}
 
 /**Title
  *
@@ -192,6 +197,9 @@ std::ostream& operator<< (std::ostream& os, const Matrix<T>& m)
  */
 template<typename T>
 void Matrix<T>::setData(T value, unsigned int col, unsigned int row){
+	if ((col > colCount_) or (row > rowCount_)){
+		throw std::invalid_argument("In setData, Invalid matrix position");
+	}
 	data_[col+row*colCount_]=value;
 	}
 

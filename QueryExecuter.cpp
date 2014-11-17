@@ -121,6 +121,7 @@ void QueryExecuter::executeEdgeDeletionsReverse(){
 void QueryExecuter::executeArgMax(){
 	std::pair<float,std::vector<std::string>> result = probHandler_.maxSearch(argmaxNodeIDs_);
 	std::cout<<"Probability: "<<result.first<<std::endl;
+	std::cout<<"Argument: "<<result.second[0]<<std::endl;
 }
 
 void QueryExecuter::executeCondition(){

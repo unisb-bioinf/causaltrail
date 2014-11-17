@@ -12,7 +12,7 @@
  */
 Node::Node(unsigned int index, unsigned int id, std::string name)
 	:index_(index),id_(id),name_(name),
-	 ProbabilityMatrix_(Matrix<float>(0,0,0.0)), ProbabilityMatrixBackup_(Matrix<float>(0,0,0.0)),
+	 ProbabilityMatrix_(Matrix<float>(0,0,0.0f)), ProbabilityMatrixBackup_(Matrix<float>(0,0,0.0f)),
 	 ObservationMatrix_(Matrix<int>(0,0,0)),ObservationBackup_(Matrix<int>(0,0,0))
 	{
 	}

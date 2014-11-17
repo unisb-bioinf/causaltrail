@@ -67,9 +67,9 @@ int main(int argc, char *argv[]){
 	std::cout<<"Please enter a query"<<std::endl;
 	std::getline(std::cin,input);
 	while (input != "exit"){
+		try{
 		Parser p3 = Parser(input,c);
 		QueryExecuter qe3 = p3.parseQuery();
-		try {
 		std::cout<<qe3<<std::endl;
 		qe3.execute();
 		}
