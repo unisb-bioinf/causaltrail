@@ -15,6 +15,7 @@ class NetworkController{
 	void loadNetwork(std::string networkfile);
 	void loadObservations(std::string datafile,std::string controlFile);
 	void trainNetwork();
+	float getLikelihoodOfTheData();
 	Network& getNetwork();
 	private:
 	Network network_;

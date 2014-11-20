@@ -46,7 +46,7 @@ Combinations<T>::Combinations(std::vector<unsigned int>& keys,std::unordered_map
  * Recursively creates a enumeration of all possible combinations given the keys and their possible values
  */
 template<typename T>
-void Combinations<T>::createCombinations(unsigned int position){
+void Combinations<T>::createCombinations(unsigned int position=0){
 	if (position == keys_.size()){
 		result_.push_back(temp_);
 		}

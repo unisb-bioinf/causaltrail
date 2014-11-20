@@ -13,6 +13,7 @@ class ProbabilityHandler{
 	float computeConditionalProbability(std::vector<unsigned int>& nodesNominator, std::vector<unsigned int>& nodesDenominator,
 		 std::unordered_map<unsigned int, int>& valuesNominator, std::unordered_map<unsigned int, int>& valuesDenominator);
 	std::pair<float,std::vector<std::string>> maxSearch(std::vector<unsigned int> queryNodes);
+
 	private:
 	std::vector<unsigned int> createFactorisation(std::vector<unsigned int>& queryNodes);
 	std::unordered_map<unsigned int, std::vector<int>> assignValues(std::vector<unsigned int>& factorisation, std::unordered_map<unsigned int, int>& values);

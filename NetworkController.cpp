@@ -50,3 +50,7 @@ void NetworkController::trainNetwork(){
 	EM em = EM(network_,observations_,0.001,100000);
 }
 
+float NetworkController::getLikelihoodOfTheData(){
+	EM em = EM(network_,observations_,0.001,100000);
+	return em.calculateLikelihoodOfTheData();
+}

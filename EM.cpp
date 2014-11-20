@@ -28,7 +28,7 @@ void EM::performEM(){
 	unsigned int maxmethod=0;
     //Check completness of the data
     if (observations_.contains(-1)){
-		for (int method=0; method<3; method++){
+		for (int method=0; method<2; method++){
 	        //Initialize and iterate E/M-Phase
 			method_=method;
 	        initalise();
@@ -186,7 +186,6 @@ void EM::initalise(){
 	switch(method_){
 		case 0: initalise1(); break;
 		case 1: initalise2(); break;
-		case 2: initalise3(); break;
 	}
 }
 
@@ -239,35 +238,6 @@ void EM::initalise2(){
     }  
 }
 
-/*
- *
- *
- *
- *
- *
- *
- */
-void EM::initalise3(){
-	for (auto&n:network_.getNodes()){
-		const Matrix<int>& obMatrix=n.getObservationMatrix();
-		Matrix<float>& probMatrix=n.getProbabilityMatrix();
-		for (int row=0; row<probMatrix.getRowCount();row++){
-			float rowsum=obMatrix.calculateRowSum(row);
-			for(int col=0;col<probMatrix.getColCount();col++){
-				if (obMatrix.hasNACol()){
-					n.setProbability(((n.getObservationMatrix()(col+1,row)+
-									(n.getObservationMatrix()(0,row)*(n.getObservationMatrix()(col+1,row)/
-									(rowsum-n.getObservationMatrix()(0,row)))))/rowsum)
-									,col,row);
-				}   
-				else {
-				n.setProbability(n.getObservationMatrix()(col,row)/rowsum,col,row);
-				}   
-			}   
-		}  	 
-	}  	 
-}
-
 /**loadSample
  *
  * @nodes
@@ -300,5 +270,5 @@ float EM::calculateLikelihoodOfTheData(){
 			prob += probHandler_.computeJointProbability(nodes,values);
 		}
 	}
-	return prob;
+	return log(prob);
 }

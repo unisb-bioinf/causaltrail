@@ -8,7 +8,7 @@ class QueryExecuter{
 
 	public:
 	QueryExecuter(NetworkController& c);
-	void execute();
+	std::pair<float,std::vector<std::string>> execute();
 	void setNonIntervention(const unsigned int nodeID, const unsigned int valueID);
 	void setCondition(const unsigned int nodeID,const unsigned int valueID);
 	void setDoIntervention(const unsigned int nodeID, const unsigned int valueID);
@@ -21,16 +21,16 @@ class QueryExecuter{
 	bool hasInterventions();
 	void executeInterventions();
 	void reverseInterventions();
-	void computeProbability();
+	std::pair<float,std::vector<std::string>> computeProbability();
 	void executeDoInterventions();
 	void executeReverseDoInterventions();
 	void executeEdgeAdditions();
 	void executeEdgeDeletions();
 	void executeEdgeAdditionsReverse();
 	void executeEdgeDeletionsReverse();	
-	void executeArgMax();
-	void executeCondition();
-	void executeProbability();
+	std::pair<float,std::vector<std::string>> executeArgMax();
+	float executeCondition();
+	float executeProbability();
 	ProbabilityHandler probHandler_;
 	Interventions interventions_;
 	NetworkController& networkController_;	
@@ -43,7 +43,6 @@ class QueryExecuter{
 	std::vector<std::pair<unsigned int, unsigned int>> addEdgeNodeIDs_;
 	std::vector<std::pair<unsigned int, unsigned int>> removeEdgeNodeIDs_;
 	std::vector<unsigned int> argmaxNodeIDs_;
-	
 };
 
 #endif

@@ -1,5 +1,5 @@
 #include "NetworkController.h"
-#include "Interventions.h"
+//#include "Interventions.h"
 #include "Parser.h"
 #include <iostream>
 
@@ -7,7 +7,7 @@
 int main(int argc, char *argv[]){
 	std::string datafile=argv[1];
 	std::string controlfile=argv[2];
-	NetworkController c= NetworkController();
+	NetworkController c = NetworkController ();
 	c.loadNetwork("TestA.na");
 	c.loadNetwork("TestSif.sif");
 	c.loadObservations(datafile,controlfile);
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]){
 	Interventions Int = Interventions(c);
 	Int.createBackupOfNetworkStructure();
 	Int.doIntervention("Difficulty","d1");
-	Int.reverseDoIntervention("Difficulty","d1");
+	Int.reverseDoIntervention("Difficulty");
 	std::cout<<prob.computeTotalProbability(2,0)<<std::endl;
 	std::cout<<prob.computeTotalProbability(2,1)<<std::endl;
 	std::cout<<prob.computeTotalProbability(2,2)<<std::endl;
@@ -52,17 +52,17 @@ int main(int argc, char *argv[]){
 	Parser p = Parser("? Grade = g1",c);
 	QueryExecuter qe = p.parseQuery();
 	std::cout<<qe<<std::endl;
-	qe.execute();
+	std::cout<<qe.execute().first<<std::endl;;
 	std::cout<<"test2"<<std::endl;
 	Parser p1 = Parser("? Grade = g1 ! do Intelligence = i0 do Letter = l1",c);
 	QueryExecuter qe1=p1.parseQuery();//.execute();
 	std::cout<<qe1<<std::endl;
-	qe1.execute();
+	std::cout<<qe1.execute().first<<std::endl;;
 	std::cout<<"test3"<<std::endl;
 	Parser p2 = Parser("? argmax ( Grade )",c);
 	QueryExecuter qe2=p2.parseQuery();//.execute();
 	std::cout<<qe2<<std::endl;
-	qe2.execute();
+	std::cout<<qe2.execute().first<<std::endl;
 	std::string input = "";
 	std::cout<<"Please enter a query"<<std::endl;
 	std::getline(std::cin,input);
@@ -70,8 +70,12 @@ int main(int argc, char *argv[]){
 		try{
 		Parser p3 = Parser(input,c);
 		QueryExecuter qe3 = p3.parseQuery();
-		std::cout<<qe3<<std::endl;
-		qe3.execute();
+		std::pair<float, std::vector<std::string>> respair = qe3.execute();
+		std::cout<<respair.first<<std::endl;
+		for (const auto& arg: respair.second){
+			std::cout<<arg<<"\n";
+			}
+		std::cout<<std::endl;
 		}
 		catch (std::exception& e){
 			std::cerr<<e.what()<<std::endl;

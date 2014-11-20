@@ -23,10 +23,20 @@ QueryExecuter Parser::parseQuery()
 	while(index < query_.size()) {
 		if(query_[index] == "!") {
 			index++;
-			parseInterventions(index);
+			if (index < query_.size()){
+				parseInterventions(index);
+			}
+			else {
+				throw std::invalid_argument("In parseQuery, no Intervention specified");
+			}
 		} else if (query_[index] == "|") {
 			index++;
-			parseCondition(index); 
+			if (index < query_.size()){
+				parseCondition(index); 
+			}
+			else {
+				throw std::invalid_argument("In parseQuery, no Intervention specified");
+			}
 		}
 		index++;
 	}
@@ -41,25 +51,35 @@ bool Parser::terminationSymbol(int index)
 
 bool Parser::terminationSymbolArgMax(int index) const
 {
-	return index != query_.size() && query_[index] != ")";
+	if (index == query_.size()){
+		throw std::invalid_argument("In terminationSymbolArgMax, index out of bound");
+	}
+	return query_[index] != ")";
 }
 
 void Parser::parseInterventions(int& index)
 {
+	bool ato=false;
 	while(terminationSymbol(index)) {
 		if(query_[index] == "do") {
 			index++;
 			parseDoIntervention(index); 
+			ato=true;
 		}
 		if(query_[index] == "+") {
 			index++;
 			parseAddEdge(index);
+			ato=true;
 		}
 		if(query_[index] == "-") {
 			index++;
 			parseRemoveEdge(index);
+			ato=true;
 		}
 		index++;
+		if (not ato){
+			throw std::invalid_argument("In parseInterventions, no inverventions found");
+		}
 	}
 }
 
@@ -123,26 +143,37 @@ void Parser::parseDoIntervention(int& index)
 
 void Parser::parseAddEdge(int& index)
 {
-	if(not getNode(query_[index])){
-		throw std::invalid_argument("In parseAddEdge, invalid node name "+query_[index]);
+	if ((index+2) < query_.size()){
+		if(not getNode(query_[index])){
+			throw std::invalid_argument("In parseAddEdge, invalid node name "+query_[index]);
+		}
+		index++;
+		if(not getNode(query_[index])){
+			throw std::invalid_argument("In parseAddEdge, invalid node name "+query_[index]);
+		}
+		qe_.setAddEdge(getNodeID(query_[index-1]),getNodeID(query_[index]));	
 	}
-	index++;
-	if(not getNode(query_[index])){
-		throw std::invalid_argument("In parseAddEdge, invalid node name "+query_[index]);
+	else {
+		throw std::invalid_argument("Invalid NodeIndex");
 	}
-	qe_.setAddEdge(getNodeID(query_[index-1]),getNodeID(query_[index]));	
 }
 
 void Parser::parseRemoveEdge(int& index)
 {
-	if(not getNode(query_[index])){
-		throw std::invalid_argument("In parseRemoveEdge, invalid node name "+query_[index]);
+	if ((index+2) < query_.size()){
+		if(not getNode(query_[index])){
+			throw std::invalid_argument("In parseRemoveEdge, invalid node name "+query_[index]);
+		}
+		index++;
+		if(not getNode(query_[index])){
+			throw std::invalid_argument("In parseRemoveEdge, invalid node name "+query_[index]);
+		}
+		qe_.setRemoveEdge(getNodeID(query_[index-1]),getNodeID(query_[index]));
 	}
-	index++;
-	if(not getNode(query_[index])){
-		throw std::invalid_argument("In parseRemoveEdge, invalid node name "+query_[index]);
+	else{
+		throw std::invalid_argument("Invalid NodeIndex");
 	}
-	qe_.setRemoveEdge(getNodeID(query_[index-1]),getNodeID(query_[index]));
+
 }
 
 void Parser::parseArgMax(int& index)

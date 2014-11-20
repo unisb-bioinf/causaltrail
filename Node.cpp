@@ -30,6 +30,18 @@ float Node::getProbability(unsigned int nv, unsigned int pv){
 	return ProbabilityMatrix_(nv,pv);
 }
 
+/**getProbability
+ *
+ * @param index of the value of the current node 
+ * @param index of the parent values
+ *
+ * @return Probability
+ * 
+ *Returns the probability for the event definded by nv and pv
+ */
+float Node::getProbability(unsigned int nv, unsigned int pv) const{
+	return ProbabilityMatrix_(nv,pv);
+}
 
 void Node::setProbability(float value, unsigned int nv, unsigned int pv){
 	ProbabilityMatrix_.setData(value,nv,pv);
@@ -44,11 +56,24 @@ void Node::setProbability(float value, unsigned int nv, unsigned int pv){
  * 
  *Returns the probability for the event defined by nv and pv
  */
-float Node::getProbability(std::string nv, std::string pv){
+float Node::getProbability(std::string nv, std::string pv) {
 	return ProbabilityMatrix_.getValueByNames(nv,pv);
 }
 
-void Node::setProbability(float value, std::string nv, std::string pv){	
+/**getProbability
+ *
+ * @param name of the value of the current node
+ * @param name of the parent values
+ *
+ * @return Probability
+ * 
+ *Returns the probability for the event defined by nv and pv
+ */
+float Node::getProbability(const std::string& nv, const std::string& pv) const{
+	return ProbabilityMatrix_.getValueByNames(nv,pv);
+}
+
+void Node::setProbability(float value, const std::string& nv, const std::string& pv){	
 	 ProbabilityMatrix_.setData(value,ProbabilityMatrix_.findCol(nv),ProbabilityMatrix_.findRow(pv));
 }
 
@@ -66,6 +91,11 @@ unsigned int Node::getObservations(unsigned int nv, unsigned int pv){
 	return ObservationMatrix_(nv,pv);
 }
 
+unsigned int Node::getObservations(unsigned int nv, unsigned int pv) const{
+	return ObservationMatrix_(nv,pv);
+}
+
+
 void Node::setObservations(int value, unsigned int nv, unsigned int pv){
 	ObservationMatrix_.setData(value, nv, pv);
 }
@@ -79,7 +109,20 @@ void Node::setObservations(int value, unsigned int nv, unsigned int pv){
  * 
  *Returns the number of occurences of the event defined by nv and pv
  */
-unsigned int Node::getObservations(std::string nv, std::string pv){
+unsigned int Node::getObservations(const std::string& nv, const std::string& pv){
+	return ObservationMatrix_.getValueByNames(nv,pv);
+}
+ 
+/**getObservations
+ *
+ * @param name of the value of the current node
+ * @param name of the parent values
+ *
+ * @return Observations
+ * 
+ *Returns the number of occurences of the event defined by nv and pv
+ */
+unsigned int Node::getObservations(const std::string& nv, const std::string& pv) const{
 	return ObservationMatrix_.getValueByNames(nv,pv);
 }
  
@@ -126,6 +169,16 @@ std::string& Node::getName(){
 	return name_;
 }
 
+/**getName
+ *
+ * @return name of the node
+ * 
+ *
+ */
+const std::string& Node::getName() const{
+	return name_;
+}
+
 /**getIndex
  *
  * @return index of the node
@@ -133,6 +186,16 @@ std::string& Node::getName(){
  *
  */
 unsigned int&  Node::getIndex(){
+	return index_;
+}
+
+/**getIndex
+ *
+ * @return index of the node
+ * 
+ *
+ */
+const unsigned int&  Node::getIndex() const{
 	return index_;
 }
 
@@ -163,7 +226,7 @@ const unsigned int&  Node::getID() const{
  * 
  *Checks whether v is a value of the current node
  */
-bool Node::hasValue(std::string v){
+bool Node::hasValue(std::string v) const{
 	if (ObservationMatrix_.findCol(v)>-1)
 		return true;
 	return false;
@@ -243,11 +306,19 @@ std::vector<int>& Node::getUniqueValues(){
 	return uniqueValues_;
 }
 
+const std::vector<int>& Node::getUniqueValues() const{
+	return uniqueValues_;
+}
+
 void Node::setUniqueValuesExcludingNA(std::vector<int> uniqueValues){
 	uniqueValuesExcludingNA_=uniqueValues;
 }
 
 std::vector<int>& Node::getUniqueValuesExcludingNA(){
+	return uniqueValuesExcludingNA_;
+}
+
+const std::vector<int>& Node::getUniqueValuesExcludingNA() const{
 	return uniqueValuesExcludingNA_;
 }
 
@@ -259,11 +330,19 @@ int Node::getObservationRow(){
 	return observationRow_;
 }
 
+const int Node::getObservationRow() const{
+	return observationRow_;
+}
+
 void Node::setParentCombinations(int combinations){
 	parentCombinations_=combinations;
 }
 
 int Node::getParentCombinations(){
+	return parentCombinations_;
+}
+
+const int Node::getParentCombinations() const{
 	return parentCombinations_;
 }
 
@@ -279,6 +358,10 @@ std::vector<std::string>& Node::getValueNames(){
 	return valueNames_;
 }
 
+const std::vector<std::string>& Node::getValueNames() const{
+	return valueNames_;
+}
+
 void Node::setValueNamesProb(std::vector<std::string> valueNames){
 	valueNamesProb_=valueNames;
 }
@@ -288,6 +371,10 @@ void Node::addValueNameProb(std::string names){
 }
 
 std::vector<std::string>& Node::getValueNamesProb(){
+	return valueNamesProb_;
+}
+
+const std::vector<std::string>& Node::getValueNamesProb() const{
 	return valueNamesProb_;
 }
 
@@ -303,6 +390,10 @@ std::vector<std::string>& Node::getParentValueNames(){
 	return parentValueNames_;
 }
 
+const std::vector<std::string>& Node::getParentValueNames() const{
+	return parentValueNames_;
+}
+
 void Node::setUnvisited(){
 	visited_=false;
 }
@@ -311,7 +402,7 @@ void Node::visit(){
 	visited_=true;
 }
 
-bool Node::isVisited(){
+bool Node::isVisited() const{
 	return visited_;
 }
 
@@ -350,7 +441,11 @@ void Node::setProbabilityTo1(int value){
 	} 
 }
 
-int Node::getIndex(std::string value){
+int Node::getIndex(const std::string& value) {
+	return ProbabilityMatrix_.findCol(value);
+}
+
+const int Node::getIndex(const std::string& value) const{
 	return ProbabilityMatrix_.findCol(value);
 }
 

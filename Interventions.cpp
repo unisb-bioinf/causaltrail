@@ -70,7 +70,7 @@ void Interventions::doIntervention(int nodeID, int value){
  *
  * Description
  */	
-void Interventions::reverseDoIntervention(std::string NodeName, std::string value){
+void Interventions::reverseDoIntervention(std::string NodeName){
 	Network& network = controller_.getNetwork();
 	Node& n = network.getNode(NodeName);
 	n.loadBackupDoIntervention();
@@ -84,7 +84,7 @@ void Interventions::reverseDoIntervention(std::string NodeName, std::string valu
  *
  * Description
  */	
-void Interventions::reverseDoIntervention(int nodeID, int value){
+void Interventions::reverseDoIntervention(int nodeID){
 	Network& network = controller_.getNetwork();
 	Node& n = network.getNode(nodeID);
 	n.loadBackupDoIntervention();

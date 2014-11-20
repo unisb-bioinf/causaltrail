@@ -31,4 +31,24 @@ add_executable(runDiscretiserTest test/DiscretiserTest.cpp Discretiser.cpp Netwo
 target_link_libraries(runDiscretiserTest ${Boost_LIBRARIES} gtest gtest_main)
 add_test(NAME runDiscretiserTest COMMAND runDiscretiserTest)
 
+add_executable(runCombinationsTests test/CombinationsTest.cpp)
+target_link_libraries(runCombinationsTests gtest gtest_main)
+add_test(NAME runCombinationsTests COMMAND runCombinationsTests)
+
+add_executable(runEMTests test/EMTest.cpp EM.cpp NetworkController.cpp Node.cpp Network.cpp ProbabilityHandler.cpp DataDistribution.cpp Discretiser.cpp)
+target_link_libraries(runEMTests ${Boost_LIBRARIES} gtest gtest_main)
+add_test(NAME runEMTests COMMAND runEMTests)
+
+add_executable(runInterventionTests test/InterventionTest.cpp Interventions.cpp EM.cpp NetworkController.cpp Node.cpp Network.cpp ProbabilityHandler.cpp DataDistribution.cpp Discretiser.cpp)
+target_link_libraries(runInterventionTests ${Boost_LIBRARIES} gtest gtest_main)
+add_test(NAME runInterventionTests COMMAND runInterventionTests)
+
+add_executable(runProbabilityTests test/ProbabilityTest.cpp Interventions.cpp EM.cpp NetworkController.cpp Node.cpp Network.cpp ProbabilityHandler.cpp DataDistribution.cpp Discretiser.cpp)
+target_link_libraries(runProbabilityTests ${Boost_LIBRARIES} gtest gtest_main)
+add_test(NAME runProbabilityTests COMMAND runProbabilityTests)
+
+add_executable(runQueryTests test/QueryTest.cpp Interventions.cpp EM.cpp NetworkController.cpp Node.cpp Network.cpp ProbabilityHandler.cpp DataDistribution.cpp Discretiser.cpp QueryExecuter.cpp Parser.cpp)
+target_link_libraries(runQueryTests ${Boost_LIBRARIES} gtest gtest_main)
+add_test(NAME runQueryTests COMMAND runQueryTests)
+
 

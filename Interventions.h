@@ -10,8 +10,8 @@ class Interventions{
 	void loadBackupOfNetworkStructure();
 	void doIntervention(std::string NodeName, std::string value);
 	void doIntervention(int nodeID, int value);
-	void reverseDoIntervention(std::string NodeName, std::string value);
-	void reverseDoIntervention(int nodeID, int value);
+	void reverseDoIntervention(std::string NodeName);
+	void reverseDoIntervention(int nodeID);
 	void addEdge(std::string source, std::string target);
 	void addEdge(int source, int target);
 	void removeEdge(std::string source, std::string target);

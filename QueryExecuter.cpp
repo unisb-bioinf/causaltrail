@@ -10,29 +10,28 @@ bool QueryExecuter::hasInterventions(){
 	return doInterventionNodeID_.size() != 0 || addEdgeNodeIDs_.size() != 0 || removeEdgeNodeIDs_.size() != 0;
 }
 
-void QueryExecuter::execute(){
+std::pair<float,std::vector<std::string>> QueryExecuter::execute(){
 	if (hasInterventions()){
 		executeInterventions();	
 	}	
-	computeProbability();
+	std::pair<float,std::vector<std::string>> probability = computeProbability();
 	if (hasInterventions()){
 		reverseInterventions();
 	}
+	return probability;
 }
 
 
-void QueryExecuter::computeProbability(){
+std::pair<float,std::vector<std::string>> QueryExecuter::computeProbability(){
+	std::vector<std::string> temp;
 	if (not argmaxNodeIDs_.empty()){
-		std::cout<<"Searching maximum"<<std::endl;
-		executeArgMax();
+		return executeArgMax();
 	}
 	else if (not conditionNodeID_.empty()){
-		std::cout<<"Calculating conditional probability"<<std::endl;
-		executeCondition();
+		return std::make_pair(executeCondition(), temp);
 	}
 	else {
-		std::cout<<"Calculating query probability"<<std::endl;
-		executeProbability();
+		return std::make_pair(executeProbability(), temp);
 	}
 }
 
@@ -89,7 +88,7 @@ void QueryExecuter::executeDoInterventions(){
 
 void QueryExecuter::executeReverseDoInterventions(){
 	for (int index = 0; index<doInterventionValues_.size();index++){
-		interventions_.reverseDoIntervention(doInterventionNodeID_[index], doInterventionValues_[doInterventionNodeID_[index]]);
+		interventions_.reverseDoIntervention(doInterventionNodeID_[index]);
 	}
 }
 
@@ -118,25 +117,21 @@ void QueryExecuter::executeEdgeDeletionsReverse(){
 }
 
 
-void QueryExecuter::executeArgMax(){
-	std::pair<float,std::vector<std::string>> result = probHandler_.maxSearch(argmaxNodeIDs_);
-	std::cout<<"Probability: "<<result.first<<std::endl;
-	std::cout<<"Argument: "<<result.second[0]<<std::endl;
+std::pair<float, std::vector<std::string>> QueryExecuter::executeArgMax(){
+	return probHandler_.maxSearch(argmaxNodeIDs_);
 }
 
-void QueryExecuter::executeCondition(){
+float QueryExecuter::executeCondition(){
 	std::vector<unsigned int> nominatorNodes = nonInterventionNodeID_;
 	nominatorNodes.insert(nominatorNodes.end(), conditionNodeID_.begin(), conditionNodeID_.end());
 	std::unordered_map<unsigned int, int> nominatorValues = nonInterventionValues_;
 	nominatorValues.insert(conditionValues_.begin(), conditionValues_.end());
 
-	float result = probHandler_.computeConditionalProbability(nominatorNodes, conditionNodeID_, nominatorValues, conditionValues_);
-	std::cout<<result<<std::endl;
+	return probHandler_.computeConditionalProbability(nominatorNodes, conditionNodeID_, nominatorValues, conditionValues_);
 }
 
-void QueryExecuter::executeProbability(){
-	float result=probHandler_.computeJointProbability(nonInterventionNodeID_,nonInterventionValues_);
-	std::cout<<result<<std::endl;
+float QueryExecuter::executeProbability(){
+	return probHandler_.computeJointProbability(nonInterventionNodeID_,nonInterventionValues_);
 }
 	
 void QueryExecuter::setNonIntervention(const unsigned int nodeID, const unsigned int valueID)
