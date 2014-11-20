@@ -82,8 +82,8 @@ void DataDistribution::assignValueNames(Node& n){
  */
 void DataDistribution::assignParentNames(Node& n){
 	if (n.getParents().size() > 1){
-		std::unordered_map<unsigned int,std::vector<int>> uniqueValuesExcludingNA;
-		for (auto id : n.getParents()){
+		std::unordered_map<unsigned int, std::vector<int>> uniqueValuesExcludingNA;
+		for (auto& id : n.getParents()){
 			uniqueValuesExcludingNA[id]=network_.getNode(id).getUniqueValuesExcludingNA();
 		}
 
@@ -91,7 +91,7 @@ void DataDistribution::assignParentNames(Node& n){
 		comb.createCombinations(0);
 		std::vector<std::vector<int>> tempParentNames=comb.getResult();
 
-		for (auto vec : tempParentNames){
+		for (auto& vec : tempParentNames){
 			std::string temp="";
 			for (unsigned int key=0; key<n.getParents().size();key++){
 				int parentRow=network_.getNode(n.getParents()[key]).getObservationRow();
@@ -104,7 +104,7 @@ void DataDistribution::assignParentNames(Node& n){
 
 	else if (n.getParents().size()==1){
 		int parentRow=network_.getNode(n.getParents()[0]).getObservationRow();
-		for (auto v : network_.getNode(n.getParents()[0]).getUniqueValuesExcludingNA()){
+		for (auto& v : network_.getNode(n.getParents()[0]).getUniqueValuesExcludingNA()){
 			n.addParentValueName(observationsMapR_[std::make_pair(v,parentRow)]); 
 		}
 

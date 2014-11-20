@@ -448,7 +448,7 @@ bool Network::hasNode(std::string name){
 }
 
 bool Network::hasValue(std::string nodeName, std::string valueName){
-	std::vector<std::string>& valueNames = getNode(nodeName).getValueNamesProb();
+	const std::vector<std::string>& valueNames = getNode(nodeName).getValueNamesProb();
 	auto it = std::find(valueNames.begin(), valueNames.end(),valueName);
 	if (it == valueNames.end())
 		return false;
