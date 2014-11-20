@@ -19,7 +19,7 @@ Network::Network()
  * @return index of the query node
  * 
  */
-unsigned int Network::getIndex(unsigned int id){
+const unsigned int Network::getIndex(unsigned int id) const{
 	auto res=IDToIndex_.find(id);
 	if (res==IDToIndex_.end()){
 		throw std::invalid_argument("Identifier not found");
@@ -34,7 +34,7 @@ unsigned int Network::getIndex(unsigned int id){
  * @return index of the query node
  * 
  */
-unsigned int Network::getIndex(std::string name){
+const unsigned int Network::getIndex(const std::string& name) const {
 	auto res=NameToIndex_.find(name);
 	if (res==NameToIndex_.end()){
 		throw std::invalid_argument("Identifier not found");
@@ -49,7 +49,7 @@ unsigned int Network::getIndex(std::string name){
  * @return vector containing the identifiers of the parents from the query node
  *  
  */
-std::vector<unsigned int> Network::getParents(unsigned int id){
+const std::vector<unsigned int> Network::getParents(unsigned int id) const{
 	std::vector<unsigned int> parentIDs;
 	unsigned int index=getIndex(id);
 	for (int row=0; row<AdjacencyMatrix_.getRowCount(); row++){
@@ -71,7 +71,7 @@ std::vector<unsigned int> Network::getParents(unsigned int id){
  * @return vector containing the identifiers of the parents from the query node
  *
  */
-std::vector<unsigned int> Network::getParents(Node& n){
+const std::vector<unsigned int> Network::getParents(Node& n) const{
 	return getParents(n.getID());
 	}
 
@@ -82,7 +82,7 @@ std::vector<unsigned int> Network::getParents(Node& n){
  * @return vector containing the identifiers of the parents from the query node
  *
  */
-std::vector<unsigned int> Network::getParents(const Node& n){
+const std::vector<unsigned int> Network::getParents(const Node& n) const{
 	return getParents(n.getID());
 	}
 
@@ -93,7 +93,7 @@ std::vector<unsigned int> Network::getParents(const Node& n){
  * @return vector containing the identifiers of the parents from the query node 
  * 
  */
-std::vector<unsigned int> Network::getParents(std::string name){
+const std::vector<unsigned int> Network::getParents(const std::string& name) const{
 	return getParents(getNode(name).getID());
 	}
 
@@ -102,7 +102,7 @@ std::vector<unsigned int> Network::getParents(std::string name){
  * @return a reference to the NodeList
  *
  */
-std::vector<Node>& Network::getNodes(){
+std::vector<Node>& Network::getNodes() {
 	return NodeList_;
 	}
 
@@ -114,6 +114,22 @@ std::vector<unsigned int> Network::getNodeIDs(){
 	return temp;
 }
 
+/**getNodes
+ *
+ * @return a reference to the NodeList
+ *
+ */
+const std::vector<Node>& Network::getNodes() const {
+	return NodeList_;
+	}
+
+const std::vector<unsigned int> Network::getNodeIDs() const{
+	std::vector<unsigned int> temp;
+	for (auto& n: NodeList_){
+		temp.push_back(n.getID());
+	}
+	return temp;
+}
 /**cutParents
  *
  * @param id identifier of the query node
@@ -139,7 +155,7 @@ void Network::cutParents(unsigned int id){
  * 
  * Removes the edges between the query node and its parents
  */
-void Network::cutParents(std::string name){
+void Network::cutParents(const std::string& name){
 	cutParents(getNode(name).getID());
 	}
 
@@ -166,7 +182,7 @@ void Network::addEdge(unsigned int id1, unsigned int id2){
  * 
  * Adds an edge between the nodes name1 and name2. The edge is directed from node name2 to node name1.
  */
-void Network::addEdge(std::string name1, std::string name2){
+void Network::addEdge(const std::string& name1, const std::string& name2){
 	addEdge(getNode(name1).getID(),getNode(name2).getID());
 	}
 
@@ -193,7 +209,7 @@ void Network::removeEdge(unsigned int id1, unsigned int id2){
  * 
  * Removes an edge between the nodes name1 and name2. The edge was directed from name2 to name1.
  */
-void Network::removeEdge(std::string name1, std::string name2){
+void Network::removeEdge(const std::string& name1, const std::string& name2){
 	removeEdge(getNode(name1).getID(),getNode(name2).getID());
 	}
 
@@ -208,6 +224,11 @@ Node& Network::getNode(unsigned int id){
 	return NodeList_[getIndex(id)];
 	}
 
+const Node& Network::getNode(const unsigned int id) const{
+	return NodeList_[getIndex(id)];
+	}
+
+
 /**getNode
  *
  * @param name name of the query node
@@ -215,9 +236,14 @@ Node& Network::getNode(unsigned int id){
  * @return A reference to the fitting node 
  * 
  */
-Node& Network::getNode(std::string name){
+Node& Network::getNode(const std::string& name){
 	return NodeList_[getIndex(name)];
 	}
+
+const Node& Network::getNode(const std::string& name) const{
+	return NodeList_[getIndex(name)];
+	}
+
 
 /**operator<<
  *
@@ -246,7 +272,7 @@ std::ostream& operator<<(std::ostream& os, const Network& n){
  * 
  * @exception invalid_argument if an unsupported file format is detected
  */
-void Network::readNetwork(std::string filename){
+void Network::readNetwork(const std::string& filename){
 	std::string extension  = boost::filesystem::extension(filename);
 	switch(ExtensionToIndex_[extension]){
 		case 0 :readTGF(filename); break;
@@ -265,7 +291,7 @@ void Network::readNetwork(std::string filename){
  * 
  * Reads and stores a network in the trivialgraphformat(TGF)
  */
-void Network::readTGF(std::string filename){
+void Network::readTGF(const std::string& filename){
 	NodeList_.clear();
 	AdjacencyMatrix_.clear();
 	std::string line;
@@ -314,7 +340,7 @@ void Network::readTGF(std::string filename){
  *
  * @exception invalid_argument, if there are no Nodes in memory.
  */
-void Network::readSIF(std::string filename){
+void Network::readSIF(const std::string& filename){
  	std::string line;
 	unsigned int id1;
 	unsigned int id2;
@@ -339,7 +365,7 @@ void Network::readSIF(std::string filename){
  * 
  * Reads nodes stored in a Node Attribute file (NA). Must be executed before readSIF().
  */
-void Network::readNA(std::string filename){
+void Network::readNA(const std::string& filename){
 	NodeList_.clear();
 	AdjacencyMatrix_.clear();
 	std::string line;
@@ -383,6 +409,13 @@ std::map<std::pair<int,int>, std::string>& Network::getObservationsMapR(){
 	return observationsMapR_;
 }
 
+const std::unordered_map<std::string,int>& Network::getObservationsMap() const{
+	return observationsMap_;
+}
+const std::map<std::pair<int,int>, std::string>& Network::getObservationsMapR() const{
+	return observationsMapR_;
+}
+
 void Network::setAllUnvisited(){
 	for (auto& n: NodeList_){
 		n.setUnvisited();
@@ -409,10 +442,10 @@ void Network::loadBackup(){
 	AdjacencyMatrixBackup_=Matrix<unsigned int>(0,0,0);
 }
 
-int Network::computeFactor(const Node& n, int parentID){
+const int Network::computeFactor(const Node& n, int parentID) const{
 	bool flag = false;
 	int factor = 1;
-	for (auto key : n.getParents()){
+	for (const auto& key : n.getParents()){
 		if (flag){
 			factor*=getNode(key).getUniqueValuesExcludingNA().size();
 		}
@@ -423,7 +456,7 @@ int Network::computeFactor(const Node& n, int parentID){
 	return factor;
 }
 
-int Network::reverseFactor(const Node& n, int parentID, int row){
+const int Network::reverseFactor(const Node& n, int parentID, int row) const{
 	int value = row;
 	int result = -1;
 	bool flag = true;
@@ -438,7 +471,7 @@ int Network::reverseFactor(const Node& n, int parentID, int row){
 	return -1;
 }
 
-bool Network::hasNode(std::string name){
+const bool Network::hasNode(const std::string& name) const{
 	auto res=NameToIndex_.find(name);
 	if (res==NameToIndex_.end()){
 		return false;
@@ -447,7 +480,7 @@ bool Network::hasNode(std::string name){
 	
 }
 
-bool Network::hasValue(std::string nodeName, std::string valueName){
+const bool Network::hasValue(const std::string& nodeName, const std::string& valueName) const{
 	const std::vector<std::string>& valueNames = getNode(nodeName).getValueNamesProb();
 	auto it = std::find(valueNames.begin(), valueNames.end(),valueName);
 	if (it == valueNames.end())
