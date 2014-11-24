@@ -8,11 +8,11 @@
 class Discretiser{
 	public: 
 	Discretiser(Matrix<std::string>& originalObservations, Matrix<int>& obsMatrix, Network& network);
-	Discretiser(Matrix<std::string>& originalObservations, std::string filename, Matrix<int>& obsMatrix, Network& network);
+	Discretiser(Matrix<std::string>& originalObservations,const std::string& filename, Matrix<int>& obsMatrix, Network& network);
 	void discretiseRow(unsigned int row, unsigned int method, float threshold);
 	int getEntry(unsigned int col, unsigned int row);
 	private:
-	void discretise(std::string filename);
+	void discretise(const std::string& filename);
 	void discretiseFloor(unsigned int row);
 	void discretiseCeil(unsigned int row);
 	void discretiseRound(unsigned int row);

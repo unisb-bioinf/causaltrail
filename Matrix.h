@@ -7,6 +7,8 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
 
 template <typename T> class Matrix;
 template <typename T> std::ostream& operator<<(std::ostream&, const Matrix<T>&);
@@ -54,8 +56,8 @@ template <typename T> class Matrix
 	std::vector<T> getUniqueColValues(unsigned int col) const;
 	bool contains(const T& query) const;
 	bool contains(const T& query);
-	void readMatrix(std::string& filename, bool colNames, bool rowNames,
-	                T initialValue);
+	void readMatrix(const std::string& filename, bool colNames, bool rowNames,
+	                const T& initialValue);
 	unsigned int countElement(unsigned int colrow, unsigned int number,const T& t);
 	unsigned int countElement(unsigned int colrow, unsigned int number,const T& t) const;	
 	bool containsElement(unsigned int colrow, unsigned int number, const T& t);
@@ -828,8 +830,8 @@ bool Matrix<T>::containsElement(unsigned int colrow, unsigned int number,const T
  * This methods reads a tab or space delimited file containing a matrix.
  */
 template <typename T>
-void Matrix<T>::readMatrix(std::string& filename, bool colNames, bool rowNames,
-                           T initialValue)
+void Matrix<T>::readMatrix(const std::string& filename, bool colNames, bool rowNames,
+                           const T& initialValue)
 {
 	std::ifstream input(filename, std::ifstream::in);
 	std::string line;
@@ -876,8 +878,19 @@ void Matrix<T>::readMatrix(std::string& filename, bool colNames, bool rowNames,
 		if(rowNames) {
 			buffer >> n;
 			rowNBuffer.push_back(n);
+			line.erase(line.begin(), line.begin() + n.size() + 1);
 		}
-		while(buffer >> t) {
+/*		for(boost::algorithm::split_iterator<std::string::iterator> it =
+		        make_split_iterator(
+		            line, token_finder(boost::algorithm::is_space(),boost::algorithm::token_compress_on));
+		    it != boost::algorithm::split_iterator<std::string::iterator>();
+		    ++it) {
+			std::cout<<boost::copy_range<std::string>(*it)<<std::endl;
+			data_[col + row * colCount_] = boost::lexical_cast<T>(boost::copy_range<std::string>(*it));
+			col++;*/
+	//	}
+		
+		while (buffer >>t){
 			data_[col + row * colCount_] = t;
 			col++;
 		}

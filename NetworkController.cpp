@@ -17,7 +17,7 @@ NetworkController::NetworkController()
  * @return void
  *
  */
-void NetworkController::loadNetwork(std::string networkfile){
+void NetworkController::loadNetwork(const std::string& networkfile){
 	network_.readNetwork(networkfile);
 }
 
@@ -32,7 +32,7 @@ Network& NetworkController::getNetwork(){
 	return network_;
 }
 
-void NetworkController::loadObservations(std::string datafile, std::string controlFile){
+void NetworkController::loadObservations(const std::string& datafile, const std::string& controlFile){
 	Matrix<std::string> originalObservations (0,0,"NA"); 
 	originalObservations.readMatrix(datafile,false,true,"NA");
 	Discretiser disc = Discretiser(originalObservations, controlFile, observations_, network_);
@@ -48,9 +48,19 @@ void NetworkController::loadObservations(std::string datafile, std::string contr
 void NetworkController::trainNetwork(){
 	DataDistribution datadu= DataDistribution(network_, observations_);
 	EM em = EM(network_,observations_,0.001,100000);
+	eMRuns_ = em.getNumberOfRuns();
+	finalDifference_ = em.getDifference();
+	likelihoodOfTheData_ = em.calculateLikelihoodOfTheData();
 }
 
-float NetworkController::getLikelihoodOfTheData(){
-	EM em = EM(network_,observations_,0.001,100000);
-	return em.calculateLikelihoodOfTheData();
+const float& NetworkController::getLikelihoodOfTheData() const {
+	return likelihoodOfTheData_;
+}
+
+const int& NetworkController::getNumberOfEMRuns() const{
+	return eMRuns_;
+}
+
+const float& NetworkController::getParameterDifference() const{
+	return finalDifference_;
 }

@@ -36,16 +36,13 @@ std::pair<float,std::vector<std::string>> QueryExecuter::computeProbability(){
 }
 
 void QueryExecuter::executeInterventions(){
-	std::cout<<"Interventions found!"<<std::endl;
 	interventions_.createBackupOfNetworkStructure();
 	bool topologyChange = false;
 	if (not addEdgeNodeIDs_.empty()){
-		std::cout<<"Adding edges"<<std::endl;
 		executeEdgeAdditions();
 		topologyChange = true;
 	}
 	if (not removeEdgeNodeIDs_.empty()){
-		std::cout<<"Deleting edges"<<std::endl;
 		executeEdgeDeletions();
 		topologyChange = true;
 	}
@@ -53,7 +50,6 @@ void QueryExecuter::executeInterventions(){
 		networkController_.trainNetwork();	
 	}
 	if (not doInterventionValues_.empty()){
-		std::cout<<"Performing do Intervention"<<std::endl;
 		executeDoInterventions();
 	}	
 }
@@ -61,17 +57,14 @@ void QueryExecuter::executeInterventions(){
 void QueryExecuter::reverseInterventions(){
 	interventions_.loadBackupOfNetworkStructure();
 	if (not doInterventionValues_.empty()){
-		std::cout<<"Reversing do Intervention"<<std::endl;
 		executeReverseDoInterventions();
 	}
 	bool topologyChange = false;
 	if (not addEdgeNodeIDs_.empty()){
-		std::cout<<"Removing added edges"<<std::endl;
 		executeEdgeAdditionsReverse();
 		topologyChange=true;
 	}
 	if (not removeEdgeNodeIDs_.empty()){
-		std::cout<<"Adding deleted edges"<<std::endl;
 		executeEdgeDeletionsReverse();
 		topologyChange=true;
 	}
@@ -131,7 +124,12 @@ float QueryExecuter::executeCondition(){
 }
 
 float QueryExecuter::executeProbability(){
-	return probHandler_.computeJointProbability(nonInterventionNodeID_,nonInterventionValues_);
+	if (nonInterventionNodeID_.size() == 1){
+		return probHandler_.computeTotalProbabilityNormalized(nonInterventionNodeID_[0],nonInterventionValues_.find(nonInterventionNodeID_[0])->second);
+	}
+	else{
+		return probHandler_.computeJointProbability(nonInterventionNodeID_,nonInterventionValues_);
+	}
 }
 	
 void QueryExecuter::setNonIntervention(const unsigned int nodeID, const unsigned int valueID)

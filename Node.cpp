@@ -1,17 +1,5 @@
 #include "Node.h"
 
-/**Detailed Constructor
- *
- * @param index position in the NodeList_ and the AdjacencyMatrix_ of the
- *Network class
- * @param id identifier of the node
- * @param name name of the node
- *
- * @return Node object
- *
- *Creates a Node using its position in the nodelist(index), a node identifier
- *and a node name
- */
 Node::Node(unsigned int index, unsigned int id, std::string name)
     : index_(index),
       id_(id),
@@ -23,15 +11,6 @@ Node::Node(unsigned int index, unsigned int id, std::string name)
 {
 }
 
-/**getProbability
- *
- * @param index of the value of the current node
- * @param index of the parent values
- *
- * @return Probability
- *
- *Returns the probability for the event definded by nv and pv
- */
 const float Node::getProbability(unsigned int nv, unsigned int pv) const
 {
 	return ProbabilityMatrix_(nv, pv);
@@ -42,15 +21,6 @@ void Node::setProbability(float value, unsigned int nv, unsigned int pv)
 	ProbabilityMatrix_.setData(value, nv, pv);
 }
 
-/**getProbability
- *
- * @param name of the value of the current node
- * @param name of the parent values
- *
- * @return Probability
- *
- *Returns the probability for the event defined by nv and pv
- */
 const float Node::getProbability(const std::string& nv, const std::string& pv)
     const
 {
@@ -64,15 +34,6 @@ void Node::setProbability(float value, const std::string& nv,
 	                           ProbabilityMatrix_.findRow(pv));
 }
 
-/**getObservations
- *
- * @param index of the value of the current node
- * @param index of the parent values
- *
- * @return Observations
- *
- *Returns the number of occurences of the event defined by nv and pv
- */
 const unsigned int Node::getObservations(unsigned int nv, unsigned int pv) const
 {
 	return ObservationMatrix_(nv, pv);
@@ -83,15 +44,6 @@ void Node::setObservations(int value, unsigned int nv, unsigned int pv)
 	ObservationMatrix_.setData(value, nv, pv);
 }
 
-/**getObservations
- *
- * @param name of the value of the current node
- * @param name of the parent values
- *
- * @return Observations
- *
- *Returns the number of occurences of the event defined by nv and pv
- */
 const unsigned int Node::getObservations(const std::string& nv,
                                          const std::string& pv) const
 {
@@ -103,60 +55,18 @@ void Node::setObservations(int value, std::string nv, std::string pv)
 	ObservationMatrix_.setData(value, ObservationMatrix_.findCol(nv),
 	                           ObservationMatrix_.findRow(pv));
 }
-
-/**setProbability()
- *
- * @param m A matrix of type float containing Probabilities
- *
- * @return void
- *
- *
- */
 void Node::setProbability(Matrix<float> m) { ProbabilityMatrix_ = m; }
 
-/**setObservations
- *
- * @param m A matrix of type int containing counts for observations
- *
- * @return
- *
- *
- */
 void Node::setObservations(Matrix<int> m) { ObservationMatrix_ = m; }
 
 void Node::setObservationBackup(Matrix<int> m) { ObservationMatrix_ = m; }
 
-/**getName
- *
- * @return name of the node
- *
- *
- */
 const std::string& Node::getName() const { return name_; }
 
-/**getIndex
- *
- * @return index of the node
- *
- *
- */
 const unsigned int& Node::getIndex() const { return index_; }
 
-/**getID
- *
- * @return identifier of the node
- *
- *
- */
 const unsigned int& Node::getID() const { return id_; }
-/**hasValue
- *
- * @param query element v
- *
- * @return true if v is a possible value of the current node, false otherwise
- *
- *Checks whether v is a value of the current node
- */
+
 bool Node::hasValue(std::string v) const
 {
 	if(ObservationMatrix_.findCol(v) > -1)
@@ -164,40 +74,15 @@ bool Node::hasValue(std::string v) const
 	return false;
 }
 
-/**getProbabilityMatrix
- *
- * @return A reference to the probability matrix of the current node
- *
- */
 Matrix<float>& Node::getProbabilityMatrix() { return ProbabilityMatrix_; }
 
-/**getProbabilityMatrix
- *
- * @return A reference to the probability matrix of the current node
- *
- */
 const Matrix<float>& Node::getProbabilityMatrix() const
 {
 	return ProbabilityMatrix_;
 }
 
-/**getObservationMatrix
- *
- * @return A reference to the observation matrix of the current node
- *
- */
 Matrix<int>& Node::getObservationMatrix() { return ObservationMatrix_; }
 
-/**operator<<
- *
- * @param ostream
- * @param n
- *
- * @return ostream
- *
- * Outputs the name, the identifier and the probability matrix of the current
- *node
- */
 std::ostream& operator<<(std::ostream& os, const Node& n)
 {
 	os << n.name_ << " " << n.id_ << "\n" << n.ObservationMatrix_ << "\n"

@@ -7,8 +7,11 @@
 class EM{
 	public:
 	EM(Network& network, Matrix<int>& observations_,float differenceThreshold_ = 0.0001f, unsigned int maxRuns_=10000);
+	
 	void performEM();
 	float calculateLikelihoodOfTheData();
+	int getNumberOfRuns();
+	float getDifference();
 	private:
 	float calculateProbabilityEM(Node& n, unsigned int col, unsigned int row);
 	void calculateExpectedValue(unsigned int row, Node& n, Matrix<int>& obMatrix);
@@ -26,6 +29,8 @@ class EM{
 	ProbabilityHandler probHandler_;
 	float differenceThreshold_;
 	unsigned int maxRuns_;
+	int neededRuns_;
+	float finalDifference_;
 };
 
 #endif

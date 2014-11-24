@@ -1,10 +1,4 @@
 #include "Parser.h"
-//#include <complex>
-
-/* struct query
- *
- * Query struct to store the parsed query information
- */
 
 QueryExecuter Parser::parseQuery()
 {
@@ -14,10 +8,19 @@ QueryExecuter Parser::parseQuery()
 	}
 	if(query_[1] == "argmax") {
 		index = 2;
-		parseArgMax(index);
+		if (index < query_.size())
+			parseArgMax(index);
+		else {
+			throw std::invalid_argument("In parseQuery, index out of bound");
+			}
 	} else {
 		index = 1;
+		if (index < query_.size()){
 		parseNonIntervention(index);
+		}
+		else{
+			throw std::invalid_argument("In parseQuery, index out of bound");
+		}
 	}
 
 	while(index < query_.size()) {
@@ -95,7 +98,7 @@ void Parser::parseNonIntervention(int& index)
 		}
 		index++;
 		if(not getValue(query_[index - 2], query_[index])) {
-			throw std::invalid_argument("in parsenNonIntervention, invalid value "+query_[index]);
+			throw std::invalid_argument("In parsenNonIntervention, invalid value "+query_[index]);
 		}
 		else{
 			qe_.setNonIntervention(getNodeID(query_[index-2]),getValueID(query_[index-2],query_[index]));

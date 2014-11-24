@@ -1,18 +1,6 @@
 #include "Discretiser.h"
 #include <algorithm>
-/**
- *
- * 
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */
+
 Discretiser::Discretiser(Matrix<std::string>& originalObservations, Matrix<int>& obsMatrix, Network& network)
 	:originalObservations_(originalObservations), observations_(obsMatrix), observationsMap_(network.getObservationsMap()), observationsMapR_(network.getObservationsMapR())
 	{
@@ -22,20 +10,7 @@ Discretiser::Discretiser(Matrix<std::string>& originalObservations, Matrix<int>&
 	observations_.setColNames(originalObservations.getColNames());
 }
 
-/**
- *
- * 
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */
-Discretiser::Discretiser(Matrix<std::string>& originalObservations, std::string filename,  Matrix<int>& obsMatrix, Network& network)
+Discretiser::Discretiser(Matrix<std::string>& originalObservations, const std::string& filename,  Matrix<int>& obsMatrix, Network& network)
 	:originalObservations_(originalObservations), observations_(obsMatrix), observationsMap_(network.getObservationsMap()), observationsMapR_(network.getObservationsMapR())
 	{
 	adaptFormat();
@@ -46,21 +21,12 @@ Discretiser::Discretiser(Matrix<std::string>& originalObservations, std::string 
 }
 
 
-int Discretiser::getEntry(unsigned int col, unsigned int row){
+int Discretiser::getEntry(unsigned int col, unsigned int row) {
 	int value = observations_(col,row);
 	return value;
 }
 
 
-/**getNumber
- *
- * @param col
- * @param row
- *
- * @return float 
- *
- * Converts the specified entrie of the matrix to a float value, if the value is empty, -1 is returned
- */
 float Discretiser::getNumber(unsigned int col, unsigned int row){
 	std::stringstream ss;
 	std::string temp;
@@ -73,13 +39,6 @@ float Discretiser::getNumber(unsigned int col, unsigned int row){
 	return value;
 }
 
-/**createSortedVector
- *
- * @param row row to sort
- * 
- * @return sorted vector containing the entries of the specified row
- *
- */
 std::vector<float> Discretiser::createSortedVector(unsigned int row){
     std::vector<float> templist;
     for (int col=0;col<originalObservations_.getColCount();col++){
@@ -91,7 +50,7 @@ std::vector<float> Discretiser::createSortedVector(unsigned int row){
 
 
 void Discretiser::convertToDenseNumbers(unsigned int row){
-	std::vector<int> obs = observations_.getUniqueRowValues(row);
+	const std::vector<int> obs = observations_.getUniqueRowValues(row);
 	for (unsigned int key = 0; key<obs.size(); key++){
 		for (unsigned int col=0;col<observations_.getColCount();col++){
 			if (obs[key]==observations_(col,row)){
@@ -102,15 +61,6 @@ void Discretiser::convertToDenseNumbers(unsigned int row){
 	}
 }
 
-/**discretiseRow
- *
- * @param
- * @param 
- * 
- * @return void
- *
- * Calls the apropriate method to discretise the specified row
- */
 void Discretiser::discretiseRow(unsigned int row, unsigned int method, float threshold){
 	switch(method){
 		case 0: discretiseCeil(row); convertToDenseNumbers(row); break;
@@ -126,16 +76,8 @@ void Discretiser::discretiseRow(unsigned int row, unsigned int method, float thr
 		}
 	}
 
-/**discretise
- *
- * @param filename name of the file containig the observations
- *
- * @return void
- *
- * Loads the observations, and performs discretisation according to the user input
- *
- */ 
-void Discretiser::discretise(std::string controlFile){
+
+void Discretiser::discretise(const std::string& controlFile){
 	std::ifstream input(controlFile,std::ifstream::in);
 	std::string line;
 	unsigned int row;
@@ -150,15 +92,7 @@ void Discretiser::discretise(std::string controlFile){
 	input.close();
 }
 
-/**discretiseFloor
- *
- * @param row row to discretise
- *
- * @return void
- *
- * Performs the floor operation on each value in the specified row
- *
- */
+
 void Discretiser::discretiseFloor(unsigned int row){
 	for (int col=0;col<originalObservations_.getColCount();col++){
 		float value=getNumber(col,row);
@@ -167,15 +101,6 @@ void Discretiser::discretiseFloor(unsigned int row){
 		}
 	}
 
-/**discretiseCeil
- *
- * @param row row to discretise
- *
- * @return void
- *
- * Performs the ceil operation on each value in the specified row
- *
- */
 void Discretiser::discretiseCeil(unsigned int row){
 	for (int col=0;col<originalObservations_.getColCount();col++){
 		float value=getNumber(col,row);
@@ -184,15 +109,6 @@ void Discretiser::discretiseCeil(unsigned int row){
 		} 
 	}
 
-/**discretiseRound
- *
- * @param row row to discretise
- *
- * @return voi
- *
- * Performs classical rounding on each value in the specified row
- *
- */
 void Discretiser::discretiseRound(unsigned int row){
 	for (int col=0;col<originalObservations_.getColCount();col++){
 		float value=getNumber(col,row);
@@ -201,15 +117,6 @@ void Discretiser::discretiseRound(unsigned int row){
 		}   
 	}  
 
-/**discretiseByAMean
- *
- * @param row row to discretise
- *
- * @return void
- *
- * Divids the data, according to its arithmetic mean, in two groups
- *
- */
 void Discretiser::discretiseByAMean(unsigned int row){
 	float mean=0;
 	for (int col=0;col<originalObservations_.getColCount();col++){
@@ -230,15 +137,6 @@ void Discretiser::discretiseByAMean(unsigned int row){
 		}
     }   
 
-/**discretiseByHMean
- *
- * @param row row to discretise
- *
- * @return void
- *
- * Divids the data, according to its harmonic mean, in two groups
- *
- */
 void Discretiser::discretiseByHMean(unsigned int row){
     float mean=0;
     for (int col=0;col<originalObservations_.getColCount();col++){
@@ -259,17 +157,8 @@ void Discretiser::discretiseByHMean(unsigned int row){
         }   
     }
 
-/**discretiseMedian
- *
- * @param row row to discretise
- *
- * @return void
- *
- * Divids the data, according to its median, in two groups
- *
- */
 void Discretiser::discretiseByMedian(unsigned int row){
-	std::vector<float> templist=createSortedVector(row);
+	const std::vector<float> templist=createSortedVector(row);
 	float median;
 	if (templist.size() % 2 !=0){
 		median=templist[ceil(templist.size()/2)];
@@ -290,16 +179,6 @@ void Discretiser::discretiseByMedian(unsigned int row){
 		}
     }   
 
-/**discretiseManually
- *
- * @param row row to discretise
- * @param threshold
- *
- * @return void
- *
- * Divids the data, accoring to a manually set theshold, in two groups
- *
- */
 void Discretiser::discretiseManually(unsigned int row, float threshold){
 	for (int col=0;col<originalObservations_.getColCount();col++){
 		float value=getNumber(col,row);
@@ -314,18 +193,8 @@ void Discretiser::discretiseManually(unsigned int row, float threshold){
 		}
     }   
 
-/**discretiseBracketMedians
- *
- * @param row row to discretise
- * @param number number of brackets
- *
- * @return void
- *
- * Equally divids the data into a user defined number of brackets
- *
- */
 void Discretiser::discretiseBracketMedians(unsigned int row, unsigned int number){
-	std::vector<float> templist=createSortedVector(row);
+	const std::vector<float> templist=createSortedVector(row);
 	std::vector<float> borderValues;
 	borderValues.reserve(number + 1);
 	borderValues.push_back(templist[0]);
@@ -346,18 +215,9 @@ void Discretiser::discretiseBracketMedians(unsigned int row, unsigned int number
 	}
 }   
 
-/**discretisePearsonTukey
- *
- * @param row row to discretise
- *
- * @return void
- *
- * Performs the Person Tukey discretisation method. Data
- *
- */
 void Discretiser::discretisePearsonTukey(unsigned int row){
-	std::vector<float> templist=createSortedVector(row);
-	std::vector<float> borderValues = {
+	const std::vector<float> templist=createSortedVector(row);
+	const std::vector<float> borderValues = {
 		//Calculate borders
 		FLT_MIN,
 		templist[ceil(0.185*templist.size())],
@@ -377,15 +237,10 @@ void Discretiser::discretisePearsonTukey(unsigned int row){
 	}
 }   
 
-/**mapNamesToInt
- *
- * @return void
- *
- * maps values of typ string to integer values to allow storing in the observation_ matrix
- */
+
 void Discretiser::mapNamesToInt(unsigned int row){
 	float index=0;
-	std::vector<std::string> uniqueValues = originalObservations_.getUniqueRowValues(row);
+	const std::vector<std::string> uniqueValues = originalObservations_.getUniqueRowValues(row);
 	for (auto value : uniqueValues){
 		if ((value != "NA")){
 			observationsMap_[value]=index;
@@ -402,15 +257,6 @@ void Discretiser::mapNamesToInt(unsigned int row){
 	}
 }
 
-/**createNameEntry
- *
- * @param value
- * @param row
- * 
- * @return void
- * 
- * Creates an name entry for the discretised value
- */
 void Discretiser::createNameEntry(int value, unsigned int row){
 	std::stringstream ss;
 	std::string ssvalue;
@@ -420,15 +266,6 @@ void Discretiser::createNameEntry(int value, unsigned int row){
 	observationsMapR_[std::make_pair(value,row)]=ssvalue;
 }
 
-/**adaptFormat
- *
- * @param value
- * @param row
- * 
- * @return void
- * 
- * Unifies the format of the original observations matrix
- */
 void Discretiser::adaptFormat(){
 	for (unsigned int col=0; col<originalObservations_.getColCount(); col++){
 		for (unsigned int row=0; row<originalObservations_.getRowCount(); row++){

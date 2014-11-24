@@ -12,13 +12,18 @@
 class NetworkController{
 	public:
 	NetworkController();
-	void loadNetwork(std::string networkfile);
-	void loadObservations(std::string datafile,std::string controlFile);
+	void loadNetwork(const std::string& networkfile);
+	void loadObservations(const std::string& datafile, const std::string& controlFile);
 	void trainNetwork();
-	float getLikelihoodOfTheData();
+	const float& getLikelihoodOfTheData() const;
 	Network& getNetwork();
+	const int& getNumberOfEMRuns() const;
+	const float& getParameterDifference() const;
 	private:
 	Network network_;
 	Matrix<int> observations_;
+	int eMRuns_;
+	float finalDifference_;
+	float likelihoodOfTheData_;
 };
 #endif
