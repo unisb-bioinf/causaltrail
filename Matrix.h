@@ -78,7 +78,6 @@ template <typename T> class Matrix
 	std::unordered_map<std::string, unsigned int> colNamesToIndex_;
 	std::vector<T> data_;
 };
-#endif
 
 template <typename T>
 Matrix<T>::Matrix(std::string filename, bool colNames, bool rowNames,
@@ -818,6 +817,7 @@ bool Matrix<T>::containsElement(unsigned int colrow, unsigned int number,const T
 	}
 	throw std::invalid_argument("First argument must be 0 (col) or 1(row)");
 }
+
 /**readMatrix
  *
  * @param filename file that should be read
@@ -872,28 +872,29 @@ void Matrix<T>::readMatrix(const std::string& filename, bool colNames, bool rowN
 			colNBuffer.push_back(n);
 		}
 	}
+
+	const auto finder = token_finder(boost::algorithm::is_any_of(" \t"),boost::algorithm::token_compress_on);
+
+	std::string tmp;
 	while(std::getline(input, line)) {
-		std::stringstream buffer;
-		buffer << line;
+		auto it = make_split_iterator(line, finder);
+
 		if(rowNames) {
-			buffer >> n;
-			rowNBuffer.push_back(n);
-			line.erase(line.begin(), line.begin() + n.size() + 1);
+			rowNBuffer.push_back(std::move(boost::copy_range<std::string>(*it)));
+			++it;
 		}
-/*		for(boost::algorithm::split_iterator<std::string::iterator> it =
-		        make_split_iterator(
-		            line, token_finder(boost::algorithm::is_space(),boost::algorithm::token_compress_on));
-		    it != boost::algorithm::split_iterator<std::string::iterator>();
-		    ++it) {
-			std::cout<<boost::copy_range<std::string>(*it)<<std::endl;
-			data_[col + row * colCount_] = boost::lexical_cast<T>(boost::copy_range<std::string>(*it));
-			col++;*/
-	//	}
-		
-		while (buffer >>t){
-			data_[col + row * colCount_] = t;
+
+		for(; it != boost::algorithm::split_iterator<std::string::iterator>(); ++it) {
+			tmp = boost::copy_range<std::string>(*it);
+
+			if(tmp == "") {
+				continue;
+			}
+
+			data_[col + row * colCount_] = boost::lexical_cast<T>(tmp);
 			col++;
 		}
+		
 		col = 0;
 		row++;
 	}
@@ -1065,3 +1066,4 @@ template <typename T> void Matrix<T>::clear()
 	rowCount_ = 0;
 	data_.clear();
 }
+#endif

@@ -10,9 +10,9 @@ class ProbabilityTest : public ::testing::Test{
 	}
 	
 	void virtual SetUp(){
-		c.loadNetwork("TestA.na");
-		c.loadNetwork("TestSif.sif");
-		c.loadObservations("data.txt","control.txt");
+		c.loadNetwork("Student.na");
+		c.loadNetwork("Student.sif");
+		c.loadObservations("StudentData.txt","controlStudent.txt");
 		c.trainNetwork();
 	}
 

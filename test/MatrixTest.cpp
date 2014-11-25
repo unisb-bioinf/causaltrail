@@ -146,7 +146,7 @@ TEST_F(MatrixTest, resizeOutOfBound){
 }
 
 TEST_F(MatrixTest,readMatrix){
-	std::string filename ("data2.txt");
+	std::string filename ("testObservations2.txt");
 	m_.readMatrix(filename,false,true,0);
 	ASSERT_TRUE(m_.getRowNames()[0]=="Difficulty");
 	ASSERT_TRUE(m_.getRowNames()[4]=="Letter");

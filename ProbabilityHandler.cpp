@@ -102,7 +102,7 @@ int ProbabilityHandler::getPosition(unsigned int& id, const std::vector<unsigned
 
 int ProbabilityHandler::getParentValues(const Node& n, const std::vector<unsigned int>& factorisation, const std::vector<int>& assignment){
 	int pos = 0;
-	std::vector<unsigned int> parents = n.getParents();
+	const std::vector<unsigned int>& parents = n.getParents();
 	if (parents.empty()){
 		return 0;
 	}

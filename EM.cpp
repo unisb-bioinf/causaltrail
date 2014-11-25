@@ -12,6 +12,7 @@ EM::EM(Network& network, Matrix<int>& observations, float difference,
 }
 void EM::performEM()
 {
+	start = std::chrono::system_clock::now();
 	unsigned int runs = 0;
 	float difference = 1.0f;
 	float maxprob = 0.0f;
@@ -48,6 +49,7 @@ void EM::performEM()
 		finalDifference_=mPhase();
 		neededRuns_=1;
 	}
+	end = std::chrono::system_clock::now();
 }
 
 float EM::calculateProbabilityEM(Node& n, unsigned int col, unsigned int row)
@@ -226,4 +228,7 @@ int EM::getNumberOfRuns(){
 float EM::getDifference(){
 	return finalDifference_;
 }
-	
+
+int EM::getTimeInSeconds(){
+	return 0;
+}	

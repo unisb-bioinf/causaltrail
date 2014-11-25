@@ -13,10 +13,10 @@ class NetworkTest : public ::testing::Test{
 };
 
 TEST_F(NetworkTest, readNetworkNASIF){
-	ASSERT_THROW(n_.readNetwork("TestSif.sif"),std::invalid_argument);
-	n_.readNetwork("TestA.na");
+	ASSERT_THROW(n_.readNetwork("Student.sif"),std::invalid_argument);
+	n_.readNetwork("Student.na");
 	ASSERT_TRUE(n_.getNodes().size()==5);
-	n_.readNetwork("TestSif.sif");
+	n_.readNetwork("Student.sif");
 	ASSERT_THROW(n_.getNode("Test"),std::invalid_argument);
 }
 

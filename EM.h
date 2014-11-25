@@ -3,6 +3,7 @@
 #include "ProbabilityHandler.h"
 #include <boost/algorithm/string/split.hpp>
 #include <cmath>
+#include <chrono>
 
 class EM{
 	public:
@@ -12,6 +13,7 @@ class EM{
 	float calculateLikelihoodOfTheData();
 	int getNumberOfRuns();
 	float getDifference();
+	int getTimeInSeconds();
 	private:
 	float calculateProbabilityEM(Node& n, unsigned int col, unsigned int row);
 	void calculateExpectedValue(unsigned int row, Node& n, Matrix<int>& obMatrix);
@@ -31,6 +33,8 @@ class EM{
 	unsigned int maxRuns_;
 	int neededRuns_;
 	float finalDifference_;
+	std::chrono::time_point<std::chrono::system_clock> start;
+	std::chrono::time_point<std::chrono::system_clock> end;
 };
 
 #endif
