@@ -213,7 +213,7 @@ float EM::calculateLikelihoodOfTheData()
 		if(not observations_.containsElement(0, sample, -1)) {
 			std::unordered_map<unsigned int, int> values =
 			    loadSample(nodes, sample);
-			prob += probHandler_.computeJointProbability(nodes, values);
+			prob += probHandler_.computeJointProbabilityWithoutNormalization(nodes, values);
 		}
 	}
 	return log(prob);

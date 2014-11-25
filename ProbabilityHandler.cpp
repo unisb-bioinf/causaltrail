@@ -130,6 +130,21 @@ float ProbabilityHandler::computeFullySpecifiedProbabilityDistribution(const std
 	return result;
 }
 
+float ProbabilityHandler::computeJointProbabilityWithoutNormalization(const std::vector<unsigned int>& queryNodes, std::unordered_map<unsigned int, int>& values){
+	//Generate the factorisation of the joint probability distribution
+	std::vector<unsigned int> factorisation=createFactorisation(queryNodes);
+
+	//Assign possible values to the node identifiers (needed for the creation of the combinations)
+	std::unordered_map<unsigned int, std::vector<int>> valueAssignment = assignValues(factorisation, values);
+
+	//Enumerate all possible value assignments
+	std::vector<std::vector<int>> combinations = enumerate(factorisation, valueAssignment);	
+	//Enumerate normalization
+
+	//Compute the joint probability by summing up all combinations
+	return computeFullySpecifiedProbabilityDistribution(factorisation, combinations);
+}
+
 float ProbabilityHandler::computeJointProbability(const std::vector<unsigned int>& queryNodes, std::unordered_map<unsigned int, int>& values){
 	//Generate the factorisation of the joint probability distribution
 	std::vector<unsigned int> factorisation=createFactorisation(queryNodes);
