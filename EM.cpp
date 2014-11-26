@@ -230,5 +230,6 @@ float EM::getDifference(){
 }
 
 int EM::getTimeInSeconds(){
-	return 0;
+	return std::chrono::duration_cast<std::chrono::milliseconds>
+                             (end-start).count();
 }	

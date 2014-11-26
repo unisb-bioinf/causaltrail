@@ -16,9 +16,9 @@ class EMTest : public ::testing::Test{
 };
 
 TEST_F(EMTest,Complete){
-	c.loadNetwork("Student.na");
-	c.loadNetwork("Student.sif");
-	c.loadObservations("StudentData.txt","controlStudent.txt");
+	c.loadNetwork("../data/Student.na");
+	c.loadNetwork("../data/Student.sif");
+	c.loadObservations("../data/StudentData.txt","../data/controlStudent.txt");
 	c.trainNetwork();
 	Network n = c.getNetwork();
 	Node grade = n.getNode("Grade");
@@ -56,9 +56,9 @@ TEST_F(EMTest,Complete){
 }
 
 TEST_F(EMTest,UnComplete){
-	c.loadNetwork("Student.na");
-	c.loadNetwork("Student.sif");
-	c.loadObservations("dataStudent60.txt","controlStudent.txt");
+	c.loadNetwork("../data/Student.na");
+	c.loadNetwork("../data/Student.sif");
+	c.loadObservations("../data/dataStudent60.txt","../data/controlStudent.txt");
 	c.trainNetwork();
 	Network n = c.getNetwork();
 	Node grade = n.getNode("Grade");

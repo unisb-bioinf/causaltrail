@@ -863,19 +863,21 @@ void Matrix<T>::readMatrix(const std::string& filename, bool colNames, bool rowN
 	T t;
 	int row = 0;
 	int col = 0;
-	if(colNames) {
-		std::getline(input, line);
-		std::stringstream colNameBuffer;
-		colNameBuffer << line;
-		colNameBuffer >> n;
-		while(colNameBuffer >> n) {
-			colNBuffer.push_back(n);
-		}
-	}
-
+	
 	const auto finder = token_finder(boost::algorithm::is_any_of(" \t"),boost::algorithm::token_compress_on);
 
 	std::string tmp;
+	if(colNames) {
+		auto it = make_split_iterator(line,finder);
+		for(; it != boost::algorithm::split_iterator<std::string::iterator>(); ++it) {
+			tmp = boost::copy_range<std::string>(*it);
+			if(tmp == "") {
+				continue;
+			}
+			colNBuffer.push_back(tmp);
+		}
+	}
+
 	while(std::getline(input, line)) {
 		auto it = make_split_iterator(line, finder);
 

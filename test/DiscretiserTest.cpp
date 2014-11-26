@@ -5,7 +5,7 @@
 class DiscretiserTest : public ::testing::Test{
 	protected:
 	DiscretiserTest()
-		:oobs_(Matrix<std::string>("testObservations.txt",false,true,"NA")), dobs_(Matrix<int>(0,0,0)), n_(Network())
+		:oobs_(Matrix<std::string>("../data/testObservations.txt",false,true,"NA")), dobs_(Matrix<int>(0,0,0)), n_(Network())
 	{
 	}
 

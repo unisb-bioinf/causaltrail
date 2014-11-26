@@ -19,11 +19,13 @@ class NetworkController{
 	Network& getNetwork();
 	const int& getNumberOfEMRuns() const;
 	const float& getParameterDifference() const;
+	const int& getTimeInSeconds() const;
 	private:
 	Network network_;
 	Matrix<int> observations_;
 	int eMRuns_;
 	float finalDifference_;
 	float likelihoodOfTheData_;
+	int timeInSeconds_;
 };
 #endif

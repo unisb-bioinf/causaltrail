@@ -1,0 +1,11 @@
+Floor	1.5	2.3	2.1	4.9	6.5	7.9	
+Ceil	1.5                 2.3                 2.1                 4.9                 6.5                 7.9
+Round	1.5                 2.3                 2.1                 4.9                 6.5                 7.9
+AMean	1.5                 2.3                 2.1                 4.9                 6.5                 7.9
+HMean	1.5                 2.3                 2.1                 4.9                 6.5                 7.9
+Median	1.5                 2.3                 2.1                 4.9                 6.5                 7.9
+Manually	1.5                 2.3                 2.1                 4.9                 6.5                 7.9
+BrackedMedian	1.5                 2.3                 2.1                 4.9                 6.5                 7.9
+PersonTukey	1.5                 2.3                 2.1                 4.9                 6.5                 7.9
+mapNamesToInt	Up	Down	Up	Up	Down	Down
+Unknown	Up	NA	-	na	/	Down
