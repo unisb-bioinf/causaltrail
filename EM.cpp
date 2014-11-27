@@ -60,7 +60,7 @@ float EM::calculateProbabilityEM(Node& n, unsigned int col, unsigned int row)
 
 	// compute TotProbParentsRec
 	float totProbParents = 1.0f;
-	for(int key = 0; key < ParentIDs.size(); key++) {
+	for(unsigned int key = 0; key < ParentIDs.size(); key++) {
 		totProbParents *= probHandler_.computeTotalProbability(
 		    ParentIDs[key], network_.reverseFactor(n, ParentIDs[key], row));
 	}
@@ -80,7 +80,7 @@ void EM::calculateExpectedValue(unsigned int row, Node& n,
                                 Matrix<int>& obMatrix)
 {
 	if(obMatrix.hasNACol()) {
-		for(int col = 1; col < obMatrix.getColCount(); col++) {
+		for(unsigned int col = 1; col < obMatrix.getColCount(); col++) {
 			float value =
 			    obMatrix(col, row) +
 			    calculateProbabilityEM(n, col, row) * obMatrix(0, row);
@@ -131,7 +131,6 @@ void EM::calculateMaximumLikelihood(unsigned int row, unsigned int& counter,
 float EM::mPhase()
 {
 	float difference = 0.0f;
-	float probability = 0.0f;
 	unsigned int counter = 0;
 	for(auto& n : network_.getNodes()) {
 		const Matrix<int>& obMatrix = n.getObservationMatrix();
@@ -158,11 +157,9 @@ void EM::initalise()
 void EM::initalise1()
 {
 	for(auto& n : network_.getNodes()) {
-		const Matrix<int>& obMatrix = n.getObservationMatrix();
 		Matrix<float>& probMatrix = n.getProbabilityMatrix();
-		for(int row = 0; row < probMatrix.getRowCount(); row++) {
-			float rowsum = obMatrix.calculateRowSum(row);
-			for(int col = 0; col < probMatrix.getColCount(); col++) {
+		for(unsigned int row = 0; row < probMatrix.getRowCount(); row++) {
+			for(unsigned int col = 0; col < probMatrix.getColCount(); col++) {
 				n.setProbability(1.0f / n.getUniqueValuesExcludingNA().size(),
 				                 col, row);
 			}
@@ -175,9 +172,9 @@ void EM::initalise2()
 	for(auto& n : network_.getNodes()) {
 		const Matrix<int>& obMatrix = n.getObservationMatrix();
 		Matrix<float>& probMatrix = n.getProbabilityMatrix();
-		for(int row = 0; row < probMatrix.getRowCount(); row++) {
+		for(unsigned int row = 0; row < probMatrix.getRowCount(); row++) {
 			float rowsum = obMatrix.calculateRowSum(row);
-			for(int col = 0; col < probMatrix.getColCount(); col++) {
+			for(unsigned int col = 0; col < probMatrix.getColCount(); col++) {
 				if(obMatrix.hasNACol()) {
 					n.setProbability(
 					    n.getObservationMatrix()(col + 1, row) /
