@@ -60,7 +60,7 @@ float EM::calculateProbabilityEM(const Node& n, unsigned int col, unsigned int r
 
 	// compute TotProbParentsRec
 	float totProbParents = 1.0f;
-	for(unsigned int key = 0; key < ParentIDs.size(); key++) {
+	for(unsigned int key = 0; key < n.getNumberOfParents(); key++) {
 		totProbParents *= probHandler_.computeTotalProbability(
 		    ParentIDs[key], network_.reverseFactor(n, ParentIDs[key], row));
 	}
@@ -159,7 +159,7 @@ void EM::initalise1()
 		Matrix<float>& probMatrix = n.getProbabilityMatrix();
 		for(unsigned int row = 0; row < probMatrix.getRowCount(); row++) {
 			for(unsigned int col = 0; col < probMatrix.getColCount(); col++) {
-				n.setProbability(1.0f / n.getNumberOfUnqiueValuesExcludingNA(),
+				n.setProbability(1.0f / n.getNumberOfUniqueValuesExcludingNA(),
 				                 col, row);
 			}
 		}

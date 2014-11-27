@@ -26,6 +26,7 @@ class Node {
 	const int getIndex(const std::string& value) const;
 	bool hasValue(const std::string& v) const;
 	const std::vector<unsigned int>& getParents() const;
+	const unsigned int getNumberOfParents() const;
 	void setParents(const std::vector<unsigned int>& parents);
 	void cutParents();
 	void setUniqueValues(const std::vector<int>& uniqueValues);
@@ -35,7 +36,7 @@ class Node {
 	const std::vector<int>& getUniqueValuesExcludingNA() const;
 	const unsigned int getNumberOfParentValues() const;
 	const unsigned int getNumberOfUniqueValues() const;
-	const unsigned int getNumberOfUnqiueValuesExcludingNA() const;
+	const unsigned int getNumberOfUniqueValuesExcludingNA() const;
 	void setObservationRow(int row);
 	const int getObservationRow() const;
 	void setParentCombinations(int row);

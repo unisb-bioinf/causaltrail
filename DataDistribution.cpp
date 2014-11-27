@@ -14,7 +14,7 @@ DataDistribution::computeParentCombinations(std::vector<unsigned int> parents)
 	int parentCombinations = 1;
 	for(const auto& parent : parents) {
 		parentCombinations *=
-		    network_.getNode(parent).getUniqueValuesExcludingNA().size();
+		    network_.getNode(parent).getNumberOfUniqueValuesExcludingNA();
 	}
 	return parentCombinations;
 }
@@ -51,7 +51,7 @@ void DataDistribution::assignValueNames(Node& n)
 
 void DataDistribution::assignParentNames(Node& n)
 {
-	if(n.getParents().size() > 1) {
+	if(n.getNumberOfParents() > 1) {
 		std::unordered_map<unsigned int, std::vector<int>>
 		uniqueValuesExcludingNA;
 		for(const auto& id : n.getParents()) {
@@ -65,7 +65,7 @@ void DataDistribution::assignParentNames(Node& n)
 
 		for(auto& vec : tempParentNames) {
 			std::string temp = "";
-			for(unsigned int key = 0; key < n.getParents().size(); key++) {
+			for(unsigned int key = 0; key < n.getNumberOfParents(); key++) {
 				int parentRow =
 				    network_.getNode(n.getParents()[key]).getObservationRow();
 				temp = temp +
@@ -75,7 +75,7 @@ void DataDistribution::assignParentNames(Node& n)
 			temp.erase(temp.end() - 1);
 			n.addParentValueName(temp);
 		}
-	} else if(n.getParents().size() == 1) {
+	} else if(n.getNumberOfParents() == 1) {
 		int parentRow = network_.getNode(n.getParents()[0]).getObservationRow();
 		for(auto& v :
 		    network_.getNode(n.getParents()[0]).getUniqueValuesExcludingNA()) {
@@ -90,7 +90,7 @@ void DataDistribution::assignParentNames(Node& n)
 
 int DataDistribution::getObservationColIndex(unsigned int sample, const Node& n)
 {
-	if(n.getUniqueValues().size() != n.getUniqueValuesExcludingNA().size()) {
+	if(n.getNumberOfUniqueValues() != n.getNumberOfUniqueValuesExcludingNA()) {
 		return observations_(sample, n.getObservationRow()) + 1;
 	} else {
 		return observations_(sample, n.getObservationRow());

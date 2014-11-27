@@ -100,6 +100,10 @@ void Node::loadBackup() { ObservationMatrix_ = ObservationBackup_; }
 
 const std::vector<unsigned int>& Node::getParents() const { return Parents_; }
 
+const unsigned int Node::getNumberOfParents() const {
+	return Parents_.size();
+}
+
 void Node::setParents(const std::vector<unsigned int>& parents)
 {
 	Parents_ = parents;
@@ -133,7 +137,7 @@ const unsigned int Node::getNumberOfUniqueValues() const
 	return uniqueValues_.size();
 }
 
-const unsigned int Node::getNumberOfUnqiueValuesExcludingNA() const
+const unsigned int Node::getNumberOfUniqueValuesExcludingNA() const
 {
 	return uniqueValuesExcludingNA_.size();
 }

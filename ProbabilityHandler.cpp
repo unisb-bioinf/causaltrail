@@ -11,12 +11,12 @@ float ProbabilityHandler::computeTotalProbabilityNormalized(int nodeID,
 	const auto& parentIDs = node.getParents();
 	const auto& probMatrix = node.getProbabilityMatrix();
 	// Check Existens
-	if(parentIDs.size() != 0) {
+	if(node.getNumberOfParents() != 0) {
 		// Yes -> Call recursively for all parent values
 		float queryResult = 0.0f;
 		for(unsigned int row = 0; row < probMatrix.getRowCount(); row++) {
 			float temp = 1.0f;
-			for(unsigned int index2 = 0; index2 < parentIDs.size(); index2++) {
+			for(unsigned int index2 = 0; index2 < node.getNumberOfParents(); index2++) {
 				temp *= computeTotalProbability(
 				    parentIDs[index2],
 				    network_.reverseFactor(node, parentIDs[index2], row));
@@ -45,12 +45,12 @@ float ProbabilityHandler::computeTotalProbability(int nodeID, int index)
 	const auto& parentIDs = node.getParents();
 	const auto& probMatrix = node.getProbabilityMatrix();
 	// Check Existens
-	if(parentIDs.size() != 0) {
+	if(node.getNumberOfParents() != 0) {
 		// Yes -> Call recursively for all parent values
 		float result = 0.0f;
 		for(unsigned int row = 0; row < probMatrix.getRowCount(); row++) {
 			float temp = 1.0f;
-			for(unsigned int index2 = 0; index2 < parentIDs.size(); index2++) {
+			for(unsigned int index2 = 0; index2 < node.getNumberOfParents(); index2++) {
 				temp *= computeTotalProbability(
 				    parentIDs[index2],
 				    network_.reverseFactor(node, parentIDs[index2], row));
