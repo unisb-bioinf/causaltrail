@@ -6,8 +6,6 @@ DataDistribution::DataDistribution(Network& network, Matrix<int>& observations)
       observationsMap_(network.getObservationsMap()),
       observationsMapR_(network.getObservationsMapR())
 {
-	assignObservationsToNodes();
-	distributeObservations();
 }
 
 int

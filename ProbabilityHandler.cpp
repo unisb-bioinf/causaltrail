@@ -91,8 +91,10 @@ std::vector<std::vector<int>> ProbabilityHandler::enumerate(const std::vector<un
 	return com.getResult();
 }
 
-int ProbabilityHandler::getPosition(unsigned int& id, const std::vector<unsigned int>& factorisation){
-	for (int i=0; i<factorisation.size(); i++){
+int ProbabilityHandler::getPosition(
+    unsigned int id, const std::vector<unsigned int>& factorisation) const
+{
+	for (unsigned int i=0; i<factorisation.size(); i++){
 		if (factorisation[i]==id){
 			return i;
 		}
@@ -106,10 +108,25 @@ int ProbabilityHandler::getParentValues(const Node& n, const std::vector<unsigne
 	if (parents.empty()){
 		return 0;
 	}
-	for(auto parent: parents){
+	for(auto parent : parents) {
 		int position = getPosition(parent, factorisation);
-		pos+=network_.computeFactor(n,parent)*assignment[position];
+		pos += network_.computeFactor(n, parent) * assignment[position];
 	}
+	return pos;
+}
+
+int ProbabilityHandler::getParentValues(const Node& n, const Matrix<int>& obs,
+                                        unsigned int sample) const
+{
+	const auto& parents = n.getParents();
+
+	int pos = 0;
+	for(auto pi : parents) {
+		const Node& parent = network_.getNode(pi);
+		pos += network_.computeFactor(n, pi) *
+		       obs(sample, parent.getObservationRow());
+	}
+
 	return pos;
 }
 
@@ -128,6 +145,28 @@ float ProbabilityHandler::computeFullySpecifiedProbabilityDistribution(const std
 		result+=intermediatResult;
 	}
 	return result;
+}
+
+float ProbabilityHandler::calculateLikelihoodOfTheData(const Matrix<int>& obs) const
+{
+	float prob = 0.0f;
+	for(unsigned int sample = 0; sample < obs.getColCount();
+	    sample++) {
+		if(!obs.containsElement(0, sample, -1)) {
+			float intermediateResult = 1.0f;
+			for (unsigned int index = 0; index < obs.getRowCount(); ++index) {
+				const Node& n = network_.getNode(obs.getRowNames()[index]);
+				int row = getParentValues(n, obs, sample);
+	
+				intermediateResult *=
+				    n.getProbability(obs(sample, n.getObservationRow()), row);
+			}
+
+			prob += intermediateResult;
+		}
+	}
+
+	return log(prob);
 }
 
 float ProbabilityHandler::computeJointProbabilityWithoutNormalization(const std::vector<unsigned int>& queryNodes, std::unordered_map<unsigned int, int>& values){
@@ -178,7 +217,7 @@ std::pair<float,std::vector<std::string>> ProbabilityHandler::maxSearch(const st
 	int maxIndex=0;
 	float maxprob=0.0f;
 	for (auto& com: combinations){
-		for (int index = 0; index<queryNodes.size(); index++){
+		for (unsigned int index = 0; index<queryNodes.size(); index++){
 			temp[queryNodes[index]]=com[index];
 		}
 		float prob = computeJointProbability(queryNodes,temp);
@@ -190,7 +229,7 @@ std::pair<float,std::vector<std::string>> ProbabilityHandler::maxSearch(const st
 	}
 	std::vector<std::string> resultNames;
 
-	for (int index = 0; index<queryNodes.size(); index++){
+	for (unsigned int index = 0; index<queryNodes.size(); index++){
 		int value = combinations[maxIndex][index];
 		const Node& node = network_.getNode(queryNodes[index]);
 		resultNames.push_back(node.getValueNamesProb()[value]);

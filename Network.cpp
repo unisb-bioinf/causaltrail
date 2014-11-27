@@ -33,7 +33,7 @@ const std::vector<unsigned int> Network::getParents(unsigned int id) const
 {
 	std::vector<unsigned int> parentIDs;
 	unsigned int index = getIndex(id);
-	for(int row = 0; row < AdjacencyMatrix_.getRowCount(); row++) {
+	for(unsigned int row = 0; row < AdjacencyMatrix_.getRowCount(); row++) {
 		if(AdjacencyMatrix_(index, row) == 1) {
 			unsigned int temp;
 			std::stringstream ss;
@@ -310,7 +310,7 @@ void Network::loadBackup()
 	AdjacencyMatrixBackup_ = Matrix<unsigned int>(0, 0, 0);
 }
 
-const int Network::computeFactor(const Node& n, int parentID) const
+const int Network::computeFactor(const Node& n, unsigned int parentID) const
 {
 	bool flag = false;
 	int factor = 1;
@@ -325,11 +325,9 @@ const int Network::computeFactor(const Node& n, int parentID) const
 	return factor;
 }
 
-const int Network::reverseFactor(const Node& n, int parentID, int row) const
+const int Network::reverseFactor(const Node& n, unsigned int parentID, int row) const
 {
 	int value = row;
-	int result = -1;
-	bool flag = true;
 	for(const auto& key : n.getParents()) {
 		int factor = computeFactor(n, key);
 		int result = value / factor;

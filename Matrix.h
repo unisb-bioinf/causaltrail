@@ -154,7 +154,9 @@ const T& Matrix<T>::operator()(unsigned int col, unsigned int row) const
 {
 	if((col > colCount_)or(row > rowCount_)) {
 		throw std::invalid_argument(
-		    "In Matrix() const, Invalid matrix position");
+		    "In Matrix() const, Invalid matrix position" +
+		    boost::lexical_cast<std::string>(col) + " " +
+		    boost::lexical_cast<std::string>(row));
 	}
 	return data_[col + row * colCount_];
 }
@@ -860,7 +862,6 @@ void Matrix<T>::readMatrix(const std::string& filename, bool colNames, bool rowN
 	// Read data
 	input.clear();
 	input.seekg(0);
-	T t;
 	int row = 0;
 	int col = 0;
 	

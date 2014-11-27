@@ -41,7 +41,7 @@ float Discretiser::getNumber(unsigned int col, unsigned int row){
 
 std::vector<float> Discretiser::createSortedVector(unsigned int row){
     std::vector<float> templist;
-    for (int col=0;col<originalObservations_.getColCount();col++){
+    for (unsigned int col=0;col<originalObservations_.getColCount();col++){
         templist.push_back(getNumber(col,row));
 	}   	
 	std::sort(templist.begin(), templist.end());
@@ -94,7 +94,7 @@ void Discretiser::discretise(const std::string& controlFile){
 
 
 void Discretiser::discretiseFloor(unsigned int row){
-	for (int col=0;col<originalObservations_.getColCount();col++){
+	for (unsigned int col=0;col<originalObservations_.getColCount();col++){
 		float value=getNumber(col,row);
 		int dvalue=floor(value);
 		observations_.setData(dvalue,col,row);
@@ -102,7 +102,7 @@ void Discretiser::discretiseFloor(unsigned int row){
 	}
 
 void Discretiser::discretiseCeil(unsigned int row){
-	for (int col=0;col<originalObservations_.getColCount();col++){
+	for (unsigned int col=0;col<originalObservations_.getColCount();col++){
 		float value=getNumber(col,row);
 		int dvalue= ceil(value);
 		observations_.setData(dvalue,col,row);
@@ -110,7 +110,7 @@ void Discretiser::discretiseCeil(unsigned int row){
 	}
 
 void Discretiser::discretiseRound(unsigned int row){
-	for (int col=0;col<originalObservations_.getColCount();col++){
+	for (unsigned int col=0;col<originalObservations_.getColCount();col++){
 		float value=getNumber(col,row);
 		int dvalue=round(value);
 		observations_.setData(dvalue,col,row);
@@ -119,12 +119,12 @@ void Discretiser::discretiseRound(unsigned int row){
 
 void Discretiser::discretiseByAMean(unsigned int row){
 	float mean=0;
-	for (int col=0;col<originalObservations_.getColCount();col++){
+	for (unsigned int col=0;col<originalObservations_.getColCount();col++){
 			float value=getNumber(col,row);
 			mean+=value;
 		}
 	mean=mean/originalObservations_.getColCount();
-	for (int col=0;col<originalObservations_.getColCount();col++){
+	for (unsigned int col=0;col<originalObservations_.getColCount();col++){
 			float value=getNumber(col,row);
 			if (value > mean){
 				observations_.setData(1,col,row);
@@ -139,12 +139,12 @@ void Discretiser::discretiseByAMean(unsigned int row){
 
 void Discretiser::discretiseByHMean(unsigned int row){
     float mean=0;
-    for (int col=0;col<originalObservations_.getColCount();col++){
+    for (unsigned int col=0;col<originalObservations_.getColCount();col++){
 			float value=getNumber(col,row);
             mean+=1.0/value;
         }   
     mean=originalObservations_.getColCount()/mean;
-    for (int col=0;col<originalObservations_.getColCount();col++){
+    for (unsigned int col=0;col<originalObservations_.getColCount();col++){
             float value=getNumber(col,row);
             if (value > mean){
                 observations_.setData(1,col,row);
@@ -166,7 +166,7 @@ void Discretiser::discretiseByMedian(unsigned int row){
 	else {
 		median=(templist[(templist.size()/2)-1]+templist[templist.size()/2])/2.0;
 		}
-	for (int col=0;col<originalObservations_.getColCount();col++){
+	for (unsigned int col=0;col<originalObservations_.getColCount();col++){
 		float value=getNumber(col,row);
 		if (value > median){
 			observations_.setData(1,col,row);
@@ -180,7 +180,7 @@ void Discretiser::discretiseByMedian(unsigned int row){
     }   
 
 void Discretiser::discretiseManually(unsigned int row, float threshold){
-	for (int col=0;col<originalObservations_.getColCount();col++){
+	for (unsigned int col=0;col<originalObservations_.getColCount();col++){
 		float value=getNumber(col,row);
 		if (value> threshold){
 			observations_.setData(1,col,row);
@@ -199,13 +199,13 @@ void Discretiser::discretiseBracketMedians(unsigned int row, unsigned int number
 	borderValues.reserve(number + 1);
 	borderValues.push_back(templist[0]);
 	//Calculat Borders
-	for (int i=1; i<number;i++){
+	for (unsigned int i=1; i<number;i++){
 		borderValues.push_back(templist[div(templist.size(),number).quot*i]);
 	}
 	borderValues.push_back(FLT_MAX);
 	//Fill intervals
-	for (int col=0;col<templist.size();col++){
-		for (int i=1;i<number+1;i++){
+	for (unsigned int col=0;col<templist.size();col++){
+		for (unsigned int i=1;i<=number;i++){
 			if ((templist[col] >= borderValues[i-1]) and (templist[col]<borderValues[i])){
 				observations_.setData(i-1, col, row);
 				createNameEntry(i-1, row);
@@ -225,7 +225,7 @@ void Discretiser::discretisePearsonTukey(unsigned int row){
 		FLT_MAX
 	};
 	//Fill intervals
-	for (int col=0;col<templist.size();col++){
+	for (unsigned int col=0;col<templist.size();col++){
 		for (int i=1;i<4;i++){
 			float value=getNumber(col,row);
 			if ((value >= borderValues[i-1]) and (value<borderValues[i])){
@@ -239,9 +239,9 @@ void Discretiser::discretisePearsonTukey(unsigned int row){
 
 
 void Discretiser::mapNamesToInt(unsigned int row){
-	float index=0;
-	const std::vector<std::string> uniqueValues = originalObservations_.getUniqueRowValues(row);
-	for (auto value : uniqueValues){
+	size_t index = 0;
+	const auto uniqueValues = originalObservations_.getUniqueRowValues(row);
+	for (const auto& value : uniqueValues){
 		if ((value != "NA")){
 			observationsMap_[value]=index;
 			observationsMapR_[std::make_pair(index,row)]=value;
@@ -252,7 +252,7 @@ void Discretiser::mapNamesToInt(unsigned int row){
 			observationsMapR_[std::make_pair(-1,row)]=value;
 		}
 	}
-	for (int col=0;col<originalObservations_.getColCount();col++){
+	for (unsigned int col=0;col<originalObservations_.getColCount();col++){
 		observations_.setData(observationsMap_[originalObservations_(col,row)],col,row);
 	}
 }
@@ -269,7 +269,7 @@ void Discretiser::createNameEntry(int value, unsigned int row){
 void Discretiser::adaptFormat(){
 	for (unsigned int col=0; col<originalObservations_.getColCount(); col++){
 		for (unsigned int row=0; row<originalObservations_.getRowCount(); row++){
-			const std::string value=originalObservations_(col,row);
+			const std::string& value=originalObservations_(col,row);
 			if ((value == "NA") or (value =="na") or (value=="-") or (value == "/"))
 				originalObservations_.setData("NA",col,row);
 		}

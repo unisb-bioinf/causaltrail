@@ -206,17 +206,7 @@ EM::loadSample(std::vector<unsigned int> nodes, unsigned int sample)
 
 float EM::calculateLikelihoodOfTheData()
 {
-	float prob = 0.0f;
-	std::vector<unsigned int> nodes = network_.getNodeIDs();
-	for(unsigned int sample = 0; sample < observations_.getColCount();
-	    sample++) {
-		if(not observations_.containsElement(0, sample, -1)) {
-			std::unordered_map<unsigned int, int> values =
-			    loadSample(nodes, sample);
-			prob += probHandler_.computeJointProbabilityWithoutNormalization(nodes, values);
-		}
-	}
-	return log(prob);
+	return probHandler_.calculateLikelihoodOfTheData(observations_);
 }
 
 

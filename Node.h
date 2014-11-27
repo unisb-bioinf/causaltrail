@@ -13,13 +13,13 @@ class Node {
 	const unsigned int getObservations(const std::string& nv, const std::string& pv) const ;	
 	void setObservations(int value, unsigned int nv, unsigned int pv);
 	void setObservations(int value, std::string nv, std::string pv);
-	void setProbability(Matrix<float> m);	
+	void setProbability(const Matrix<float>& m);	
 	void setProbabilityTo1(std::string value);
 	void setProbabilityTo1(int value);
 	void createBackupDoIntervention();
 	void loadBackupDoIntervention();
-	void setObservations(Matrix<int> m);
-	void setObservationBackup(Matrix<int> m);
+	void setObservations(const Matrix<int>& m);
+	void setObservationBackup(const Matrix<int>& m);
 	const std::string& getName() const;
 	const unsigned int& getIndex() const;
 	const unsigned int& getID() const;
@@ -28,9 +28,9 @@ class Node {
 	const std::vector<unsigned int>& getParents() const;
 	void setParents(std::vector<unsigned int> parents);
 	void cutParents();
-	void setUniqueValues(std::vector<int> uniqueValues);
+	void setUniqueValues(const std::vector<int>& uniqueValues);
 	const std::vector<int>& getUniqueValues() const;
-	void setUniqueValuesExcludingNA(std::vector<int>);
+	void setUniqueValuesExcludingNA(const std::vector<int>&);
 	std::vector<int>& getUniqueValuesExcludingNA();
 	const std::vector<int>& getUniqueValuesExcludingNA() const;
 	void setObservationRow(int row);

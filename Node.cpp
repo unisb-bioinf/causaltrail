@@ -55,11 +55,11 @@ void Node::setObservations(int value, std::string nv, std::string pv)
 	ObservationMatrix_.setData(value, ObservationMatrix_.findCol(nv),
 	                           ObservationMatrix_.findRow(pv));
 }
-void Node::setProbability(Matrix<float> m) { ProbabilityMatrix_ = m; }
+void Node::setProbability(const Matrix<float>& m) { ProbabilityMatrix_ = m; }
 
-void Node::setObservations(Matrix<int> m) { ObservationMatrix_ = m; }
+void Node::setObservations(const Matrix<int>& m) { ObservationMatrix_ = m; }
 
-void Node::setObservationBackup(Matrix<int> m) { ObservationMatrix_ = m; }
+void Node::setObservationBackup(const Matrix<int>& m) { ObservationMatrix_ = m; }
 
 const std::string& Node::getName() const { return name_; }
 
@@ -100,14 +100,14 @@ void Node::setParents(std::vector<unsigned int> parents) { Parents_ = parents; }
 
 void Node::cutParents() { Parents_.clear(); }
 
-void Node::setUniqueValues(std::vector<int> uniqueValues)
+void Node::setUniqueValues(const std::vector<int>& uniqueValues)
 {
 	uniqueValues_ = uniqueValues;
 }
 
 const std::vector<int>& Node::getUniqueValues() const { return uniqueValues_; }
 
-void Node::setUniqueValuesExcludingNA(std::vector<int> uniqueValues)
+void Node::setUniqueValuesExcludingNA(const std::vector<int>& uniqueValues)
 {
 	uniqueValuesExcludingNA_ = uniqueValues;
 }

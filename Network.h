@@ -36,8 +36,8 @@ class Network{
 		const std::map<std::pair<int,int>, std::string>& getObservationsMapR() const;
 		void createBackup();
 		void loadBackup();
-		const int computeFactor(const Node& n, int parentID) const ;
-		const int reverseFactor(const Node& n, int parentID, int row) const;
+		const int computeFactor(const Node& n, unsigned int parentID) const ;
+		const int reverseFactor(const Node& n, unsigned int parentID, int row) const;
 	private:
 		const std::vector<unsigned int> getParents(unsigned int id) const;
 		const std::vector<unsigned int> getParents(const std::string& name) const;
