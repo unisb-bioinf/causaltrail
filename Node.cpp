@@ -128,6 +128,16 @@ const std::vector<int>& Node::getUniqueValuesExcludingNA() const
 	return uniqueValuesExcludingNA_;
 }
 
+const unsigned int Node::getNumberOfUniqueValues() const
+{
+	return uniqueValues_.size();
+}
+
+const unsigned int Node::getNumberOfUnqiueValuesExcludingNA() const
+{
+	return uniqueValuesExcludingNA_.size();
+}
+
 void Node::setObservationRow(int row) { observationRow_ = row; }
 
 const int Node::getObservationRow() const { return observationRow_; }
