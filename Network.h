@@ -38,11 +38,13 @@ class Network{
 		void loadBackup();
 		const int computeFactor(const Node& n, unsigned int parentID) const ;
 		const int reverseFactor(const Node& n, unsigned int parentID, int row) const;
+		unsigned int getNewID(unsigned int originalID);
 	private:
 		const std::vector<unsigned int> getParents(unsigned int id) const;
 		const std::vector<unsigned int> getParents(const std::string& name) const;
 		const std::vector<unsigned int> getParents(Node& n) const;
 		const std::vector<unsigned int> getParents(const Node& n) const;		
+		unsigned int getDenseNodeIdentifier(unsigned int originialIdentifier);
 		void assignParents();
 		void readTGF(const std::string& filename);
 		void readSIF(const std::string& filename);
@@ -53,6 +55,7 @@ class Network{
 		std::unordered_map<std::string, unsigned int> NameToIndex_;
 		std::unordered_map<std::string, unsigned int> ExtensionToIndex_;
 		std::unordered_map<std::string,int> observationsMap_;
+		std::vector<std::pair<unsigned int, unsigned int>> originalIDToDense_;
 		std::map<std::pair<int,int>, std::string> observationsMapR_;
 		std::vector<Node> NodeList_;
 };

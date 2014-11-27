@@ -37,12 +37,12 @@ TEST_F(ProbabilityTest, TotalProbability){
 	ASSERT_NEAR(0.4f,p.computeTotalProbability(1,1),0.001);	
 
 	//Tests for SAT
-	ASSERT_NEAR(0.725f,p.computeTotalProbability(5,0),0.001);
-	ASSERT_NEAR(0.275f,p.computeTotalProbability(5,1),0.001);	
+	ASSERT_NEAR(0.725f,p.computeTotalProbability(4,0),0.001);
+	ASSERT_NEAR(0.275f,p.computeTotalProbability(4,1),0.001);	
 
 	//Tests for Letter
-	ASSERT_NEAR(0.497664f,p.computeTotalProbability(4,0),0.001);
-	ASSERT_NEAR(0.502336f,p.computeTotalProbability(4,1),0.001);	
+	ASSERT_NEAR(0.497664f,p.computeTotalProbability(5,0),0.001);
+	ASSERT_NEAR(0.502336f,p.computeTotalProbability(5,1),0.001);	
 }
 
 TEST_F(ProbabilityTest, JointProbability){
@@ -99,11 +99,11 @@ TEST_F(ProbabilityTest, ConditionalProbability){
 	ASSERT_NEAR(0.48f, p.computeConditionalProbability(v2, v2d, mn2, md2),0.001);
 
 	std::unordered_map<unsigned int, int> mn3;
-	mn3[5]=0;
+	mn3[4]=0;
 	mn3[1]=0;
 	std::vector<unsigned int> v3 {1,5};
 	std::unordered_map<unsigned int, int> md3;
-	md3[5]=0;
+	md3[4]=0;
 	std::vector<unsigned int> v3d {5};
 	//Test for Difficulty given SAT
 	ASSERT_NEAR(0.6f, p.computeConditionalProbability(v3, v3d, mn3, md3),0.001);
@@ -118,8 +118,8 @@ TEST_F(ProbabilityTest, maxSearch){
 	ASSERT_TRUE("g1"==p.maxSearch({2}).second[0]);
 
 	//Tests for SAT
-	ASSERT_NEAR(0.725f,p.maxSearch({5}).first,0.001);
-	ASSERT_TRUE("s0"==p.maxSearch({5}).second[0]);
+	ASSERT_NEAR(0.725f,p.maxSearch({4}).first,0.001);
+	ASSERT_TRUE("s0"==p.maxSearch({4}).second[0]);
 
 	//Tests for Intelligence
 	ASSERT_NEAR(0.7f,p.maxSearch({3}).first,0.001);

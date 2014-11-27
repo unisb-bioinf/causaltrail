@@ -9,6 +9,17 @@ Network::Network()
 	ExtensionToIndex_[".sif"] = 2;
 }
 
+struct Comp {
+    bool operator()(std::pair<unsigned int, unsigned int> p, unsigned int s) const
+    { return p.first < s; }
+    bool operator()(unsigned int s, std::pair<unsigned int, unsigned int> p) const
+    { return s < p.first; }
+    bool operator()(std::pair<unsigned int, unsigned int> p1,std::pair<unsigned int,unsigned int> p2) const
+    { return p1.first < p2.first; }
+  
+};
+
+
 
 const unsigned int Network::getIndex(unsigned int id) const
 {
@@ -183,6 +194,7 @@ void Network::readTGF(const std::string& filename)
 		std::stringstream buffer;
 		buffer << line;
 		buffer >> id1 >> name;
+		id1=getDenseNodeIdentifier(id1);
 		NodeList_.push_back(Node(0, id1, name));
 		IDToIndex_[id1] = index;
 		NameToIndex_[name] = index;
@@ -196,11 +208,12 @@ void Network::readTGF(const std::string& filename)
 	AdjacencyMatrix_.resize(NodeList_.size(), NodeList_.size(), 0);
 	AdjacencyMatrix_.setRowNames(names);
 	AdjacencyMatrix_.setColNames(names);
+	std::sort(originalIDToDense_.begin(), originalIDToDense_.end(),Comp());
 	while(std::getline(input, line)) {
 		std::stringstream buffer;
 		buffer << line;
 		buffer >> id1 >> id2;
-		addEdge(id2, id1);
+		addEdge(getNewID(id2),getNewID(id1));
 	}
 	input.close();
 }
@@ -219,7 +232,7 @@ void Network::readSIF(const std::string& filename)
 		std::stringstream buffer;
 		buffer << line;
 		buffer >> id1 >> relation >> id2;
-		addEdge(id2, id1);
+		addEdge(getNewID(id2), getNewID(id1));
 	}
 	input.close();
 }
@@ -241,6 +254,7 @@ void Network::readNA(const std::string& filename)
 		std::stringstream buffer;
 		buffer << line;
 		buffer >> id1 >> waste >> name;
+		id1=getDenseNodeIdentifier(id1);
 		NodeList_.push_back(Node(0, id1, name));
 		IDToIndex_[id1] = index;
 		NameToIndex_[name] = index;
@@ -254,6 +268,7 @@ void Network::readNA(const std::string& filename)
 	AdjacencyMatrix_.resize(NodeList_.size(), NodeList_.size(), 0);
 	AdjacencyMatrix_.setRowNames(names);
 	AdjacencyMatrix_.setColNames(names);
+	std::sort(originalIDToDense_.begin(), originalIDToDense_.end(),Comp());
 }
 
 void Network::assignParents()
@@ -358,3 +373,18 @@ const bool Network::hasValue(const std::string& nodeName,
 		return false;
 	return true;
 }
+
+unsigned int Network::getDenseNodeIdentifier(unsigned int originialIdentifier) {
+	unsigned int newID= NodeList_.size()+1;
+	originalIDToDense_.push_back(std::make_pair(originialIdentifier, newID));
+	return newID;
+}
+
+unsigned int Network::getNewID(unsigned int originalIdentifier){
+	auto low = std::lower_bound(originalIDToDense_.begin(),originalIDToDense_.end(),originalIdentifier, Comp());
+	if (low != originalIDToDense_.end()){
+		return low->second;
+		}
+	throw std::invalid_argument("Identifier not found");
+}
+	
