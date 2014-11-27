@@ -50,7 +50,8 @@ const unsigned int Node::getObservations(const std::string& nv,
 	return ObservationMatrix_.getValueByNames(nv, pv);
 }
 
-void Node::setObservations(int value, const std::string& nv, const std::string& pv)
+void Node::setObservations(int value, const std::string& nv,
+                           const std::string& pv)
 {
 	ObservationMatrix_.setData(value, ObservationMatrix_.findCol(nv),
 	                           ObservationMatrix_.findRow(pv));
@@ -59,7 +60,10 @@ void Node::setProbability(const Matrix<float>& m) { ProbabilityMatrix_ = m; }
 
 void Node::setObservations(const Matrix<int>& m) { ObservationMatrix_ = m; }
 
-void Node::setObservationBackup(const Matrix<int>& m) { ObservationMatrix_ = m; }
+void Node::setObservationBackup(const Matrix<int>& m)
+{
+	ObservationMatrix_ = m;
+}
 
 const std::string& Node::getName() const { return name_; }
 
@@ -96,7 +100,10 @@ void Node::loadBackup() { ObservationMatrix_ = ObservationBackup_; }
 
 const std::vector<unsigned int>& Node::getParents() const { return Parents_; }
 
-void Node::setParents(const std::vector<unsigned int>& parents) { Parents_ = parents; }
+void Node::setParents(const std::vector<unsigned int>& parents)
+{
+	Parents_ = parents;
+}
 
 void Node::cutParents() { Parents_.clear(); }
 
@@ -137,7 +144,10 @@ void Node::setValueNames(const std::vector<std::string>& valueNames)
 	valueNames_ = valueNames;
 }
 
-void Node::addValueName(const std::string& name) { valueNames_.push_back(name); }
+void Node::addValueName(const std::string& name)
+{
+	valueNames_.push_back(name);
+}
 
 const std::vector<std::string>& Node::getValueNames() const
 {

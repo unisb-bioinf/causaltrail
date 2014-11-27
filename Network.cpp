@@ -66,7 +66,7 @@ std::vector<Node>& Network::getNodes() { return NodeList_; }
 std::vector<unsigned int> Network::getNodeIDs()
 {
 	std::vector<unsigned int> temp;
-	for(auto& n : NodeList_) {
+	for(const auto& n : NodeList_) {
 		temp.push_back(n.getID());
 	}
 	return temp;
@@ -87,7 +87,7 @@ void Network::cutParents(unsigned int id)
 {
 	std::vector<unsigned int> parentIDs = getParents(id);
 	unsigned int index = getIndex(id);
-	for(auto n : parentIDs) {
+	for(auto& n : parentIDs) {
 		AdjacencyMatrix_.setData(0, getIndex(n), index);
 	}
 	getNode(id).cutParents();
