@@ -15,7 +15,7 @@ void Interventions::loadBackupOfNetworkStructure(){
 	network.loadBackup();
 }
 
-void Interventions::doIntervention(std::string NodeName, std::string value){
+void Interventions::doIntervention(const std::string& NodeName, const std::string& value){
 	Network& network = controller_.getNetwork();
 	Node& n = network.getNode(NodeName);
 	n.createBackupDoIntervention();
@@ -31,7 +31,7 @@ void Interventions::doIntervention(int nodeID, int value){
 	n.setProbabilityTo1(value);
 }
 
-void Interventions::reverseDoIntervention(std::string NodeName){
+void Interventions::reverseDoIntervention(const std::string& NodeName){
 	Network& network = controller_.getNetwork();
 	Node& n = network.getNode(NodeName);
 	n.loadBackupDoIntervention();
@@ -43,7 +43,7 @@ void Interventions::reverseDoIntervention(int nodeID){
 	n.loadBackupDoIntervention();
 }
 
-void Interventions::addEdge(std::string source, std::string target){
+void Interventions::addEdge(const std::string& source, const std::string& target){
 	Network& network = controller_.getNetwork();
 	network.addEdge(target,source);
 }
@@ -53,7 +53,7 @@ void Interventions::addEdge(int source, int target){
 	network.addEdge(target,source);
 }
 
-void Interventions::removeEdge(std::string source, std::string target){
+void Interventions::removeEdge(const std::string& source, const std::string& target){
 	Network& network = controller_.getNetwork();
 	network.removeEdge(target,source);
 }
