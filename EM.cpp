@@ -76,9 +76,9 @@ float EM::calculateProbabilityEM(const Node& n, unsigned int col, unsigned int r
 	return nominator / denominator;
 }
 
-void EM::calculateExpectedValue(unsigned int row, const Node& n,
-                                Matrix<int>& obMatrix)
+void EM::calculateExpectedValue(unsigned int row, Node& n)
 {
+	Matrix<int>& obMatrix = n.getObservationMatrix();	
 	if(obMatrix.hasNACol()) {
 		for(unsigned int col = 1; col < obMatrix.getColCount(); col++) {
 			float value =
@@ -92,9 +92,8 @@ void EM::calculateExpectedValue(unsigned int row, const Node& n,
 void EM::ePhase()
 {
 	for(auto& n : network_.getNodes()) {
-		Matrix<int>& obMatrix = n.getObservationMatrix();
-		for(unsigned int row = 0; row < obMatrix.getRowCount(); row++) {
-			calculateExpectedValue(row, n, obMatrix);
+		for(unsigned int row = 0; row < n.getNumberOfParentValues(); row++) {
+			calculateExpectedValue(row, n);
 		}
 	}
 }
@@ -160,7 +159,7 @@ void EM::initalise1()
 		Matrix<float>& probMatrix = n.getProbabilityMatrix();
 		for(unsigned int row = 0; row < probMatrix.getRowCount(); row++) {
 			for(unsigned int col = 0; col < probMatrix.getColCount(); col++) {
-				n.setProbability(1.0f / n.getUniqueValuesExcludingNA().size(),
+				n.setProbability(1.0f / n.getNumberOfUnqiueValuesExcludingNA(),
 				                 col, row);
 			}
 		}

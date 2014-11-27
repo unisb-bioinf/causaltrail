@@ -33,6 +33,7 @@ class Node {
 	void setUniqueValuesExcludingNA(const std::vector<int>&);
 	std::vector<int>& getUniqueValuesExcludingNA();
 	const std::vector<int>& getUniqueValuesExcludingNA() const;
+	const unsigned int getNumberOfParentValues() const;
 	const unsigned int getNumberOfUniqueValues() const;
 	const unsigned int getNumberOfUnqiueValuesExcludingNA() const;
 	void setObservationRow(int row);

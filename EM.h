@@ -15,7 +15,7 @@ class EM{
 	int getTimeInSeconds();
 	private:
 	float calculateProbabilityEM(const Node& n, unsigned int col, unsigned int row);
-	void calculateExpectedValue(unsigned int row, const Node& n, Matrix<int>& obMatrix);
+	void calculateExpectedValue(unsigned int row, Node& n);
 	void ePhase();
 	void calculateMaximumLikelihood(unsigned int row, unsigned int& counter, float& difference, Node& n, const Matrix<int> & obMatrix);
 	float mPhase();

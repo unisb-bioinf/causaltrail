@@ -138,6 +138,11 @@ const unsigned int Node::getNumberOfUnqiueValuesExcludingNA() const
 	return uniqueValuesExcludingNA_.size();
 }
 
+const unsigned int Node::getNumberOfParentValues() const
+{
+	return parentValueNames_.size();
+}
+
 void Node::setObservationRow(int row) { observationRow_ = row; }
 
 const int Node::getObservationRow() const { return observationRow_; }
