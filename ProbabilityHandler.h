@@ -11,7 +11,6 @@ class ProbabilityHandler{
 	float computeTotalProbability(int nodeID, int value);
 	float computeTotalProbabilityNormalized(int nodeID, int value);
 	float computeJointProbability(const std::vector<unsigned int>& nodes, std::unordered_map<unsigned int, int>& values);
-	float computeJointProbabilityWithoutNormalization(const std::vector<unsigned int>& nodes, std::unordered_map<unsigned int, int>& values);
 	float computeConditionalProbability(const std::vector<unsigned int>& nodesNominator,const std::vector<unsigned int>& nodesDenominator,
 		 std::unordered_map<unsigned int, int>& valuesNominator, std::unordered_map<unsigned int, int>& valuesDenominator);
 	std::pair<float,std::vector<std::string>> maxSearch(const std::vector<unsigned int> queryNodes);

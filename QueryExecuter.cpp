@@ -74,13 +74,13 @@ void QueryExecuter::reverseInterventions(){
 }
 
 void QueryExecuter::executeDoInterventions(){
-	for (int index = 0; index<doInterventionValues_.size(); index++){
+	for (unsigned int index = 0; index<doInterventionValues_.size(); index++){
 		interventions_.doIntervention(doInterventionNodeID_[index], doInterventionValues_[doInterventionNodeID_[index]]);
 	}
 }
 
 void QueryExecuter::executeReverseDoInterventions(){
-	for (int index = 0; index<doInterventionValues_.size();index++){
+	for (unsigned int index = 0; index<doInterventionValues_.size();index++){
 		interventions_.reverseDoIntervention(doInterventionNodeID_[index]);
 	}
 }
