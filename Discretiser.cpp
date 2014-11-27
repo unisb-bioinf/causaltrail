@@ -1,7 +1,7 @@
 #include "Discretiser.h"
 #include <algorithm>
 
-Discretiser::Discretiser(Matrix<std::string>& originalObservations, Matrix<int>& obsMatrix, Network& network)
+Discretiser::Discretiser(const Matrix<std::string>& originalObservations, Matrix<int>& obsMatrix, Network& network)
 	:originalObservations_(originalObservations), observations_(obsMatrix), observationsMap_(network.getObservationsMap()), observationsMapR_(network.getObservationsMapR())
 	{
 	adaptFormat();
@@ -10,7 +10,7 @@ Discretiser::Discretiser(Matrix<std::string>& originalObservations, Matrix<int>&
 	observations_.setColNames(originalObservations.getColNames());
 }
 
-Discretiser::Discretiser(Matrix<std::string>& originalObservations, const std::string& filename,  Matrix<int>& obsMatrix, Network& network)
+Discretiser::Discretiser(const Matrix<std::string>& originalObservations, const std::string& filename,  Matrix<int>& obsMatrix, Network& network)
 	:originalObservations_(originalObservations), observations_(obsMatrix), observationsMap_(network.getObservationsMap()), observationsMapR_(network.getObservationsMapR())
 	{
 	adaptFormat();
@@ -50,7 +50,7 @@ std::vector<float> Discretiser::createSortedVector(unsigned int row){
 
 
 void Discretiser::convertToDenseNumbers(unsigned int row){
-	const std::vector<int> obs = observations_.getUniqueRowValues(row);
+	const std::vector<int>& obs = observations_.getUniqueRowValues(row);
 	for (unsigned int key = 0; key<obs.size(); key++){
 		for (unsigned int col=0;col<observations_.getColCount();col++){
 			if (obs[key]==observations_(col,row)){
@@ -158,7 +158,7 @@ void Discretiser::discretiseByHMean(unsigned int row){
     }
 
 void Discretiser::discretiseByMedian(unsigned int row){
-	const std::vector<float> templist=createSortedVector(row);
+	const std::vector<float>& templist=createSortedVector(row);
 	float median;
 	if (templist.size() % 2 !=0){
 		median=templist[ceil(templist.size()/2)];
@@ -194,7 +194,7 @@ void Discretiser::discretiseManually(unsigned int row, float threshold){
     }   
 
 void Discretiser::discretiseBracketMedians(unsigned int row, unsigned int number){
-	const std::vector<float> templist=createSortedVector(row);
+	const std::vector<float>& templist=createSortedVector(row);
 	std::vector<float> borderValues;
 	borderValues.reserve(number + 1);
 	borderValues.push_back(templist[0]);
@@ -216,7 +216,7 @@ void Discretiser::discretiseBracketMedians(unsigned int row, unsigned int number
 }   
 
 void Discretiser::discretisePearsonTukey(unsigned int row){
-	const std::vector<float> templist=createSortedVector(row);
+	const std::vector<float>& templist=createSortedVector(row);
 	const std::vector<float> borderValues = {
 		//Calculate borders
 		FLT_MIN,
@@ -240,7 +240,7 @@ void Discretiser::discretisePearsonTukey(unsigned int row){
 
 void Discretiser::mapNamesToInt(unsigned int row){
 	size_t index = 0;
-	const auto uniqueValues = originalObservations_.getUniqueRowValues(row);
+	const auto& uniqueValues = originalObservations_.getUniqueRowValues(row);
 	for (const auto& value : uniqueValues){
 		if ((value != "NA")){
 			observationsMap_[value]=index;

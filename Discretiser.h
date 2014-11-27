@@ -7,8 +7,8 @@
 
 class Discretiser{
 	public: 
-	Discretiser(Matrix<std::string>& originalObservations, Matrix<int>& obsMatrix, Network& network);
-	Discretiser(Matrix<std::string>& originalObservations,const std::string& filename, Matrix<int>& obsMatrix, Network& network);
+	Discretiser(const Matrix<std::string>& originalObservations, Matrix<int>& obsMatrix, Network& network);
+	Discretiser(const Matrix<std::string>& originalObservations,const std::string& filename, Matrix<int>& obsMatrix, Network& network);
 	void discretiseRow(unsigned int row, unsigned int method, float threshold);
 	int getEntry(unsigned int col, unsigned int row);
 	private:
