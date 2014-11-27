@@ -2,7 +2,7 @@
 
 QueryExecuter Parser::parseQuery()
 {
-	int index = 0;
+	unsigned int index = 0;
 	if(query_[index] != "?") {
 		throw std::invalid_argument("In parseQuery, query should start with ?");
 	}
@@ -46,13 +46,13 @@ QueryExecuter Parser::parseQuery()
 	return qe_;
 }
 
-bool Parser::terminationSymbol(int index)
+bool Parser::terminationSymbol(unsigned int index)
     const
 {
 	return index != query_.size() && query_[index] != "!" && query_[index] != "|";
 }
 
-bool Parser::terminationSymbolArgMax(int index) const
+bool Parser::terminationSymbolArgMax(unsigned int index) const
 {
 	if (index == query_.size()){
 		throw std::invalid_argument("In terminationSymbolArgMax, index out of bound");
@@ -60,7 +60,7 @@ bool Parser::terminationSymbolArgMax(int index) const
 	return query_[index] != ")";
 }
 
-void Parser::parseInterventions(int& index)
+void Parser::parseInterventions(unsigned int& index)
 {
 	bool ato=false;
 	while(terminationSymbol(index)) {
@@ -86,7 +86,7 @@ void Parser::parseInterventions(int& index)
 	}
 }
 
-void Parser::parseNonIntervention(int& index)
+void Parser::parseNonIntervention(unsigned int& index)
 {
 	while(terminationSymbol(index)) {
 		if(not getNode(query_[index])) {
@@ -107,7 +107,7 @@ void Parser::parseNonIntervention(int& index)
 	}
 }
 
-void Parser::parseCondition(int& index)
+void Parser::parseCondition(unsigned int& index)
 {
 	while(terminationSymbol(index)) {
 		if(not getNode(query_[index])){
@@ -127,7 +127,7 @@ void Parser::parseCondition(int& index)
 	}
 }
 
-void Parser::parseDoIntervention(int& index)
+void Parser::parseDoIntervention(unsigned int& index)
 {
 	if(not getNode(query_[index])){
 		throw std::invalid_argument("In parseDoIntervention, invalid node name "+query_[index]);
@@ -144,7 +144,7 @@ void Parser::parseDoIntervention(int& index)
 	}
 }
 
-void Parser::parseAddEdge(int& index)
+void Parser::parseAddEdge(unsigned int& index)
 {
 	if ((index+2) < query_.size()){
 		if(not getNode(query_[index])){
@@ -161,7 +161,7 @@ void Parser::parseAddEdge(int& index)
 	}
 }
 
-void Parser::parseRemoveEdge(int& index)
+void Parser::parseRemoveEdge(unsigned int& index)
 {
 	if ((index+2) < query_.size()){
 		if(not getNode(query_[index])){
@@ -179,7 +179,7 @@ void Parser::parseRemoveEdge(int& index)
 
 }
 
-void Parser::parseArgMax(int& index)
+void Parser::parseArgMax(unsigned int& index)
 {
 	if(query_[index] != ("("))
 		throw std::invalid_argument("In parseArgMax, invalid sign expected ( but found  "+query_[index]);
