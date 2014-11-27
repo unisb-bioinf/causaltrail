@@ -1,6 +1,6 @@
 #include "Node.h"
 
-Node::Node(unsigned int index, unsigned int id, std::string name)
+Node::Node(unsigned int index, unsigned int id, const std::string& name)
     : index_(index),
       id_(id),
       name_(name),
@@ -50,7 +50,7 @@ const unsigned int Node::getObservations(const std::string& nv,
 	return ObservationMatrix_.getValueByNames(nv, pv);
 }
 
-void Node::setObservations(int value, std::string nv, std::string pv)
+void Node::setObservations(int value, const std::string& nv, const std::string& pv)
 {
 	ObservationMatrix_.setData(value, ObservationMatrix_.findCol(nv),
 	                           ObservationMatrix_.findRow(pv));
@@ -67,7 +67,7 @@ const unsigned int& Node::getIndex() const { return index_; }
 
 const unsigned int& Node::getID() const { return id_; }
 
-bool Node::hasValue(std::string v) const
+bool Node::hasValue(const std::string& v) const
 {
 	if(ObservationMatrix_.findCol(v) > -1)
 		return true;
@@ -96,7 +96,7 @@ void Node::loadBackup() { ObservationMatrix_ = ObservationBackup_; }
 
 const std::vector<unsigned int>& Node::getParents() const { return Parents_; }
 
-void Node::setParents(std::vector<unsigned int> parents) { Parents_ = parents; }
+void Node::setParents(const std::vector<unsigned int>& parents) { Parents_ = parents; }
 
 void Node::cutParents() { Parents_.clear(); }
 
@@ -132,24 +132,24 @@ void Node::setParentCombinations(int combinations)
 
 const int Node::getParentCombinations() const { return parentCombinations_; }
 
-void Node::setValueNames(std::vector<std::string> valueNames)
+void Node::setValueNames(const std::vector<std::string>& valueNames)
 {
 	valueNames_ = valueNames;
 }
 
-void Node::addValueName(std::string name) { valueNames_.push_back(name); }
+void Node::addValueName(const std::string& name) { valueNames_.push_back(name); }
 
 const std::vector<std::string>& Node::getValueNames() const
 {
 	return valueNames_;
 }
 
-void Node::setValueNamesProb(std::vector<std::string> valueNames)
+void Node::setValueNamesProb(const std::vector<std::string>& valueNames)
 {
 	valueNamesProb_ = valueNames;
 }
 
-void Node::addValueNameProb(std::string names)
+void Node::addValueNameProb(const std::string& names)
 {
 	valueNamesProb_.push_back(names);
 }
@@ -159,12 +159,12 @@ const std::vector<std::string>& Node::getValueNamesProb() const
 	return valueNamesProb_;
 }
 
-void Node::setParentValueNames(std::vector<std::string> valueNames)
+void Node::setParentValueNames(const std::vector<std::string>& valueNames)
 {
 	parentValueNames_ = valueNames;
 }
 
-void Node::addParentValueName(std::string names)
+void Node::addParentValueName(const std::string& names)
 {
 	parentValueNames_.push_back(names);
 }
@@ -194,7 +194,7 @@ void Node::loadBackupDoIntervention()
 	ProbabilityMatrixBackup_ = Matrix<float>(0, 0, 0.0);
 }
 
-void Node::setProbabilityTo1(std::string value)
+void Node::setProbabilityTo1(const std::string& value)
 {
 	for(unsigned int col = 0; col < ProbabilityMatrix_.getColCount(); col++) {
 		for(unsigned int row = 0; row < ProbabilityMatrix_.getRowCount();

@@ -4,7 +4,7 @@
 
 class Node {
 	public:
-	Node(unsigned int index,unsigned int id, std::string name);
+	Node(unsigned int index,unsigned int id, const std::string& name);
 	const float getProbability(unsigned int nv, unsigned int pv) const;
 	const float getProbability(const std::string& nv, const std::string& pv) const;	
 	void setProbability(float value, unsigned int nv, unsigned int pv);
@@ -12,9 +12,9 @@ class Node {
 	const unsigned int getObservations(unsigned int nv, unsigned int pv) const ;
 	const unsigned int getObservations(const std::string& nv, const std::string& pv) const ;	
 	void setObservations(int value, unsigned int nv, unsigned int pv);
-	void setObservations(int value, std::string nv, std::string pv);
+	void setObservations(int value, const std::string& nv, const std::string& pv);
 	void setProbability(const Matrix<float>& m);	
-	void setProbabilityTo1(std::string value);
+	void setProbabilityTo1(const std::string& value);
 	void setProbabilityTo1(int value);
 	void createBackupDoIntervention();
 	void loadBackupDoIntervention();
@@ -24,9 +24,9 @@ class Node {
 	const unsigned int& getIndex() const;
 	const unsigned int& getID() const;
 	const int getIndex(const std::string& value) const;
-	bool hasValue(std::string v) const;
+	bool hasValue(const std::string& v) const;
 	const std::vector<unsigned int>& getParents() const;
-	void setParents(std::vector<unsigned int> parents);
+	void setParents(const std::vector<unsigned int>& parents);
 	void cutParents();
 	void setUniqueValues(const std::vector<int>& uniqueValues);
 	const std::vector<int>& getUniqueValues() const;
@@ -37,14 +37,14 @@ class Node {
 	const int getObservationRow() const;
 	void setParentCombinations(int row);
 	const int getParentCombinations() const;
-	void setValueNames(std::vector<std::string> valueNames);
-	void addValueName(std::string name);
+	void setValueNames(const std::vector<std::string>& valueNames);
+	void addValueName(const std::string& name);
 	const std::vector<std::string>& getValueNames() const;
-	void setValueNamesProb(std::vector<std::string> valueNames);
-	void addValueNameProb(std::string name);
+	void setValueNamesProb(const std::vector<std::string>& valueNames);
+	void addValueNameProb(const std::string& name);
 	const std::vector<std::string>& getValueNamesProb() const;
-	void setParentValueNames(std::vector<std::string> valueNames); 
-	void addParentValueName(std::string name);
+	void setParentValueNames(const std::vector<std::string>& valueNames); 
+	void addParentValueName(const std::string& name);
 	const std::vector<std::string>& getParentValueNames() const;
 	Matrix<float>& getProbabilityMatrix();
 	const Matrix<float>& getProbabilityMatrix() const;
