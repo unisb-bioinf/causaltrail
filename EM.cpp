@@ -52,11 +52,11 @@ void EM::performEM()
 	end = std::chrono::system_clock::now();
 }
 
-float EM::calculateProbabilityEM(Node& n, unsigned int col, unsigned int row)
+float EM::calculateProbabilityEM(const Node& n, unsigned int col, unsigned int row)
 {
 	// get Parents
 	auto ParentIDs = n.getParents();
-	Matrix<float>& probMatrix = n.getProbabilityMatrix();
+	const Matrix<float>& probMatrix = n.getProbabilityMatrix();
 
 	// compute TotProbParentsRec
 	float totProbParents = 1.0f;
@@ -76,7 +76,7 @@ float EM::calculateProbabilityEM(Node& n, unsigned int col, unsigned int row)
 	return nominator / denominator;
 }
 
-void EM::calculateExpectedValue(unsigned int row, Node& n,
+void EM::calculateExpectedValue(unsigned int row, const Node& n,
                                 Matrix<int>& obMatrix)
 {
 	if(obMatrix.hasNACol()) {

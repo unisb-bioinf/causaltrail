@@ -7,16 +7,15 @@
 
 class EM{
 	public:
-	EM(Network& network, Matrix<int>& observations_,float differenceThreshold_ = 0.0001f, unsigned int maxRuns_=10000);
-	
+	EM(Network& network, Matrix<int>& observations_,float differenceThreshold_ = 0.0001f, unsigned int maxRuns_=10000);	
 	void performEM();
 	float calculateLikelihoodOfTheData();
 	int getNumberOfRuns();
 	float getDifference();
 	int getTimeInSeconds();
 	private:
-	float calculateProbabilityEM(Node& n, unsigned int col, unsigned int row);
-	void calculateExpectedValue(unsigned int row, Node& n, Matrix<int>& obMatrix);
+	float calculateProbabilityEM(const Node& n, unsigned int col, unsigned int row);
+	void calculateExpectedValue(unsigned int row, const Node& n, Matrix<int>& obMatrix);
 	void ePhase();
 	void calculateMaximumLikelihood(unsigned int row, unsigned int& counter, float& difference, Node& n, const Matrix<int> & obMatrix);
 	float mPhase();
