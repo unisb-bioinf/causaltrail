@@ -26,8 +26,8 @@ template <typename T> class Matrix
 	const T& operator()(unsigned int col, unsigned int row) const;
 	friend std::ostream& operator<<<>(std::ostream& os, const Matrix<T>& m);
 	void setData(T value, unsigned int col, unsigned int row);
-	void setRowNames(std::vector<std::string> names);
-	void setColNames(std::vector<std::string> names);
+	void setRowNames(const std::vector<std::string>& names);
+	void setColNames(const std::vector<std::string>& names);
 	unsigned int getRowCount();
 	unsigned int getColCount();
 	const unsigned int getRowCount() const;
@@ -272,7 +272,7 @@ void Matrix<T>::setData(T value, unsigned int col, unsigned int row)
  *
  */
 template <typename T>
-void Matrix<T>::setRowNames(const std::vector<std::string> names)
+void Matrix<T>::setRowNames(const std::vector<std::string>& names)
 {
 	rowNames_ = names;
 	unsigned int counter = 0;
@@ -294,7 +294,7 @@ void Matrix<T>::setRowNames(const std::vector<std::string> names)
  *
  */
 template <typename T>
-void Matrix<T>::setColNames(const std::vector<std::string> names)
+void Matrix<T>::setColNames(const std::vector<std::string>& names)
 {
 	colNames_ = names;
 	unsigned int counter = 0;
