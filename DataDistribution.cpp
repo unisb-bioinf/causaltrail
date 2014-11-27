@@ -88,7 +88,7 @@ void DataDistribution::assignParentNames(Node& n)
 	}
 }
 
-int DataDistribution::getObservationColIndex(unsigned int sample, Node& n)
+int DataDistribution::getObservationColIndex(unsigned int sample, const Node& n)
 {
 	if(n.getUniqueValues().size() != n.getUniqueValuesExcludingNA().size()) {
 		return observations_(sample, n.getObservationRow()) + 1;
@@ -97,8 +97,8 @@ int DataDistribution::getObservationColIndex(unsigned int sample, Node& n)
 	}
 }
 
-int DataDistribution::getObservationRowIndex(unsigned int sample, Node& n,
-                                             Matrix<int>& obsMatrix)
+int DataDistribution::getObservationRowIndex(unsigned int sample, const Node& n,
+                                             const Matrix<int>& obsMatrix)
 {
 	if(n.getParents().empty()) {
 		return 0;
@@ -115,7 +115,7 @@ int DataDistribution::getObservationRowIndex(unsigned int sample, Node& n,
 	return index;
 }
 
-void DataDistribution::countObservations(Matrix<int>& obsMatrix, Node& n)
+void DataDistribution::countObservations(Matrix<int>& obsMatrix, const Node& n)
 {
 	for(unsigned int sample = 0; sample < observations_.getColCount();
 	    sample++) {
