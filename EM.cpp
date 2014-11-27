@@ -192,18 +192,6 @@ void EM::initalise2()
 	}
 }
 
-std::unordered_map<unsigned int, int>
-EM::loadSample(std::vector<unsigned int> nodes, unsigned int sample)
-{
-	std::unordered_map<unsigned int, int> sampleValues;
-	for(const auto& id : nodes) {
-		Node& n = network_.getNode(id);
-		int obsRow = n.getObservationRow();
-		sampleValues[id] = observations_(sample, obsRow);
-	}
-	return sampleValues;
-}
-
 float EM::calculateLikelihoodOfTheData()
 {
 	return probHandler_.calculateLikelihoodOfTheData(observations_);

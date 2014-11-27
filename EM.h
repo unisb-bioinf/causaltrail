@@ -24,7 +24,6 @@ class EM{
 	void initalise1();
 	void initalise2();
 	void initalise3();
-	std::unordered_map<unsigned int, int> loadSample(std::vector<unsigned int> nodes, unsigned int sample);
 	Network& network_;
 	unsigned int method_;
 	Matrix<int>& observations_;
