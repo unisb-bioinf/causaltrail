@@ -31,9 +31,9 @@ class QueryExecuter{
 	std::pair<float,std::vector<std::string>> executeArgMax();
 	float executeCondition();
 	float executeProbability();
+	NetworkController& networkController_;	
 	ProbabilityHandler probHandler_;
 	Interventions interventions_;
-	NetworkController& networkController_;	
 	std::vector<unsigned int> nonInterventionNodeID_;
 	std::unordered_map<unsigned int, int> nonInterventionValues_;
 	std::vector<unsigned int> conditionNodeID_;
