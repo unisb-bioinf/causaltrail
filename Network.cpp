@@ -340,7 +340,8 @@ const int Network::computeFactor(const Node& n, unsigned int parentID) const
 	return factor;
 }
 
-const int Network::reverseFactor(const Node& n, unsigned int parentID, int row) const
+const int Network::reverseFactor(const Node& n, unsigned int parentID, int row)
+    const
 {
 	int value = row;
 	for(const auto& key : n.getParents()) {
@@ -374,17 +375,22 @@ const bool Network::hasValue(const std::string& nodeName,
 	return true;
 }
 
-unsigned int Network::getDenseNodeIdentifier(unsigned int originialIdentifier) {
-	unsigned int newID= NodeList_.size()+1;
+unsigned int Network::getDenseNodeIdentifier(unsigned int originialIdentifier)
+{
+	unsigned int newID = NodeList_.size();
 	originalIDToDense_.push_back(std::make_pair(originialIdentifier, newID));
 	return newID;
 }
 
-unsigned int Network::getNewID(unsigned int originalIdentifier){
-	auto low = std::lower_bound(originalIDToDense_.begin(),originalIDToDense_.end(),originalIdentifier, Comp());
-	if (low != originalIDToDense_.end()){
+unsigned int Network::getNewID(unsigned int originalIdentifier)
+{
+	auto low =
+	    std::lower_bound(originalIDToDense_.begin(), originalIDToDense_.end(),
+	                     originalIdentifier, Comp());
+	if(low != originalIDToDense_.end()) {
 		return low->second;
-		}
+	}
 	throw std::invalid_argument("Identifier not found");
 }
-	
+
+const unsigned int Network::size() const { return getNodes().size(); }

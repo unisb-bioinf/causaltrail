@@ -39,6 +39,7 @@ class Network{
 		const int computeFactor(const Node& n, unsigned int parentID) const ;
 		const int reverseFactor(const Node& n, unsigned int parentID, int row) const;
 		unsigned int getNewID(unsigned int originalID);
+		const unsigned int size() const;
 	private:
 		const std::vector<unsigned int> getParents(unsigned int id) const;
 		const std::vector<unsigned int> getParents(const std::string& name) const;

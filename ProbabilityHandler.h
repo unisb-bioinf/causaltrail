@@ -13,12 +13,12 @@ class ProbabilityHandler
 	float computeTotalProbabilityNormalized(int nodeID, int value);
 	float
 	computeJointProbability(const std::vector<unsigned int>& nodes,
-	                        std::unordered_map<unsigned int, int>& values);
+	                        const std::vector<int>& values);
 	float computeConditionalProbability(
 	    const std::vector<unsigned int>& nodesNominator,
 	    const std::vector<unsigned int>& nodesDenominator,
-	    std::unordered_map<unsigned int, int>& valuesNominator,
-	    std::unordered_map<unsigned int, int>& valuesDenominator);
+	    const std::vector<int>& valuesNominator,
+	    const std::vector<int>& valuesDenominator);
 	std::pair<float, std::vector<std::string>>
 	maxSearch(const std::vector<unsigned int>& queryNodes);
 	float calculateLikelihoodOfTheData(const Matrix<int>& obs) const;
@@ -26,14 +26,14 @@ class ProbabilityHandler
 	private:
 	std::vector<unsigned int>
 	createFactorisation(const std::vector<unsigned int>& queryNodes);
-	std::unordered_map<unsigned int, std::vector<int>>
+	std::vector<std::vector<int>>
 	assignValues(const std::vector<unsigned int>& factorisation,
-	             std::unordered_map<unsigned int, int>& values);
+	             const std::vector<int>& values);
 	std::vector<std::vector<int>> enumerate(
 	    const std::vector<unsigned int>& factorisation,
-	    std::unordered_map<unsigned int, std::vector<int>>& valueAssignment);
-	int getPosition(unsigned int id,
-	                const std::vector<unsigned int>& factorisation) const;
+	    const std::vector<std::vector<int>>& valueAssignment);
+//	int getPosition(unsigned int id,
+//	                const std::vector<unsigned int>& factorisation) const;
 	int getParentValues(const Node& n,
 	                    const std::vector<unsigned int>& factorisation,
 	                    const std::vector<int>& assignment);

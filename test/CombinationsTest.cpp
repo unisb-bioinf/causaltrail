@@ -8,10 +8,10 @@ class CombinationsTest : public ::testing::Test{
 	}
 
 	void virtual SetUp(){
-		mapInt[0]=valuesInt;
-		mapInt[1]=valuesInt2;
-		mapString[0]=valuesString;
-		mapString[1]=valuesString2;
+		mapInt.push_back(valuesInt);
+		mapInt.push_back(valuesInt2);
+		mapString.push_back(valuesString);
+		mapString.push_back(valuesString2);
 	}
 
 	public:
@@ -20,8 +20,8 @@ class CombinationsTest : public ::testing::Test{
 	std::vector<int> valuesInt2 = {1,2,3};
 	std::vector<std::string> valuesString = {"A","B"};
 	std::vector<std::string> valuesString2 = {"A","B","C"};
-	std::unordered_map<unsigned int, std::vector<int>> mapInt;
-	std::unordered_map<unsigned int, std::vector<std::string>> mapString;
+	std::vector<std::vector<int>> mapInt;
+	std::vector<std::vector<std::string>> mapString;
 	
 };
 

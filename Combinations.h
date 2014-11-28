@@ -7,13 +7,12 @@
 template<typename T>
 class Combinations{
 	public:
-	Combinations(const std::vector<unsigned int>& keys, std::unordered_map<unsigned int, std::vector<T>>& values);
-	Combinations(std::vector<unsigned int>& keys, std::unordered_map<unsigned int,std::vector<T>>& values);
+	Combinations(const std::vector<unsigned int>& keys, const std::vector<std::vector<T>>& values);
 	void createCombinations(unsigned int position);
 	std::vector<std::vector<T>> getResult();
 	private:
 	const std::vector<unsigned int>& keys_;
-	std::unordered_map<unsigned int,std::vector<T>>& values_;
+	const std::vector<std::vector<T>>& values_;
 	std::vector<T> temp_;
 	std::vector<std::vector<T>> result_;
 };
@@ -30,17 +29,10 @@ class Combinations{
  * This class creates all enumerations for the enumeration problem without replacement and without regard to sequence
  */
 template<typename T>
-Combinations<T>::Combinations(std::vector<unsigned int>& keys, std::unordered_map<unsigned int,std::vector<T>>& values)
+Combinations<T>::Combinations(const std::vector<unsigned int>& keys, const std::vector<std::vector<T>>& values)
 	:keys_(keys),values_(values)
 	{
-	temp_.resize(keys.size());
-	}
-
-template<typename T>
-Combinations<T>::Combinations(const std::vector<unsigned int>& keys, std::unordered_map<unsigned int, std::vector<T>>& values)
-	:keys_(keys),values_(values)
-	{
-	temp_.resize(keys.size());
+	temp_.resize(values.size());
 	}
 
 
@@ -59,8 +51,8 @@ void Combinations<T>::createCombinations(unsigned int position=0){
 		result_.push_back(temp_);
 		}
 	else {
-		for (auto v:values_[keys_[position]]){
-			temp_[position]=v;
+		for (auto& v : values_[keys_[position]]){
+			temp_[keys_[position]]=v;
 			createCombinations(position+1);
 			}
 		}	

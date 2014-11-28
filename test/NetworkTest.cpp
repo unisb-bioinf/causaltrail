@@ -23,53 +23,53 @@ TEST_F(NetworkTest, readNetworkNASIF){
 TEST_F(NetworkTest, readNetworkTGF){
 	n_.readNetwork("../data/test.tgf");
 	ASSERT_TRUE(n_.getNodes().size()==3);
-	ASSERT_TRUE(n_.getNode("Hallo").getID()==1);
-	ASSERT_TRUE(n_.getNode(2).getName()=="Welt");
+	ASSERT_TRUE(n_.getNode("Hallo").getID()==0);
+	ASSERT_TRUE(n_.getNode(1).getName()=="Welt");
 	ASSERT_TRUE(n_.hasNode("!!!"));
 	ASSERT_TRUE(n_.getIndex("Hallo")==0);
-	ASSERT_TRUE(n_.getIndex(2)==1);
+	ASSERT_TRUE(n_.getIndex(2)==2);
 }
 
 TEST_F(NetworkTest, getParents){
 	n_.readNetwork("../data/test.tgf");
 	ASSERT_TRUE(n_.getNode("Hallo").getParents().empty());
-	ASSERT_TRUE(n_.getNode(2).getParents()[0]==1);
-	ASSERT_TRUE(n_.getNode(3).getParents()[0]==2);	
+	ASSERT_TRUE(n_.getNode(1).getParents()[0]==0);
+	ASSERT_TRUE(n_.getNode(2).getParents()[0]==1);	
 }
 
 TEST_F(NetworkTest, cutParents){
 	n_.readNetwork("../data/test.tgf");
-	n_.cutParents(1);
+	n_.cutParents(0);
 	n_.cutParents("Welt");
-	n_.cutParents(3);
+	n_.cutParents(2);
 	ASSERT_TRUE(n_.getNode("Hallo").getParents().empty());
+	ASSERT_TRUE(n_.getNode(1).getParents().empty());
 	ASSERT_TRUE(n_.getNode(2).getParents().empty());
-	ASSERT_TRUE(n_.getNode(3).getParents().empty());
 }
 
 TEST_F(NetworkTest, backup){
 	n_.readNetwork("../data/test.tgf");
 	n_.createBackup();
-	n_.cutParents(1);
+	n_.cutParents(0);
 	n_.cutParents("Welt");
-	n_.cutParents(3);
+	n_.cutParents(2);
 	ASSERT_TRUE(n_.getNode("Hallo").getParents().empty());
+	ASSERT_TRUE(n_.getNode(1).getParents().empty());
 	ASSERT_TRUE(n_.getNode(2).getParents().empty());
-	ASSERT_TRUE(n_.getNode(3).getParents().empty());
 	n_.loadBackup();
 	ASSERT_TRUE(n_.getNode("Hallo").getParents().empty());
-	ASSERT_TRUE(n_.getNode(2).getParents()[0]==1);
-	ASSERT_TRUE(n_.getNode(3).getParents()[0]==2);	
+	ASSERT_TRUE(n_.getNode(1).getParents()[0]==0);
+	ASSERT_TRUE(n_.getNode(2).getParents()[0]==1);	
 }
 
 TEST_F(NetworkTest, DFS){
 	std::vector<unsigned int> temp;
 	n_.readNetwork("../data/test.tgf");
-	n_.performDFS(3,temp);
+	n_.performDFS(2,temp);
 	ASSERT_TRUE(temp.size()==3);
-	ASSERT_TRUE(temp[0]==3);
-	ASSERT_TRUE(temp[1]==2);
-	ASSERT_TRUE(temp[2]==1);
+	ASSERT_TRUE(temp[0]==2);
+	ASSERT_TRUE(temp[1]==1);
+	ASSERT_TRUE(temp[2]==0);
 	n_.setAllUnvisited();
 	ASSERT_FALSE(n_.getNode("Hallo").isVisited());
 	ASSERT_FALSE(n_.getNode("Welt").isVisited());
@@ -78,11 +78,11 @@ TEST_F(NetworkTest, DFS){
 
 TEST_F(NetworkTest, edgeOperations){
 	n_.readNetwork("../data/test.tgf");
-	n_.addEdge(3,1);
-	ASSERT_TRUE(n_.getNode(3).getParents().size()==2);
-	ASSERT_TRUE(n_.getNode(3).getParents()[0]==1);
-	ASSERT_TRUE(n_.getNode(3).getParents()[1]==2);
-	n_.removeEdge(3,1);
-	ASSERT_TRUE(n_.getNode(3).getParents().size()==1);
-	ASSERT_TRUE(n_.getNode(3).getParents()[0]==2);
+	n_.addEdge(2,0);
+	ASSERT_TRUE(n_.getNode(2).getParents().size()==2);
+	ASSERT_TRUE(n_.getNode(2).getParents()[0]==0);
+	ASSERT_TRUE(n_.getNode(2).getParents()[1]==1);
+	n_.removeEdge(2,0);
+	ASSERT_TRUE(n_.getNode(2).getParents().size()==1);
+	ASSERT_TRUE(n_.getNode(2).getParents()[0]==1);
 }

@@ -35,11 +35,11 @@ class QueryExecuter{
 	ProbabilityHandler probHandler_;
 	Interventions interventions_;
 	std::vector<unsigned int> nonInterventionNodeID_;
-	std::unordered_map<unsigned int, int> nonInterventionValues_;
+	std::vector<int> nonInterventionValues_;
 	std::vector<unsigned int> conditionNodeID_;
-	std::unordered_map<unsigned int, int> conditionValues_;
+	std::vector<int> conditionValues_;
 	std::vector<unsigned int> doInterventionNodeID_;
-	std::unordered_map<unsigned int, int> doInterventionValues_;
+	std::vector<int> doInterventionValues_;
 	std::vector<std::pair<unsigned int, unsigned int>> addEdgeNodeIDs_;
 	std::vector<std::pair<unsigned int, unsigned int>> removeEdgeNodeIDs_;
 	std::vector<unsigned int> argmaxNodeIDs_;

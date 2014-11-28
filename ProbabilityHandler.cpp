@@ -16,7 +16,8 @@ float ProbabilityHandler::computeTotalProbabilityNormalized(int nodeID,
 		float queryResult = 0.0f;
 		for(unsigned int row = 0; row < probMatrix.getRowCount(); row++) {
 			float temp = 1.0f;
-			for(unsigned int index2 = 0; index2 < node.getNumberOfParents(); index2++) {
+			for(unsigned int index2 = 0; index2 < node.getNumberOfParents();
+			    index2++) {
 				temp *= computeTotalProbability(
 				    parentIDs[index2],
 				    network_.reverseFactor(node, parentIDs[index2], row));
@@ -50,7 +51,8 @@ float ProbabilityHandler::computeTotalProbability(int nodeID, int index)
 		float result = 0.0f;
 		for(unsigned int row = 0; row < probMatrix.getRowCount(); row++) {
 			float temp = 1.0f;
-			for(unsigned int index2 = 0; index2 < node.getNumberOfParents(); index2++) {
+			for(unsigned int index2 = 0; index2 < node.getNumberOfParents();
+			    index2++) {
 				temp *= computeTotalProbability(
 				    parentIDs[index2],
 				    network_.reverseFactor(node, parentIDs[index2], row));
@@ -79,13 +81,13 @@ std::vector<unsigned int> ProbabilityHandler::createFactorisation(
 	return visitedNodes;
 }
 
-std::unordered_map<unsigned int, std::vector<int>>
+std::vector<std::vector<int>>
 ProbabilityHandler::assignValues(const std::vector<unsigned int>& factorisation,
-                                 std::unordered_map<unsigned int, int>& values)
+                                 const std::vector<int>& values)
 {
-	std::unordered_map<unsigned int, std::vector<int>> possibleValueMap;
+	std::vector<std::vector<int>> possibleValueMap(values.size(), {-1});
 	for(unsigned int id : factorisation) {
-		if(values.find(id) != values.end()) {
+		if(values[id] != -1) {
 			possibleValueMap[id] = {values[id]};
 		} else {
 			possibleValueMap[id] =
@@ -97,22 +99,11 @@ ProbabilityHandler::assignValues(const std::vector<unsigned int>& factorisation,
 
 std::vector<std::vector<int>> ProbabilityHandler::enumerate(
     const std::vector<unsigned int>& factorisation,
-    std::unordered_map<unsigned int, std::vector<int>>& valueAssignment)
+    const std::vector<std::vector<int>>& valueAssignment)
 {
 	Combinations<int> com = Combinations<int>(factorisation, valueAssignment);
 	com.createCombinations(0);
 	return com.getResult();
-}
-
-int ProbabilityHandler::getPosition(
-    unsigned int id, const std::vector<unsigned int>& factorisation) const
-{
-	for(unsigned int i = 0; i < factorisation.size(); i++) {
-		if(factorisation[i] == id) {
-			return i;
-		}
-	}
-	throw std::invalid_argument("Element not found in factorisation");
 }
 
 int ProbabilityHandler::getParentValues(
@@ -125,8 +116,7 @@ int ProbabilityHandler::getParentValues(
 		return 0;
 	}
 	for(auto parent : parents) {
-		int position = getPosition(parent, factorisation);
-		pos += network_.computeFactor(n, parent) * assignment[position];
+		pos += network_.computeFactor(n, parent) * assignment[parent];
 	}
 	return pos;
 }
@@ -154,7 +144,7 @@ float ProbabilityHandler::computeFullySpecifiedProbabilityDistribution(
 	for(auto& assignment : combinations) {
 		float intermediatResult = 1.0f;
 		for(unsigned int index = 0; index < factorisation.size(); index++) {
-			int col = assignment[index];
+			int col = assignment[factorisation[index]];
 
 			const Node& n = network_.getNode(factorisation[index]);
 			int row = getParentValues(n, factorisation, assignment);
@@ -187,23 +177,25 @@ float ProbabilityHandler::calculateLikelihoodOfTheData(const Matrix<int>& obs)
 }
 
 float ProbabilityHandler::computeJointProbability(
-    const std::vector<unsigned int>& queryNodes,
-    std::unordered_map<unsigned int, int>& values)
+    const std::vector<unsigned int>& queryNodes, const std::vector<int>& values)
 {
+	std::cout << "New" << std::endl;
 	// Generate the factorisation of the joint probability distribution
 	std::vector<unsigned int> factorisation = createFactorisation(queryNodes);
-
 	// Assign possible values to the node identifiers (needed for the creation
 	// of the combinations)
-	std::unordered_map<unsigned int, int> emptyMap;
-	std::unordered_map<unsigned int, std::vector<int>> valueAssignment =
+	std::vector<int> emptyVec(network_.size(), -1);
+
+	std::vector<std::vector<int>> valueAssignment =
 	    assignValues(factorisation, values);
-	std::unordered_map<unsigned int, std::vector<int>> fullAssignment =
-	    assignValues(factorisation, emptyMap);
+
+	std::vector<std::vector<int>> fullAssignment =
+	    assignValues(factorisation, emptyVec);
 
 	// Enumerate all possible value assignments
 	std::vector<std::vector<int>> combinations =
 	    enumerate(factorisation, valueAssignment);
+
 	// Enumerate normalization
 	std::vector<std::vector<int>> normalizations =
 	    enumerate(factorisation, fullAssignment);
@@ -218,8 +210,8 @@ float ProbabilityHandler::computeJointProbability(
 float ProbabilityHandler::computeConditionalProbability(
     const std::vector<unsigned int>& nodesNominator,
     const std::vector<unsigned int>& nodesDenominator,
-    std::unordered_map<unsigned int, int>& valuesNominator,
-    std::unordered_map<unsigned int, int>& valuesDenominator)
+    const std::vector<int>& valuesNominator,
+    const std::vector<int>& valuesDenominator)
 {
 	return computeJointProbability(nodesNominator, valuesNominator) /
 	       computeJointProbability(nodesDenominator, valuesDenominator);
@@ -228,22 +220,21 @@ float ProbabilityHandler::computeConditionalProbability(
 std::pair<float, std::vector<std::string>>
 ProbabilityHandler::maxSearch(const std::vector<unsigned int>& queryNodes)
 {
-	std::unordered_map<unsigned int, int> temp;
-	// Assign Values
-	std::unordered_map<unsigned int, std::vector<int>> valueAssignment =
-	    assignValues(queryNodes, temp);
-	// Enumerate all possible value assignments
+	std::vector<int> emptyValues(network_.size(), -1);
+	std::vector<std::vector<int>> queryAssignment =
+	    assignValues(queryNodes, emptyValues);
 	std::vector<std::vector<int>> combinations =
-	    enumerate(queryNodes, valueAssignment);
-	// Search most probable assignment
+	    enumerate(queryNodes, queryAssignment);
+
 	int index = 0;
 	int maxIndex = 0;
 	float maxprob = 0.0f;
+
 	for(auto& com : combinations) {
-		for(unsigned int index = 0; index < queryNodes.size(); index++) {
-			temp[queryNodes[index]] = com[index];
+		for(auto& id : queryNodes) {
+			emptyValues[id] = com[id];
 		}
-		float prob = computeJointProbability(queryNodes, temp);
+		float prob = computeJointProbability(queryNodes, emptyValues);
 		if(prob > maxprob) {
 			maxprob = prob;
 			maxIndex = index;

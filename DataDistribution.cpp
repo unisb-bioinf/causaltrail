@@ -52,8 +52,8 @@ void DataDistribution::assignValueNames(Node& n)
 void DataDistribution::assignParentNames(Node& n)
 {
 	if(n.getNumberOfParents() > 1) {
-		std::unordered_map<unsigned int, std::vector<int>>
-		uniqueValuesExcludingNA;
+		std::vector<std::vector<int>>
+		uniqueValuesExcludingNA (network_.getNodes().size(),{-1});
 		for(const auto& id : n.getParents()) {
 			uniqueValuesExcludingNA[id] =
 			    network_.getNode(id).getUniqueValuesExcludingNA();

@@ -3,6 +3,10 @@
 QueryExecuter::QueryExecuter(NetworkController& c)
 	:networkController_(c),probHandler_(ProbabilityHandler(c.getNetwork())), interventions_(c)
 {
+	unsigned int size = c.getNetwork().size();
+	nonInterventionValues_.resize(size,-1);
+	conditionValues_.resize(size,-1);
+	doInterventionValues_.resize(size,-1);
 	
 }
 
@@ -117,15 +121,16 @@ std::pair<float, std::vector<std::string>> QueryExecuter::executeArgMax(){
 float QueryExecuter::executeCondition(){
 	std::vector<unsigned int> nominatorNodes = nonInterventionNodeID_;
 	nominatorNodes.insert(nominatorNodes.end(), conditionNodeID_.begin(), conditionNodeID_.end());
-	std::unordered_map<unsigned int, int> nominatorValues = nonInterventionValues_;
-	nominatorValues.insert(conditionValues_.begin(), conditionValues_.end());
-
+	std::vector<int> nominatorValues = nonInterventionValues_;
+	for (auto& id : conditionNodeID_){
+		nominatorValues[id]=conditionValues_[id];
+	}
 	return probHandler_.computeConditionalProbability(nominatorNodes, conditionNodeID_, nominatorValues, conditionValues_);
 }
 
 float QueryExecuter::executeProbability(){
 	if (nonInterventionNodeID_.size() == 1){
-		return probHandler_.computeTotalProbabilityNormalized(nonInterventionNodeID_[0],nonInterventionValues_.find(nonInterventionNodeID_[0])->second);
+		return probHandler_.computeTotalProbabilityNormalized(nonInterventionNodeID_[0],nonInterventionValues_[(nonInterventionNodeID_[0])]);
 	}
 	else{
 		return probHandler_.computeJointProbability(nonInterventionNodeID_,nonInterventionValues_);
@@ -168,11 +173,11 @@ void QueryExecuter::setArgMax(const unsigned int nodeID)
 std::ostream& operator<<(std::ostream& os,const QueryExecuter& qe){
 	os<<"NonIntervention: "<<qe.nonInterventionNodeID_.size()<<" "<<qe.nonInterventionValues_.size()<<std::endl;
 	for (unsigned int index = 0; index < qe.nonInterventionNodeID_.size(); index++){
-		os<<qe.nonInterventionNodeID_[index]<<" "<<qe.nonInterventionValues_.find(qe.nonInterventionNodeID_[index])->second<<std::endl;
+		os<<qe.nonInterventionNodeID_[index]<<" "<<qe.nonInterventionValues_[qe.nonInterventionNodeID_[index]]<<std::endl;
 	}
 	os<<"Condition: "<<qe.conditionNodeID_.size()<<" "<<qe.conditionValues_.size()<<std::endl;
 	for (unsigned int index = 0; index < qe.conditionNodeID_.size(); index++){
-		os<<qe.conditionNodeID_[index]<<" "<<qe.conditionValues_.find(qe.conditionNodeID_[index])->second<<std::endl;
+		os<<qe.conditionNodeID_[index]<<" "<<qe.conditionValues_[(qe.conditionNodeID_[index])]<<std::endl;
 	}
 	os<<"ArgMax: "<<qe.argmaxNodeIDs_.size()<<std::endl;
 	for (unsigned int index = 0; index < qe.argmaxNodeIDs_.size(); index++){
@@ -180,7 +185,7 @@ std::ostream& operator<<(std::ostream& os,const QueryExecuter& qe){
 	}
 	os<<"DoIntervention: "<<qe.doInterventionNodeID_.size()<<" "<<qe.doInterventionValues_.size()<<std::endl;
 	for (unsigned int index = 0; index < qe.doInterventionNodeID_.size(); index++){
-		os<<qe.doInterventionNodeID_[index]<<" "<<qe.doInterventionValues_.find(qe.doInterventionNodeID_[index])->second<<std::endl;
+		os<<qe.doInterventionNodeID_[index]<<" "<<qe.doInterventionValues_[(qe.doInterventionNodeID_[index])]<<std::endl;
 	}
 	os<<"AddEdge: "<<qe.addEdgeNodeIDs_.size()<<std::endl;
 	for (unsigned int index = 0; index < qe.addEdgeNodeIDs_.size(); index++){
