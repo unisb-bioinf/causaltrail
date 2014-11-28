@@ -955,9 +955,12 @@ void Matrix<T>::resize(unsigned int colCount, unsigned int rowCount,
 template <typename T> float Matrix<T>::calculateRowSum(unsigned int row)
 {
 	float sum = 0;
-	for(int col = 0; col < colCount_; col++)
-		sum += (float)data_[col + row * colCount_];
-	return sum;
+	if (std::is_arithmetic<T>::value){
+		for(int col = 0; col < colCount_; col++)
+			sum += (float)data_[col + row * colCount_];
+		return sum;
+	}
+	return -1.0f;
 }
 
 /**calculateColSum
@@ -971,9 +974,12 @@ template <typename T> float Matrix<T>::calculateRowSum(unsigned int row)
 template <typename T> float Matrix<T>::calculateColSum(unsigned int col)
 {
 	float sum = 0;
-	for(int row = 0; row < rowCount_; row++)
-		sum += (float)data_[col + row * colCount_];
-	return sum;
+	if (std::is_arithmetic<T>::value){
+		for(int row = 0; row < rowCount_; row++)
+			sum += (float)data_[col + row * colCount_];
+		return sum;
+		}
+	return -1.0f;
 }
 
 /**calculateRowSum const
@@ -988,9 +994,12 @@ template <typename T>
 const float Matrix<T>::calculateRowSum(unsigned int row) const
 {
 	float sum = 0;
-	for(int col = 0; col < colCount_; col++)
-		sum += (float)data_[col + row * colCount_];
-	return sum;
+	if (std::is_arithmetic<T>::value){
+		for(int col = 0; col < colCount_; col++)
+			sum += (float)data_[col + row * colCount_];
+		return sum;
+		}
+	return -1.0;
 }
 
 /**calculateColSum const
@@ -1005,9 +1014,12 @@ template <typename T>
 const float Matrix<T>::calculateColSum(unsigned int col) const
 {
 	float sum = 0;
-	for(int row = 0; row < rowCount_; row++)
-		sum += (float)data_[col + row * colCount_];
-	return sum;
+	if (std::is_arithmetic<T>::value){
+		for(int row = 0; row < rowCount_; row++)
+			sum += (float)data_[col + row * colCount_];
+		return sum;
+		}
+	return -1.0;
 }
 
 /**hasNACol
