@@ -179,7 +179,6 @@ float ProbabilityHandler::calculateLikelihoodOfTheData(const Matrix<int>& obs)
 float ProbabilityHandler::computeJointProbability(
     const std::vector<unsigned int>& queryNodes, const std::vector<int>& values)
 {
-	std::cout << "New" << std::endl;
 	// Generate the factorisation of the joint probability distribution
 	std::vector<unsigned int> factorisation = createFactorisation(queryNodes);
 	// Assign possible values to the node identifiers (needed for the creation
