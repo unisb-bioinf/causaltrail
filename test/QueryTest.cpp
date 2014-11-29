@@ -1,14 +1,15 @@
 #include "gtest/gtest.h"
 #include "../NetworkController.h"
 #include "../Parser.h"
+#include "config.h"
 
 class QueryTest : public ::testing::Test{
 	protected:
 	QueryTest()
-		:c(NetworkController())
-	{	c.loadNetwork("../data/Student.na");
-		c.loadNetwork("../data/Student.sif");
-		c.loadObservations("../data/StudentData.txt","../data/controlStudent.txt");
+		:c(NetworkController())	{
+		c.loadNetwork(TEST_DATA_PATH("Student.na"));
+		c.loadNetwork(TEST_DATA_PATH("Student.sif"));
+		c.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.txt"));
 		c.trainNetwork();
 	}
 

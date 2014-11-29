@@ -16,9 +16,10 @@ target_link_libraries(CausalTrail CausalTrailLib ${Boost_LIBRARIES})
 IF(GTEST_SRC_DIR)
 
 enable_testing()
+include(CausalAnalysisTest.cmake)
+create_test_config_file()
 add_subdirectory(${GTEST_SRC_DIR} "gtest")
 include_directories("${GTEST_SRC_DIR}/include")
-
 
 add_executable(runMatrixTests test/MatrixTest.cpp)
 target_link_libraries(runMatrixTests gtest gtest_main)

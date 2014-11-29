@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "../Matrix.h"
+#include "config.h"
 
 class MatrixTest : public ::testing::Test{
 	protected:
@@ -146,8 +147,7 @@ TEST_F(MatrixTest, resizeOutOfBound){
 }
 
 TEST_F(MatrixTest,readMatrix){
-	std::string filename ("../data/testObservations2.txt");
-	m_.readMatrix(filename,false,true,0);
+	m_.readMatrix(TEST_DATA_PATH("testObservations2.txt"),false,true,0);
 	ASSERT_TRUE(m_.getRowNames()[0]=="Difficulty");
 	ASSERT_TRUE(m_.getRowNames()[4]=="Letter");
 	ASSERT_EQ(5,m_.getRowCount());

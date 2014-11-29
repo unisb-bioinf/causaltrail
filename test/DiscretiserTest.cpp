@@ -1,11 +1,12 @@
 #include "gtest/gtest.h"
 #include "../Discretiser.h"
 #include "../Network.h"
+#include "config.h"
 
 class DiscretiserTest : public ::testing::Test{
 	protected:
 	DiscretiserTest()
-		:oobs_(Matrix<std::string>("../data/testObservations.txt",false,true,"NA")), dobs_(Matrix<int>(0,0,0)), n_(Network())
+		:oobs_(Matrix<std::string>(TEST_DATA_PATH("testObservations.txt"),false,true,"NA")), dobs_(Matrix<int>(0,0,0)), n_(Network())
 	{
 	}
 

@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "../Network.h"
+#include "config.h"
 
 class NetworkTest : public ::testing::Test{
 	protected:
@@ -13,15 +14,15 @@ class NetworkTest : public ::testing::Test{
 };
 
 TEST_F(NetworkTest, readNetworkNASIF){
-	ASSERT_THROW(n_.readNetwork("../data/Student.sif"),std::invalid_argument);
-	n_.readNetwork("../data/Student.na");
+	ASSERT_THROW(n_.readNetwork(TEST_DATA_PATH("Student.sif")),std::invalid_argument);
+	n_.readNetwork(TEST_DATA_PATH("Student.na"));
 	ASSERT_TRUE(n_.getNodes().size()==5);
-	n_.readNetwork("../data/Student.sif");
+	n_.readNetwork(TEST_DATA_PATH("Student.sif"));
 	ASSERT_THROW(n_.getNode("Test"),std::invalid_argument);
 }
 
 TEST_F(NetworkTest, readNetworkTGF){
-	n_.readNetwork("../data/test.tgf");
+	n_.readNetwork(TEST_DATA_PATH("test.tgf"));
 	ASSERT_TRUE(n_.getNodes().size()==3);
 	ASSERT_TRUE(n_.getNode("Hallo").getID()==0);
 	ASSERT_TRUE(n_.getNode(1).getName()=="Welt");
@@ -31,14 +32,14 @@ TEST_F(NetworkTest, readNetworkTGF){
 }
 
 TEST_F(NetworkTest, getParents){
-	n_.readNetwork("../data/test.tgf");
+	n_.readNetwork(TEST_DATA_PATH("test.tgf"));
 	ASSERT_TRUE(n_.getNode("Hallo").getParents().empty());
 	ASSERT_TRUE(n_.getNode(1).getParents()[0]==0);
 	ASSERT_TRUE(n_.getNode(2).getParents()[0]==1);	
 }
 
 TEST_F(NetworkTest, cutParents){
-	n_.readNetwork("../data/test.tgf");
+	n_.readNetwork(TEST_DATA_PATH("test.tgf"));
 	n_.cutParents(0);
 	n_.cutParents("Welt");
 	n_.cutParents(2);
@@ -48,7 +49,7 @@ TEST_F(NetworkTest, cutParents){
 }
 
 TEST_F(NetworkTest, backup){
-	n_.readNetwork("../data/test.tgf");
+	n_.readNetwork(TEST_DATA_PATH("test.tgf"));
 	n_.createBackup();
 	n_.cutParents(0);
 	n_.cutParents("Welt");
@@ -64,7 +65,7 @@ TEST_F(NetworkTest, backup){
 
 TEST_F(NetworkTest, DFS){
 	std::vector<unsigned int> temp;
-	n_.readNetwork("../data/test.tgf");
+	n_.readNetwork(TEST_DATA_PATH("test.tgf"));
 	n_.performDFS(2,temp);
 	ASSERT_TRUE(temp.size()==3);
 	ASSERT_TRUE(temp[0]==2);
@@ -77,7 +78,7 @@ TEST_F(NetworkTest, DFS){
 }
 
 TEST_F(NetworkTest, edgeOperations){
-	n_.readNetwork("../data/test.tgf");
+	n_.readNetwork(TEST_DATA_PATH("test.tgf"));
 	n_.addEdge(2,0);
 	ASSERT_TRUE(n_.getNode(2).getParents().size()==2);
 	ASSERT_TRUE(n_.getNode(2).getParents()[0]==0);

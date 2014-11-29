@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "../NetworkController.h"
 #include "../EM.h"
+#include "config.h"
 
 class EMTest : public ::testing::Test{
 	protected:
@@ -16,9 +17,9 @@ class EMTest : public ::testing::Test{
 };
 
 TEST_F(EMTest,Complete){
-	c.loadNetwork("../data/Student.na");
-	c.loadNetwork("../data/Student.sif");
-	c.loadObservations("../data/StudentData.txt","../data/controlStudent.txt");
+	c.loadNetwork(TEST_DATA_PATH("Student.na"));
+	c.loadNetwork(TEST_DATA_PATH("Student.sif"));
+	c.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.txt"));
 	c.trainNetwork();
 	Network n = c.getNetwork();
 	Node grade = n.getNode("Grade");
@@ -56,9 +57,9 @@ TEST_F(EMTest,Complete){
 }
 
 TEST_F(EMTest,UnComplete){
-	c.loadNetwork("../data/Student.na");
-	c.loadNetwork("../data/Student.sif");
-	c.loadObservations("../data/dataStudent60.txt","../data/controlStudent.txt");
+	c.loadNetwork(TEST_DATA_PATH("Student.na"));
+	c.loadNetwork(TEST_DATA_PATH("Student.sif"));
+	c.loadObservations(TEST_DATA_PATH("dataStudent60.txt"),TEST_DATA_PATH("controlStudent.txt"));
 	c.trainNetwork();
 	Network n = c.getNetwork();
 	Node grade = n.getNode("Grade");

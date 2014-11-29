@@ -18,6 +18,7 @@ void Interventions::loadBackupOfNetworkStructure(){
 void Interventions::doIntervention(const std::string& NodeName, const std::string& value){
 	Network& network = controller_.getNetwork();
 	Node& n = network.getNode(NodeName);
+	std::cout<<n.getName()<<" "<<n.getID()<<" "<<value<<std::endl;
 	n.createBackupDoIntervention();
 	network.cutParents(NodeName);
 	n.setProbabilityTo1(value);
@@ -27,6 +28,7 @@ void Interventions::doIntervention(int nodeID, int value){
 	Network& network = controller_.getNetwork();
 	Node& n = network.getNode(nodeID);
 	n.createBackupDoIntervention();
+	std::cout<<n.getName()<<" "<<n.getID()<<" "<<value<<std::endl;
 	network.cutParents(nodeID);
 	n.setProbabilityTo1(value);
 }

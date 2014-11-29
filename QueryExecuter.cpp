@@ -78,16 +78,17 @@ void QueryExecuter::reverseInterventions(){
 }
 
 void QueryExecuter::executeDoInterventions(){
-	for (unsigned int index = 0; index<doInterventionValues_.size(); index++){
-		interventions_.doIntervention(doInterventionNodeID_[index], doInterventionValues_[doInterventionNodeID_[index]]);
+	for (auto & id : doInterventionNodeID_){
+		interventions_.doIntervention(id, doInterventionValues_[id]);
 	}
 }
 
 void QueryExecuter::executeReverseDoInterventions(){
-	for (unsigned int index = 0; index<doInterventionValues_.size();index++){
-		interventions_.reverseDoIntervention(doInterventionNodeID_[index]);
+	for (auto & id : doInterventionNodeID_){
+		interventions_.reverseDoIntervention(id);
 	}
 }
+
 
 void QueryExecuter::executeEdgeAdditions(){
 	for (auto& p : addEdgeNodeIDs_){
