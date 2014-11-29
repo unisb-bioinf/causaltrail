@@ -62,14 +62,13 @@ void DataDistribution::assignParentNames(Node& n)
 		auto comb = Combinations<int>(n.getParents(), uniqueValuesExcludingNA);
 		comb.createCombinations(0);
 		std::vector<std::vector<int>> tempParentNames = comb.getResult();
-
 		for(auto& vec : tempParentNames) {
 			std::string temp = "";
 			for(unsigned int key = 0; key < n.getNumberOfParents(); key++) {
 				int parentRow =
 				    network_.getNode(n.getParents()[key]).getObservationRow();
 				temp = temp +
-				       observationsMapR_[std::make_pair(vec[key], parentRow)] +
+				       observationsMapR_[std::make_pair(vec[n.getParents()[key]], parentRow)] +
 				       ",";
 			}
 			temp.erase(temp.end() - 1);

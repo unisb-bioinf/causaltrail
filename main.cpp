@@ -16,9 +16,8 @@ int main(int argc, char *argv[]){
 	c.loadObservations(datafile,controlfile);
 	c.trainNetwork();
 	std::cout<<c.getNetwork()<<std::endl;
-	std::cout<<c.getNumberOfEMRuns()<<std::endl;
-	std::cout<<c.getParameterDifference()<<std::endl;
-	std::cout<<c.getTimeInSeconds()<<std::endl;
+	std::cout<<"Number of EM runs: "<<c.getNumberOfEMRuns()<<std::endl;
+	std::cout<<"Time passed in microseconds: "<<c.getTimeInMicroSeconds()<<std::endl;
 	std::string input = "";
 	std::cout<<"Please enter a query"<<std::endl;
 	std::getline(std::cin,input);

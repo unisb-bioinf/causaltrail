@@ -53,7 +53,7 @@ void NetworkController::trainNetwork(){
 	eMRuns_ = em.getNumberOfRuns();
 	finalDifference_ = em.getDifference();
 	likelihoodOfTheData_ = em.calculateLikelihoodOfTheData();
-	timeInSeconds_ = em.getTimeInSeconds();
+	timeInMicroSeconds_ = em.getTimeInMicroSeconds();
 }
 
 const float& NetworkController::getLikelihoodOfTheData() const {
@@ -68,6 +68,6 @@ const float& NetworkController::getParameterDifference() const{
 	return finalDifference_;
 }
 
-const int& NetworkController::getTimeInSeconds() const{
-	return timeInSeconds_;
+const int& NetworkController::getTimeInMicroSeconds() const{
+	return timeInMicroSeconds_;
 }

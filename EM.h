@@ -12,7 +12,7 @@ class EM{
 	float calculateLikelihoodOfTheData();
 	int getNumberOfRuns();
 	float getDifference();
-	int getTimeInSeconds();
+	int getTimeInMicroSeconds();
 	private:
 	float calculateProbabilityEM(const Node& n, unsigned int col, unsigned int row);
 	void calculateExpectedValue(unsigned int row, Node& n);

@@ -865,7 +865,7 @@ void Matrix<T>::readMatrix(const std::string& filename, bool colNames, bool rowN
 	int row = 0;
 	int col = 0;
 	
-	const auto finder = token_finder(boost::algorithm::is_any_of(" \t"),boost::algorithm::token_compress_on);
+	const auto finder = token_finder(boost::algorithm::is_any_of("\t "),boost::token_compress_on);
 
 	std::string tmp;
 	if(colNames) {
