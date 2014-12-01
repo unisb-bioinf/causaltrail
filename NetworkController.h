@@ -20,6 +20,7 @@ class NetworkController{
 	const int& getNumberOfEMRuns() const;
 	const float& getParameterDifference() const;
 	const int& getTimeInMicroSeconds() const;
+	void saveParameters() const;
 	private:
 	Network network_;
 	Matrix<int> observations_;

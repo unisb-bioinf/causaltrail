@@ -11,9 +11,8 @@ class ProbabilityHandler
 	ProbabilityHandler(Network& network);
 	float computeTotalProbability(int nodeID, int value);
 	float computeTotalProbabilityNormalized(int nodeID, int value);
-	float
-	computeJointProbability(const std::vector<unsigned int>& nodes,
-	                        const std::vector<int>& values);
+	float computeJointProbability(const std::vector<unsigned int>& nodes,
+	                        		const std::vector<int>& values);
 	float computeConditionalProbability(
 	    const std::vector<unsigned int>& nodesNominator,
 	    const std::vector<unsigned int>& nodesDenominator,
@@ -32,8 +31,6 @@ class ProbabilityHandler
 	std::vector<std::vector<int>> enumerate(
 	    const std::vector<unsigned int>& factorisation,
 	    const std::vector<std::vector<int>>& valueAssignment);
-//	int getPosition(unsigned int id,
-//	                const std::vector<unsigned int>& factorisation) const;
 	int getParentValues(const Node& n,
 	                    const std::vector<unsigned int>& factorisation,
 	                    const std::vector<int>& assignment);
@@ -41,8 +38,11 @@ class ProbabilityHandler
 	                    unsigned int index) const;
 	float computeFullySpecifiedProbabilityDistribution(
 	    const std::vector<unsigned int>& factorisation,
+		const std::pair<std::vector<unsigned int>, std::vector<unsigned int>>& nodePair,                        
 	    const std::vector<std::vector<int>>& combinations);
-
+	std::pair<std::vector<unsigned int>,std::vector<unsigned int>>
+	getNoneSummationNodes(const std::vector<unsigned int>& queryNodes,
+	                  const std::vector<unsigned int>& factorisation);
 	Network& network_;
 };
 

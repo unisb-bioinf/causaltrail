@@ -71,3 +71,7 @@ const float& NetworkController::getParameterDifference() const{
 const int& NetworkController::getTimeInMicroSeconds() const{
 	return timeInMicroSeconds_;
 }
+
+void NetworkController::saveParameters() const{
+	network_.saveParameters();
+}

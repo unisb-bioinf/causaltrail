@@ -18,6 +18,7 @@ int main(int argc, char *argv[]){
 	std::cout<<c.getNetwork()<<std::endl;
 	std::cout<<"Number of EM runs: "<<c.getNumberOfEMRuns()<<std::endl;
 	std::cout<<"Time passed in microseconds: "<<c.getTimeInMicroSeconds()<<std::endl;
+//	c.saveParameters();
 	std::string input = "";
 	std::cout<<"Please enter a query"<<std::endl;
 	std::getline(std::cin,input);

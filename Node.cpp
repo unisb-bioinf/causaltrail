@@ -7,7 +7,8 @@ Node::Node(unsigned int index, unsigned int id, const std::string& name)
       ProbabilityMatrix_(Matrix<float>(0, 0, 0.0f)),
       ProbabilityMatrixBackup_(Matrix<float>(0, 0, 0.0f)),
       ObservationMatrix_(Matrix<int>(0, 0, 0)),
-      ObservationBackup_(Matrix<int>(0, 0, 0))
+      ObservationBackup_(Matrix<int>(0, 0, 0)),
+	  DynProgMatrix_(Matrix<float>(0, 0, -1.0f))
 {
 }
 
@@ -234,6 +235,7 @@ void Node::setProbabilityTo1(const std::string& value)
 	unsigned int col = ProbabilityMatrix_.findCol(value);
 	for(unsigned int row = 0; row < ProbabilityMatrix_.getRowCount(); row++) {
 		ProbabilityMatrix_.setData(1.0f, col, row);
+
 	}
 }
 
@@ -264,3 +266,19 @@ void Node::clearNameVectors()
 	parentValueNames_.clear();
 	uniqueValuesExcludingNA_.clear();
 }
+
+bool Node::isCalculated(unsigned int index, unsigned int row) const {
+	return (DynProgMatrix_(index,row) != -1.0f); 
+}
+
+void Node::setCalculatedValue(float value, unsigned int index, unsigned int row){
+	DynProgMatrix_.setData(value,index,row);
+}
+
+float Node::getCalculatedValue(unsigned int index, unsigned int row) const{
+	return DynProgMatrix_(index,row);
+}
+
+void Node::clearDynProgMatrix(){
+	DynProgMatrix_ = Matrix<float>(valueNamesProb_,parentValueNames_,-1.0f);
+}	

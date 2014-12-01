@@ -1,4 +1,8 @@
 #include "Network.h"
+#include <ctime>
+#include <chrono>
+#include <fstream>
+#include <iostream>
 
 Network::Network()
     : AdjacencyMatrix_(Matrix<unsigned int>(0, 0, 0)),
@@ -394,3 +398,20 @@ unsigned int Network::getNewID(unsigned int originalIdentifier)
 }
 
 const unsigned int Network::size() const { return getNodes().size(); }
+
+void Network::saveParameters() const{
+	std::chrono::time_point<std::chrono::system_clock> time = std::chrono::system_clock::now();
+    std::time_t time_ = std::chrono::system_clock::to_time_t(time);
+	std::string ts = std::ctime(&time_);
+	std::ofstream file;
+	std::string filename = "Parameters_"+ts;
+	file.open(filename);
+	for (auto& n : NodeList_){
+		unsigned int rowCount=n.getNumberOfParentValues();
+		unsigned int colCount=n.getNumberOfUniqueValuesExcludingNA();
+		for (unsigned int row=0;row<rowCount;row++)
+			for (unsigned int col=0;col<colCount;col++)
+				file<<n.getProbability(col,row)<<"\n";
+		}
+	file.close();
+}

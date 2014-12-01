@@ -54,6 +54,10 @@ class Node {
 	const Matrix<float>& getProbabilityMatrix() const;
 	Matrix<int>& getObservationMatrix();
 	const Matrix<int>& getObservationMatrix() const;
+	bool isCalculated(unsigned int index, unsigned int row) const;
+	void setCalculatedValue(float value, unsigned int index, unsigned int row);
+	float getCalculatedValue(unsigned int index, unsigned int row) const;
+	void clearDynProgMatrix();
 	void createBackup();
 	void loadBackup();
 	void setUnvisited();
@@ -71,6 +75,7 @@ class Node {
 	Matrix<float> ProbabilityMatrixBackup_;
 	Matrix<int> ObservationMatrix_;
 	Matrix<int> ObservationBackup_;
+	Matrix<float> DynProgMatrix_;
 	std::vector<int> uniqueValues_;
 	std::vector<std::string> valueNames_;
 	std::vector<std::string> valueNamesProb_;
