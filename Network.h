@@ -41,6 +41,7 @@ class Network{
 		unsigned int getNewID(unsigned int originalID);
 		const unsigned int size() const;
 		void saveParameters() const;
+		void clearDynProgMatrices();
 	private:
 		const std::vector<unsigned int> getParents(unsigned int id) const;
 		const std::vector<unsigned int> getParents(const std::string& name) const;

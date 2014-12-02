@@ -40,6 +40,7 @@ std::pair<float,std::vector<std::string>> QueryExecuter::computeProbability(){
 }
 
 void QueryExecuter::executeInterventions(){
+	networkController_.getNetwork().clearDynProgMatrices();
 	interventions_.createBackupOfNetworkStructure();
 	bool topologyChange = false;
 	if (not addEdgeNodeIDs_.empty()){
@@ -59,6 +60,7 @@ void QueryExecuter::executeInterventions(){
 }
 
 void QueryExecuter::reverseInterventions(){
+	networkController_.getNetwork().clearDynProgMatrices();
 	interventions_.loadBackupOfNetworkStructure();
 	if (not doInterventionValues_.empty()){
 		executeReverseDoInterventions();

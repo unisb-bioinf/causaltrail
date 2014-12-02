@@ -415,3 +415,9 @@ void Network::saveParameters() const{
 		}
 	file.close();
 }
+
+void Network::clearDynProgMatrices(){
+	for (auto& n : NodeList_){
+		n.clearDynProgMatrix();
+	}
+}

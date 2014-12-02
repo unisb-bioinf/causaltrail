@@ -35,7 +35,6 @@ Combinations<T>::Combinations(const std::vector<unsigned int>& keys, const std::
 	temp_.resize(values.size());
 	}
 
-
 /**createCombinations
  *
  * @param

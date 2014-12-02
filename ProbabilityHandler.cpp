@@ -6,6 +6,11 @@ ProbabilityHandler::ProbabilityHandler(Network& network) : network_(network) {}
 float ProbabilityHandler::computeTotalProbabilityNormalized(int nodeID,
                                                             int index)
 {
+	if (index == -1){
+		throw std::invalid_argument(
+	    "The current node does contain the query value");
+	}
+
 	// Get Parents
 	const Node& node = network_.getNode(nodeID);
 	const auto& parentIDs = node.getParents();
@@ -16,29 +21,25 @@ float ProbabilityHandler::computeTotalProbabilityNormalized(int nodeID,
 		float queryResult = 0.0f;
 
 		for(unsigned int row = 0; row < probMatrix.getRowCount(); row++) {
-			float temp = 1.0f;
-
-			for(unsigned int index2 = 0; index2 < node.getNumberOfParents();
-			    index2++) {
-				temp *= computeTotalProbability(
-				    parentIDs[index2],
-				    network_.reverseFactor(node, parentIDs[index2], row));
-			}
-
-			if(index != -1) {
-				queryResult += (temp * probMatrix(index, row));
+			if(node.isCalculated(index, row)) {
+				queryResult += node.getCalculatedValue(index, row);
 			} else {
-				throw std::invalid_argument(
-				    "The current node does contain the query value");
+				float temp = 1.0f;
+				for(unsigned int index2 = 0; index2 < node.getNumberOfParents();
+				    index2++) {
+					temp *= computeTotalProbability(
+					    parentIDs[index2],
+					    network_.reverseFactor(node, parentIDs[index2], row));
+				}
+				queryResult += (temp * probMatrix(index, row));
 			}
 		}
 		float norm = 0.0f;
-		unsigned int queryCol = index; 
+		unsigned int queryCol = index;
 		for(unsigned int col = 0; col < probMatrix.getColCount(); col++) {
-			if (col != queryCol){ 
+			if(col != queryCol) {
 				norm += computeTotalProbability(nodeID, col);
-			}
-			else {
+			} else {
 				norm += queryResult;
 			}
 		}
@@ -54,7 +55,6 @@ float ProbabilityHandler::computeTotalProbability(int nodeID, int index)
 		throw std::invalid_argument(
 					    "The current node does not contain the query value");
 	}
-
 	// Get Parents
 	Node& node = network_.getNode(nodeID);
 	const auto& parentIDs = node.getParents();
@@ -65,11 +65,9 @@ float ProbabilityHandler::computeTotalProbability(int nodeID, int index)
 		float result = 0.0f;
 		for(unsigned int row = 0; row < probMatrix.getRowCount(); row++) {
 			if (node.isCalculated(index,row)){
-				std::cout<<"Loading stored value: P("<<node.getName()<<"="<<probMatrix.getColNames()[index]<<"|"<<probMatrix.getRowNames()[row]<<")"<<std::endl;	
 				result += node.getCalculatedValue(index,row);
 			}
 			else {
-				std::cout<<"Calculating: P("<<node.getName()<<"="<<probMatrix.getColNames()[index]<<"|"<<probMatrix.getRowNames()[row]<<")"<<std::endl;
 				float temp = 1.0f;
 				for(unsigned int index2 = 0; index2 < node.getNumberOfParents();
 				    index2++) {
@@ -217,20 +215,10 @@ float ProbabilityHandler::computeJointProbability(
 	auto valueAssignment =
 	    assignValues(factorisation, values);
 
-	auto fullAssignment =
-	    assignValues(factorisation, emptyVec);
-
-	// Enumerate all possible value assignments
-	auto combinations =
-	    enumerate(factorisation, valueAssignment);
-
-	// Enumerate normalization
-	auto normalizations =
-	    enumerate(factorisation, fullAssignment);
+	auto combinations=enumerate(factorisation, valueAssignment);
 
 	// Compute the joint probability by summing up all combinations
-	return computeFullySpecifiedProbabilityDistribution(factorisation, nodeVectorPair,
-	                                                    combinations);
+	return computeFullySpecifiedProbabilityDistribution(factorisation, nodeVectorPair, combinations);
 }
 
 float ProbabilityHandler::computeConditionalProbability(
@@ -255,18 +243,28 @@ ProbabilityHandler::maxSearch(const std::vector<unsigned int>& queryNodes)
 	int index = 0;
 	int maxIndex = 0;
 	float maxprob = 0.0f;
-
-	for(auto& com : combinations) {
-
-		for(auto& id : queryNodes) {
-			emptyValues[id] = com[id];
+	if (queryNodes.size() > 1){
+		for(auto& com : combinations) {
+			for(auto& id : queryNodes) {
+				emptyValues[id] = com[id];
+			}
+			float prob = computeJointProbability(queryNodes, emptyValues);
+			if(prob > maxprob) {
+				maxprob = prob;
+				maxIndex = index;
+			}
+			index++;
 		}
-		float prob = computeJointProbability(queryNodes, emptyValues);
-		if(prob > maxprob) {
-			maxprob = prob;
-			maxIndex = index;
+	}
+	else {
+		for(auto& com : combinations) {
+			float prob = computeTotalProbability(queryNodes[0], com[queryNodes[0]]);
+			if(prob > maxprob) {
+				maxprob = prob;
+				maxIndex = index;
+			}
+			index++;
 		}
-		index++;
 	}
 	std::vector<std::string> resultNames;
 

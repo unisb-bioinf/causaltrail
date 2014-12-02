@@ -54,6 +54,7 @@ void NetworkController::trainNetwork(){
 	finalDifference_ = em.getDifference();
 	likelihoodOfTheData_ = em.calculateLikelihoodOfTheData();
 	timeInMicroSeconds_ = em.getTimeInMicroSeconds();
+	network_.clearDynProgMatrices();
 }
 
 const float& NetworkController::getLikelihoodOfTheData() const {
