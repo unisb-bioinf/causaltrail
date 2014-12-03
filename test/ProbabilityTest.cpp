@@ -55,11 +55,15 @@ TEST_F(ProbabilityTest, JointProbability){
 	m1[1]=0;
 	std::vector<unsigned int> v1{0,1};
 	ASSERT_NEAR(0.288f, p.computeJointProbability(v1,m1), 0.001);
+	ASSERT_NEAR(0.288f, p.computeJointProbabilityUsingVariableElimination(v1,m1),0.001);
 
 	//Test for Difficulty
-	std::vector<int> m2(1,0);
+	std::vector<int> m2(5,-1);
+	m2[0]=0;
 	std::vector<unsigned int> v2 {0};
 	ASSERT_NEAR(0.6f, p.computeJointProbability(v2,m2), 0.001);
+	ASSERT_NEAR(0.6f, p.computeJointProbabilityUsingVariableElimination(v2,m2),0.001);
+
 
 	//Test for Difficulty and Intelligence
 	std::vector<int> m4(5,-1);
@@ -67,13 +71,14 @@ TEST_F(ProbabilityTest, JointProbability){
 	m4[2]=0;
 	std::vector<unsigned int> v4 {0,2};
 	ASSERT_NEAR(0.42f, p.computeJointProbability(v4,m4), 0.001);
-
-
+	ASSERT_NEAR(0.42f, p.computeJointProbabilityUsingVariableElimination(v4,m4), 0.001);
 
 	//Test for fully specified distribution
 	std::vector<int> m3(5,0);
 	std::vector<unsigned int> v3{0,1,2,3,4};
 	ASSERT_NEAR(0.01197f, p.computeJointProbability(v3,m3), 0.001);
+	ASSERT_NEAR(0.01197f, p.computeJointProbabilityUsingVariableElimination(v3,m3),0.001);
+
 
 }
 

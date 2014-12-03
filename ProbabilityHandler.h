@@ -2,6 +2,7 @@
 #define PROBABILITYHANDLER_H
 
 #include "Network.h"
+#include "Factor.h"
 #include <boost/algorithm/string.hpp>
 
 class ProbabilityHandler
@@ -12,7 +13,9 @@ class ProbabilityHandler
 	float computeTotalProbability(int nodeID, int value);
 	float computeTotalProbabilityNormalized(int nodeID, int value);
 	float computeJointProbability(const std::vector<unsigned int>& nodes,
-	                        		const std::vector<int>& values);
+	                              const std::vector<int>& values);
+	float computeJointProbabilityUsingVariableElimination(
+	    const std::vector<unsigned int>& nodes, const std::vector<int>& values);
 	float computeConditionalProbability(
 	    const std::vector<unsigned int>& nodesNominator,
 	    const std::vector<unsigned int>& nodesDenominator,
@@ -40,9 +43,16 @@ class ProbabilityHandler
 	    const std::vector<unsigned int>& factorisation,
 		const std::pair<std::vector<unsigned int>, std::vector<unsigned int>>& nodePair,                        
 	    const std::vector<std::vector<int>>& combinations);
+	float getResult(std::vector<Factor>& factorlist);
 	std::pair<std::vector<unsigned int>,std::vector<unsigned int>>
 	getNoneSummationNodes(const std::vector<unsigned int>& queryNodes,
 	                  const std::vector<unsigned int>& factorisation);
+	std::vector<Factor> createFactorList(const std::vector<unsigned int>& factorisation, const std::vector<int>& values) const;
+	std::vector<unsigned int> getOrdering(const std::vector<unsigned int>& factorisation,const std::vector<unsigned int>& queryNodes) const;
+	void eliminate(const unsigned int id, std::vector<Factor>& factorlist);
+
+
+
 	Network& network_;
 };
 

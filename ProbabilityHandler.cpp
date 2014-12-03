@@ -221,14 +221,96 @@ float ProbabilityHandler::computeJointProbability(
 	return computeFullySpecifiedProbabilityDistribution(factorisation, nodeVectorPair, combinations);
 }
 
+std::vector<Factor> ProbabilityHandler::createFactorList(const std::vector<unsigned int>& factorisation, const std::vector<int>& values) const {
+	std::vector<Factor> temp;
+	for (auto& id : factorisation){
+		temp.push_back(Factor(network_.getNode(id),values));
+	}
+	return temp;
+}
+
+std::vector<unsigned int> ProbabilityHandler::getOrdering(const std::vector<unsigned int>& factorisation,const std::vector<unsigned int>& queryNodes) const{
+	auto temp = queryNodes;
+	for (auto& id : factorisation){
+		if (std::find(queryNodes.begin(), queryNodes.end(), id)==queryNodes.end())
+		{		
+			temp.push_back(id);
+		}
+	}
+	return temp;
+}
+
+void ProbabilityHandler::eliminate(const unsigned int id, std::vector<Factor>& factorlist){
+	std::vector<unsigned int> neededFactors;
+	std::vector<std::vector<unsigned int>> neededFactorsIDs;
+	for (unsigned int i = 0; i < factorlist.size(); i++){
+		Factor& f = factorlist[i];
+		if (std::find(f.getIDs().begin(), f.getIDs().end(), id) != f.getIDs().end()){
+			neededFactors.push_back(i);
+			neededFactorsIDs.push_back(f.getIDs());
+		}	
+	}
+
+	Factor tempFactor(0,{});	
+	if (neededFactors.size() > 1){
+		//Multiply
+		tempFactor = factorlist[neededFactors[0]];
+		for (unsigned int i = 1; i <neededFactors.size(); i++){
+			tempFactor = tempFactor.product(factorlist[neededFactors[i]]);
+		}
+		//SumOut
+		tempFactor = tempFactor.sumOut(id,network_);
+	}
+	else {
+		tempFactor = factorlist[neededFactors[0]];
+		tempFactor = tempFactor.sumOut(id,network_);
+	}
+	for (auto& neededFactorID : neededFactorsIDs){
+		auto it = factorlist.begin();
+		for (; it!= factorlist.end();){
+			if (it->getIDs() == neededFactorID){
+				it = factorlist.erase(it);
+			}
+			else {
+				++it;
+			}
+		}
+	}
+	factorlist.push_back(tempFactor);
+
+	
+}
+
+float ProbabilityHandler::getResult(std::vector<Factor>& factorlist){
+	float prob = 1.0f;
+	for (auto& f : factorlist){
+		prob*=f.getProbability(0);
+	}
+	return prob;
+}
+
+float ProbabilityHandler::computeJointProbabilityUsingVariableElimination(
+	    const std::vector<unsigned int>& queryNodes, const std::vector<int>& values){
+	auto factorisation = createFactorisation(queryNodes);
+	auto factorlist = createFactorList(factorisation, values);
+	
+	auto ordering = getOrdering(factorisation, queryNodes);
+	for (auto& id : ordering){
+		eliminate(id, factorlist);
+	}
+	return getResult(factorlist);
+}
+	
+
+
 float ProbabilityHandler::computeConditionalProbability(
     const std::vector<unsigned int>& nodesNominator,
     const std::vector<unsigned int>& nodesDenominator,
     const std::vector<int>& valuesNominator,
     const std::vector<int>& valuesDenominator)
 {
-	return computeJointProbability(nodesNominator, valuesNominator) /
-	       computeJointProbability(nodesDenominator, valuesDenominator);
+	return computeJointProbabilityUsingVariableElimination(nodesNominator, valuesNominator) /
+	       computeJointProbabilityUsingVariableElimination(nodesDenominator, valuesDenominator);
 }
 
 std::pair<float, std::vector<std::string>>
@@ -248,7 +330,7 @@ ProbabilityHandler::maxSearch(const std::vector<unsigned int>& queryNodes)
 			for(auto& id : queryNodes) {
 				emptyValues[id] = com[id];
 			}
-			float prob = computeJointProbability(queryNodes, emptyValues);
+			float prob = computeJointProbabilityUsingVariableElimination(queryNodes, emptyValues);
 			if(prob > maxprob) {
 				maxprob = prob;
 				maxIndex = index;

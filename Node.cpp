@@ -110,7 +110,7 @@ void Node::setParents(const std::vector<unsigned int>& parents)
 	Parents_ = parents;
 }
 
-void Node::cutParents() { Parents_.clear(); }
+void Node::cutParents() { Parents_.clear(); parentValues_.clear();}
 
 void Node::setUniqueValues(const std::vector<int>& uniqueValues)
 {
@@ -214,12 +214,15 @@ void Node::createBackupDoIntervention()
 {
 	ProbabilityMatrixBackup_ = ProbabilityMatrix_;
 	ParentsBackup_ = Parents_;
+	parentValuesBackup_ = parentValues_;
 }
 
 void Node::loadBackupDoIntervention()
 {
 	ProbabilityMatrix_ = ProbabilityMatrixBackup_;
 	Parents_ = ParentsBackup_;
+	parentValues_ = parentValuesBackup_;
+	parentValuesBackup_.clear();
 	ParentsBackup_.clear();
 	ProbabilityMatrixBackup_ = Matrix<float>(0, 0, 0.0);
 }
@@ -264,6 +267,7 @@ void Node::clearNameVectors()
 	valueNames_.clear();
 	valueNamesProb_.clear();
 	parentValueNames_.clear();
+	parentValues_.clear();
 	uniqueValuesExcludingNA_.clear();
 }
 
@@ -281,4 +285,12 @@ float Node::getCalculatedValue(unsigned int index, unsigned int row) const{
 
 void Node::clearDynProgMatrix(){
 	DynProgMatrix_ = Matrix<float>(valueNamesProb_,parentValueNames_,-1.0f);
-}	
+}
+
+void Node::setParentValues(std::vector<std::vector<int>>& pValues){
+	parentValues_ = pValues;
+}
+
+const std::vector<std::vector<int>>& Node::getParentValues() const{
+	return parentValues_;
+}

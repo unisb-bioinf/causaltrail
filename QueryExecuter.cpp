@@ -136,7 +136,7 @@ float QueryExecuter::executeProbability(){
 		return probHandler_.computeTotalProbabilityNormalized(nonInterventionNodeID_[0],nonInterventionValues_[(nonInterventionNodeID_[0])]);
 	}
 	else{
-		return probHandler_.computeJointProbability(nonInterventionNodeID_,nonInterventionValues_);
+		return probHandler_.computeJointProbabilityUsingVariableElimination(nonInterventionNodeID_,nonInterventionValues_);
 	}
 }
 	

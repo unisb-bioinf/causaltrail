@@ -64,6 +64,8 @@ class Node {
 	void visit();
 	bool isVisited() const;
 	void clearNameVectors();
+	void setParentValues(std::vector<std::vector<int>>& pValues);
+	const std::vector<std::vector<int>>& getParentValues() const;
 	friend std::ostream& operator<< (std::ostream& os,const Node& n);
 	private:
 	unsigned int index_;
@@ -80,6 +82,8 @@ class Node {
 	std::vector<std::string> valueNames_;
 	std::vector<std::string> valueNamesProb_;
 	std::vector<std::string> parentValueNames_;
+	std::vector<std::vector<int>> parentValues_;
+	std::vector<std::vector<int>> parentValuesBackup_;
 	std::vector<int> uniqueValuesExcludingNA_;
 	int observationRow_;
 	int parentCombinations_;

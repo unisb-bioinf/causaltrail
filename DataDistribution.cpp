@@ -62,18 +62,23 @@ void DataDistribution::assignParentNames(Node& n)
 		auto comb = Combinations<int>(n.getParents(), uniqueValuesExcludingNA);
 		comb.createCombinations(0);
 		std::vector<std::vector<int>> tempParentNames = comb.getResult();
+		std::vector<std::vector<int>> parentValues;
 		for(auto& vec : tempParentNames) {
 			std::string temp = "";
+			std::vector<int> value;
 			for(unsigned int key = 0; key < n.getNumberOfParents(); key++) {
 				int parentRow =
 				    network_.getNode(n.getParents()[key]).getObservationRow();
 				temp = temp +
 				       observationsMapR_[std::make_pair(vec[n.getParents()[key]], parentRow)] +
 				       ",";
+					value.push_back(vec[n.getParents()[key]]);
 			}
 			temp.erase(temp.end() - 1);
 			n.addParentValueName(temp);
+			parentValues.push_back(value);
 		}
+		n.setParentValues(parentValues);
 	} else if(n.getNumberOfParents() == 1) {
 		int parentRow = network_.getNode(n.getParents()[0]).getObservationRow();
 		for(auto& v :
@@ -81,9 +86,16 @@ void DataDistribution::assignParentNames(Node& n)
 			n.addParentValueName(
 			    observationsMapR_[std::make_pair(v, parentRow)]);
 		}
+		std::vector<std::vector<int>> pValues;
+		for (auto& value : network_.getNode(n.getParents()[0]).getUniqueValuesExcludingNA()){
+			pValues.push_back({value});
+		}
+		n.setParentValues(pValues);
 
 	} else {
 		n.addParentValueName("1");
+		std::vector<std::vector<int>> noParents{{}};
+		n.setParentValues(noParents);
 	}
 }
 
