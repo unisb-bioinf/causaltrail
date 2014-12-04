@@ -54,14 +54,12 @@ TEST_F(ProbabilityTest, JointProbability){
 	m1[0]=0;
 	m1[1]=0;
 	std::vector<unsigned int> v1{0,1};
-	ASSERT_NEAR(0.288f, p.computeJointProbability(v1,m1), 0.001);
 	ASSERT_NEAR(0.288f, p.computeJointProbabilityUsingVariableElimination(v1,m1),0.001);
 
 	//Test for Difficulty
 	std::vector<int> m2(5,-1);
 	m2[0]=0;
 	std::vector<unsigned int> v2 {0};
-	ASSERT_NEAR(0.6f, p.computeJointProbability(v2,m2), 0.001);
 	ASSERT_NEAR(0.6f, p.computeJointProbabilityUsingVariableElimination(v2,m2),0.001);
 
 
@@ -70,13 +68,11 @@ TEST_F(ProbabilityTest, JointProbability){
 	m4[0]=0;
 	m4[2]=0;
 	std::vector<unsigned int> v4 {0,2};
-	ASSERT_NEAR(0.42f, p.computeJointProbability(v4,m4), 0.001);
 	ASSERT_NEAR(0.42f, p.computeJointProbabilityUsingVariableElimination(v4,m4), 0.001);
 
 	//Test for fully specified distribution
 	std::vector<int> m3(5,0);
 	std::vector<unsigned int> v3{0,1,2,3,4};
-	ASSERT_NEAR(0.01197f, p.computeJointProbability(v3,m3), 0.001);
 	ASSERT_NEAR(0.01197f, p.computeJointProbabilityUsingVariableElimination(v3,m3),0.001);
 
 
@@ -96,7 +92,6 @@ TEST_F(ProbabilityTest, ConditionalProbability){
 	md[0]=0;
 	std::vector<unsigned int> v1d {0,2};
 	//Test for Grade given Intelligence and Difficulty
-	std::cout<<"Test 1"<<std::endl;
 	ASSERT_NEAR(0.3f, p.computeConditionalProbability(v1, v1d, mn, md), 0.001);
 
 	std::vector<int> mn2(5,-1);
@@ -107,7 +102,6 @@ TEST_F(ProbabilityTest, ConditionalProbability){
 	md2[0]=0;
 	std::vector<unsigned int> v2d {0};
 	//Test for Grade given Difficulty
-	std::cout<<"Test 2"<<std::endl;
 	ASSERT_NEAR(0.48f, p.computeConditionalProbability(v2, v2d, mn2, md2),0.001);
 
 	std::vector<int> mn3(5,-1);

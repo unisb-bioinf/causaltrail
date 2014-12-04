@@ -6,9 +6,9 @@ ProbabilityHandler::ProbabilityHandler(Network& network) : network_(network) {}
 float ProbabilityHandler::computeTotalProbabilityNormalized(int nodeID,
                                                             int index)
 {
-	if (index == -1){
+	if(index == -1) {
 		throw std::invalid_argument(
-	    "The current node does contain the query value");
+		    "The current node does contain the query value");
 	}
 
 	// Get Parents
@@ -51,9 +51,9 @@ float ProbabilityHandler::computeTotalProbabilityNormalized(int nodeID,
 
 float ProbabilityHandler::computeTotalProbability(int nodeID, int index)
 {
-	if (index == -1){
+	if(index == -1) {
 		throw std::invalid_argument(
-					    "The current node does not contain the query value");
+		    "The current node does not contain the query value");
 	}
 	// Get Parents
 	Node& node = network_.getNode(nodeID);
@@ -64,10 +64,9 @@ float ProbabilityHandler::computeTotalProbability(int nodeID, int index)
 		// Yes -> Call recursively for all parent values
 		float result = 0.0f;
 		for(unsigned int row = 0; row < probMatrix.getRowCount(); row++) {
-			if (node.isCalculated(index,row)){
-				result += node.getCalculatedValue(index,row);
-			}
-			else {
+			if(node.isCalculated(index, row)) {
+				result += node.getCalculatedValue(index, row);
+			} else {
 				float temp = 1.0f;
 				for(unsigned int index2 = 0; index2 < node.getNumberOfParents();
 				    index2++) {
@@ -75,8 +74,8 @@ float ProbabilityHandler::computeTotalProbability(int nodeID, int index)
 					    parentIDs[index2],
 					    network_.reverseFactor(node, parentIDs[index2], row));
 				}
-				float tempResult=temp * probMatrix(index, row);
-				node.setCalculatedValue(tempResult,index,row);
+				float tempResult = temp * probMatrix(index, row);
+				node.setCalculatedValue(tempResult, index, row);
 				result += tempResult;
 			}
 		}
@@ -122,21 +121,6 @@ std::vector<std::vector<int>> ProbabilityHandler::enumerate(
 	return com.getResult();
 }
 
-int ProbabilityHandler::getParentValues(
-    const Node& n, const std::vector<unsigned int>& factorisation,
-    const std::vector<int>& assignment)
-{
-	int pos = 0;
-	const std::vector<unsigned int>& parents = n.getParents();
-	if(parents.empty()) {
-		return 0;
-	}
-	for(auto parent : parents) {
-		pos += network_.computeFactor(n, parent) * assignment[parent];
-	}
-	return pos;
-}
-
 int ProbabilityHandler::getParentValues(const Node& n, const Matrix<int>& obs,
                                         unsigned int sample) const
 {
@@ -150,34 +134,6 @@ int ProbabilityHandler::getParentValues(const Node& n, const Matrix<int>& obs,
 	}
 
 	return pos;
-}
-
-float ProbabilityHandler::computeFullySpecifiedProbabilityDistribution(
-    const std::vector<unsigned int>& factorisation,
-	const std::pair<std::vector<unsigned int>,std::vector<unsigned int>>& nodePair,
-    const std::vector<std::vector<int>>& combinations)
-{
-	float result = 0.0f;
-	float PreSumFactor = 1.0f;
-	for(auto& nodeID : nodePair.second){
-		int col = combinations[0][nodeID];
-		const Node& n = network_.getNode(nodeID);
-		int row = getParentValues(n, factorisation, combinations[0]);
-		PreSumFactor *= n.getProbability(col, row);
-	}
-
-
-	for(auto& assignment : combinations) {
-		float intermediatResult = 1.0f;
-		for(auto& nodeID : nodePair.first) {
-			int col = assignment[nodeID];
-			const Node& n = network_.getNode(nodeID);
-			int row = getParentValues(n, factorisation, assignment);
-			intermediatResult *= n.getProbability(col, row);
-		}
-		result += intermediatResult;
-	}
-	return result*PreSumFactor;
 }
 
 float ProbabilityHandler::calculateLikelihoodOfTheData(const Matrix<int>& obs)
@@ -202,109 +158,89 @@ float ProbabilityHandler::calculateLikelihoodOfTheData(const Matrix<int>& obs)
 	return log(prob);
 }
 
-float ProbabilityHandler::computeJointProbability(
-    const std::vector<unsigned int>& queryNodes, const std::vector<int>& values)
+std::vector<Factor> ProbabilityHandler::createFactorList(
+    const std::vector<unsigned int>& factorisation,
+    const std::vector<int>& values) const
 {
-	// Generate the factorisation of the joint probability distribution
-	auto factorisation = createFactorisation(queryNodes);
-	auto nodeVectorPair = getNoneSummationNodes(queryNodes, factorisation);
-	// Assign possible values to the node identifiers (needed for the creation
-	// of the combinations)
-	std::vector<int> emptyVec(network_.size(),-1);
-
-	auto valueAssignment =
-	    assignValues(factorisation, values);
-
-	auto combinations=enumerate(factorisation, valueAssignment);
-
-	// Compute the joint probability by summing up all combinations
-	return computeFullySpecifiedProbabilityDistribution(factorisation, nodeVectorPair, combinations);
-}
-
-std::vector<Factor> ProbabilityHandler::createFactorList(const std::vector<unsigned int>& factorisation, const std::vector<int>& values) const {
 	std::vector<Factor> temp;
-	for (auto& id : factorisation){
-		temp.push_back(Factor(network_.getNode(id),values));
+	for(auto& id : factorisation) {
+		temp.push_back(Factor(network_.getNode(id), values));
 	}
 	return temp;
 }
 
-std::vector<unsigned int> ProbabilityHandler::getOrdering(const std::vector<unsigned int>& factorisation,const std::vector<unsigned int>& queryNodes) const{
+std::vector<unsigned int>
+ProbabilityHandler::getOrdering(const std::vector<unsigned int>& factorisation,
+                                const std::vector<unsigned int>& queryNodes)
+    const
+{
 	auto temp = queryNodes;
-	for (auto& id : factorisation){
-		if (std::find(queryNodes.begin(), queryNodes.end(), id)==queryNodes.end())
-		{		
+	for(auto& id : factorisation) {
+		if(std::find(queryNodes.begin(), queryNodes.end(), id) ==
+		   queryNodes.end()) {
 			temp.push_back(id);
 		}
 	}
 	return temp;
 }
 
-void ProbabilityHandler::eliminate(const unsigned int id, std::vector<Factor>& factorlist, const std::vector<int>& values){
-	std::cout<<"Before Eliminating "+network_.getNode(id).getName()<<std::endl;
-	for (auto& f : factorlist){
-		std::cout<<f<<std::endl;
-	}
+void ProbabilityHandler::eliminate(const unsigned int id,
+                                   std::vector<Factor>& factorlist,
+                                   const std::vector<int>& values)
+{
 	std::vector<unsigned int> neededFactors;
 	std::vector<std::vector<unsigned int>> neededFactorsIDs;
-	for (unsigned int i = 0; i < factorlist.size(); i++){
+	for(unsigned int i = 0; i < factorlist.size(); i++) {
 		Factor& f = factorlist[i];
-		if (std::find(f.getIDs().begin(), f.getIDs().end(), id) != f.getIDs().end()){
+		if(std::find(f.getIDs().begin(), f.getIDs().end(), id) !=
+		   f.getIDs().end()) {
 			neededFactors.push_back(i);
 			neededFactorsIDs.push_back(f.getIDs());
-		}	
+		}
 	}
 
-	Factor tempFactor = factorlist[neededFactors[0]];	
-	if (neededFactors.size() > 1){
-		for (unsigned int i = 1; i <neededFactors.size(); i++){
-			tempFactor = tempFactor.product(factorlist[neededFactors[i]]);
+	Factor tempFactor = factorlist[neededFactors[0]];
+	if(neededFactors.size() > 1) {
+		for(unsigned int i = 1; i < neededFactors.size(); i++) {
+			tempFactor = tempFactor.product(factorlist[neededFactors[i]],network_,values);
 		}
-	}	
-	
-	tempFactor = tempFactor.sumOut(id,network_, values);
-	
-	for (auto& neededFactorID : neededFactorsIDs){
+	}
+	tempFactor = tempFactor.sumOut(id, network_, values);
+	for(auto& neededFactorID : neededFactorsIDs) {
 		auto it = factorlist.begin();
-		for (; it!= factorlist.end();){
-			if (it->getIDs() == neededFactorID){
+		for(; it != factorlist.end();) {
+			if(it->getIDs() == neededFactorID) {
 				it = factorlist.erase(it);
-			}
-			else {
+			} else {
 				++it;
 			}
 		}
 	}
 	factorlist.push_back(tempFactor);
-	std::cout<<"After Eliminating "+network_.getNode(id).getName()<<std::endl;
-	for (auto& f : factorlist){
-		std::cout<<f<<std::endl;
-	}
-
-	
 }
 
-float ProbabilityHandler::getResult(std::vector<Factor>& factorlist){
+float ProbabilityHandler::getResult(std::vector<Factor>& factorlist)
+{
 	float prob = 1.0f;
-	for (auto& f : factorlist){
-		prob*=f.getProbability(0);
+	for(auto& f : factorlist) {
+		prob *= f.getProbability(0);
 	}
 	return prob;
 }
 
 float ProbabilityHandler::computeJointProbabilityUsingVariableElimination(
-	    const std::vector<unsigned int>& queryNodes, const std::vector<int>& values){
+    const std::vector<unsigned int>& queryNodes, const std::vector<int>& values)
+{
 	auto factorisation = createFactorisation(queryNodes);
 	auto factorlist = createFactorList(factorisation, values);
-	
+
 	auto ordering = getOrdering(factorisation, queryNodes);
-	for (auto& id : ordering){
+	for(auto& id : ordering) {
 		eliminate(id, factorlist, values);
+	
 	}
 	return getResult(factorlist);
 }
-	
-
 
 float ProbabilityHandler::computeConditionalProbability(
     const std::vector<unsigned int>& nodesNominator,
@@ -312,12 +248,15 @@ float ProbabilityHandler::computeConditionalProbability(
     const std::vector<int>& valuesNominator,
     const std::vector<int>& valuesDenominator)
 {
-	return computeJointProbabilityUsingVariableElimination(nodesNominator, valuesNominator) /
-	       computeJointProbabilityUsingVariableElimination(nodesDenominator, valuesDenominator);
+	std::cout<<computeJointProbabilityUsingVariableElimination(nodesNominator, valuesNominator)<<std::endl;
+	std::cout<<computeJointProbabilityUsingVariableElimination(nodesDenominator, valuesDenominator)<<std::endl;
+	return computeJointProbabilityUsingVariableElimination(nodesNominator, valuesNominator)/computeJointProbabilityUsingVariableElimination(nodesDenominator, valuesDenominator);
 }
 
 std::pair<float, std::vector<std::string>>
-ProbabilityHandler::maxSearch(const std::vector<unsigned int>& queryNodes, const std::vector<unsigned int>& conditionNodes, const std::vector<int>& conditionValues)
+ProbabilityHandler::maxSearch(const std::vector<unsigned int>& queryNodes,
+                              const std::vector<unsigned int>& conditionNodes,
+                              const std::vector<int>& conditionValues)
 {
 	std::vector<int> emptyValues(network_.size(), -1);
 	std::vector<std::vector<int>> queryAssignment =
@@ -330,26 +269,29 @@ ProbabilityHandler::maxSearch(const std::vector<unsigned int>& queryNodes, const
 	int maxIndex = 0;
 	float maxprob = 0.0f;
 
-	if (not conditionNodes.empty()){
+	if(not conditionNodes.empty()) {
 		nominatorNodes = queryNodes;
-		nominatorNodes.insert(nominatorNodes.end(), conditionNodes.begin(), conditionNodes.end());
-	}	
+		nominatorNodes.insert(nominatorNodes.end(), conditionNodes.begin(),
+		                      conditionNodes.end());
+	}
 
-	if (queryNodes.size() > 1){
+	if(queryNodes.size() > 1) {
 		for(auto& com : combinations) {
 			float prob = 0.0f;
-			if (conditionNodes.empty()){
+			if(conditionNodes.empty()) {
 				for(auto& id : queryNodes) {
 					emptyValues[id] = com[id];
 				}
-				prob = computeJointProbabilityUsingVariableElimination(queryNodes, emptyValues);
-			}
-			else {
+				prob = computeJointProbabilityUsingVariableElimination(
+				    queryNodes, emptyValues);
+			} else {
 				std::vector<int> nominatorValues = conditionValues;
 				for(auto& id : queryNodes) {
 					nominatorValues[id] = com[id];
 				}
-				prob = computeConditionalProbability(nominatorNodes, conditionNodes, nominatorValues, conditionValues);
+				prob = computeConditionalProbability(
+				    nominatorNodes, conditionNodes, nominatorValues,
+				    conditionValues);
 			}
 			if(prob > maxprob) {
 				maxprob = prob;
@@ -357,17 +299,18 @@ ProbabilityHandler::maxSearch(const std::vector<unsigned int>& queryNodes, const
 			}
 			index++;
 		}
-	}
-	else {
+	} else {
 		for(auto& com : combinations) {
 			float prob = 0.0f;
-			if (conditionNodes.empty()){
-				prob = computeTotalProbability(queryNodes[0], com[queryNodes[0]]);
-			}
-			else {
+			if(conditionNodes.empty()) {
+				prob =
+				    computeTotalProbabilityNormalized(queryNodes[0], com[queryNodes[0]]);
+			} else {
 				std::vector<int> nominatorValues = conditionValues;
-				nominatorValues[queryNodes[0]]=com[queryNodes[0]];
-				prob = computeConditionalProbability(nominatorNodes, conditionNodes, nominatorValues, conditionValues);
+				nominatorValues[queryNodes[0]] = com[queryNodes[0]];
+				prob = computeConditionalProbability(
+				    nominatorNodes, conditionNodes, nominatorValues,
+				    conditionValues);
 			}
 			if(prob > maxprob) {
 				maxprob = prob;
@@ -385,26 +328,3 @@ ProbabilityHandler::maxSearch(const std::vector<unsigned int>& queryNodes, const
 	}
 	return std::make_pair(maxprob, resultNames);
 }
-
-std::pair<std::vector<unsigned int>, std::vector<unsigned int>>
-ProbabilityHandler::getNoneSummationNodes(const std::vector<unsigned int>& queryNodes,
-                  const std::vector<unsigned int>& factorisation)
-{
-	auto summationNodes=factorisation;
-	std::vector<unsigned int> noneSummationNodes;
-	for (auto& id : queryNodes){
-		bool flag = true;
-		for (auto& pid:  network_.getNode(id).getParents()){
-			if (std::find(queryNodes.begin(), queryNodes.end(),pid) == queryNodes.end()){
-				flag = false;
-			}
-		}
-		if (flag){
-			noneSummationNodes.push_back(id);
-			summationNodes.erase(std::find(summationNodes.begin(), summationNodes.end(), id));
-		}
-		
-	}
-	return std::make_pair(summationNodes,noneSummationNodes);
-}
-
