@@ -38,7 +38,7 @@ QueryExecuter Parser::parseQuery()
 				parseCondition(index); 
 			}
 			else {
-				throw std::invalid_argument("In parseQuery, no Intervention specified");
+				throw std::invalid_argument("In parseQuery, no Condition specified");
 			}
 		}
 		index++;

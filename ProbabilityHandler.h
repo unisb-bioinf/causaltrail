@@ -22,7 +22,7 @@ class ProbabilityHandler
 	    const std::vector<int>& valuesNominator,
 	    const std::vector<int>& valuesDenominator);
 	std::pair<float, std::vector<std::string>>
-	maxSearch(const std::vector<unsigned int>& queryNodes);
+	maxSearch(const std::vector<unsigned int>& queryNodes, const std::vector<unsigned int>& conditionNodes, const std::vector<int>& conditionValues);
 	float calculateLikelihoodOfTheData(const Matrix<int>& obs) const;
 
 	private:
@@ -49,7 +49,7 @@ class ProbabilityHandler
 	                  const std::vector<unsigned int>& factorisation);
 	std::vector<Factor> createFactorList(const std::vector<unsigned int>& factorisation, const std::vector<int>& values) const;
 	std::vector<unsigned int> getOrdering(const std::vector<unsigned int>& factorisation,const std::vector<unsigned int>& queryNodes) const;
-	void eliminate(const unsigned int id, std::vector<Factor>& factorlist);
+	void eliminate(const unsigned int id, std::vector<Factor>& factorlist, const std::vector<int>& values);
 
 
 

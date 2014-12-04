@@ -118,7 +118,7 @@ void QueryExecuter::executeEdgeDeletionsReverse(){
 
 
 std::pair<float, std::vector<std::string>> QueryExecuter::executeArgMax(){
-	return probHandler_.maxSearch(argmaxNodeIDs_);
+	return probHandler_.maxSearch(argmaxNodeIDs_, conditionNodeID_, conditionValues_);
 }
 
 float QueryExecuter::executeCondition(){

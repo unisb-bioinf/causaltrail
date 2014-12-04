@@ -96,6 +96,7 @@ TEST_F(ProbabilityTest, ConditionalProbability){
 	md[0]=0;
 	std::vector<unsigned int> v1d {0,2};
 	//Test for Grade given Intelligence and Difficulty
+	std::cout<<"Test 1"<<std::endl;
 	ASSERT_NEAR(0.3f, p.computeConditionalProbability(v1, v1d, mn, md), 0.001);
 
 	std::vector<int> mn2(5,-1);
@@ -106,6 +107,7 @@ TEST_F(ProbabilityTest, ConditionalProbability){
 	md2[0]=0;
 	std::vector<unsigned int> v2d {0};
 	//Test for Grade given Difficulty
+	std::cout<<"Test 2"<<std::endl;
 	ASSERT_NEAR(0.48f, p.computeConditionalProbability(v2, v2d, mn2, md2),0.001);
 
 	std::vector<int> mn3(5,-1);
@@ -119,18 +121,25 @@ TEST_F(ProbabilityTest, ConditionalProbability){
 	ASSERT_NEAR(0.6f, p.computeConditionalProbability(v3, v3d, mn3, md3),0.001);
 }
 
+
 TEST_F(ProbabilityTest, maxSearch){
 	Network n = c.getNetwork();
 	ProbabilityHandler p (n);
+	std::vector<unsigned int> emptyNodeIDs {};
+	std::vector<int> emptyNodeValues {};
 	//Tests for grade
-	ASSERT_NEAR(0.362f,p.maxSearch({1}).first,0.001);
-	ASSERT_TRUE("g1"==p.maxSearch({1}).second[0]);
+	std::pair<float,std::vector<std::string>> result1 = p.maxSearch({1},emptyNodeIDs, emptyNodeValues);
+	ASSERT_NEAR(0.362f,result1.first,0.001);
+	ASSERT_TRUE("g1"==result1.second[0]);
 
 	//Tests for SAT
-	ASSERT_NEAR(0.725f,p.maxSearch({3}).first,0.001);
-	ASSERT_TRUE("s0"==p.maxSearch({3}).second[0]);
+	std::pair<float,std::vector<std::string>> result2 = p.maxSearch({3}, emptyNodeIDs, emptyNodeValues); 
+	ASSERT_NEAR(0.725f,result2.first,0.001);
+	ASSERT_TRUE("s0"==result2.second[0]);
 
 	//Tests for Intelligence
-	ASSERT_NEAR(0.7f,p.maxSearch({2}).first,0.001);
-	ASSERT_TRUE("i0"==p.maxSearch({2}).second[0]);
+	std::pair<float,std::vector<std::string>> result3 = p.maxSearch({2}, emptyNodeIDs, emptyNodeValues);
+	ASSERT_NEAR(0.7f,result3.first,0.001);
+	ASSERT_TRUE("i0"==result3.second[0]);
 }
+

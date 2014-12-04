@@ -240,7 +240,11 @@ std::vector<unsigned int> ProbabilityHandler::getOrdering(const std::vector<unsi
 	return temp;
 }
 
-void ProbabilityHandler::eliminate(const unsigned int id, std::vector<Factor>& factorlist){
+void ProbabilityHandler::eliminate(const unsigned int id, std::vector<Factor>& factorlist, const std::vector<int>& values){
+	std::cout<<"Before Eliminating "+network_.getNode(id).getName()<<std::endl;
+	for (auto& f : factorlist){
+		std::cout<<f<<std::endl;
+	}
 	std::vector<unsigned int> neededFactors;
 	std::vector<std::vector<unsigned int>> neededFactorsIDs;
 	for (unsigned int i = 0; i < factorlist.size(); i++){
@@ -251,20 +255,15 @@ void ProbabilityHandler::eliminate(const unsigned int id, std::vector<Factor>& f
 		}	
 	}
 
-	Factor tempFactor(0,{});	
+	Factor tempFactor = factorlist[neededFactors[0]];	
 	if (neededFactors.size() > 1){
-		//Multiply
-		tempFactor = factorlist[neededFactors[0]];
 		for (unsigned int i = 1; i <neededFactors.size(); i++){
 			tempFactor = tempFactor.product(factorlist[neededFactors[i]]);
 		}
-		//SumOut
-		tempFactor = tempFactor.sumOut(id,network_);
-	}
-	else {
-		tempFactor = factorlist[neededFactors[0]];
-		tempFactor = tempFactor.sumOut(id,network_);
-	}
+	}	
+	
+	tempFactor = tempFactor.sumOut(id,network_, values);
+	
 	for (auto& neededFactorID : neededFactorsIDs){
 		auto it = factorlist.begin();
 		for (; it!= factorlist.end();){
@@ -277,6 +276,10 @@ void ProbabilityHandler::eliminate(const unsigned int id, std::vector<Factor>& f
 		}
 	}
 	factorlist.push_back(tempFactor);
+	std::cout<<"After Eliminating "+network_.getNode(id).getName()<<std::endl;
+	for (auto& f : factorlist){
+		std::cout<<f<<std::endl;
+	}
 
 	
 }
@@ -296,7 +299,7 @@ float ProbabilityHandler::computeJointProbabilityUsingVariableElimination(
 	
 	auto ordering = getOrdering(factorisation, queryNodes);
 	for (auto& id : ordering){
-		eliminate(id, factorlist);
+		eliminate(id, factorlist, values);
 	}
 	return getResult(factorlist);
 }
@@ -314,23 +317,40 @@ float ProbabilityHandler::computeConditionalProbability(
 }
 
 std::pair<float, std::vector<std::string>>
-ProbabilityHandler::maxSearch(const std::vector<unsigned int>& queryNodes)
+ProbabilityHandler::maxSearch(const std::vector<unsigned int>& queryNodes, const std::vector<unsigned int>& conditionNodes, const std::vector<int>& conditionValues)
 {
 	std::vector<int> emptyValues(network_.size(), -1);
 	std::vector<std::vector<int>> queryAssignment =
 	    assignValues(queryNodes, emptyValues);
 	std::vector<std::vector<int>> combinations =
 	    enumerate(queryNodes, queryAssignment);
+	std::vector<unsigned int> nominatorNodes;
 
 	int index = 0;
 	int maxIndex = 0;
 	float maxprob = 0.0f;
+
+	if (not conditionNodes.empty()){
+		nominatorNodes = queryNodes;
+		nominatorNodes.insert(nominatorNodes.end(), conditionNodes.begin(), conditionNodes.end());
+	}	
+
 	if (queryNodes.size() > 1){
 		for(auto& com : combinations) {
-			for(auto& id : queryNodes) {
-				emptyValues[id] = com[id];
+			float prob = 0.0f;
+			if (conditionNodes.empty()){
+				for(auto& id : queryNodes) {
+					emptyValues[id] = com[id];
+				}
+				prob = computeJointProbabilityUsingVariableElimination(queryNodes, emptyValues);
 			}
-			float prob = computeJointProbabilityUsingVariableElimination(queryNodes, emptyValues);
+			else {
+				std::vector<int> nominatorValues = conditionValues;
+				for(auto& id : queryNodes) {
+					nominatorValues[id] = com[id];
+				}
+				prob = computeConditionalProbability(nominatorNodes, conditionNodes, nominatorValues, conditionValues);
+			}
 			if(prob > maxprob) {
 				maxprob = prob;
 				maxIndex = index;
@@ -340,7 +360,15 @@ ProbabilityHandler::maxSearch(const std::vector<unsigned int>& queryNodes)
 	}
 	else {
 		for(auto& com : combinations) {
-			float prob = computeTotalProbability(queryNodes[0], com[queryNodes[0]]);
+			float prob = 0.0f;
+			if (conditionNodes.empty()){
+				prob = computeTotalProbability(queryNodes[0], com[queryNodes[0]]);
+			}
+			else {
+				std::vector<int> nominatorValues = conditionValues;
+				nominatorValues[queryNodes[0]]=com[queryNodes[0]];
+				prob = computeConditionalProbability(nominatorNodes, conditionNodes, nominatorValues, conditionValues);
+			}
 			if(prob > maxprob) {
 				maxprob = prob;
 				maxIndex = index;
