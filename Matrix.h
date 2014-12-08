@@ -16,66 +16,539 @@ template <typename T> std::ostream& operator<<(std::ostream&, const Matrix<T>&);
 template <typename T> class Matrix
 {
 	public:
+	/**Detailed Constructor
+	 *
+	 * @param filename The file containing the data to be stored in the matrix
+	 * @param colNames Flag to indicate the existence of column names
+	 * @param rowNames Flag to indicate the existence of row names
+	 * @param initialValue Initial value for all points in the matrix
+	 *
+	 * @return A Matrix Object
+	 *	
+	 * Creates a Matrix containing the data from the specified file
+	 */
 	Matrix(std::string filename, bool colNames, bool rowNames, T initialValue);
+
+	/**Detailed Constructor
+	 *
+	 * @param colNames A vector containing the column names
+	 * @param rowNames A vector containing the row names
+	 * @param initialValue Initial value for all points in the matrix
+	 *
+	 * @return A Matrix Object
+	 *
+	 * Creates a Matrix with the specified name vectors. The size of the matrix is calculated 
+	 * using the number of entries in the name vectors.
+	 */
 	Matrix(std::vector<std::string> colNames = {"NA"},
 	       std::vector<std::string> rowNames = {"NA"}, T initialValue = NULL);
+
+	/**Detailed Constructor
+	 *
+	 * @param colCount Number of columns
+	 * @param rowCount Number of rows
+	 * @param initialValue Initial value for all points in the matrix
+	 * @param colNames (obtional)
+	 * @param rowNames (obtional)
+	 * @return A Matrix Object
+	 *
+	 * Creates a Matrix with the specified number of columns and rows
+	 */
 	Matrix(int colCount = 0, int rowCount = 0, T initialValue = NULL,
 	       std::vector<std::string> colNames = {"NA"},
 	       std::vector<std::string> rowNames = {"NA"});
+
+	/**Operator()
+	 *
+	 * @param col Column number
+	 * @param row Row number
+	 *
+	 * @return Value at position Matrix[col,row]
+	 *
+	 * This operator returns the matrix value at the specified position
+	 */
 	T& operator()(unsigned int col, unsigned int row);
+
+	/**Operator() const
+	*
+	* @param col Column number
+	* @param row Row number
+	*
+	* @return Value at position Matrix[col,row]
+	*
+	* This operator returns the matrix value at the specified position
+	*/
 	const T& operator()(unsigned int col, unsigned int row) const;
+
+	/**Operator <<
+	 *
+	 * @param os Reference to an ostream
+	 * @param m Reference to a matrix object
+	 *
+	 * @return ostream Containing the content of the matrix
+	 *
+	 * This operator adds the content of the matrix to an ostream.
+	 * Column and Rownames are included if they are  available.
+	 *
+	 */
 	friend std::ostream& operator<<<>(std::ostream& os, const Matrix<T>& m);
+
+	/**setData
+	 *
+	 * @param value Value to be added into the matrix
+	 * @param col Destination column
+	 * @param row Destination row
+	 *
+	 * This method stores a value in the matrix at the specified position
+	 *
+	 * @throw Exception
+	 */
 	void setData(T value, unsigned int col, unsigned int row);
+
+	/**setRowNames
+	 *
+	 * @param names Vector containing row names
+	 *
+	 * This method stors the rownames of the matrix. It also generates a mapping
+	 * between rownames and index
+	 *
+	 */
 	void setRowNames(const std::vector<std::string>& names);
+
+	/**setColNames
+	 *
+	 * @param names vector containing column names
+	 *
+	 * This method stors the rownames of the matrix. It also generates a mapping
+	 *between
+	 * columnames and index
+	 *
+	 */
 	void setColNames(const std::vector<std::string>& names);
+
+	/**getRowCount
+	 *
+	 * @return Number of rows
+	 *
+	 * This function returns the number of rows of the matrix
+	 */
 	unsigned int getRowCount();
+
+	/**getColCount
+	 *
+	 * @return Number of columns
+	 *
+	 * This function returns the number of columns
+	 */
 	unsigned int getColCount();
+
+	/**getRowCount const
+	 *
+	 * @return Number of rows
+	 *
+	 * This function returns the number of rows of the matrix
+	 */
 	const unsigned int getRowCount() const;
+
+	/**getColCount const
+	 *
+	 * @return Number of columns
+	 *
+	 * This function returns the number of columns
+	 */
 	const unsigned int getColCount() const;
+
+	/**getValueByNames
+  	 *
+     * @param colName Name of the query column
+	 * @param rowName Name of the query row
+	 *
+	 * @return Value at position Matrix[colName, rowName]
+	 *
+	 * This function allows access to the matrix via col- and rownames
+	 *	
+	 * @throw Exception Invalid_argument(Either column or row name are invalid)
+	 */
 	T& getValueByNames(const std::string& colName, const std::string& rowName);
+	
+	/**getValueByNames const
+	 *
+	 * @param colName Name of the query column
+	 * @param rowName Name of the query row
+	 *
+	 * @return Value at position Matrix[colName, rowName]
+	 *
+	 * This function allows access to the matrix via col- and rownames
+	 *	
+	 * @throw Exception Invalid_argument(Either column or row name are invalid)
+	 */
 	const T& getValueByNames(const std::string& colName, const std::string& rowName) const;
+
+	/**getRowNames
+	 *
+	 * @return rowNames
+	 *
+	 * Returns a reference to the row names of the matrix
+	 */
 	std::vector<std::string>& getRowNames();
+
+	/**getRowNames const
+	 *
+	 * @return rowNames
+	 *
+	 * Returns a reference to the row names of the matrix
+	 */
 	const std::vector<std::string>& getRowNames() const;
+
+	/**getColNames
+	 *
+	 * @return column names
+	 *
+	 * Returns a reference to the column names of the matrix
+	 */
 	std::vector<std::string>& getColNames();
+	
+	/**getColNames const
+	 *
+	 * @return column names
+	 *
+	 * Returns a reference to the column names of the matrix
+	 */
 	const std::vector<std::string>& getColNames() const;
+
+	/**findRow
+	 *
+	 * @param element Query name of the row
+	 *
+	 * @return row index containing the query value, -1 if the matrix does not
+	 * contain such a row
+	 *
+	 * This function returns the index of the row, which matches the given row name
+	 */
 	int findRow(const std::string& element);
+
+	/**findCol
+	 *
+	 * @param element Query name of the col
+	 *
+	 * @return col index containing the query value, -1 if the matrix does not
+	 * contain such a col
+	 *
+	 * This function returns the index of the col, which matches the given col name
+	 */
 	int findCol(const std::string& element);
+
+	/**findRow const
+	 *
+	 * @param element Query name of the row
+	 *
+	 * @return row index containing the query value, -1 if the matrix does not
+	 * contain such a row
+	 *
+	 * This function returns the index of the row, which matches the given row name
+	 */
 	const int findRow(const std::string& element) const;
+
+	/**findCol const
+	 *
+	 * @param element Query name of the col
+	 *
+	 * @return col index containing the query value, -1 if the matrix does not
+	 * contain such a col
+	 *
+	 * This function returns the index of the col, which matches the given col name
+	 */
 	const int findCol(const std::string& element) const;
+
+	/**calculateRowSum
+	 *
+	 * @param row Index of the row of interest
+	 *
+	 * @return col sum of the values
+	 *
+	 * If a matrix contains numerical values, this method computes the sum of
+	 * those values that are assigned to the specified row
+	 */
 	float calculateRowSum(unsigned int row);
+
+	/**calculateRowSum const
+	 *
+	 * @param row Index of the row of interest
+	 *
+	 * @return col sum of the values
+	 *
+	 * If a matrix contains numerical values, this method computes the sum of
+	 * those values that are assigned to the specified row
+	 */
 	const float calculateRowSum(unsigned int row) const;
+
+	/**calculateColSum
+	 *
+	 * @param col Index of the row of interest
+	 *
+	 * @return col sum of the values
+	 *
+	 * If a matrix contains numerical values, this method computes the sum of
+	 * those values that are assigned to the specified column
+	 */
 	float calculateColSum(unsigned int col);
+	/**calculateColSum const 
+	 *
+	 * @param col Index of the col of interest
+	 *
+	 * @return col sum of the values
+	 *
+	 * If a matrix contains numerical values, this method computes the sum of
+	 * those values that are assigned to the specified column
+	 */
 	const float calculateColSum(unsigned int col) const;
+
+	/**getUniqueRowValues
+	 *
+	 * @param row index
+	 *
+	 * @return vector containing the unique elements stored in the query row of the
+	 * matrix
+	 *
+	 * This function returns the unique elements which are stored in the specified
+	 * row of the matrix
+	 */
 	std::vector<T> getUniqueRowValues(unsigned int row);
+
+	/**getUniqueRowValues
+	 *
+	 * @param row index
+	 * @param exclud A value to exclud
+	 *
+	 * @return vector containing the unique elements stored in the query row of the
+	 * matrix
+	 *
+	 * This function returns the unique elements which are stored in the specified
+	 * row of the matrix
+	 */
 	std::vector<T> getUniqueRowValues(unsigned int row, const T& exclud);
-	std::vector<T> getUniqueColValues(unsigned int col, const T& exclud);
+
+	/**getUniqueColValues
+	 *
+	 * @param row index
+	 *
+	 * @return vector containing the unique elements stored in the query row of the
+	 * matrix
+	 *
+	 * This function returns the unique elements which are stored in the specified
+	 * row of the matrix
+	 */
 	std::vector<T> getUniqueColValues(unsigned int col);
+
+	/**getUniqueColValues
+	 *
+	 * @param row index
+	 * @param exclud A value to exclud
+	 *
+	 * @return vector containing the unique elements stored in the query row of the
+	 * matrix
+	 *
+	 * This function returns the unique elements which are stored in the specified
+	 * row of the matrix
+	 */
+	std::vector<T> getUniqueColValues(unsigned int col, const T& exclud);
+
+	/**getUniqueRowValues const
+	 *
+	 * @param row index
+	 *
+	 * @return vector containing the unique elements stored in the query row of the
+	 * matrix
+	 *
+	 * This function returns the unique elements which are stored in the specified
+	 * row of the matrix
+	 */
 	std::vector<T> getUniqueRowValues(unsigned int row) const;
+
+	/**getUniqueRowValues const
+	 *
+	 * @param row index
+	 * @param exclud A value to exclud
+	 *
+	 * @return std::vector<T> A vector containing the unique elements stored in the query row of the
+	 * matrix
+	 *
+	 * This function returns the unique elements which are stored in the specified
+	 * row of the matrix
+	 */
 	std::vector<T> getUniqueRowValues(unsigned int row, const T& exclud) const;
-	std::vector<T> getUniqueColValues(unsigned int col, const T& exclud) const;
+
+	/**getUniqueColValues const
+	 *
+	 * @param row index
+	 *
+	 * @return vector containing the unique elements stored in the query row of the
+	 * matrix
+	 *
+	 * This function returns the unique elements which are stored in the specified
+	 * row of the matrix
+	 */
 	std::vector<T> getUniqueColValues(unsigned int col) const;
+
+	/**getUniqueColValues const
+	 *
+	 * @param col index
+	 * @param exclud A value to exclud 
+	 *
+	 * @return vector containing the unique elements stored in the query row of the
+	 * matrix
+	 *
+	 * This function returns the unique elements which are stored in the specified
+	 * row of the matrix
+	 */
+	std::vector<T> getUniqueColValues(unsigned int col, const T& exclud) const;
+
+	/**contains const
+	 *
+	 * @param query Query value
+	 *
+	 * @return true, if the matrix contains the query element, false otherwise
+	 *
+	 * This function checks, whether the query element is stored in the matrix or
+	 * not
+	 */	
 	bool contains(const T& query) const;
-	bool contains(const T& query);
+
+	/**readMatrix
+	 *
+	 * @param filename File that should be read
+	 * @param rowNames Flag indicating whether the matrix contains rowNames
+	 * @param colNames Flag indicating whether the matrix contains colNames
+	 * @param initialValue value that should be used for initilization
+	 *
+	 * This methods reads a tab or space delimited file containing a matrix.
+	 */
 	void readMatrix(const std::string& filename, bool colNames, bool rowNames,
 	                const T& initialValue);
+
+	/**countElement
+	 *
+	 * @param colrow Control variable defining whether rows or columns should be
+	 * analysed: 1=row, 0=col
+	 * @param number index of the row or column which should be analysed
+	 * @param t query
+	 *
+	 * @return the number of occurence of element t in the specified column or row
+	 * of the matrix
+	 *
+	 * This function counts how often a certain element is stored in a specified
+	 * column or row of the matrix
+	 */
 	unsigned int countElement(unsigned int colrow, unsigned int number,const T& t);
+ 
+	/**countElement const
+	 *
+	 * @param colrow control variable defining whether rows or columns should be
+	 * analysed 1=row, 0=col
+	 * @param number Index of the row or column which should be analysed
+	 * @param t query
+	 *
+	 * @return the number of occurence of element t in the specified column or row
+	 * of the matrix
+	 *
+	 * This function counts how often a certain element is stored in a specified
+	 * column or row of the matrix
+	 */
+
 	unsigned int countElement(unsigned int colrow, unsigned int number,const T& t) const;	
-	bool containsElement(unsigned int colrow, unsigned int number, const T& t);
+
+	/**containsElement
+	 *
+	 * @param colrow control variable defining whether rows or columns should be
+	 * analysed 1=row, 0=col
+	 * @param number index of the row or column which should be analysed
+	 * @param t query
+	 *
+	 * @return 0 if Element is not contained in the specified row or colum, 1
+	 * otherwise
+	 *
+	 * The method checks wheter a certain element is contained in a row or a column
+	 */
+	bool containsElement(unsigned int colrow, unsigned int number,const T& t);
+
+	/**containsElement
+	 *
+	 * @param colrow control variable defining whether rows or columns should be
+	 * analysed 1=row, 0=col
+	 * @param number index of the row or column which should be analysed
+	 * @param t query
+	 *
+	 * @return 0 if Element is not contained in the specified row or colum, 1
+	 *otherwise
+	 *
+	 * The method checks wheter a certain element is contained in a row or a column
+	 */
 	bool containsElement(unsigned int colrow, unsigned int number, const T& t) const;	
+
+	/**resize
+	 *
+	 * @param colCount New number of columns
+	 * @param rowCount New number of rows
+	 * @param initialValue Value that should be used for initialisation
+	 *
+	 * This function adapts the size of the matrix. A matrix can not be shrinked,
+	 *only enlarged.
+	 * Existing elements will stay at their original matrix position.
+	 *
+	 * @throw Exception invalid_argument(If the original number of colums or rows is
+	 * smaller than the new one)
+	 */
 	void resize(unsigned int colCount, unsigned int rowCount, T initalValue);
+
+	/**hasNACol
+	 * 
+	 * @return bool
+	 * 
+	 * Returns true if NA is contained in a column of the matrix
+     */
 	bool hasNACol();
+
+	/**hasNARow
+	 *
+	 * @return bool
+	 *
+	 * Returns true if NA is contained in a column of the row
+	 */
 	bool hasNARow();
+
+	/**hasNACol
+	 * 
+	 * @return bool
+	 * 
+	 * Returns true if NA is contained in a column of the matrix
+     */
 	const bool hasNACol() const;
+
+	/**hasNARow
+	 *
+	 * @return bool
+	 *
+	 * Returns true if NA is contained in a column of the row
+	 */
 	const bool hasNARow() const;
+
+	/**clear
+	 *
+	 * Reset operation for the matrix
+	 */
 	void clear();
 
 	private:
+	//Unsigned ints to store the size of the matrix
 	unsigned int rowCount_;
 	unsigned int colCount_;
+	//Vectors to store the rowNames
 	std::vector<std::string> rowNames_;
 	std::vector<std::string> colNames_;
+	//Unordered maps to hash from Names to their corresponding index
 	std::unordered_map<std::string, unsigned int> rowNamesToIndex_;
 	std::unordered_map<std::string, unsigned int> colNamesToIndex_;
+	//Vector to store the actual data
 	std::vector<T> data_;
 };
 
@@ -99,16 +572,6 @@ Matrix<T>::Matrix(std::vector<std::string> colNames,
 	setRowNames(rowNames);
 }
 
-/**Detailed Constructor
- *
- * @param colCount number of columns
- * @param rowCount number of rows
- * @param initialValue initial value for all points in the matrix
- *
- * @return A Matrix Object
- *
- * Creates a Matrix with the specified number of columns and rows
- */
 template <typename T>
 Matrix<T>::Matrix(int colCount, int rowCount, T initialValue,
                   std::vector<std::string> colNames,
@@ -121,15 +584,6 @@ Matrix<T>::Matrix(int colCount, int rowCount, T initialValue,
 	setRowNames(rowNames);
 }
 
-/**Operator()
- *
- * @param col column number
- * @param row row number
- *
- * @return Value at position Matrix[col,row]
- *
- * This operator returns the matrix value at the specified position
- */
 template <typename T>
 T& Matrix<T>::operator()(unsigned int col, unsigned int row)
 {
@@ -139,16 +593,6 @@ T& Matrix<T>::operator()(unsigned int col, unsigned int row)
 	return data_[col + row * colCount_];
 }
 
-/**Operator() const
- *
- * @param col column number
- * @param row row number
- *
- * @return Value at position Matrix[col,row]
- *
- * This operator returns the matrix value at the specified position
- *
- */
 template <typename T>
 const T& Matrix<T>::operator()(unsigned int col, unsigned int row) const
 {
@@ -161,17 +605,6 @@ const T& Matrix<T>::operator()(unsigned int col, unsigned int row) const
 	return data_[col + row * colCount_];
 }
 
-/**getValueByNames
- *
- * @param colName Name of the query column
- * @param rowName Name of the query row
- *
- * @return Value at position Matrix[colName, rowName]
- *
- * This function allows access to the matrix via col- and rownames
- *
- * @throw Exception Invalid_argument(Either column or row name are invalid)
- */
 template <typename T>
 T& Matrix<T>::getValueByNames(const std::string& colName,
                               const std::string& rowName)
@@ -184,17 +617,6 @@ T& Matrix<T>::getValueByNames(const std::string& colName,
 		return data_[col + row * colCount_];
 }
 
-/**getValueByNames
- *
- * @param colName Name of the query column
- * @param rowName Name of the query row
- *
- * @return Value at position Matrix[colName, rowName]
- *
- * This function allows access to the matrix via col- and rownames
- *
- * @throw Exception Invalid_argument(Either column or row name are invalid)
- */
 template <typename T>
 const T& Matrix<T>::getValueByNames(const std::string& colName,
                               const std::string& rowName) const
@@ -206,17 +628,6 @@ const T& Matrix<T>::getValueByNames(const std::string& colName,
 	} else
 		return data_[col + row * colCount_];
 }
-/**Operator <<
- *
- * @param os Reference to an ostream
- * @param m Reference to a matrix object
- *
- * @return ostream containing the content of the matrix
- *
- * This operator adds the content of the matrix to an ostream.
- * Column and Rownames are included if they are  available.
- *
- */
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const Matrix<T>& m)
 { // Write Column Names
@@ -239,18 +650,6 @@ std::ostream& operator<<(std::ostream& os, const Matrix<T>& m)
 	return os;
 }
 
-/**setData
- *
- * @param value, value to be added into the matrix
- * @param col, destination column
- * @param row, destination row
- *
- * @return void
- *
- * This method stores a value in the matrix at the specified position
- *
- * @throw Exception
- */
 template <typename T>
 void Matrix<T>::setData(T value, unsigned int col, unsigned int row)
 {
@@ -260,17 +659,6 @@ void Matrix<T>::setData(T value, unsigned int col, unsigned int row)
 	data_[col + row * colCount_] = value;
 }
 
-/**setRowNames
- *
- * @param names vector containing row names
- *
- * @return void
- *
- * This method stors the rownames of the matrix. It also generates a mapping
- *between
- * rownames and index
- *
- */
 template <typename T>
 void Matrix<T>::setRowNames(const std::vector<std::string>& names)
 {
@@ -282,17 +670,6 @@ void Matrix<T>::setRowNames(const std::vector<std::string>& names)
 	}
 }
 
-/**setColNames
- *
- * @param names vector containing column names
- *
- * @return void
- *
- * This method stors the rownames of the matrix. It also generates a mapping
- *between
- * columnames and index
- *
- */
 template <typename T>
 void Matrix<T>::setColNames(const std::vector<std::string>& names)
 {
@@ -304,105 +681,48 @@ void Matrix<T>::setColNames(const std::vector<std::string>& names)
 	}
 }
 
-/**getRowCount
- *
- * @return Number of rows
- *
- * This function returns the number of rows of the matrix
- */
 template <typename T> unsigned int Matrix<T>::getRowCount()
 {
 	return rowCount_;
 }
 
-/**getColCount
- *
- * @return Number of columns
- *
- * This function returns the number of columns
- */
 template <typename T> unsigned int Matrix<T>::getColCount()
 {
 	return colCount_;
 }
 
-/**getRowCount const
- *
- * @return Number of rows
- *
- * This function returns the number of rows of the matrix
- */
 template <typename T> const unsigned int Matrix<T>::getRowCount() const
 {
 	return rowCount_;
 }
 
-/**getColCount const
- *
- * @return Number of columns
- *
- * This function returns the number of columns
- */
 template <typename T> const unsigned int Matrix<T>::getColCount() const
 {
 	return colCount_;
 }
 
-/**getRowNames
- *
- * @return rowNames
- *
- * Returns a reference to the row names of the matrix
- */
 template <typename T> std::vector<std::string>& Matrix<T>::getRowNames()
 {
 	return rowNames_;
 }
 
-/**getColNames
- *
- * @return column names
- *
- * Returns a reference to the column names of the matrix
- */
 template <typename T> std::vector<std::string>& Matrix<T>::getColNames()
 {
 	return colNames_;
 }
 
-/**getRowNames
- *
- * @return rowNames
- *
- * Returns a reference to the row names of the matrix
- */
 template <typename T>
 const std::vector<std::string>& Matrix<T>::getRowNames() const
 {
 	return rowNames_;
 }
 
-/**getColNames
- *
- * @return column names
- *
- * Returns a reference to the column names of the matrix
- */
 template <typename T>
 const std::vector<std::string>& Matrix<T>::getColNames() const
 {
 	return colNames_;
 }
 
-/**findRow
- *
- * @param element query name of the row
- *
- * @return row index containing the query value, -1 if the matrix does not
- *contain such a row
- *
- * This function returns the index of the row, which matches the given row name
- */
 template <typename T> int Matrix<T>::findRow(const std::string& element)
 {
 	auto res = rowNamesToIndex_.find(element);
@@ -412,15 +732,6 @@ template <typename T> int Matrix<T>::findRow(const std::string& element)
 	return res->second;
 }
 
-/**findCol
- *
- * @param element query name of the col
- *
- * @return col index containing the query value, -1 if the matrix does not
- *contain such a col
- *
- * This function returns the index of the col, which matches the given col name
- */
 template <typename T> int Matrix<T>::findCol(const std::string& element)
 {
 	auto res = colNamesToIndex_.find(element);
@@ -430,15 +741,6 @@ template <typename T> int Matrix<T>::findCol(const std::string& element)
 	return res->second;
 }
 
-/**findRow const
- *
- * @param element query name of the row
- *
- * @return row index containing the query value, -1 if the matrix does not
- *contain such a row
- *
- * This function returns the index of the row, which matches the given row name
- */
 template <typename T>
 const int Matrix<T>::findRow(const std::string& element) const
 {
@@ -449,15 +751,6 @@ const int Matrix<T>::findRow(const std::string& element) const
 	return res->second;
 }
 
-/**findCol
- *
- * @param element query name of the col
- *
- * @return col index containing the query value, -1 if the matrix does not
- *contain such a col
- *
- * This function returns the index of the col, which matches the given col name
- */
 template <typename T>
 const int Matrix<T>::findCol(const std::string& element) const
 {
@@ -468,16 +761,6 @@ const int Matrix<T>::findCol(const std::string& element) const
 	return res->second;
 }
 
-/**getUniqueRowValues
- *
- * @param row index
- *
- * @return vector containing the unique elements stored in the query row of the
- *matrix
- *
- * This function returns the unique elements which are stored in the specified
- *row of the matrix
- */
 template <typename T>
 std::vector<T> Matrix<T>::getUniqueRowValues(unsigned int row)
 {
@@ -488,17 +771,6 @@ std::vector<T> Matrix<T>::getUniqueRowValues(unsigned int row)
 	return std::vector<T>(tempSet.begin(), tempSet.end());
 }
 
-/**getUniqueRowValues
- *
- * @param row index
- * @param exclud
- *
- * @return vector containing the unique elements stored in the query row of the
- *matrix
- *
- * This function returns the unique elements which are stored in the specified
- *row of the matrix
- */
 template <typename T>
 std::vector<T> Matrix<T>::getUniqueRowValues(unsigned int row, const T& exclud)
 {
@@ -511,16 +783,6 @@ std::vector<T> Matrix<T>::getUniqueRowValues(unsigned int row, const T& exclud)
 	return std::vector<T>(tempSet.begin(), tempSet.end());
 }
 
-/**getUniqueColValues
- *
- * @param col index
- *
- * @return vector containing the unique elements stored in the query col of the
- *matrix
- *
- * This function returns the unique elements which are stored in the specified
- *col of the matrix
- */
 template <typename T>
 std::vector<T> Matrix<T>::getUniqueColValues(unsigned int col)
 {
@@ -531,16 +793,6 @@ std::vector<T> Matrix<T>::getUniqueColValues(unsigned int col)
 	return std::vector<T>(tempSet.begin(), tempSet.end());
 }
 
-/**getUniqueColValues
- *
- * @param col index
- *
- * @return vector containing the unique elements stored in the query col of the
- *matrix
- *
- * This function returns the unique elements which are stored in the specified
- *col of the matrix
- */
 template <typename T>
 std::vector<T> Matrix<T>::getUniqueColValues(unsigned int col, const T& exclud)
 {
@@ -553,16 +805,6 @@ std::vector<T> Matrix<T>::getUniqueColValues(unsigned int col, const T& exclud)
 	return std::vector<T>(tempSet.begin(), tempSet.end());
 }
 
-/**getUniqueRowValues
- *
- * @param row index
- *
- * @return vector containing the unique elements stored in the query row of the
- *matrix
- *
- * This function returns the unique elements which are stored in the specified
- *row of the matrix
- */
 template <typename T>
 std::vector<T> Matrix<T>::getUniqueRowValues(unsigned int row) const
 {
@@ -573,17 +815,6 @@ std::vector<T> Matrix<T>::getUniqueRowValues(unsigned int row) const
 	return std::vector<T>(tempSet.begin(), tempSet.end());
 }
 
-/**getUniqueRowValues
- *
- * @param row index
- * @param exclud
- *
- * @return vector containing the unique elements stored in the query row of the
- *matrix
- *
- * This function returns the unique elements which are stored in the specified
- *row of the matrix
- */
 template <typename T>
 std::vector<T> Matrix<T>::getUniqueRowValues(unsigned int row, const T& exclud) const
 {
@@ -596,16 +827,6 @@ std::vector<T> Matrix<T>::getUniqueRowValues(unsigned int row, const T& exclud) 
 	return std::vector<T>(tempSet.begin(), tempSet.end());
 }
 
-/**getUniqueColValues
- *
- * @param col index
- *
- * @return vector containing the unique elements stored in the query col of the
- *matrix
- *
- * This function returns the unique elements which are stored in the specified
- *col of the matrix
- */
 template <typename T>
 std::vector<T> Matrix<T>::getUniqueColValues(unsigned int col) const
 {
@@ -616,16 +837,6 @@ std::vector<T> Matrix<T>::getUniqueColValues(unsigned int col) const
 	return std::vector<T>(tempSet.begin(), tempSet.end());
 }
 
-/**getUniqueColValues
- *
- * @param col index
- *
- * @return vector containing the unique elements stored in the query col of the
- *matrix
- *
- * This function returns the unique elements which are stored in the specified
- *col of the matrix
- */
 template <typename T>
 std::vector<T> Matrix<T>::getUniqueColValues(unsigned int col, const T& exclud) const
 {
@@ -638,38 +849,6 @@ std::vector<T> Matrix<T>::getUniqueColValues(unsigned int col, const T& exclud) 
 	return std::vector<T>(tempSet.begin(), tempSet.end());
 }
 
-/**contains
- *
- * @param query query value
- *
- * @return true, if the matrix contains the query element, false otherwise
- *
- * This function checks, whether the query element is stored in the matrix or
- *not
- */
-template <typename T> bool Matrix<T>::contains(const T& query)
-{
-	for(auto res : data_) {
-		if(res == query) {
-			return true;
-		}
-	}
-	return false;
-}
-
-/**countElement
- *
- * @param colrow control variable controls whether rows or columns should be
- *analysed 1=row, 0=col
- * @param number index of the row or column which should be analysed
- * @param query value
- *
- * @return the number of occurence of element t in the specified column or row
- *of the matrix
- *
- * This function counts how often a certain element is stored in a specified
- *column or row of the matrix
- */
 template <typename T>
 unsigned int Matrix<T>::countElement(unsigned int colrow, unsigned int number,
                                      const T& t)
@@ -695,18 +874,6 @@ unsigned int Matrix<T>::countElement(unsigned int colrow, unsigned int number,
 	return counter;
 }
 
-/**countainsElement
- *
- * @param colrow control variable controls whether rows or columns should be
- *analysed 1=row, 0=col
- * @param number index of the row or column which should be analysed
- * @param query value
- *
- * @return 0 if Element is not contained in the specified row or colum, 1
- *otherwise
- *
- * The method checks wheter a certain element is contained in a row or a column
- */
 template <typename T>
 bool Matrix<T>::containsElement(unsigned int colrow, unsigned int number,const T& t)
 {
@@ -729,15 +896,6 @@ bool Matrix<T>::containsElement(unsigned int colrow, unsigned int number,const T
 	throw std::invalid_argument("First argument must be 0 (col) or 1(row)");
 }
 
-/**contains
- *
- * @param query query value
- *
- * @return true, if the matrix contains the query element, false otherwise
- *
- * This function checks, whether the query element is stored in the matrix or
- *not
- */
 template <typename T> bool Matrix<T>::contains(const T& query) const
 {
 	for(auto res : data_) {
@@ -748,19 +906,6 @@ template <typename T> bool Matrix<T>::contains(const T& query) const
 	return false;
 }
 
-/**countElement
- *
- * @param colrow control variable controls whether rows or columns should be
- *analysed 1=row, 0=col
- * @param number index of the row or column which should be analysed
- * @param query value
- *
- * @return the number of occurence of element t in the specified column or row
- *of the matrix
- *
- * This function counts how often a certain element is stored in a specified
- *column or row of the matrix
- */
 template <typename T>
 unsigned int Matrix<T>::countElement(unsigned int colrow, unsigned int number,
                                      const T& t) const
@@ -786,18 +931,6 @@ unsigned int Matrix<T>::countElement(unsigned int colrow, unsigned int number,
 	return counter;
 }
 
-/**countainsElement
- *
- * @param colrow control variable controls whether rows or columns should be
- *analysed 1=row, 0=col
- * @param number index of the row or column which should be analysed
- * @param query value
- *
- * @return 0 if Element is not contained in the specified row or colum, 1
- *otherwise
- *
- * The method checks wheter a certain element is contained in a row or a column
- */
 template <typename T>
 bool Matrix<T>::containsElement(unsigned int colrow, unsigned int number,const T& t) const
 {
@@ -820,17 +953,6 @@ bool Matrix<T>::containsElement(unsigned int colrow, unsigned int number,const T
 	throw std::invalid_argument("First argument must be 0 (col) or 1(row)");
 }
 
-/**readMatrix
- *
- * @param filename file that should be read
- * @param rowNames flag indicating whether the matrix contains rowNames
- * @param colNames flag indicating whether the matrix contains colNames
- * @param initialValue value that should be used for initilization
- *
- * @return void
- *
- * This methods reads a tab or space delimited file containing a matrix.
- */
 template <typename T>
 void Matrix<T>::readMatrix(const std::string& filename, bool colNames, bool rowNames,
                            const T& initialValue)
@@ -906,21 +1028,6 @@ void Matrix<T>::readMatrix(const std::string& filename, bool colNames, bool rowN
 	setColNames(colNBuffer);
 }
 
-/**resize
- *
- * @param colCount new number of columns
- * @param rowCount new number of rows
- * @param initialValue value that should be used for initialisation
- *
- * @return void
- *
- * This function adapts the size of the matrix. A matrix can not be shrinked,
- *only enlarged.
- * Existing elements will stay at their original matrix position.
- *
- * @throw Exception invalid_argument(If the original number of colums or rows is
- *smaller than the new one)
- */
 template <typename T>
 void Matrix<T>::resize(unsigned int colCount, unsigned int rowCount,
                        T initialValue)
@@ -944,14 +1051,6 @@ void Matrix<T>::resize(unsigned int colCount, unsigned int rowCount,
 	rowCount_ = rowCount;
 }
 
-/**calculateRowSum
- *
- * @param row
- *
- * @return
- *
- *
- */
 template <typename T> float Matrix<T>::calculateRowSum(unsigned int row)
 {
 	float sum = 0;
@@ -963,14 +1062,6 @@ template <typename T> float Matrix<T>::calculateRowSum(unsigned int row)
 	return -1.0f;
 }
 
-/**calculateColSum
- *
- * @param col
- *
- * @return
- *
- *
- */
 template <typename T> float Matrix<T>::calculateColSum(unsigned int col)
 {
 	float sum = 0;
@@ -982,14 +1073,6 @@ template <typename T> float Matrix<T>::calculateColSum(unsigned int col)
 	return -1.0f;
 }
 
-/**calculateRowSum const
- *
- * @param row
- *
- * @return
- *
- *
- */
 template <typename T>
 const float Matrix<T>::calculateRowSum(unsigned int row) const
 {
@@ -1002,14 +1085,6 @@ const float Matrix<T>::calculateRowSum(unsigned int row) const
 	return -1.0;
 }
 
-/**calculateColSum const
- *
- * @param col
- *
- * @return
- *
- *
- */
 template <typename T>
 const float Matrix<T>::calculateColSum(unsigned int col) const
 {
@@ -1022,10 +1097,6 @@ const float Matrix<T>::calculateColSum(unsigned int col) const
 	return -1.0;
 }
 
-/**hasNACol
- *
- * return true if NA (or variants) are columnNames
- */
 template <typename T> bool Matrix<T>::hasNACol()
 {
 	if((findCol("NA") == -1)) {
@@ -1034,10 +1105,6 @@ template <typename T> bool Matrix<T>::hasNACol()
 	return true;
 }
 
-/**hasNARow
- *
- *return true if NA (or variants) are rowNames
- */
 template <typename T> bool Matrix<T>::hasNARow()
 {
 	if((findRow("NA") == -1)) {
@@ -1046,10 +1113,6 @@ template <typename T> bool Matrix<T>::hasNARow()
 	return true;
 }
 
-/**hasNACol
- *
- * return true if NA (or variants) are columnNames
- */
 template <typename T> const bool Matrix<T>::hasNACol() const
 {
 	if((findCol("NA") == -1)) {
@@ -1058,10 +1121,6 @@ template <typename T> const bool Matrix<T>::hasNACol() const
 	return true;
 }
 
-/**hasNARow
- *
- *return true if NA (or variants) are rowNames
- */
 template <typename T> const bool Matrix<T>::hasNARow() const
 {
 	if((findRow("NA") == -1)) {
@@ -1069,12 +1128,7 @@ template <typename T> const bool Matrix<T>::hasNARow() const
 	}
 	return true;
 }
-/**clear
- *
- * @return void
- *
- * Reset operation for the matrix.
- */
+
 template <typename T> void Matrix<T>::clear()
 {
 	colCount_ = 0;
