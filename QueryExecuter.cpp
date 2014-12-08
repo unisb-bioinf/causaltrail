@@ -122,13 +122,7 @@ std::pair<float, std::vector<std::string>> QueryExecuter::executeArgMax(){
 }
 
 float QueryExecuter::executeCondition(){
-	std::vector<unsigned int> nominatorNodes = nonInterventionNodeID_;
-	nominatorNodes.insert(nominatorNodes.end(), conditionNodeID_.begin(), conditionNodeID_.end());
-	std::vector<int> nominatorValues = nonInterventionValues_;
-	for (auto& id : conditionNodeID_){
-		nominatorValues[id]=conditionValues_[id];
-	}
-	return probHandler_.computeConditionalProbability(nominatorNodes, conditionNodeID_, nominatorValues, conditionValues_);
+	return probHandler_.computeConditionalProbability(nonInterventionNodeID_, conditionNodeID_, nonInterventionValues_, conditionValues_);
 }
 
 float QueryExecuter::executeProbability(){

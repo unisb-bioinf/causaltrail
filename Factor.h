@@ -16,9 +16,11 @@ class Factor{
 	void addProbability(float prob);
 	void setProbability(float prob, unsigned int index);
 	float getProbability(unsigned int index) const;
+	float getProbability(const std::vector<int>& values) const;
 	unsigned int getIndex(unsigned int index) const;
 	Factor product(Factor& factor,const Network& network_, const std::vector<int>& values);
 	Factor sumOut(unsigned int id, Network& network_, const std::vector<int>& values);
+	void normalize();
 	friend std::ostream& operator<< (std::ostream& os,const Factor& f);
 	
 	private:

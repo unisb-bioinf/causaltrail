@@ -35,9 +35,11 @@ class ProbabilityHandler
 	int getParentValues(const Node& n, const Matrix<int>& obs,
 	                    unsigned int index) const;
 	float getResult(std::vector<Factor>& factorlist);
+	float getResult(std::vector<Factor>& factorlist, const std::vector<int>& values);
 	std::vector<Factor> createFactorList(const std::vector<unsigned int>& factorisation, const std::vector<int>& values) const;
 	std::vector<unsigned int> getOrdering(const std::vector<unsigned int>& factorisation,const std::vector<unsigned int>& queryNodes) const;
-	void eliminate(const unsigned int id, std::vector<Factor>& factorlist, const std::vector<int>& values);
+	std::vector<unsigned int> getOrdering(const std::vector<unsigned int>& factorisation,const std::vector<unsigned int>& conditionNodes, const std::vector<unsigned int>& nonInterventionNodes) const;	
+	void eliminate(const unsigned int id, std::vector<Factor>& factorlist, const std::vector<int>& values, const std::vector<int>& nonInterventionValues);
 
 
 

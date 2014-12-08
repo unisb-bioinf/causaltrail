@@ -113,6 +113,20 @@ Factor::getUnionOfIDs(const std::vector<unsigned int>& commonIDs,
 	return uni;
 }
 
+void Factor::normalize(){
+	if (probabilities_.size() > 1){
+		float probSum = 0.0f;
+		for (auto& v : probabilities_){
+			probSum+=v;
+		}
+		for (auto& v : probabilities_){
+			v = v / probSum;
+		}
+	}
+}
+
+
+
 Factor Factor::product(Factor& factor, const Network& network_, const std::vector<int>& values)
 {
 	std::vector<unsigned int> commonIDs = getCommonIDs(factor);
@@ -225,6 +239,25 @@ float Factor::getProbability(unsigned int index) const
 {
 	return probabilities_[index];
 }
+
+float Factor::getProbability(const std::vector<int>& values) const
+{
+	for(int i = 0; i< length_; i++){
+		bool flag = true;
+		if (nodeIDs_.size() > 0){
+			for (unsigned int j = 0; j < nodeIDs_.size(); j++){
+				if (val_[j+i*nodeIDs_.size()] != values[nodeIDs_[j]]){
+					flag = false;
+				}
+			}
+			if (flag){
+				return probabilities_[i];
+				}
+			}
+		}
+	return 1.0f;
+}
+	
 
 std::ostream& operator<<(std::ostream& os, const Factor& f)
 {

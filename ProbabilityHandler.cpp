@@ -184,9 +184,28 @@ ProbabilityHandler::getOrdering(const std::vector<unsigned int>& factorisation,
 	return temp;
 }
 
+std::vector<unsigned int> ProbabilityHandler::getOrdering(
+    const std::vector<unsigned int>& factorisation,
+    const std::vector<unsigned int>& conditionNodes,
+    const std::vector<unsigned int>& nonInterventionNodes) const
+{
+	auto temp = conditionNodes;
+	for(auto& id : factorisation) {
+		if((std::find(conditionNodes.begin(), conditionNodes.end(), id) ==
+		   conditionNodes.end()) and (std::find(nonInterventionNodes.begin(), nonInterventionNodes.end(), id) == nonInterventionNodes.end())) {
+			temp.push_back(id);
+		}
+	}
+	for(auto& id : nonInterventionNodes) {
+		temp.push_back(id);
+	}
+	return temp;
+}
+
 void ProbabilityHandler::eliminate(const unsigned int id,
                                    std::vector<Factor>& factorlist,
-                                   const std::vector<int>& values)
+                                   const std::vector<int>& values,
+									const std::vector<int>& nonInterventionValues = {})
 {
 	std::vector<unsigned int> neededFactors;
 	std::vector<std::vector<unsigned int>> neededFactorsIDs;
@@ -204,7 +223,11 @@ void ProbabilityHandler::eliminate(const unsigned int id,
 			tempFactor = tempFactor.product(factorlist[neededFactors[i]],network_,values);
 		}
 	}
-	tempFactor = tempFactor.sumOut(id, network_, values);
+	std::cout<<"Product"<<std::endl;
+	std::cout<<tempFactor<<std::endl;
+	if ((nonInterventionValues.empty()) or (values[id] != -1) or ((values[id] == -1) and (nonInterventionValues[id] == -1))){
+		tempFactor = tempFactor.sumOut(id, network_, values);
+	}
 	for(auto& neededFactorID : neededFactorsIDs) {
 		auto it = factorlist.begin();
 		for(; it != factorlist.end();) {
@@ -215,6 +238,8 @@ void ProbabilityHandler::eliminate(const unsigned int id,
 			}
 		}
 	}
+	std::cout<<"SumOut"<<std::endl;
+	std::cout<<tempFactor<<std::endl;
 	factorlist.push_back(tempFactor);
 }
 
@@ -226,6 +251,22 @@ float ProbabilityHandler::getResult(std::vector<Factor>& factorlist)
 	}
 	return prob;
 }
+
+
+float ProbabilityHandler::getResult(std::vector<Factor>& factorlist, const std::vector<int>& values)
+{
+	for(auto& f : factorlist) {
+		f.normalize();
+	}
+	std::cout<<factorlist[0]<<std::endl;
+	float prob = 1.0f;
+	for (auto& f: factorlist){
+		prob *= f.getProbability(values);
+	}
+	return prob;
+}
+
+
 
 float ProbabilityHandler::computeJointProbabilityUsingVariableElimination(
     const std::vector<unsigned int>& queryNodes, const std::vector<int>& values)
@@ -240,12 +281,24 @@ float ProbabilityHandler::computeJointProbabilityUsingVariableElimination(
 }
 
 float ProbabilityHandler::computeConditionalProbability(
-    const std::vector<unsigned int>& nodesNominator,
-    const std::vector<unsigned int>& nodesDenominator,
-    const std::vector<int>& valuesNominator,
-    const std::vector<int>& valuesDenominator)
-{
-	return computeJointProbabilityUsingVariableElimination(nodesNominator, valuesNominator)/computeJointProbabilityUsingVariableElimination(nodesDenominator, valuesDenominator);
+    const std::vector<unsigned int>& nodesNonIntervention,
+    const std::vector<unsigned int>& nodesCondition,
+    const std::vector<int>& valuesNonIntervention,
+    const std::vector<int>& valuesCondition)
+{	
+	auto allNodes = nodesNonIntervention;
+	allNodes.insert(allNodes.end(), nodesCondition.begin(), nodesCondition.end());
+	auto factorisation = createFactorisation(allNodes);
+	auto factorlist = createFactorList(factorisation, valuesCondition);
+	auto ordering = getOrdering(factorisation, nodesCondition, nodesNonIntervention);
+	for (auto& id : ordering) {
+		eliminate(id, factorlist, valuesCondition, valuesNonIntervention);
+	}
+	std::cout<<"Final List"<<std::endl;
+	for (auto& f : factorlist){
+		std::cout<<f<<std::endl;
+	}
+	return getResult(factorlist,valuesNonIntervention);
 }
 
 std::pair<float, std::vector<std::string>>
@@ -258,35 +311,23 @@ ProbabilityHandler::maxSearch(const std::vector<unsigned int>& queryNodes,
 	    assignValues(queryNodes, emptyValues);
 	std::vector<std::vector<int>> combinations =
 	    enumerate(queryNodes, queryAssignment);
-	std::vector<unsigned int> nominatorNodes;
 
 	int index = 0;
 	int maxIndex = 0;
 	float maxprob = 0.0f;
 
-	if(not conditionNodes.empty()) {
-		nominatorNodes = queryNodes;
-		nominatorNodes.insert(nominatorNodes.end(), conditionNodes.begin(),
-		                      conditionNodes.end());
-	}
-
 	if(queryNodes.size() > 1) {
 		for(auto& com : combinations) {
 			float prob = 0.0f;
-			if(conditionNodes.empty()) {
-				for(auto& id : queryNodes) {
-					emptyValues[id] = com[id];
-				}
+			for(auto& id : queryNodes) {
+				emptyValues[id] = com[id];
+			}
+			if (conditionNodes.empty()) {
 				prob = computeJointProbabilityUsingVariableElimination(
 				    queryNodes, emptyValues);
 			} else {
-				std::vector<int> nominatorValues = conditionValues;
-				for(auto& id : queryNodes) {
-					nominatorValues[id] = com[id];
-				}
 				prob = computeConditionalProbability(
-				    nominatorNodes, conditionNodes, nominatorValues,
-				    conditionValues);
+				    queryNodes, conditionNodes, emptyValues,conditionValues);
 			}
 			if(prob > maxprob) {
 				maxprob = prob;
@@ -301,10 +342,9 @@ ProbabilityHandler::maxSearch(const std::vector<unsigned int>& queryNodes,
 				prob =
 				    computeTotalProbabilityNormalized(queryNodes[0], com[queryNodes[0]]);
 			} else {
-				std::vector<int> nominatorValues = conditionValues;
-				nominatorValues[queryNodes[0]] = com[queryNodes[0]];
+				emptyValues[queryNodes[0]]=com[queryNodes[0]];
 				prob = computeConditionalProbability(
-				    nominatorNodes, conditionNodes, nominatorValues,
+				    {queryNodes[0]}, conditionNodes, emptyValues,
 				    conditionValues);
 			}
 			if(prob > maxprob) {

@@ -82,11 +82,9 @@ TEST_F(ProbabilityTest, ConditionalProbability){
 	Network n = c.getNetwork();
 	ProbabilityHandler p (n);
 	std::vector<int> mn(5,-1);
-	mn[2]=0;
-	mn[0]=0;
 	mn[1]=0;
 	
-	std::vector<unsigned int> v1 {0,1,2};
+	std::vector<unsigned int> v1 {1};
 	std::vector<int> md(5,-1);
 	md[2]=0;
 	md[0]=0;
@@ -96,8 +94,7 @@ TEST_F(ProbabilityTest, ConditionalProbability){
 
 	std::vector<int> mn2(5,-1);
 	mn2[1]=0;
-	mn2[0]=0;
-	std::vector<unsigned int> v2 {0,1};
+	std::vector<unsigned int> v2 {1};
 	std::vector<int> md2(5,-1);
 	md2[0]=0;
 	std::vector<unsigned int> v2d {0};
@@ -105,9 +102,8 @@ TEST_F(ProbabilityTest, ConditionalProbability){
 	ASSERT_NEAR(0.48f, p.computeConditionalProbability(v2, v2d, mn2, md2),0.001);
 
 	std::vector<int> mn3(5,-1);
-	mn3[3]=0;
 	mn3[0]=0;
-	std::vector<unsigned int> v3 {0,3};
+	std::vector<unsigned int> v3 {0};
 	std::vector<int> md3(5,-1);
 	md3[3]=0;
 	std::vector<unsigned int> v3d {3};
