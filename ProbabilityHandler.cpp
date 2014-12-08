@@ -198,7 +198,6 @@ void ProbabilityHandler::eliminate(const unsigned int id,
 			neededFactorsIDs.push_back(f.getIDs());
 		}
 	}
-
 	Factor tempFactor = factorlist[neededFactors[0]];
 	if(neededFactors.size() > 1) {
 		for(unsigned int i = 1; i < neededFactors.size(); i++) {
@@ -233,11 +232,9 @@ float ProbabilityHandler::computeJointProbabilityUsingVariableElimination(
 {
 	auto factorisation = createFactorisation(queryNodes);
 	auto factorlist = createFactorList(factorisation, values);
-
 	auto ordering = getOrdering(factorisation, queryNodes);
 	for(auto& id : ordering) {
 		eliminate(id, factorlist, values);
-	
 	}
 	return getResult(factorlist);
 }
@@ -248,8 +245,6 @@ float ProbabilityHandler::computeConditionalProbability(
     const std::vector<int>& valuesNominator,
     const std::vector<int>& valuesDenominator)
 {
-	std::cout<<computeJointProbabilityUsingVariableElimination(nodesNominator, valuesNominator)<<std::endl;
-	std::cout<<computeJointProbabilityUsingVariableElimination(nodesDenominator, valuesDenominator)<<std::endl;
 	return computeJointProbabilityUsingVariableElimination(nodesNominator, valuesNominator)/computeJointProbabilityUsingVariableElimination(nodesDenominator, valuesDenominator);
 }
 

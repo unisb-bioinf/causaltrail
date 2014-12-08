@@ -28,7 +28,7 @@ Factor::Factor(const Node& n, const std::vector<int>& values)
 				}
 				if((not parentsKnown)and(usedValues.find(v) ==
 				                         usedValues.end())) {
-					addValue(v);
+					val_.insert(val_.end(), v.begin(), v.end());
 					addProbability(p(col, row));
 					length_++;
 					usedValues.insert(v);
@@ -40,7 +40,7 @@ Factor::Factor(const Node& n, const std::vector<int>& values)
 						}
 					}
 					if((useRow)and(usedValues.find(v) == usedValues.end())) {
-						addValue(v);
+						val_.insert(val_.end(), v.begin(), v.end());
 						addProbability(p(col, row));
 						length_++;
 						usedValues.insert(v);
@@ -56,7 +56,7 @@ Factor::Factor(const Node& n, const std::vector<int>& values)
 				         n.getParentValues()[row].end());
 			}
 			if((not parentsKnown)and(usedValues.find(v) == usedValues.end())) {
-				addValue(v);
+				val_.insert(val_.end(), v.begin(), v.end());
 				addProbability(p(values[n.getID()], row));
 				length_++;
 				usedValues.insert(v);
@@ -68,7 +68,7 @@ Factor::Factor(const Node& n, const std::vector<int>& values)
 					}
 				}
 				if((useRow)and(usedValues.find(v) == usedValues.end())) {
-					addValue(v);
+					val_.insert(val_.end(), v.begin(), v.end());
 					addProbability(p(values[n.getID()], row));
 					length_++;
 					usedValues.insert(v);
@@ -79,12 +79,9 @@ Factor::Factor(const Node& n, const std::vector<int>& values)
 }
 
 Factor::Factor(unsigned int length, std::vector<unsigned int> ids)
-//	: values_(length * ids.size()), probabilities_(length)
+	: val_(length*ids.size()), probabilities_(length), length_(length)
 {
 	nodeIDs_ = ids;
-	length_ = length;
-	values_.resize(length, {});
-	probabilities_.resize(length, 0.0f);
 }
 
 std::vector<unsigned int> Factor::getCommonIDs(const Factor& factor) const
@@ -128,38 +125,32 @@ Factor Factor::product(Factor& factor, const Network& network_, const std::vecto
 			newFactorLength*=network_.getNode(id).getNumberOfUniqueValuesExcludingNA();
 		}
 	}
-	std::cout<<newFactorLength<<std::endl;
-	Factor newFactor(0, unionIDs);
-	int i = 0;
-	for(auto& valueAssignment1 : values_) {
-		int j = 0;
-		for(auto& valueAssignment2 : factor.getAllValues()) {
-			// Assert that all common nodes are identical
+	Factor newFactor(newFactorLength, unionIDs);
+	int counter = 0;
+	for (int i = 0; i< length_; i++){
+		for (int j = 0; j < factor.length_; j++){
 			bool valid = true;
 			for(auto& id : commonIDs) {
-				if(valueAssignment1[getIndex(id)] !=
-				   valueAssignment2[factor.getIndex(id)]) {
+				if(val_[getIndex(id)+i*nodeIDs_.size()] != factor.val_[factor.getIndex(id)+j*factor.nodeIDs_.size()]) {
 					valid = false;
 					break;
 				}
 			}
 			if(valid) {
-				std::vector<int> assignment(valueAssignment1.size() + uniqueIDs.size());
-				std::copy(valueAssignment1.begin(), valueAssignment1.end(), assignment.begin());
-				auto it = assignment.begin() + valueAssignment1.size();
-				for(auto id : uniqueIDs) {
-					*it++ = valueAssignment2[factor.getIndex(id)];
+				for (unsigned int h = 0; h < nodeIDs_.size(); h++){
+					newFactor.val_[h+counter*unionIDs.size()]=val_[h+i*nodeIDs_.size()];
 				}
-				newFactor.addValue(assignment);
-				newFactor.addProbability(getProbability(i) *
-				                         factor.getProbability(j));
-				newFactor.length_ += 1;
+				int h=nodeIDs_.size();
+				for (auto id : uniqueIDs){
+					newFactor.val_[h+counter*unionIDs.size()]=factor.val_[factor.getIndex(id)+j*factor.nodeIDs_.size()];
+					h++;
+				}	
+				newFactor.setProbability(getProbability(i) *
+				                         factor.getProbability(j),counter);
+				counter++;
 			}
-			j++;
 		}
-		i++;
 	}
-	std::cout<<"RealLength: "<<newFactor.length_<<std::endl;;
 	return newFactor;
 }
 
@@ -175,26 +166,37 @@ Factor Factor::sumOut(unsigned int id, Network& network_,
 		}
 	}
 	unsigned int jumptimes = 0;
+	unsigned int newFactorLength = length_;
 	if(values[id] == -1) {
 		jumptimes =
 		    network_.getNode(id).getNumberOfUniqueValuesExcludingNA() - 1;
+		newFactorLength = length_/(jumptimes+1);
 	}
-	nodeIDs_.erase(nodeIDs_.begin() + index);
-	Factor newFactor(0, nodeIDs_);
-	int firstOb = values_[0][index];
+	
+	std::vector<unsigned int> newIDs = nodeIDs_;
+	newIDs.erase(newIDs.begin() + index);
+	Factor newFactor(newFactorLength, newIDs);
+	unsigned int counter = 0;
+	int firstOb = val_[index];
 	for(int i = 0; i < length_; i++) {
-		if(values_[i][index] == firstOb) {
+		if(val_[index+i*nodeIDs_.size()] == firstOb) {
 			float prob = probabilities_[i];
 			for(unsigned int j = 1; j <= jumptimes; j++) {
 				prob += probabilities_[i + j * jump];
 			}
-			values_[i].erase(values_[i].begin() + index);
-			newFactor.addValue(values_[i]);
-			newFactor.addProbability(prob);
-			newFactor.length_ += 1;
+			for (unsigned int c = 0; c < nodeIDs_.size(); c++){
+				unsigned int d = c;
+				if (c != index){
+					if (c > index){
+						d = c - 1;
+					}
+					newFactor.val_[d+counter*newIDs.size()]=val_[c+i*nodeIDs_.size()];
+				}
+			}
+			newFactor.setProbability(prob,counter);
+			counter++;
 		}
 	}
-
 	return newFactor;
 }
 
@@ -211,29 +213,6 @@ unsigned int Factor::getIndex(unsigned int id) const
 }
 
 const std::vector<unsigned int>& Factor::getIDs() const { return nodeIDs_; }
-const std::vector<std::vector<int>>& Factor::getAllValues() const
-{
-	return values_;
-}
-
-const std::vector<int>& Factor::getValues(unsigned int index) const
-{
-	return values_[index];
-}
-
-const int& Factor::getValue(unsigned int row, unsigned int index) const
-{
-	return values_[row][index];
-}
-	
-void Factor::setValue(const std::vector<int>& value, unsigned int index){
-	values_[index]=value;
-}
-
-void Factor::addValue(const std::vector<int>& value)
-{
-	values_.push_back(value);
-}
 
 void Factor::addProbability(float prob) { probabilities_.push_back(prob); }
 
@@ -257,8 +236,8 @@ std::ostream& operator<<(std::ostream& os, const Factor& f)
 	os << "\n"
 	   << "Table:" << std::endl;
 	for(int i = 0; i < f.length_; i++) {
-		for(auto& id : f.values_[i]) {
-			os << id << " ";
+		for (unsigned int j = 0; j < f.nodeIDs_.size(); j++){
+			os << f.val_[j+i*f.nodeIDs_.size()]<< " ";
 		}
 		os << f.probabilities_[i] << std::endl;
 		;

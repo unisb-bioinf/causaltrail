@@ -25,7 +25,7 @@ class Factor{
 	std::vector<unsigned int> getUnionOfIDs(const std::vector<unsigned int>& commonIDs, const Factor& factor) const;
 	std::vector<unsigned int> getCommonIDs(const Factor& factor) const;
 	std::vector<unsigned int> nodeIDs_;
-	std::vector<std::vector<int>> values_;
+	std::vector<int> val_;
 	std::vector<float> probabilities_;
 	int length_;
 };
