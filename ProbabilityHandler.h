@@ -20,7 +20,9 @@ class ProbabilityHandler
 	    const std::vector<int>& valuesNominator,
 	    const std::vector<int>& valuesDenominator);
 	std::pair<float, std::vector<std::string>>
-	maxSearch(const std::vector<unsigned int>& queryNodes, const std::vector<unsigned int>& conditionNodes, const std::vector<int>& conditionValues);
+	maxSearch(const std::vector<unsigned int>& queryNodes,
+	          const std::vector<unsigned int>& conditionNodes,
+	          const std::vector<int>& conditionValues);
 	float calculateLikelihoodOfTheData(const Matrix<int>& obs) const;
 
 	private:
@@ -29,19 +31,27 @@ class ProbabilityHandler
 	std::vector<std::vector<int>>
 	assignValues(const std::vector<unsigned int>& factorisation,
 	             const std::vector<int>& values);
-	std::vector<std::vector<int>> enumerate(
-	    const std::vector<unsigned int>& factorisation,
-	    const std::vector<std::vector<int>>& valueAssignment);
+	std::vector<std::vector<int>>
+	enumerate(const std::vector<unsigned int>& factorisation,
+	          const std::vector<std::vector<int>>& valueAssignment);
 	int getParentValues(const Node& n, const Matrix<int>& obs,
 	                    unsigned int index) const;
 	float getResult(std::vector<Factor>& factorlist);
-	float getResult(std::vector<Factor>& factorlist, const std::vector<int>& values);
-	std::vector<Factor> createFactorList(const std::vector<unsigned int>& factorisation, const std::vector<int>& values) const;
-	std::vector<unsigned int> getOrdering(const std::vector<unsigned int>& factorisation,const std::vector<unsigned int>& queryNodes) const;
-	std::vector<unsigned int> getOrdering(const std::vector<unsigned int>& factorisation,const std::vector<unsigned int>& conditionNodes, const std::vector<unsigned int>& nonInterventionNodes) const;	
-	void eliminate(const unsigned int id, std::vector<Factor>& factorlist, const std::vector<int>& values, const std::vector<int>& nonInterventionValues);
-
-
+	float getResult(std::vector<Factor>& factorlist,
+	                const std::vector<int>& values);
+	std::vector<Factor>
+	createFactorList(const std::vector<unsigned int>& factorisation,
+	                 const std::vector<int>& values) const;
+	std::vector<unsigned int>
+	getOrdering(const std::vector<unsigned int>& factorisation,
+	            const std::vector<unsigned int>& queryNodes) const;
+	std::vector<unsigned int>
+	getOrdering(const std::vector<unsigned int>& factorisation,
+	            const std::vector<unsigned int>& conditionNodes,
+	            const std::vector<unsigned int>& nonInterventionNodes) const;
+	void eliminate(const unsigned int id, std::vector<Factor>& factorlist,
+	               const std::vector<int>& values,
+	               const std::vector<int>& nonInterventionValues);
 
 	Network& network_;
 };
