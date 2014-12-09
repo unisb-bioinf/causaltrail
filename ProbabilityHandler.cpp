@@ -162,6 +162,7 @@ std::vector<Factor> ProbabilityHandler::createFactorList(
     const std::vector<int>& values) const
 {
 	std::vector<Factor> temp;
+	temp.reserve(factorisation.size());
 	for(auto& id : factorisation) {
 		temp.push_back(Factor(network_.getNode(id), values));
 	}
