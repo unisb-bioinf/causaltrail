@@ -145,8 +145,7 @@ float ProbabilityHandler::calculateLikelihoodOfTheData(const Matrix<int>& obs)
 		if(!obs.containsElement(0, sample, -1)) {
 			float intermediateResult = 1.0f;
 
-			for(unsigned int index = 0; index < obs.getRowCount(); ++index) {
-				const Node& n = network_.getNode(obs.getRowNames()[index]);
+			for(const Node& n : network_.getNodes()) {
 				int row = getParentValues(n, obs, sample);
 				intermediateResult *=
 				    n.getProbability(obs(sample, n.getObservationRow()), row);
