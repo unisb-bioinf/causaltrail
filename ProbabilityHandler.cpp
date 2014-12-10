@@ -303,8 +303,8 @@ float ProbabilityHandler::computeConditionalProbability(
 
 std::pair<float, std::vector<std::string>>
 ProbabilityHandler::maxSearch(const std::vector<unsigned int>& queryNodes,
-                              const std::vector<unsigned int>& conditionNodes,
-                              const std::vector<int>& conditionValues)
+                              const std::vector<unsigned int>& conditionNodes = {},
+                              const std::vector<int>& conditionValues = {})
 {
 	std::vector<int> emptyValues(network_.size(), -1);
 	std::vector<std::vector<int>> queryAssignment =

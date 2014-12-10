@@ -57,4 +57,9 @@ add_executable(runQueryTests test/QueryTest.cpp)
 target_link_libraries(runQueryTests ${Boost_LIBRARIES} CausalTrailLib gtest gtest_main)
 add_test(NAME runQueryTests COMMAND runQueryTests)
 
+add_executable(runFactorTests test/FactorTest.cpp)
+target_link_libraries(runFactorTests ${Boost_LIBRARIES} CausalTrailLib gtest gtest_main)
+add_test(NAME runFactorTests COMMAND runFactorTests)
+
+
 endif()

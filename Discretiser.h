@@ -58,10 +58,12 @@ class Discretiser{
  	 *
 	 * @param filename, name of the controlFile
 	 *
- 	 * Executes the discretised for each row specified in the controlFile. The structure of the file
+ 	 * Discretises each row as specified in the controlFile. The structure of the file
 	 * is as follows:
 	 * Row	MethodCode
+	 *
 	 * Row numbers start at 0.
+ 	 *
  	 * The method integer codes are:
 	 *	0: discretiseCeil
 	 *	1: discretiseFloor
