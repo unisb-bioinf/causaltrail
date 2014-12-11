@@ -3,9 +3,9 @@
 #include "../Parser.h"
 #include "config.h"
 
-class QueryTest : public ::testing::Test{
+class ParserTest : public ::testing::Test{
 	protected:
-	QueryTest()
+	ParserTest()
 		:c(NetworkController())	{
 		c.loadNetwork(TEST_DATA_PATH("Student.na"));
 		c.loadNetwork(TEST_DATA_PATH("Student.sif"));
@@ -18,231 +18,231 @@ class QueryTest : public ::testing::Test{
 	
 };
 
-TEST_F(QueryTest,ParserCheck0){
+TEST_F(ParserTest,ParserCheck0){
 	std::string query("");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck1){
+TEST_F(ParserTest,ParserCheck1){
 	std::string query("This should throw");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck2){
+TEST_F(ParserTest,ParserCheck2){
 	std::string query("? Grade g1");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck3){
+TEST_F(ParserTest,ParserCheck3){
 	std::string query("? Grad = g1");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck4){
+TEST_F(ParserTest,ParserCheck4){
 	std::string query("? Grade = g");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck5){
+TEST_F(ParserTest,ParserCheck5){
 	std::string query("? Grade = g1 !");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck6){
+TEST_F(ParserTest,ParserCheck6){
 	std::string query("? Grade = g1 do Letter = l0");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck7){
+TEST_F(ParserTest,ParserCheck7){
 	std::string query("? Grade = g1 ! Letter = l0");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck8){
+TEST_F(ParserTest,ParserCheck8){
 	std::string query("? Grade = g1 ! do Letter l0");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck9){
+TEST_F(ParserTest,ParserCheck9){
 	std::string query("? Grade = g1 ! do Lette = l0");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck10){
+TEST_F(ParserTest,ParserCheck10){
 	std::string query("? Grade = g1 ! do Letter = l");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck11){
+TEST_F(ParserTest,ParserCheck11){
 	std::string query("? Grade = g1 +");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck12){
+TEST_F(ParserTest,ParserCheck12){
 	std::string query("? Grade = g1 ! +");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck13){
+TEST_F(ParserTest,ParserCheck13){
 	std::string query("? Grade = g1 ! + Letter");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck14){
+TEST_F(ParserTest,ParserCheck14){
 	std::string query("? Grade = g1 ! + Letter Grad");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck15){
+TEST_F(ParserTest,ParserCheck15){
 	std::string query("? Grade = g1 ! + Lette Grade");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck16){
+TEST_F(ParserTest,ParserCheck16){
 	std::string query("? Grade = g1 ! + Lette Grad");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck17){
+TEST_F(ParserTest,ParserCheck17){
 	std::string query("? Grade = g1 -");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck18){
+TEST_F(ParserTest,ParserCheck18){
 	std::string query("? Grade = g1 ! -");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck19){
+TEST_F(ParserTest,ParserCheck19){
 
 	std::string query("? Grade = g1 ! - Letter");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck20){
+TEST_F(ParserTest,ParserCheck20){
 	std::string query("? Grade = g1 ! - Letter Grad");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck21){
+TEST_F(ParserTest,ParserCheck21){
 	std::string query("? Grade = g1 ! - Lette Grade");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck22){
+TEST_F(ParserTest,ParserCheck22){
 	std::string query("? Grade = g1 ! - Lette Grad");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck23){
+TEST_F(ParserTest,ParserCheck23){
 	std::string query("? Grade = g1 | ");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck24){
+TEST_F(ParserTest,ParserCheck24){
 	std::string query("? Grade = g1 | Letter l1 ");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck25){
+TEST_F(ParserTest,ParserCheck25){
 	std::string query("? Grade = g1 | Letter = ");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck26){
+TEST_F(ParserTest,ParserCheck26){
 	std::string query("? Grade = g1 | Lette = l1 ");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck27){
+TEST_F(ParserTest,ParserCheck27){
 	std::string query("? Grade = g1 Lette");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck28){
+TEST_F(ParserTest,ParserCheck28){
 	std::string query("? Grade = g1 Letter = l ");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck29){
+TEST_F(ParserTest,ParserCheck29){
 	std::string query("? Grade = g1 Letter l1");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck30){
+TEST_F(ParserTest,ParserCheck30){
 	std::string query("? argmax");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck31){
+TEST_F(ParserTest,ParserCheck31){
 	std::string query("? argmax Letter");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck32){
+TEST_F(ParserTest,ParserCheck32){
 	std::string query("? argmax ( Letter");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck33){
+TEST_F(ParserTest,ParserCheck33){
 	std::string query("? argmax Letter )");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck34){
+TEST_F(ParserTest,ParserCheck34){
 	std::string query("? argmax( Letter )");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest,ParserCheck35){
+TEST_F(ParserTest,ParserCheck35){
 	std::string query("? argmax ( Letter)");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
-TEST_F(QueryTest, ParserCheck36){
+TEST_F(ParserTest, ParserCheck36){
 	std::string query("? Grade = g1");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
 	ASSERT_NEAR(0.362f,qe.execute().first,0.001);
 }
 
-TEST_F(QueryTest, ParserCheck37){
+TEST_F(ParserTest, ParserCheck37){
 	std::string query("? Grade = g2");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
@@ -250,7 +250,7 @@ TEST_F(QueryTest, ParserCheck37){
 	ASSERT_NEAR(0.2884f,qe.execute().first,0.001);
 }
 
-TEST_F(QueryTest, ParserCheck38){
+TEST_F(ParserTest, ParserCheck38){
 	std::string query("? Grade = g3");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
@@ -258,7 +258,7 @@ TEST_F(QueryTest, ParserCheck38){
 	ASSERT_NEAR(0.3496f, qe.execute().first, 0.001);
 }
 
-TEST_F(QueryTest, ParserCheck39){
+TEST_F(ParserTest, ParserCheck39){
 	std::string query("? Intelligence = i0");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
@@ -266,7 +266,7 @@ TEST_F(QueryTest, ParserCheck39){
 	ASSERT_NEAR(0.7f, qe.execute().first, 0.001);
 }
 
-TEST_F(QueryTest, ParserCheck40){
+TEST_F(ParserTest, ParserCheck40){
 	std::string query("? Intelligence = i1");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
@@ -274,7 +274,7 @@ TEST_F(QueryTest, ParserCheck40){
 	ASSERT_NEAR(0.3f, qe.execute().first, 0.001);
 }
 
-TEST_F(QueryTest, ParserCheck41){
+TEST_F(ParserTest, ParserCheck41){
 	std::string query("? Difficulty = d0");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
@@ -282,7 +282,7 @@ TEST_F(QueryTest, ParserCheck41){
 	ASSERT_NEAR(0.6f, qe.execute().first, 0.001);
 }
 
-TEST_F(QueryTest, ParserCheck42){
+TEST_F(ParserTest, ParserCheck42){
 	std::string query("? Difficulty = d1");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
@@ -290,7 +290,7 @@ TEST_F(QueryTest, ParserCheck42){
 	ASSERT_NEAR(0.4f, qe.execute().first, 0.001);
 }
 
-TEST_F(QueryTest, ParserCheck43){
+TEST_F(ParserTest, ParserCheck43){
 	std::string query("? SAT = s0");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
@@ -298,80 +298,95 @@ TEST_F(QueryTest, ParserCheck43){
 	ASSERT_NEAR(0.725f, qe.execute().first, 0.001);
 }
 
-TEST_F(QueryTest, ParserCheck44){
+TEST_F(ParserTest, ParserCheck44){
 	std::string query("? SAT = s1");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
 	ASSERT_NEAR(0.275f, qe.execute().first, 0.001);
 }
 
-TEST_F(QueryTest, ParserCheck45){
+TEST_F(ParserTest, ParserCheck45){
 	std::string query("? Letter = l0");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
 	ASSERT_NEAR(0.497664f, qe.execute().first, 0.001);
 }
 
-TEST_F(QueryTest, ParserCheck46){
+TEST_F(ParserTest, ParserCheck46){
 	std::string query("? Letter = l1");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
 	ASSERT_NEAR(0.502336f, qe.execute().first, 0.001);
 }
 
-TEST_F(QueryTest, ParserCheck47){
+TEST_F(ParserTest, ParserCheck47){
 	std::string query("? Grade = g1 Difficulty = d0");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
 	ASSERT_NEAR(0.288f,qe.execute().first,0.001);
 }
 
-TEST_F(QueryTest, ParserCheck48){   
+TEST_F(ParserTest, ParserCheck48){   
 	std::string query("? Grade = g1 Difficulty = d0 Intelligence = i0 SAT = s0 Letter = l0");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
 	ASSERT_NEAR(0.01197f,qe.execute().first,0.001);
 }
 
-TEST_F(QueryTest, ParserCheck49){
+TEST_F(ParserTest, ParserCheck49){
 	std::string query("? Grade = g1 | Intelligence = i0 Difficulty = d0");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
 	ASSERT_NEAR(0.3f, qe.execute().first, 0.001);
 }
 
-TEST_F(QueryTest, ParserCheck50){
+TEST_F(ParserTest, ParserCheck50){
 	std::string query("? Grade = g1 | Difficulty = d0");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
 	ASSERT_NEAR(0.48f, qe.execute().first, 0.001);
 }
 
-TEST_F(QueryTest, ParserCheck51){
+TEST_F(ParserTest, ParserCheck51){
 	std::string query("? Difficulty = d0 | SAT = s0");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
 	ASSERT_NEAR(0.6f, qe.execute().first, 0.001);
 }
 
-TEST_F(QueryTest, ParserCheck52){
+TEST_F(ParserTest, ParserCheck55){
+	std::string query("? Difficulty = d0 | Grade = g1");
+	Parser p(query,c);
+	QueryExecuter qe = p.parseQuery();
+	ASSERT_NEAR(0.795f, qe.execute().first, 0.001);
+}
+
+TEST_F(ParserTest, ParserCheck52){
 	std::string query("? argmax ( Grade )");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
 	ASSERT_NEAR(0.362f, qe.execute().first,0.001);
 }
 
-TEST_F(QueryTest, ParserCheck53){
+TEST_F(ParserTest, ParserCheck53){
 	std::string query("? argmax ( SAT )");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
 	ASSERT_NEAR(0.725f, qe.execute().first, 0.001);
 }
 
-TEST_F(QueryTest, ParserCheck54){
+TEST_F(ParserTest, ParserCheck54){
 	std::string query("? argmax ( Intelligence )");
 	Parser p (query, c);
 	QueryExecuter qe = p.parseQuery();
 	qe.execute();
 	ASSERT_NEAR(0.7f, qe.execute().first, 0.001);	
+}
+
+TEST_F(ParserTest, ParserCheck56){
+	std::string query("? argmax ( Grade ) | Intelligence = i1");
+	Parser p (query, c);
+	QueryExecuter qe = p.parseQuery();
+	qe.execute();
+	ASSERT_NEAR(0.74f, qe.execute().first, 0.001);	
 }
