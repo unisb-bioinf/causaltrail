@@ -958,6 +958,9 @@ void Matrix<T>::readMatrix(const std::string& filename, bool colNames, bool rowN
                            const T& initialValue)
 {
 	std::ifstream input(filename, std::ifstream::in);
+	if (!input.good()){
+		throw std::invalid_argument("File not found");
+	}
 	std::string line;
 	int numRows = 0;
 	int numCols = 0;

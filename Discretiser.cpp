@@ -79,6 +79,9 @@ void Discretiser::discretiseRow(unsigned int row, unsigned int method, float thr
 
 void Discretiser::discretise(const std::string& controlFile){
 	std::ifstream input(controlFile,std::ifstream::in);
+	if (!input.good()){
+		throw std::invalid_argument("Controlfile not found");
+	}
 	std::string line;
 	unsigned int row;
 	unsigned int method;
@@ -87,6 +90,13 @@ void Discretiser::discretise(const std::string& controlFile){
 		float threshold=0.0;
 		buffer<<line;
 		buffer>>row>>method>>threshold;
+		if (row > originalObservations_.getRowCount()){
+			throw std::invalid_argument("Row does not exist");
+		}
+		if ((method < 0) or (method > 9))
+		{
+			throw std::invalid_argument("Method not known");
+		}
 		discretiseRow(row,method,threshold);
 		}
 	input.close();

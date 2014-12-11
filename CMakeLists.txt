@@ -33,6 +33,10 @@ add_executable(runNetworkTests test/NetworkTest.cpp)
 target_link_libraries(runNetworkTests CausalTrailLib ${Boost_LIBRARIES} gtest gtest_main)
 add_test(NAME runNetworkTests COMMAND runNetworkTests)
 
+add_executable(runNetworkControllerTests test/NetworkControllerTest.cpp)
+target_link_libraries(runNetworkControllerTests CausalTrailLib ${Boost_LIBRARIES} gtest gtest_main)
+add_test(NAME runNetworkControllerTests COMMAND runNetworkControllerTests)
+
 add_executable(runDiscretiserTest test/DiscretiserTest.cpp)
 target_link_libraries(runDiscretiserTest CausalTrailLib ${Boost_LIBRARIES} gtest gtest_main)
 add_test(NAME runDiscretiserTest COMMAND runDiscretiserTest)

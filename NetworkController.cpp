@@ -1,7 +1,7 @@
 #include "NetworkController.h"
 
 NetworkController::NetworkController()
-	:network_(Network()),observations_(Matrix<int>(0,0,0))
+	:network_(Network()),observations_(Matrix<int>(0,0,-1))
 	{
 }
 

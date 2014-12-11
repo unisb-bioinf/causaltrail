@@ -8,9 +8,9 @@ Network::Network()
     : AdjacencyMatrix_(Matrix<unsigned int>(0, 0, 0)),
       AdjacencyMatrixBackup_(Matrix<unsigned int>(0, 0, 0))
 {
-	ExtensionToIndex_[".tgf"] = 0;
-	ExtensionToIndex_[".na"] = 1;
-	ExtensionToIndex_[".sif"] = 2;
+	ExtensionToIndex_[".tgf"] = 1;
+	ExtensionToIndex_[".na"] = 2;
+	ExtensionToIndex_[".sif"] = 3;
 }
 
 struct Comp {
@@ -166,13 +166,13 @@ void Network::readNetwork(const std::string& filename)
 {
 	std::string extension = boost::filesystem::extension(filename);
 	switch(ExtensionToIndex_[extension]) {
-		case 0:
+		case 1:
 			readTGF(filename);
 			break;
-		case 1:
+		case 2:
 			readNA(filename);
 			break;
-		case 2:
+		case 3:
 			readSIF(filename);
 			break;
 		default:
@@ -187,6 +187,9 @@ void Network::readTGF(const std::string& filename)
 	AdjacencyMatrix_.clear();
 	std::string line;
 	std::ifstream input(filename, std::ifstream::in);
+	if (! input.good()){
+		throw std::invalid_argument("File not found");
+		}
 	unsigned int id1;
 	unsigned int id2;
 	std::string name;
@@ -213,11 +216,16 @@ void Network::readTGF(const std::string& filename)
 	AdjacencyMatrix_.setRowNames(names);
 	AdjacencyMatrix_.setColNames(names);
 	std::sort(originalIDToDense_.begin(), originalIDToDense_.end(),Comp());
+	bool edges = false;
 	while(std::getline(input, line)) {
+		edges=true;
 		std::stringstream buffer;
 		buffer << line;
 		buffer >> id1 >> id2;
 		addEdge(getNewID(id2),getNewID(id1));
+	}
+	if (!edges){
+		throw std::invalid_argument("No edges read from file, either # is missing, or there no edges encoded");
 	}
 	input.close();
 }
@@ -229,6 +237,9 @@ void Network::readSIF(const std::string& filename)
 	unsigned int id2;
 	std::string relation;
 	std::ifstream input(filename, std::ifstream::in);
+	if (! input.good()){
+		throw std::invalid_argument("File not found");
+		}
 	if(NodeList_.empty())
 		throw std::invalid_argument(
 		    "You have to read in a .na file beforehand.");
@@ -236,7 +247,13 @@ void Network::readSIF(const std::string& filename)
 		std::stringstream buffer;
 		buffer << line;
 		buffer >> id1 >> relation >> id2;
+		if (relation == ""){
+			throw std::invalid_argument("Invalid file structure of sif file");
+		}
 		addEdge(getNewID(id2), getNewID(id1));
+		id2 = -1;
+		id1 = -1;
+		relation = "";
 	}
 	input.close();
 }
@@ -247,9 +264,12 @@ void Network::readNA(const std::string& filename)
 	AdjacencyMatrix_.clear();
 	std::string line;
 	std::ifstream input(filename, std::ifstream::in);
+	if (! input.good()){
+		throw std::invalid_argument("File not found");
+		}
 	unsigned int id1;
-	std::string name;
-	std::string waste;
+	std::string name = "";
+	std::string waste = "";
 	std::string ids;
 	unsigned int index = 0;
 	std::vector<std::string> names;
@@ -258,6 +278,9 @@ void Network::readNA(const std::string& filename)
 		std::stringstream buffer;
 		buffer << line;
 		buffer >> id1 >> waste >> name;
+		if ((waste == "") or (name == "")){
+			throw std::invalid_argument("Invalid structure of na file");
+		}
 		id1=getDenseNodeIdentifier(id1);
 		NodeList_.push_back(Node(0, id1, name));
 		IDToIndex_[id1] = index;
@@ -267,6 +290,8 @@ void Network::readNA(const std::string& filename)
 		nbuffer >> ids;
 		names.push_back(ids);
 		index++;
+		waste = "";
+		name = "";
 	}
 	input.close();
 	AdjacencyMatrix_.resize(NodeList_.size(), NodeList_.size(), 0);
