@@ -20,6 +20,11 @@ class InterventionTest : public ::testing::Test{
 	
 };
 
+TEST_F(InterventionTest, Constructor){
+	Interventions i(c);
+	SUCCEED();
+}
+
 TEST_F(InterventionTest, doInterventionEdges){
 	Interventions i(c);
 	Network& n = c.getNetwork();
@@ -104,13 +109,13 @@ TEST_F(InterventionTest, addEdgeProbability){
 	ASSERT_EQ(2,prob.getColCount());	
 	ASSERT_EQ(3,prob.getRowCount());
 	i.createBackupOfNetworkStructure();
-	i.addEdge("SAT","Letter");
+	i.addEdge(3,4);
 	c.trainNetwork();
 	Matrix<float> probAdd = letter.getProbabilityMatrix();
 	ASSERT_EQ(2,probAdd.getColCount());	
 	ASSERT_EQ(6,probAdd.getRowCount());
 	i.loadBackupOfNetworkStructure();
-	i.removeEdge("SAT","Letter");
+	i.removeEdge(3,4);
 	c.trainNetwork();
 	Matrix<float> probNew = letter.getProbabilityMatrix();
 	ASSERT_EQ(2,probNew.getColCount());	

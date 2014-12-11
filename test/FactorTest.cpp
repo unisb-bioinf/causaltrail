@@ -75,8 +75,18 @@ TEST_F(FactorTest, getIndex){
 	ASSERT_EQ(1, f.getIndex(2));
 	ASSERT_EQ(2, f.getIndex(1));
 	ASSERT_EQ(3, f.getIndex(0));
-	ASSERT_THROW(f.getIndex(4), std::invalid_argument);
-	
+	ASSERT_THROW(f.getIndex(4), std::invalid_argument);	
+}
+
+TEST_F(FactorTest, getProbabilityVector){
+	Network n = c.getNetwork();
+	std::vector<int> emptyValues (5,-1);
+	Factor fGrade (n.getNode("Grade"), emptyValues);
+	ASSERT_NEAR(1.0f,fGrade.getProbability(emptyValues),0.001);
+	Factor fIntelligence(n.getNode("Intelligence"), emptyValues);
+	emptyValues[2]=0;
+	ASSERT_NEAR(0.7f,fIntelligence.getProbability(emptyValues), 0.001);
+
 }
 
 TEST_F(FactorTest, product){

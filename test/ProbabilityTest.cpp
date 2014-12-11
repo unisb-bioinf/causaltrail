@@ -21,6 +21,12 @@ class ProbabilityTest : public ::testing::Test{
 	NetworkController c;
 };
 
+TEST_F(ProbabilityTest, Constructor){
+	Network n = c.getNetwork();
+	ProbabilityHandler p (n);
+	SUCCEED();
+}
+
 TEST_F(ProbabilityTest, TotalProbability){
 	Network n = c.getNetwork();
 	ProbabilityHandler p (n);
@@ -45,6 +51,32 @@ TEST_F(ProbabilityTest, TotalProbability){
 	ASSERT_NEAR(0.497664f,p.computeTotalProbability(4,0),0.001);
 	ASSERT_NEAR(0.502336f,p.computeTotalProbability(4,1),0.001);	
 }
+
+TEST_F(ProbabilityTest, TotalProbabilityNormalized){
+	Network n = c.getNetwork();
+	ProbabilityHandler p (n);
+	//Tests for Grade
+	ASSERT_NEAR(0.362f,p.computeTotalProbabilityNormalized(1,0),0.001);
+	ASSERT_NEAR(0.2884f,p.computeTotalProbabilityNormalized(1,1),0.001);
+	ASSERT_NEAR(0.3496f,p.computeTotalProbabilityNormalized(1,2),0.001);
+
+	//Tests for Intelligence
+	ASSERT_NEAR(0.7f,p.computeTotalProbabilityNormalized(2,0),0.001);
+	ASSERT_NEAR(0.3f,p.computeTotalProbabilityNormalized(2,1),0.001);	
+
+	//Tests for Difficulty
+	ASSERT_NEAR(0.6f,p.computeTotalProbabilityNormalized(0,0),0.001);
+	ASSERT_NEAR(0.4f,p.computeTotalProbabilityNormalized(0,1),0.001);	
+
+	//Tests for SAT
+	ASSERT_NEAR(0.725f,p.computeTotalProbabilityNormalized(3,0),0.001);
+	ASSERT_NEAR(0.275f,p.computeTotalProbabilityNormalized(3,1),0.001);	
+
+	//Tests for Letter
+	ASSERT_NEAR(0.497664f,p.computeTotalProbabilityNormalized(4,0),0.001);
+	ASSERT_NEAR(0.502336f,p.computeTotalProbabilityNormalized(4,1),0.001);	
+}
+	
 
 TEST_F(ProbabilityTest, JointProbability){
 	Network n = c.getNetwork();
@@ -109,6 +141,15 @@ TEST_F(ProbabilityTest, ConditionalProbability){
 	std::vector<unsigned int> v3d {3};
 	//Test for Difficulty given SAT
 	ASSERT_NEAR(0.6f, p.computeConditionalProbability(v3, v3d, mn3, md3),0.001);
+
+	std::vector<int> mn4(5,-1);
+	mn4[3]=0;
+	std::vector<unsigned int> v4 {3};
+	std::vector<int> md4(5,-1);
+	md4[0]=0;
+	std::vector<unsigned int> v4d {0};
+	//Test for Difficulty given Grade
+	ASSERT_NEAR(0.725f, p.computeConditionalProbability(v4, v4d, mn4, md4),0.001);
 }
 
 
@@ -116,7 +157,7 @@ TEST_F(ProbabilityTest, maxSearch){
 	Network n = c.getNetwork();
 	ProbabilityHandler p (n);
 	std::vector<unsigned int> emptyNodeIDs {};
-	std::vector<int> emptyNodeValues {};
+	std::vector<int> emptyNodeValues (5,-1);
 	//Tests for grade
 	std::pair<float,std::vector<std::string>> result1 = p.maxSearch({1},emptyNodeIDs, emptyNodeValues);
 	ASSERT_NEAR(0.362f,result1.first,0.001);
@@ -131,5 +172,22 @@ TEST_F(ProbabilityTest, maxSearch){
 	std::pair<float,std::vector<std::string>> result3 = p.maxSearch({2}, emptyNodeIDs, emptyNodeValues);
 	ASSERT_NEAR(0.7f,result3.first,0.001);
 	ASSERT_TRUE("i0"==result3.second[0]);
+
+	//Test for Grade given Intelligence
+	emptyNodeIDs.push_back(2);
+	emptyNodeValues[2]=1;
+	std::pair<float,std::vector<std::string>> result4 = p.maxSearch({1}, emptyNodeIDs, emptyNodeValues);
+	ASSERT_NEAR(0.74f,result4.first,0.001);
+	ASSERT_TRUE("g1"==result4.second[0]);
 }
 
+TEST_F(ProbabilityTest, computeLikelihodOfTheData){
+	Network n = c.getNetwork();
+	ProbabilityHandler p (n);
+	Matrix<int> testObservations(2,5,0);
+	ASSERT_NEAR(-3.7322,p.calculateLikelihoodOfTheData(testObservations),0.001);
+
+	Matrix<int> testObservations2(0,0,0);
+	ASSERT_THROW(p.calculateLikelihoodOfTheData(testObservations2),std::invalid_argument);
+
+}

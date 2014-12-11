@@ -3,6 +3,7 @@
 
 #include "Network.h"
 #include "Factor.h"
+#include "gtest/gtest_prod.h"
 #include <boost/algorithm/string.hpp>
 
 class ProbabilityHandler

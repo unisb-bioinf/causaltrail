@@ -139,22 +139,27 @@ int ProbabilityHandler::getParentValues(const Node& n, const Matrix<int>& obs,
 float ProbabilityHandler::calculateLikelihoodOfTheData(const Matrix<int>& obs)
     const
 {
-	float prob = 0.0f;
-	for(unsigned int sample = 0; sample < obs.getColCount(); sample++) {
+	if (obs.getColCount() > 0){
+		float prob = 0.0f;
+		for(unsigned int sample = 0; sample < obs.getColCount(); sample++) {
+	
+			if(!obs.containsElement(0, sample, -1)) {
+				float intermediateResult = 1.0f;
+	
+				for(const Node& n : network_.getNodes()) {
+					int row = getParentValues(n, obs, sample);
+					intermediateResult *=
+					    n.getProbability(obs(sample, n.getObservationRow()), row);
+				}
 
-		if(!obs.containsElement(0, sample, -1)) {
-			float intermediateResult = 1.0f;
-
-			for(const Node& n : network_.getNodes()) {
-				int row = getParentValues(n, obs, sample);
-				intermediateResult *=
-				    n.getProbability(obs(sample, n.getObservationRow()), row);
+				prob += intermediateResult;
 			}
-
-			prob += intermediateResult;
 		}
+		return log(prob);
 	}
-	return log(prob);
+	else {
+		throw std::invalid_argument("No samples provided");
+	}
 }
 
 std::vector<Factor> ProbabilityHandler::createFactorList(
@@ -223,8 +228,6 @@ void ProbabilityHandler::eliminate(const unsigned int id,
 			tempFactor = tempFactor.product(factorlist[neededFactors[i]],network_,values);
 		}
 	}
-	std::cout<<"Product"<<std::endl;
-	std::cout<<tempFactor<<std::endl;
 	if ((nonInterventionValues.empty()) or (values[id] != -1) or ((values[id] == -1) and (nonInterventionValues[id] == -1))){
 		tempFactor = tempFactor.sumOut(id, network_, values);
 	}
@@ -238,8 +241,6 @@ void ProbabilityHandler::eliminate(const unsigned int id,
 			}
 		}
 	}
-	std::cout<<"SumOut"<<std::endl;
-	std::cout<<tempFactor<<std::endl;
 	factorlist.push_back(tempFactor);
 }
 
@@ -258,7 +259,6 @@ float ProbabilityHandler::getResult(std::vector<Factor>& factorlist, const std::
 	for(auto& f : factorlist) {
 		f.normalize();
 	}
-	std::cout<<factorlist[0]<<std::endl;
 	float prob = 1.0f;
 	for (auto& f: factorlist){
 		prob *= f.getProbability(values);
@@ -293,10 +293,6 @@ float ProbabilityHandler::computeConditionalProbability(
 	auto ordering = getOrdering(factorisation, nodesCondition, nodesNonIntervention);
 	for (auto& id : ordering) {
 		eliminate(id, factorlist, valuesCondition, valuesNonIntervention);
-	}
-	std::cout<<"Final List"<<std::endl;
-	for (auto& f : factorlist){
-		std::cout<<f<<std::endl;
 	}
 	return getResult(factorlist,valuesNonIntervention);
 }
