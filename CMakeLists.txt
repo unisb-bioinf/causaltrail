@@ -53,6 +53,10 @@ add_executable(runProbabilityTests test/ProbabilityTest.cpp)
 target_link_libraries(runProbabilityTests ${Boost_LIBRARIES} CausalTrailLib gtest gtest_main)
 add_test(NAME runProbabilityTests COMMAND runProbabilityTests)
 
+add_executable(runQueryExecuterTests test/QueryExecuterTest.cpp)
+target_link_libraries(runQueryExecuterTests ${Boost_LIBRARIES} CausalTrailLib gtest gtest_main)
+add_test(NAME runQueryExecuterTests COMMAND runQueryExecuterTests)
+
 add_executable(runParserTests test/ParserTest.cpp)
 target_link_libraries(runParserTests ${Boost_LIBRARIES} CausalTrailLib gtest gtest_main)
 add_test(NAME runParserTests COMMAND runParserTests)

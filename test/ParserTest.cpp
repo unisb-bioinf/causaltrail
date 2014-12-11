@@ -246,7 +246,6 @@ TEST_F(ParserTest, ParserCheck37){
 	std::string query("? Grade = g2");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
-	qe.execute();
 	ASSERT_NEAR(0.2884f,qe.execute().first,0.001);
 }
 
@@ -254,7 +253,6 @@ TEST_F(ParserTest, ParserCheck38){
 	std::string query("? Grade = g3");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
-	qe.execute();
 	ASSERT_NEAR(0.3496f, qe.execute().first, 0.001);
 }
 
@@ -262,7 +260,6 @@ TEST_F(ParserTest, ParserCheck39){
 	std::string query("? Intelligence = i0");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
-	qe.execute();
 	ASSERT_NEAR(0.7f, qe.execute().first, 0.001);
 }
 
@@ -270,7 +267,6 @@ TEST_F(ParserTest, ParserCheck40){
 	std::string query("? Intelligence = i1");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
-	qe.execute();
 	ASSERT_NEAR(0.3f, qe.execute().first, 0.001);
 }
 
@@ -278,7 +274,6 @@ TEST_F(ParserTest, ParserCheck41){
 	std::string query("? Difficulty = d0");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
-	qe.execute();
 	ASSERT_NEAR(0.6f, qe.execute().first, 0.001);
 }
 
@@ -286,7 +281,6 @@ TEST_F(ParserTest, ParserCheck42){
 	std::string query("? Difficulty = d1");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
-	qe.execute();
 	ASSERT_NEAR(0.4f, qe.execute().first, 0.001);
 }
 
@@ -294,7 +288,6 @@ TEST_F(ParserTest, ParserCheck43){
 	std::string query("? SAT = s0");
 	Parser p (query,c);
 	QueryExecuter qe = p.parseQuery();
-	qe.execute();
 	ASSERT_NEAR(0.725f, qe.execute().first, 0.001);
 }
 
@@ -379,7 +372,6 @@ TEST_F(ParserTest, ParserCheck54){
 	std::string query("? argmax ( Intelligence )");
 	Parser p (query, c);
 	QueryExecuter qe = p.parseQuery();
-	qe.execute();
 	ASSERT_NEAR(0.7f, qe.execute().first, 0.001);	
 }
 
@@ -387,6 +379,5 @@ TEST_F(ParserTest, ParserCheck56){
 	std::string query("? argmax ( Grade ) | Intelligence = i1");
 	Parser p (query, c);
 	QueryExecuter qe = p.parseQuery();
-	qe.execute();
 	ASSERT_NEAR(0.74f, qe.execute().first, 0.001);	
 }
