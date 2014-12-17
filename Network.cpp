@@ -25,7 +25,7 @@ struct Comp {
 
 
 
-const unsigned int Network::getIndex(unsigned int id) const
+unsigned int Network::getIndex(unsigned int id) const
 {
 	auto res = IDToIndex_.find(id);
 	if(res == IDToIndex_.end()) {
@@ -35,7 +35,7 @@ const unsigned int Network::getIndex(unsigned int id) const
 }
 
 
-const unsigned int Network::getIndex(const std::string& name) const
+unsigned int Network::getIndex(const std::string& name) const
 {
 	auto res = NameToIndex_.find(name);
 	if(res == NameToIndex_.end()) {
@@ -354,7 +354,7 @@ void Network::loadBackup()
 	AdjacencyMatrixBackup_ = Matrix<unsigned int>(0, 0, 0);
 }
 
-const int Network::computeFactor(const Node& n, unsigned int parentID) const
+int Network::computeFactor(const Node& n, unsigned int parentID) const
 {
 	bool flag = false;
 	int factor = 1;
@@ -369,7 +369,7 @@ const int Network::computeFactor(const Node& n, unsigned int parentID) const
 	return factor;
 }
 
-const int Network::reverseFactor(const Node& n, unsigned int parentID, int row)
+int Network::reverseFactor(const Node& n, unsigned int parentID, int row)
     const
 {
 	int value = row;
@@ -384,7 +384,7 @@ const int Network::reverseFactor(const Node& n, unsigned int parentID, int row)
 	return -1;
 }
 
-const bool Network::hasNode(const std::string& name) const
+bool Network::hasNode(const std::string& name) const
 {
 	auto res = NameToIndex_.find(name);
 	if(res == NameToIndex_.end()) {
@@ -393,7 +393,7 @@ const bool Network::hasNode(const std::string& name) const
 	return true;
 }
 
-const bool Network::hasValue(const std::string& nodeName,
+bool Network::hasValue(const std::string& nodeName,
                              const std::string& valueName) const
 {
 	const std::vector<std::string>& valueNames =
@@ -422,7 +422,7 @@ unsigned int Network::getNewID(unsigned int originalIdentifier)
 	throw std::invalid_argument("Identifier not found");
 }
 
-const unsigned int Network::size() const { return getNodes().size(); }
+unsigned int Network::size() const { return getNodes().size(); }
 
 void Network::saveParameters() const{
 	std::chrono::time_point<std::chrono::system_clock> time = std::chrono::system_clock::now();

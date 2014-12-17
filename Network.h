@@ -141,7 +141,7 @@ class Network{
 		 *
 		 * Checks whether a node is contained in a network or not
 		 */
-		const bool hasNode(const std::string& name) const;
+		bool hasNode(const std::string& name) const;
 
 		/**hasValue 
 		 *
@@ -152,7 +152,7 @@ class Network{
 		 *
 		 * Checks whether a given node contains a certain value
 		 */
-		const bool hasValue(const std::string& name, const std::string& value) const ;
+		bool hasValue(const std::string& name, const std::string& value) const ;
 
 		/**getNodes 
 		 *
@@ -194,7 +194,7 @@ class Network{
 		 *
 		 * Returns the position of the given node in the nodelist of the network object
 		 */
-		const unsigned int getIndex(unsigned int id) const ;
+		unsigned int getIndex(unsigned int id) const ;
 
 		/**getIndex 
 		 *
@@ -204,7 +204,7 @@ class Network{
 		 *
 		 * Returns the position of the given node in the nodelist of the network object
 		 */
-		const unsigned int getIndex(const std::string& name) const;
+		unsigned int getIndex(const std::string& name) const;
 
 		/**operator<< 
 		 *
@@ -270,7 +270,7 @@ class Network{
 		 * Calculates the factor to be used for calculating a dense integer
 		 * representation of the node values. 
 		 */
-		const int computeFactor(const Node& n, unsigned int parentID) const ;
+		int computeFactor(const Node& n, unsigned int parentID) const ;
 
 		/**reverseFactor 
 		 *
@@ -283,14 +283,14 @@ class Network{
 		 * Calculates the original value of a node given the dense integer
 		 * representation used for internal storage
 		 */
-		const int reverseFactor(const Node& n, unsigned int parentID, int row) const;
+		int reverseFactor(const Node& n, unsigned int parentID, int row) const;
 
 		/**size 
 		 *
 		 * @return Returns the number of nodes in network
 		 *
 		 */
-		const unsigned int size() const;
+		unsigned int size() const;
 
 		/**saveParameters 
 		 *

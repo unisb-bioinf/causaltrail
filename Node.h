@@ -26,7 +26,7 @@ class Node {
 	 *
  	 * Retrieves the desired probability out of the probability matrix
 	 */
-	const float getProbability(unsigned int nv, unsigned int pv) const;
+	float getProbability(unsigned int nv, unsigned int pv) const;
 	
 	/**getProbability
 	 *
@@ -37,7 +37,7 @@ class Node {
 	 *
  	 * Retrieves the desired probability out of the probability matrix
 	 */
-	const float getProbability(const std::string& nv, const std::string& pv) const;	
+	float getProbability(const std::string& nv, const std::string& pv) const;	
 	
 	/**setProbability
 	 *
@@ -68,7 +68,7 @@ class Node {
 	 *
  	 * Returns the number of samples in the data, that fits to the given values
 	 */
-	const unsigned int getObservations(unsigned int nv, unsigned int pv) const ;
+	unsigned int getObservations(unsigned int nv, unsigned int pv) const ;
 	
 	/**getObservations
 	 *
@@ -79,7 +79,7 @@ class Node {
 	 *
  	 * Returns the number of samples in the data, that fits to the given values
 	 */
-	const unsigned int getObservations(const std::string& nv, const std::string& pv) const ;	
+	unsigned int getObservations(const std::string& nv, const std::string& pv) const ;	
 	
 	/**setObservations
 	 *
@@ -185,7 +185,7 @@ class Node {
 	 *
  	 * Returns the index of the given value in the CPT
 	 */
-	const int getIndex(const std::string& value) const;
+	int getIndex(const std::string& value) const;
 	
 	/**hasValue
 	 *
@@ -209,7 +209,7 @@ class Node {
 	 * @return The number of parents
 	 *
 	 */
-	const unsigned int getNumberOfParents() const;
+	unsigned int getNumberOfParents() const;
 	
 	/**setParents
 	 *
@@ -267,21 +267,21 @@ class Node {
 	 * @return The number of different value combinatons with respect to the parents
 	 *
 	 */
-	const unsigned int getNumberOfParentValues() const;
+	unsigned int getNumberOfParentValues() const;
 
 	/**getNumberOfUnqiueValues
 	 *
 	 * @return The number of unique values occuring in this node
 	 *
 	 */
-	const unsigned int getNumberOfUniqueValues() const;
+	unsigned int getNumberOfUniqueValues() const;
 
 	/**getNumberOfUnqiueValuesExcludingNA
 	 *
 	 * @return The number of unique values occuring in this node excluding NAs
 	 *
 	 */
-	const unsigned int getNumberOfUniqueValuesExcludingNA() const;
+	unsigned int getNumberOfUniqueValuesExcludingNA() const;
 
 	/**setObservationRow
 	 *
@@ -297,7 +297,7 @@ class Node {
 	 * @return row containing the observations
 	 *
 	 */
-	const int getObservationRow() const;
+	int getObservationRow() const;
 	
 	/**setParentCombinations
 	 *
@@ -312,7 +312,7 @@ class Node {
 	 * @return
 	 *
 	 */
-	const int getParentCombinations() const;
+	int getParentCombinations() const;
 	
 	/**setValueNames
 	 *

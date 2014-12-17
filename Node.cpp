@@ -12,7 +12,7 @@ Node::Node(unsigned int index, unsigned int id, const std::string& name)
 {
 }
 
-const float Node::getProbability(unsigned int nv, unsigned int pv) const
+float Node::getProbability(unsigned int nv, unsigned int pv) const
 {
 	return ProbabilityMatrix_(nv, pv);
 }
@@ -22,7 +22,7 @@ void Node::setProbability(float value, unsigned int nv, unsigned int pv)
 	ProbabilityMatrix_.setData(value, nv, pv);
 }
 
-const float Node::getProbability(const std::string& nv, const std::string& pv)
+float Node::getProbability(const std::string& nv, const std::string& pv)
     const
 {
 	return ProbabilityMatrix_.getValueByNames(nv, pv);
@@ -35,7 +35,7 @@ void Node::setProbability(float value, const std::string& nv,
 	                           ProbabilityMatrix_.findRow(pv));
 }
 
-const unsigned int Node::getObservations(unsigned int nv, unsigned int pv) const
+unsigned int Node::getObservations(unsigned int nv, unsigned int pv) const
 {
 	return ObservationMatrix_(nv, pv);
 }
@@ -45,7 +45,7 @@ void Node::setObservations(int value, unsigned int nv, unsigned int pv)
 	ObservationMatrix_.setData(value, nv, pv);
 }
 
-const unsigned int Node::getObservations(const std::string& nv,
+unsigned int Node::getObservations(const std::string& nv,
                                          const std::string& pv) const
 {
 	return ObservationMatrix_.getValueByNames(nv, pv);
@@ -101,7 +101,7 @@ void Node::loadBackup() { ObservationMatrix_ = ObservationBackup_; }
 
 const std::vector<unsigned int>& Node::getParents() const { return Parents_; }
 
-const unsigned int Node::getNumberOfParents() const {
+unsigned int Node::getNumberOfParents() const {
 	return Parents_.size();
 }
 
@@ -133,31 +133,31 @@ const std::vector<int>& Node::getUniqueValuesExcludingNA() const
 	return uniqueValuesExcludingNA_;
 }
 
-const unsigned int Node::getNumberOfUniqueValues() const
+unsigned int Node::getNumberOfUniqueValues() const
 {
 	return uniqueValues_.size();
 }
 
-const unsigned int Node::getNumberOfUniqueValuesExcludingNA() const
+unsigned int Node::getNumberOfUniqueValuesExcludingNA() const
 {
 	return uniqueValuesExcludingNA_.size();
 }
 
-const unsigned int Node::getNumberOfParentValues() const
+unsigned int Node::getNumberOfParentValues() const
 {
 	return parentValueNames_.size();
 }
 
 void Node::setObservationRow(int row) { observationRow_ = row; }
 
-const int Node::getObservationRow() const { return observationRow_; }
+int Node::getObservationRow() const { return observationRow_; }
 
 void Node::setParentCombinations(int combinations)
 {
 	parentCombinations_ = combinations;
 }
 
-const int Node::getParentCombinations() const { return parentCombinations_; }
+int Node::getParentCombinations() const { return parentCombinations_; }
 
 void Node::setValueNames(const std::vector<std::string>& valueNames)
 {
@@ -255,7 +255,7 @@ void Node::setProbabilityTo1(int value)
 	}
 }
 
-const int Node::getIndex(const std::string& value) const
+int Node::getIndex(const std::string& value) const
 {
 	return ProbabilityMatrix_.findCol(value);
 }

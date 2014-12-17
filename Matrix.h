@@ -148,7 +148,7 @@ template <typename T> class Matrix
 	 *
 	 * This function returns the number of rows of the matrix
 	 */
-	const unsigned int getRowCount() const;
+	unsigned int getRowCount() const;
 
 	/**getColCount const
 	 *
@@ -156,7 +156,7 @@ template <typename T> class Matrix
 	 *
 	 * This function returns the number of columns
 	 */
-	const unsigned int getColCount() const;
+	unsigned int getColCount() const;
 
 	/**getValueByNames
   	 *
@@ -247,7 +247,7 @@ template <typename T> class Matrix
 	 *
 	 * This function returns the index of the row, which matches the given row name
 	 */
-	const int findRow(const std::string& element) const;
+	int findRow(const std::string& element) const;
 
 	/**findCol const
 	 *
@@ -258,7 +258,7 @@ template <typename T> class Matrix
 	 *
 	 * This function returns the index of the col, which matches the given col name
 	 */
-	const int findCol(const std::string& element) const;
+	int findCol(const std::string& element) const;
 
 	/**calculateRowSum
 	 *
@@ -280,7 +280,7 @@ template <typename T> class Matrix
 	 * If a matrix contains numerical values, this method computes the sum of
 	 * those values that are assigned to the specified row
 	 */
-	const float calculateRowSum(unsigned int row) const;
+	float calculateRowSum(unsigned int row) const;
 
 	/**calculateColSum
 	 *
@@ -301,7 +301,7 @@ template <typename T> class Matrix
 	 * If a matrix contains numerical values, this method computes the sum of
 	 * those values that are assigned to the specified column
 	 */
-	const float calculateColSum(unsigned int col) const;
+	float calculateColSum(unsigned int col) const;
 
 	/**getUniqueRowValues
 	 *
@@ -522,7 +522,7 @@ template <typename T> class Matrix
 	 * 
 	 * Returns true if NA is contained in a column of the matrix
      */
-	const bool hasNACol() const;
+	bool hasNACol() const;
 
 	/**hasNARow
 	 *
@@ -530,7 +530,7 @@ template <typename T> class Matrix
 	 *
 	 * Returns true if NA is contained in a column of the row
 	 */
-	const bool hasNARow() const;
+	bool hasNARow() const;
 
 	/**clear
 	 *
@@ -691,12 +691,12 @@ template <typename T> unsigned int Matrix<T>::getColCount()
 	return colCount_;
 }
 
-template <typename T> const unsigned int Matrix<T>::getRowCount() const
+template <typename T> unsigned int Matrix<T>::getRowCount() const
 {
 	return rowCount_;
 }
 
-template <typename T> const unsigned int Matrix<T>::getColCount() const
+template <typename T> unsigned int Matrix<T>::getColCount() const
 {
 	return colCount_;
 }
@@ -742,7 +742,7 @@ template <typename T> int Matrix<T>::findCol(const std::string& element)
 }
 
 template <typename T>
-const int Matrix<T>::findRow(const std::string& element) const
+int Matrix<T>::findRow(const std::string& element) const
 {
 	auto res = rowNamesToIndex_.find(element);
 	if(res == rowNamesToIndex_.end()) {
@@ -752,7 +752,7 @@ const int Matrix<T>::findRow(const std::string& element) const
 }
 
 template <typename T>
-const int Matrix<T>::findCol(const std::string& element) const
+int Matrix<T>::findCol(const std::string& element) const
 {
 	auto res = colNamesToIndex_.find(element);
 	if(res == colNamesToIndex_.end()) {
@@ -1077,7 +1077,7 @@ template <typename T> float Matrix<T>::calculateColSum(unsigned int col)
 }
 
 template <typename T>
-const float Matrix<T>::calculateRowSum(unsigned int row) const
+float Matrix<T>::calculateRowSum(unsigned int row) const
 {
 	float sum = 0;
 	if (std::is_arithmetic<T>::value){
@@ -1089,7 +1089,7 @@ const float Matrix<T>::calculateRowSum(unsigned int row) const
 }
 
 template <typename T>
-const float Matrix<T>::calculateColSum(unsigned int col) const
+float Matrix<T>::calculateColSum(unsigned int col) const
 {
 	float sum = 0;
 	if (std::is_arithmetic<T>::value){
@@ -1116,7 +1116,7 @@ template <typename T> bool Matrix<T>::hasNARow()
 	return true;
 }
 
-template <typename T> const bool Matrix<T>::hasNACol() const
+template <typename T> bool Matrix<T>::hasNACol() const
 {
 	if((findCol("NA") == -1)) {
 		return false;
@@ -1124,7 +1124,7 @@ template <typename T> const bool Matrix<T>::hasNACol() const
 	return true;
 }
 
-template <typename T> const bool Matrix<T>::hasNARow() const
+template <typename T> bool Matrix<T>::hasNARow() const
 {
 	if((findRow("NA") == -1)) {
 		return false;
