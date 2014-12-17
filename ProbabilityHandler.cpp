@@ -352,9 +352,9 @@ ProbabilityHandler::maxSearch(const std::vector<unsigned int>& queryNodes,
 	}
 	std::vector<std::string> resultNames;
 
-	for(unsigned int index = 0; index < queryNodes.size(); index++) {
-		int value = combinations[maxIndex][index];
-		const Node& node = network_.getNode(queryNodes[index]);
+	for(auto& id : queryNodes) {
+		int value = combinations[maxIndex][id];
+		const Node& node = network_.getNode(id);
 		resultNames.push_back(node.getValueNamesProb()[value]);
 	}
 	return std::make_pair(maxprob, resultNames);

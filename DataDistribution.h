@@ -1,4 +1,4 @@
-#ifndef DATADISTRIBUTION_H 
+#ifndef DATADISTRIBUTION_H
 #define DATADISTRIBUTION_H
 
 #include"Network.h"

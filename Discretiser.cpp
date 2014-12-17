@@ -93,7 +93,7 @@ void Discretiser::discretise(const std::string& controlFile){
 		if (row > originalObservations_.getRowCount()){
 			throw std::invalid_argument("Row does not exist");
 		}
-		if ((method < 0) or (method > 9))
+		if (method > 9)
 		{
 			throw std::invalid_argument("Method not known");
 		}
