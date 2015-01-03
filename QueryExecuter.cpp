@@ -38,28 +38,36 @@ void QueryExecuter::adaptNodeIdentifiers(){
 	auto shift = networkController_.getNetwork().getHypoStart();
 	for (unsigned int i = 0; i< nonInterventionNodeID_.size(); i++){
 		auto id = nonInterventionNodeID_[i];
+		if (not networkController_.getNetwork().getNode(id).getParents().empty()){
 		nonInterventionNodeID_[i]=networkController_.getNetwork().getNewID(id+shift);	
 		nonInterventionValues_[networkController_.getNetwork().getNewID(id    +shift)]=nonInterventionValues_[id];
 		nonInterventionValues_[id]=-1;
 	}
+	else if (conditionValues_[id] != -1){
+		networkController_.getNetwork().removeHypoNodes();
+		throw std::invalid_argument("It is not possible to infer and condition on exogenous variables simultaneously!");
+		}
+}
 	for (unsigned int j = 0; j< doInterventionNodeID_.size(); j++){
 		auto id = doInterventionNodeID_[j];
+		if (not networkController_.getNetwork().getNode(id).getParents().empty()){
 		doInterventionNodeID_[j] = networkController_.getNetwork().getNewID(id+shift);
 		doInterventionValues_[networkController_.getNetwork().getNewID(id+shift)]=doInterventionValues_[id];
 		doInterventionValues_[id] = -1;
 		}
+	}
 }
 
 std::pair<float,std::vector<std::string>> QueryExecuter::execute(){
 	std::pair<float,std::vector<std::string>> probability;
 	bool cf = false;
 	if (isCounterfactual()){
+		if ((not addEdgeNodeIDs_.empty()) || (not removeEdgeNodeIDs_.empty())){
+			throw std::invalid_argument("Edge additions and removals are not defined for counterfactuals");
+		}
 		networkController_.getNetwork().createTwinNetwork();
 		cf = true;
 		adaptNodeIdentifiers();
-		if (not (addEdgeNodeIDs_.empty() && removeEdgeNodeIDs_.empty())){
-			throw std::invalid_argument("Edge additions and removals are not defined for counterfactuals");
-		}
 	}
 	if (hasInterventions()){
 		executeInterventions();	

@@ -41,7 +41,7 @@ QueryExecuter Parser::parseQuery()
 				throw std::invalid_argument("In parseQuery, no Condition specified");
 			}
 		}
-		index++;
+		else throw std::invalid_argument("In parseQuery, unvalid sign "+query_[index]);
 	}
 	return qe_;
 }
@@ -193,6 +193,7 @@ void Parser::parseArgMax(unsigned int& index)
 		}
 		index++;
 	}
+	index++;
 }
 
 bool Parser::getNode(const std::string& nodeName)
