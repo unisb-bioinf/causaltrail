@@ -447,6 +447,10 @@ void Network::clearDynProgMatrices(){
 	}
 }
 
+void Network::removeHypoNodes(){
+	NodeList_.erase(NodeList_.begin()+hypostart_,NodeList_.end());
+}
+
 void Network::createTwinNetwork(){
 	std::set<int> hypoNodes;
 	
@@ -457,7 +461,7 @@ void Network::createTwinNetwork(){
 	}
 
 	unsigned int shift = NodeList_.size();
-	hypostart = shift;
+	hypostart_ = shift;
 	unsigned int index = NodeList_.size();
 	unsigned int newID = shift;
 	for (auto id : hypoNodes){
@@ -484,4 +488,8 @@ void Network::createTwinNetwork(){
 		index++;	
 		NodeList_.push_back(hypoNode);
 	}
+}
+
+unsigned int Network::getHypoStart(){
+	return hypostart_;
 }

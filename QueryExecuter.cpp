@@ -14,13 +14,62 @@ bool QueryExecuter::hasInterventions(){
 	return doInterventionNodeID_.size() != 0 || addEdgeNodeIDs_.size() != 0 || removeEdgeNodeIDs_.size() != 0;
 }
 
+bool QueryExecuter::isCounterfactual(){
+	//Non internvetion ID in Condition
+	for (auto& id : nonInterventionNodeID_){
+		if(std::find(conditionNodeID_.begin(),conditionNodeID_.end(),id) != conditionNodeID_.end()){
+			return true;
+		}
+	}
+	//Do Intervention in Condition
+	for (auto& id: doInterventionNodeID_){
+		if (std::find(conditionNodeID_.begin(),conditionNodeID_.end(),id) != conditionNodeID_.end()){
+			return true;
+		}
+	}
+	return false;
+}
+
+void QueryExecuter::adaptNodeIdentifiers(){
+	unsigned int size = networkController_.getNetwork().size();
+	nonInterventionValues_.resize(size,-1);
+	conditionValues_.resize(size,-1);
+	doInterventionValues_.resize(size,-1);	
+	auto shift = networkController_.getNetwork().getHypoStart();
+	for (unsigned int i = 0; i< nonInterventionNodeID_.size(); i++){
+		auto id = nonInterventionNodeID_[i];
+		nonInterventionNodeID_[i]=networkController_.getNetwork().getNewID(id+shift);	
+		nonInterventionValues_[networkController_.getNetwork().getNewID(id    +shift)]=nonInterventionValues_[id];
+		nonInterventionValues_[id]=-1;
+	}
+	for (unsigned int j = 0; j< doInterventionNodeID_.size(); j++){
+		auto id = doInterventionNodeID_[j];
+		doInterventionNodeID_[j] = networkController_.getNetwork().getNewID(id+shift);
+		doInterventionValues_[networkController_.getNetwork().getNewID(id+shift)]=doInterventionValues_[id];
+		doInterventionValues_[id] = -1;
+		}
+}
+
 std::pair<float,std::vector<std::string>> QueryExecuter::execute(){
+	std::pair<float,std::vector<std::string>> probability;
+	bool cf = false;
+	if (isCounterfactual()){
+		networkController_.getNetwork().createTwinNetwork();
+		cf = true;
+		adaptNodeIdentifiers();
+		if (not (addEdgeNodeIDs_.empty() && removeEdgeNodeIDs_.empty())){
+			throw std::invalid_argument("Edge additions and removals are not defined for counterfactuals");
+		}
+	}
 	if (hasInterventions()){
 		executeInterventions();	
 	}	
-	std::pair<float,std::vector<std::string>> probability = computeProbability();
+	probability = computeProbability();
 	if (hasInterventions()){
 		reverseInterventions();
+	}
+	if (cf){
+		networkController_.getNetwork().removeHypoNodes();
 	}
 	return probability;
 }

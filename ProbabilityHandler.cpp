@@ -289,18 +289,7 @@ float ProbabilityHandler::computeConditionalProbability(
 	auto allNodes = nodesNonIntervention;
 	allNodes.insert(allNodes.end(), nodesCondition.begin(), nodesCondition.end());
 	auto factorisation = createFactorisation(allNodes);
-	std::cout<<"Values non intervention"<<std::endl;
-	for (auto&v : valuesNonIntervention){
-		std::cout<<v<<std::endl;
-	}
-	std::cout<<"Values condition"<<std::endl;
-	for (auto&v : valuesCondition){
-		std::cout<<v<<std::endl;
-	}
 	auto factorlist = createFactorList(factorisation, valuesCondition);
-	for (auto&f : factorlist){
-		std::cout<<f<<std::endl;
-	}	
 	auto ordering = getOrdering(factorisation, nodesCondition, nodesNonIntervention);
 	for (auto& id : ordering) {
 		eliminate(id, factorlist, valuesCondition, valuesNonIntervention);

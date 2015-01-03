@@ -208,6 +208,7 @@ TEST_F(NetworkControllerTest, DataLikelihood){
 	n.loadNetwork(TEST_DATA_PATH("Student.na"));
 	n.loadNetwork(TEST_DATA_PATH("Student.sif"));
 	n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.txt"));
+	n.trainNetwork();
 	ASSERT_TRUE(n.getLikelihoodOfTheData() != 0.0f);
 }
 

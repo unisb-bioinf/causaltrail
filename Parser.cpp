@@ -64,6 +64,7 @@ void Parser::parseInterventions(unsigned int& index)
 {
 	bool ato=false;
 	while(terminationSymbol(index)) {
+		ato = false;
 		if(query_[index] == "do") {
 			index++;
 			parseDoIntervention(index); 
@@ -146,7 +147,7 @@ void Parser::parseDoIntervention(unsigned int& index)
 
 void Parser::parseAddEdge(unsigned int& index)
 {
-	if ((index+2) < query_.size()){
+	if ((index+1) < query_.size()){
 		if(not getNode(query_[index])){
 			throw std::invalid_argument("In parseAddEdge, invalid node name "+query_[index]);
 		}
@@ -163,7 +164,7 @@ void Parser::parseAddEdge(unsigned int& index)
 
 void Parser::parseRemoveEdge(unsigned int& index)
 {
-	if ((index+2) < query_.size()){
+	if ((index+1) < query_.size()){
 		if(not getNode(query_[index])){
 			throw std::invalid_argument("In parseRemoveEdge, invalid node name "+query_[index]);
 		}

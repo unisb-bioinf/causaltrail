@@ -311,6 +311,28 @@ class Network{
 		 */
 		void createTwinNetwork();
 
+		/**removeHypoNodes
+	 	 *
+	 	 * Removes the Hypothetical Nodes from the nodelist
+		 */
+		void removeHypoNodes();
+
+		/**getNewID 
+		 *
+		 * @param originalID, The original ID used in the network file
+		 *
+		 * @return The corresponding newID
+		 *
+		 * Given the original Node ID, the corresponding new one is retrieved
+		 * and returned
+		 */
+		unsigned int getNewID(unsigned int originalID);
+
+		/**getHypoStart
+		 *
+		 * @return Returns the value of the private variable hypostart_
+		 */
+		unsigned int getHypoStart();
 
 	private:
 		/**getParents 
@@ -378,18 +400,7 @@ class Network{
 		 */
 		void assignParents();
 
-		/**getNewID 
-		 *
-		 * @param originalID, The original ID used in the network file
-		 *
-		 * @return The corresponding newID
-		 *
-		 * Given the original Node ID, the corresponding new one is retrieved
-		 * and returned
-		 */
-		unsigned int getNewID(unsigned int originalID);
-
-
+	
 		/**readTGF 
 		 *
 		 * @param filename Name of the TGF file
@@ -434,6 +445,6 @@ class Network{
 		//Stores the nodes of the network
 		std::vector<Node> NodeList_;
 		//Stores the startindex of the hypothetical Nodes
-		unsigned int hypostart;
+		unsigned int hypostart_;
 };
 #endif

@@ -90,6 +90,19 @@ class QueryExecuter{
 
 	private:
 
+	/**isCOunterfactual
+	 *
+	 * @return true if the given query represents a counterfactual, false otherwise
+	 */
+	bool isCounterfactual();
+
+
+	/**adaptNodeIdentifiers
+	 *
+	 *Adapts the node identifiers to the hypothetical Nodes of the Twin Network
+	 */
+	void adaptNodeIdentifiers();
+
 	/**hasInterventions
 	 * 
 	 * @return true if a query contains interventions, false otherwise
