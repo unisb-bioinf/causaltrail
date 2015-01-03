@@ -30,6 +30,7 @@ void NetworkController::trainNetwork(){
 	likelihoodOfTheData_ = em.calculateLikelihoodOfTheData();
 	timeInMicroSeconds_ = em.getTimeInMicroSeconds();
 	network_.clearDynProgMatrices();
+	network_.createTwinNetwork();
 }
 
 const float& NetworkController::getLikelihoodOfTheData() const {

@@ -305,6 +305,13 @@ class Network{
 		 */
 		void clearDynProgMatrices();
 
+		/**createTwinNetwork
+		 *
+		 * Creates a TwinNetwork Representation to compute CounterFactualQueries
+		 */
+		void createTwinNetwork();
+
+
 	private:
 		/**getParents 
 		 *
@@ -426,5 +433,7 @@ class Network{
 		std::map<std::pair<int,int>, std::string> observationsMapR_;
 		//Stores the nodes of the network
 		std::vector<Node> NodeList_;
+		//Stores the startindex of the hypothetical Nodes
+		unsigned int hypostart;
 };
 #endif

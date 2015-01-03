@@ -294,3 +294,11 @@ void Node::setParentValues(std::vector<std::vector<int>>& pValues){
 const std::vector<std::vector<int>>& Node::getParentValues() const{
 	return parentValues_;
 }
+
+void Node::setName(std::string name){
+	name_ = name;
+}
+
+void Node::setID(unsigned int id){
+	id_ = id;
+}

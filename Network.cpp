@@ -446,3 +446,42 @@ void Network::clearDynProgMatrices(){
 		n.clearDynProgMatrix();
 	}
 }
+
+void Network::createTwinNetwork(){
+	std::set<int> hypoNodes;
+	
+	for (auto& n : NodeList_){
+		if (not n.getParents().empty()){
+			hypoNodes.insert(n.getID());
+		}	
+	}
+
+	unsigned int shift = NodeList_.size();
+	hypostart = shift;
+	unsigned int index = NodeList_.size();
+	unsigned int newID = shift;
+	for (auto id : hypoNodes){
+		originalIDToDense_.push_back(std::make_pair(id+shift, newID));
+		newID++;
+	}
+
+	for (auto id : hypoNodes){
+		Node hypoNode = getNode(id);
+		hypoNode.setName(hypoNode.getName()+"*");
+		hypoNode.setID(getNewID(id+shift));
+		std::vector<unsigned int> newParents;
+		for (auto& p : getNode(id).getParents()){
+			if (hypoNodes.find(p)!=hypoNodes.end()){
+				newParents.push_back(getNewID(p+shift));
+			}
+			else{
+				newParents.push_back(p);
+			}
+		}
+		hypoNode.setParents(newParents);
+		IDToIndex_[hypoNode.getID()] = index;
+		NameToIndex_[hypoNode.getName()] = index;
+		index++;	
+		NodeList_.push_back(hypoNode);
+	}
+}

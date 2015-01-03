@@ -162,7 +162,21 @@ class Node {
  	 *
 	 */
 	const std::string& getName() const;
-	
+
+	/**setName
+	 *
+	 * @param Name that should be assigned to the node
+	 * 
+	 */
+	void setName(std::string name);
+
+	/**setID
+	 *
+	 * @param id that should be assigned to the node
+	 *
+	 */
+	void setID(unsigned int id);	
+
 	/**getIndex
 	 *
 	 * @return Index of the node
