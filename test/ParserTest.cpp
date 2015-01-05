@@ -381,3 +381,32 @@ TEST_F(ParserTest, ParserCheck56){
 	QueryExecuter qe = p.parseQuery();
 	ASSERT_NEAR(0.74f, qe.execute().first, 0.001);	
 }
+
+TEST_F(ParserTest, ParserCheck57){
+	std::string query("? Intelligence = i1 | Intelligence = i0");
+	Parser p (query, c);
+	QueryExecuter qe = p.parseQuery();
+	ASSERT_THROW(qe.execute(),std::invalid_argument);
+}
+
+
+TEST_F(ParserTest, ParserCheck58){
+	std::string query("? Letter = l1 | Letter = l0 ! + SAT Letter");
+	Parser p (query, c);
+	QueryExecuter qe = p.parseQuery();
+	ASSERT_THROW(qe.execute(),std::invalid_argument);
+}
+
+TEST_F(ParserTest, ParserCheck59){
+	std::string query("? Letter = l1 | Letter = l0");
+	Parser p (query, c);
+	QueryExecuter qe = p.parseQuery();
+	ASSERT_NEAR(0.4016, qe.execute().first, 0.01);
+}
+
+TEST_F(ParserTest, ParserCheck60){
+	std::string query("? Letter = l1 ! do Grade = g1 | Letter = l0 Grade = g3");
+	Parser p (query, c);
+	QueryExecuter qe = p.parseQuery();
+	ASSERT_NEAR(0.90, qe.execute().first, 0.001);
+}
