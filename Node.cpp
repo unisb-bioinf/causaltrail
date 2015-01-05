@@ -262,7 +262,6 @@ int Node::getIndex(const std::string& value) const
 
 void Node::clearNameVectors()
 {
-	valueNamesProb_.clear();
 	uniqueValues_.clear();
 	valueNames_.clear();
 	valueNamesProb_.clear();

@@ -334,6 +334,13 @@ class Network{
 		 */
 		unsigned int getHypoStart();
 
+		/**getHypoID
+		 *
+		 * @param originalID, THe identifier of the original real world node
+		 *
+		 * @return the hypothetical node identifier
+		 */
+		unsigned int getHypoID(unsigned int originalID);
 	private:
 		/**getParents 
 		 *
@@ -444,7 +451,9 @@ class Network{
 		std::map<std::pair<int,int>, std::string> observationsMapR_;
 		//Stores the nodes of the network
 		std::vector<Node> NodeList_;
-		//Stores the startindex of the hypothetical Nodes
+		//Stores the startindex of the hypothetical nodes
 		unsigned int hypostart_;
+		//Mapes the original Node ID to the hypothetical node ID
+		std::vector<unsigned int> IDMap_;
 };
 #endif

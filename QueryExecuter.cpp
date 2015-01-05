@@ -35,12 +35,11 @@ void QueryExecuter::adaptNodeIdentifiers(){
 	nonInterventionValues_.resize(size,-1);
 	conditionValues_.resize(size,-1);
 	doInterventionValues_.resize(size,-1);	
-	auto shift = networkController_.getNetwork().getHypoStart();
 	for (unsigned int i = 0; i< nonInterventionNodeID_.size(); i++){
 		auto id = nonInterventionNodeID_[i];
 		if (not networkController_.getNetwork().getNode(id).getParents().empty()){
-		nonInterventionNodeID_[i]=networkController_.getNetwork().getNewID(id+shift);	
-		nonInterventionValues_[networkController_.getNetwork().getNewID(id    +shift)]=nonInterventionValues_[id];
+		nonInterventionNodeID_[i]=networkController_.getNetwork().getHypoID(id);	
+		nonInterventionValues_[networkController_.getNetwork().getHypoID(id)]=nonInterventionValues_[id];
 		nonInterventionValues_[id]=-1;
 	}
 	else if (conditionValues_[id] != -1){
@@ -51,8 +50,8 @@ void QueryExecuter::adaptNodeIdentifiers(){
 	for (unsigned int j = 0; j< doInterventionNodeID_.size(); j++){
 		auto id = doInterventionNodeID_[j];
 		if (not networkController_.getNetwork().getNode(id).getParents().empty()){
-		doInterventionNodeID_[j] = networkController_.getNetwork().getNewID(id+shift);
-		doInterventionValues_[networkController_.getNetwork().getNewID(id+shift)]=doInterventionValues_[id];
+		doInterventionNodeID_[j] = networkController_.getNetwork().getHypoID(id);
+		doInterventionValues_[networkController_.getNetwork().getHypoID(id)]=doInterventionValues_[id];
 		doInterventionValues_[id] = -1;
 		}
 	}

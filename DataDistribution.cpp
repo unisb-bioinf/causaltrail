@@ -23,7 +23,11 @@ void DataDistribution::assignObservationsToNodes()
 {
 	for(auto& n : network_.getNodes()) {
 		n.clearNameVectors();
-		n.setObservationRow(observations_.findRow(n.getName()));
+		int row = observations_.findRow(n.getName());
+		if (row == -1){
+			throw std::invalid_argument(n.getName()+" not contained in data");
+		}
+		n.setObservationRow(row);
 		n.setUniqueValues(
 		    observations_.getUniqueRowValues(n.getObservationRow()));
 		n.setUniqueValuesExcludingNA(
@@ -46,6 +50,7 @@ void DataDistribution::assignValueNames(Node& n)
 		if(value != -1) {
 			n.addValueNameProb(originalName);
 		}
+		std::cout<<originalName<<std::endl;
 	}
 }
 

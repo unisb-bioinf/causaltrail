@@ -453,30 +453,29 @@ void Network::removeHypoNodes(){
 
 void Network::createTwinNetwork(){
 	std::set<int> hypoNodes;
-	
 	for (auto& n : NodeList_){
 		if (not n.getParents().empty()){
 			hypoNodes.insert(n.getID());
 		}	
 	}
-
 	unsigned int shift = NodeList_.size();
 	hypostart_ = shift;
-	unsigned int index = NodeList_.size();
+	IDMap_.resize(shift,-1);
+	unsigned int index = shift;
 	unsigned int newID = shift;
 	for (auto id : hypoNodes){
-		originalIDToDense_.push_back(std::make_pair(id+shift, newID));
+		IDMap_[id]=newID;
 		newID++;
 	}
 
 	for (auto id : hypoNodes){
 		Node hypoNode = getNode(id);
 		hypoNode.setName(hypoNode.getName()+"*");
-		hypoNode.setID(getNewID(id+shift));
+		hypoNode.setID(IDMap_[id]);
 		std::vector<unsigned int> newParents;
 		for (auto& p : getNode(id).getParents()){
 			if (hypoNodes.find(p)!=hypoNodes.end()){
-				newParents.push_back(getNewID(p+shift));
+				newParents.push_back(IDMap_[p]);
 			}
 			else{
 				newParents.push_back(p);
@@ -492,4 +491,8 @@ void Network::createTwinNetwork(){
 
 unsigned int Network::getHypoStart(){
 	return hypostart_;
+}
+
+unsigned int Network::getHypoID(unsigned int originalID){
+	return IDMap_[originalID];
 }
