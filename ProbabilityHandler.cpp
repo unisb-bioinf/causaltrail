@@ -291,8 +291,16 @@ float ProbabilityHandler::computeConditionalProbability(
 	auto factorisation = createFactorisation(allNodes);
 	auto factorlist = createFactorList(factorisation, valuesCondition);
 	auto ordering = getOrdering(factorisation, nodesCondition, nodesNonIntervention);
+	for (auto& f: factorlist){
+		std::cout<<f<<std::endl;
+	}
+
 	for (auto& id : ordering) {
 		eliminate(id, factorlist, valuesCondition, valuesNonIntervention);
+		std::cout<<"New Elimination Step for ID: "<<id<<std::endl;
+		for (auto& f: factorlist){
+			std::cout<<f<<std::endl;
+		}
 	}
 	return getResult(factorlist,valuesNonIntervention);
 }

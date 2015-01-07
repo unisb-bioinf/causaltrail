@@ -119,8 +119,10 @@ void Factor::normalize(){
 		for (auto& v : probabilities_){
 			probSum+=v;
 		}
-		for (auto& v : probabilities_){
-			v = v / probSum;
+		if (probSum > 0.0f){
+			for (auto& v : probabilities_){
+				v = v / probSum;
+			}
 		}
 	}
 }
@@ -165,6 +167,8 @@ Factor Factor::product(Factor& factor, const Network& network_, const std::vecto
 			}
 		}
 	}
+	std::cout<<"Neuer Faktor"<<std::endl;
+	std::cout<<newFactor<<std::endl;
 	return newFactor;
 }
 

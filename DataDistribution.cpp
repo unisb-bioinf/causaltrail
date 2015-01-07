@@ -50,7 +50,6 @@ void DataDistribution::assignValueNames(Node& n)
 		if(value != -1) {
 			n.addValueNameProb(originalName);
 		}
-		std::cout<<originalName<<std::endl;
 	}
 }
 
