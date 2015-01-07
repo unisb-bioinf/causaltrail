@@ -192,8 +192,13 @@ float QueryExecuter::executeProbability(){
 	
 void QueryExecuter::setNonIntervention(const unsigned int nodeID, const unsigned int valueID)
 {
-	nonInterventionNodeID_.push_back(nodeID);
-	nonInterventionValues_[nodeID]=valueID;
+	if (std::find(nonInterventionNodeID_.begin(), nonInterventionNodeID_.end(), nodeID) == nonInterventionNodeID_.end()){
+		nonInterventionNodeID_.push_back(nodeID);
+		nonInterventionValues_[nodeID]=valueID;
+	}
+	else{
+		throw std::invalid_argument("Nodes can not occur multiple times in the non intervention node list");
+	}
 }
 
 void QueryExecuter::setCondition(const unsigned int nodeID, const unsigned int valueID)
