@@ -167,8 +167,6 @@ Factor Factor::product(Factor& factor, const Network& network_, const std::vecto
 			}
 		}
 	}
-	std::cout<<"Neuer Faktor"<<std::endl;
-	std::cout<<newFactor<<std::endl;
 	return newFactor;
 }
 
