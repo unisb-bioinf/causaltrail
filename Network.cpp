@@ -101,10 +101,6 @@ const std::vector<unsigned int> Network::getNodeIDs() const
 void Network::cutParents(unsigned int id)
 {
 	std::vector<unsigned int> parentIDs = getParents(id);
-	unsigned int index = getIndex(id);
-	for(auto& n : parentIDs) {
-		AdjacencyMatrix_.setData(0, getIndex(n), index);
-	}
 	getNode(id).cutParents();
 }
 
