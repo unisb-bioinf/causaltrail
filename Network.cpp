@@ -100,7 +100,6 @@ const std::vector<unsigned int> Network::getNodeIDs() const
 
 void Network::cutParents(unsigned int id)
 {
-	std::vector<unsigned int> parentIDs = getParents(id);
 	getNode(id).cutParents();
 }
 
