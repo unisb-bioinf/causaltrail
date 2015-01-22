@@ -93,6 +93,25 @@ class Network{
 		 */
 		void performDFS(unsigned int id, std::vector<unsigned int>& visitedNodes);
 
+		/**cycleCheck 
+		 *
+		 * @param sourceID Identifier of the cycle start node
+		 * @param currentID Identifier of the current node
+		 * @param result Variable holding the result whether or not there is a cycle
+		 *
+		 * Performs Depth First Search in the network starting from the given node.
+		 */
+		void cycleCheck(unsigned int sourceID, unsigned int currentID, bool& result);
+
+		/**checkCycleExistence
+		 *
+		 * @param id Identifier of the cycle start node
+		 * @return true if there is a cycle, false otherwise
+		 *
+		 * Checks if there is a cycle so that this node can be reached from itself.
+		 */
+		bool checkCycleExistence(unsigned int id);
+
 		/**getNode 
 		 *
 		 * @param id Identifier of the node of interest
@@ -136,7 +155,7 @@ class Network{
 		/**hasNode 
 		 *
 		 * @param name Name of the Node of interest
-		 *
+		  *
 		 * @return True if the query node is contained in the network, false otherwise
 		 *
 		 * Checks whether a node is contained in a network or not

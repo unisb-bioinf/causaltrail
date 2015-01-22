@@ -87,3 +87,12 @@ TEST_F(NetworkTest, edgeOperations){
 	ASSERT_TRUE(n_.getNode(2).getParents().size()==1);
 	ASSERT_TRUE(n_.getNode(2).getParents()[0]==1);
 }
+
+TEST_F(NetworkTest, cycle){
+	n_.readNetwork(TEST_DATA_PATH("test.tgf"));
+	n_.addEdge(0,2);
+	ASSERT_TRUE(n_.checkCycleExistence(1));
+
+	n_.readNetwork(TEST_DATA_PATH("test.tgf"));
+	ASSERT_FALSE(n_.checkCycleExistence(1));
+}

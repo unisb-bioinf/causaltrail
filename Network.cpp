@@ -341,6 +341,27 @@ void Network::performDFS(unsigned int id,
 	}
 }
 
+void Network::cycleCheck(unsigned int sourceID, unsigned int currentID, bool& result){
+	if (sourceID == currentID){
+		result = true;
+	}
+	else{
+		Node& n = getNode(currentID);
+		for (unsigned int pid : n.getParents()){
+			cycleCheck(sourceID,pid,result);
+		}
+	}
+}
+
+bool Network::checkCycleExistence(unsigned int id){
+	bool result = false;
+	Node& n = getNode(id);
+	for (int pid : n.getParents()){
+		cycleCheck(id,pid,result);
+	}
+	return result;
+}
+
 void Network::createBackup() { AdjacencyMatrixBackup_ = AdjacencyMatrix_; }
 
 void Network::loadBackup()

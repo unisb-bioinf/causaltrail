@@ -26,17 +26,11 @@ void Interventions::doIntervention(const std::string& NodeName, const std::strin
 }
 
 void Interventions::doIntervention(int nodeID, int value){
-	std::cout<<"Entering Intervention"<<std::endl;
 	Network& network = controller_.getNetwork();
-	std::cout<<"1"<<std::endl;
 	Node& n = network.getNode(nodeID);
-	std::cout<<"2"<<std::endl;
 	n.createBackupDoIntervention();
-	std::cout<<"3"<<std::endl;
 	network.cutParents(nodeID);
-	std::cout<<"Before"<<std::endl;
 	n.setProbabilityTo1(value);
-	std::cout<<"After"<<std::endl;n.setProbabilityTo1(value);
 }
 
 void Interventions::reverseDoIntervention(const std::string& NodeName){

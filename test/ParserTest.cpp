@@ -235,6 +235,7 @@ TEST_F(ParserTest,ParserCheck35){
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
+
 TEST_F(ParserTest, ParserCheck36){
 	std::string query("? Grade = g1");
 	Parser p (query,c);
@@ -409,4 +410,11 @@ TEST_F(ParserTest, ParserCheck60){
 	Parser p (query, c);
 	QueryExecuter qe = p.parseQuery();
 	ASSERT_NEAR(0.90, qe.execute().first, 0.001);
+}
+
+
+TEST_F(ParserTest,ParserCheck61){
+	std::string query("? Letter = l1 ! + Letter Intelligence");
+	Parser p (query,c);
+	ASSERT_THROW(p.parseQuery().execute(),std::invalid_argument);
 }

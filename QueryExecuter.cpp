@@ -35,21 +35,18 @@ void QueryExecuter::adaptNodeIdentifiers(){
 	nonInterventionValues_.resize(size,-1);
 	conditionValues_.resize(size,-1);
 	doInterventionValues_.resize(size,-1);	
-	std::cout<<"1"<<std::endl;
 	for (unsigned int i = 0; i< nonInterventionNodeID_.size(); i++){
 		auto id = nonInterventionNodeID_[i];
 		if (not networkController_.getNetwork().getNode(id).getParents().empty()){
 			nonInterventionNodeID_[i]=networkController_.getNetwork().getHypoID(id);	
 			nonInterventionValues_[networkController_.getNetwork().getHypoID(id)]=nonInterventionValues_[id];
 			nonInterventionValues_[id]=-1;
-			std::cout<<"2"<<std::endl;
 	}
 	else if (conditionValues_[id] != -1){
 		networkController_.getNetwork().removeHypoNodes();
 		throw std::invalid_argument("It is not possible to infer and condition on exogenous variables simultaneously!");
 		}
 	}
-	std::cout<<"3"<<std::endl;
 	for (unsigned int j = 0; j< doInterventionNodeID_.size(); j++){
 		auto id = doInterventionNodeID_[j];
 		if (not networkController_.getNetwork().getNode(id).getParents().empty()){
@@ -58,7 +55,6 @@ void QueryExecuter::adaptNodeIdentifiers(){
 		doInterventionValues_[id] = -1;
 		}
 	}
-	std::cout<<"4"<<std::endl;
 }
 
 std::pair<float,std::vector<std::string>> QueryExecuter::execute(){
@@ -75,7 +71,6 @@ std::pair<float,std::vector<std::string>> QueryExecuter::execute(){
 	if (hasInterventions()){
 		executeInterventions();	
 	}
-	std::cout<<"5"<<std::endl;	
 	probability = computeProbability();
 	if (hasInterventions()){
 		reverseInterventions();
@@ -116,9 +111,7 @@ void QueryExecuter::executeInterventions(){
 		networkController_.trainNetwork();	
 	}
 	if (not doInterventionValues_.empty()){
-		std::cout<<"5"<<std::endl;
 		executeDoInterventions();
-		std::cout<<"6"<<std::endl;
 	}	
 }
 
@@ -144,10 +137,7 @@ void QueryExecuter::reverseInterventions(){
 
 void QueryExecuter::executeDoInterventions(){
 	for (auto & id : doInterventionNodeID_){
-		std::cout<<"ID"<<id<<std::endl;
-		std::cout<<doInterventionValues_[id]<<std::endl;
 		interventions_.doIntervention(id, doInterventionValues_[id]);
-		std::cout<<"7"<<std::endl;
 	}
 }
 
@@ -161,6 +151,10 @@ void QueryExecuter::executeReverseDoInterventions(){
 void QueryExecuter::executeEdgeAdditions(){
 	for (auto& p : addEdgeNodeIDs_){
 		interventions_.addEdge(p.first,p.second);
+		if(networkController_.getNetwork().checkCycleExistence(p.first)){
+			interventions_.removeEdge(p.first,p.second);
+			throw std::invalid_argument("This edge induces a cycle");	
+		}
 	}
 }
 
@@ -188,7 +182,6 @@ std::pair<float, std::vector<std::string>> QueryExecuter::executeArgMax(){
 }
 
 float QueryExecuter::executeCondition(){
-	std::cout<<"Entering condition"<<std::endl;
 	return probHandler_.computeConditionalProbability(nonInterventionNodeID_, conditionNodeID_, nonInterventionValues_, conditionValues_);
 }
 
