@@ -51,3 +51,10 @@ const int& NetworkController::getTimeInMicroSeconds() const{
 void NetworkController::saveParameters() const{
 	network_.saveParameters();
 }
+
+bool NetworkController::isEdgePossible(unsigned int sourceID, unsigned int targetID){
+	network_.addEdge(sourceID,targetID);
+	bool edgePossible = network_.checkCycleExistence(sourceID);
+	network_.removeEdge(sourceID,targetID);
+	return edgePossible;
+}

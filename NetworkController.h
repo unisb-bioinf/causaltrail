@@ -81,6 +81,14 @@ class NetworkController{
 	 */
 	void saveParameters() const;
 
+	/**isEdgePossible
+	 *
+	 * @param sourceID, Identifier of the source node
+	 * @param targetID, Identifier of the target node
+	 * @return true, if the edge does not induce a cycle, false otherwise
+	 */
+	bool isEdgePossible(unsigned int sourceID, unsigned int targetID);
+	
 	private:
 
 	//Network object

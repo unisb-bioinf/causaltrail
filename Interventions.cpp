@@ -20,9 +20,7 @@ void Interventions::doIntervention(const std::string& NodeName, const std::strin
 	Node& n = network.getNode(NodeName);
 	n.createBackupDoIntervention();
 	network.cutParents(NodeName);
-	std::cout<<"Before"<<std::endl;
 	n.setProbabilityTo1(value);
-	std::cout<<"After"<<std::endl;
 }
 
 void Interventions::doIntervention(int nodeID, int value){

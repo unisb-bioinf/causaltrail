@@ -212,4 +212,12 @@ TEST_F(NetworkControllerTest, DataLikelihood){
 	ASSERT_TRUE(n.getLikelihoodOfTheData() != 0.0f);
 }
 
+TEST_F(NetworkControllerTest, EdgeAdditionPossibility){
+	NetworkController n;
+	n.loadNetwork(TEST_DATA_PATH("Student.na"));
+	n.loadNetwork(TEST_DATA_PATH("Student.sif"));
+	ASSERT_TRUE(n.isEdgePossible(2,4));
+	ASSERT_FALSE(n.isEdgePossible(4,2));	
+}
+
 
