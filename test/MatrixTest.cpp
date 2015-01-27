@@ -137,13 +137,59 @@ TEST_F(MatrixTest,countElement){
 
 TEST_F(MatrixTest,resize){
 	m_.resize(10,12,0);
-	ASSERT_EQ(1,m_(0,0));
-	ASSERT_EQ(12u,m_.getRowCount());
-	ASSERT_EQ(10u,m_.getColCount());
+	ASSERT_EQ(1, m_(0,0));
+	ASSERT_EQ(12u, m_.getRowCount());
+	ASSERT_EQ(10u, m_.getColCount());
 }
 
-TEST_F(MatrixTest, resizeOutOfBound){
-	ASSERT_THROW(m_.resize(2,2,0), std::invalid_argument);
+TEST_F(MatrixTest, resizeOnlyCols){
+	m_.resize(5, m_.getRowCount(), 23456);
+
+	ASSERT_EQ(5u, m_.getColCount());
+	ASSERT_EQ(2u, m_.getRowCount());
+
+	EXPECT_EQ(1, m_(0, 0));
+	EXPECT_EQ(2, m_(0, 1));
+	EXPECT_EQ(3, m_(1, 0));
+	EXPECT_EQ(4, m_(1, 1));
+	EXPECT_EQ(5, m_(2, 0));
+	EXPECT_EQ(6, m_(2, 1));
+
+	EXPECT_EQ(23456, m_(3, 0));
+	EXPECT_EQ(23456, m_(4, 0));
+
+	EXPECT_EQ(23456, m_(3, 1));
+	EXPECT_EQ(23456, m_(4, 1));
+}
+
+TEST_F(MatrixTest, resizeOnlyRows){
+	m_.resize(m_.getColCount(), 3, 23456);
+
+	ASSERT_EQ(3u, m_.getRowCount());
+	ASSERT_EQ(3u, m_.getColCount());
+
+	EXPECT_EQ(1, m_(0, 0));
+	EXPECT_EQ(2, m_(0, 1));
+	EXPECT_EQ(3, m_(1, 0));
+	EXPECT_EQ(4, m_(1, 1));
+	EXPECT_EQ(5, m_(2, 0));
+	EXPECT_EQ(6, m_(2, 1));
+
+	EXPECT_EQ(23456, m_(0,2));
+	EXPECT_EQ(23456, m_(1,2));
+	EXPECT_EQ(23456, m_(2,2));
+}
+
+TEST_F(MatrixTest, resizeOutOfBound) {
+	ASSERT_THROW(m_.resize(1, 1, 0), std::invalid_argument);
+}
+
+TEST_F(MatrixTest, resizeOutOfBoundRows) {
+	ASSERT_THROW(m_.resize(m_.getColCount(), 1, 0), std::invalid_argument);
+}
+
+TEST_F(MatrixTest, resizeOutOfBoundCols) {
+	ASSERT_THROW(m_.resize(2, m_.getRowCount(), 0), std::invalid_argument);
 }
 
 TEST_F(MatrixTest,readMatrix){
