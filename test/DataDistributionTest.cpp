@@ -175,40 +175,40 @@ TEST_F(DataDistributionTest, distributeObservationsTestStudentComplet){
 	db.assignObservationsToNodes();
 	db.distributeObservations();
 	Node dif = n.getNode("Difficulty");
-	ASSERT_EQ(60000,dif.getObservations(0,0));
-	ASSERT_EQ(40000,dif.getObservations(1,0));
+	ASSERT_EQ(60000u,dif.getObservations(0,0));
+	ASSERT_EQ(40000u,dif.getObservations(1,0));
 
 	Node& intel = n.getNode("Intelligence");
-	ASSERT_EQ(70000,intel.getObservations(0,0));
-	ASSERT_EQ(30000,intel.getObservations(1,0));
+	ASSERT_EQ(70000u,intel.getObservations(0,0));
+	ASSERT_EQ(30000u,intel.getObservations(1,0));
 
 	Node& grade = n.getNode("Grade");
-	ASSERT_EQ(13500,grade.getObservations(0,0));
-	ASSERT_EQ(1250,grade.getObservations(0,2));
-	ASSERT_EQ(13500,grade.getObservations(0,1));
-	ASSERT_EQ(7500,grade.getObservations(0,3));
-	ASSERT_EQ(18000,grade.getObservations(1,0));
-	ASSERT_EQ(6250,grade.getObservations(1,2));
-	ASSERT_EQ(1200,grade.getObservations(1,1));
-	ASSERT_EQ(4500,grade.getObservations(1,3));
-	ASSERT_EQ(13500,grade.getObservations(2,0));
-	ASSERT_EQ(17500,grade.getObservations(2,2));
-	ASSERT_EQ(300,grade.getObservations(2,1));
-	ASSERT_EQ(3000,grade.getObservations(2,3));
+	ASSERT_EQ(13500u,grade.getObservations(0,0));
+	ASSERT_EQ(1250u,grade.getObservations(0,2));
+	ASSERT_EQ(13500u,grade.getObservations(0,1));
+	ASSERT_EQ(7500u,grade.getObservations(0,3));
+	ASSERT_EQ(18000u,grade.getObservations(1,0));
+	ASSERT_EQ(6250u,grade.getObservations(1,2));
+	ASSERT_EQ(1200u,grade.getObservations(1,1));
+	ASSERT_EQ(4500u,grade.getObservations(1,3));
+	ASSERT_EQ(13500u,grade.getObservations(2,0));
+	ASSERT_EQ(17500u,grade.getObservations(2,2));
+	ASSERT_EQ(300u,grade.getObservations(2,1));
+	ASSERT_EQ(3000u,grade.getObservations(2,3));
 
 	Node& SAT = n.getNode("SAT");
-	ASSERT_EQ(66500,SAT.getObservations(0,0));
-	ASSERT_EQ(6000,SAT.getObservations(0,1));
-	ASSERT_EQ(3500,SAT.getObservations(1,0));
-	ASSERT_EQ(24000,SAT.getObservations(1,1));
+	ASSERT_EQ(66500u,SAT.getObservations(0,0));
+	ASSERT_EQ(6000u,SAT.getObservations(0,1));
+	ASSERT_EQ(3500u,SAT.getObservations(1,0));
+	ASSERT_EQ(24000u,SAT.getObservations(1,1));
 	
 	Node& Letter = n.getNode("Letter");
-	ASSERT_EQ(3575 , Letter.getObservations(0,0));
-	ASSERT_EQ(11980 , Letter.getObservations(0,1));
-	ASSERT_EQ(33957 , Letter.getObservations(0,2));
-	ASSERT_EQ(32175 , Letter.getObservations(1,0));
-	ASSERT_EQ(17970 , Letter.getObservations(1,1));
-	ASSERT_EQ(343 , Letter.getObservations(1,2));
+	ASSERT_EQ(3575u , Letter.getObservations(0,0));
+	ASSERT_EQ(11980u , Letter.getObservations(0,1));
+	ASSERT_EQ(33957u , Letter.getObservations(0,2));
+	ASSERT_EQ(32175u , Letter.getObservations(1,0));
+	ASSERT_EQ(17970u , Letter.getObservations(1,1));
+	ASSERT_EQ(343u , Letter.getObservations(1,2));
 }
 
 TEST_F(DataDistributionTest, distributeObservationsTestStudentInComplet){
@@ -223,54 +223,54 @@ TEST_F(DataDistributionTest, distributeObservationsTestStudentInComplet){
 	
 	db.distributeObservations();
 	Node dif = n.getNode("Difficulty");
-	ASSERT_EQ(59999,dif.getObservations(0,0));
+	ASSERT_EQ(59999u,dif.getObservations(0,0));
 	
-	ASSERT_EQ(23973,dif.getObservations(1,0));
-	ASSERT_EQ(16028,dif.getObservations(2,0));
+	ASSERT_EQ(23973u,dif.getObservations(1,0));
+	ASSERT_EQ(16028u,dif.getObservations(2,0));
 
 	Node& intel = n.getNode("Intelligence");
-	ASSERT_EQ(59999,intel.getObservations(0,0));
+	ASSERT_EQ(59999u,intel.getObservations(0,0));
 	
-	ASSERT_EQ(27829,intel.getObservations(1,0));
-	ASSERT_EQ(12172,intel.getObservations(2,0));
+	ASSERT_EQ(27829u,intel.getObservations(1,0));
+	ASSERT_EQ(12172u,intel.getObservations(2,0));
 
 	Node& grade = n.getNode("Grade");
-	ASSERT_EQ(4234,grade.getObservations(0,0));
-	ASSERT_EQ(1461,grade.getObservations(0,1));
-	ASSERT_EQ(2395,grade.getObservations(0,2));
-	ASSERT_EQ(1444,grade.getObservations(0,3));
+	ASSERT_EQ(4234u,grade.getObservations(0,0));
+	ASSERT_EQ(1461u,grade.getObservations(0,1));
+	ASSERT_EQ(2395u,grade.getObservations(0,2));
+	ASSERT_EQ(1444u,grade.getObservations(0,3));
 	
-	ASSERT_EQ(914,grade.getObservations(1,0));
-	ASSERT_EQ(94,grade.getObservations(1,2));
-	ASSERT_EQ(924,grade.getObservations(1,1));
-	ASSERT_EQ(465,grade.getObservations(1,3));
-	ASSERT_EQ(1136,grade.getObservations(2,0));
-	ASSERT_EQ(84,grade.getObservations(2,1));
-	ASSERT_EQ(399,grade.getObservations(2,2));
-	ASSERT_EQ(304,grade.getObservations(2,3));
-	ASSERT_EQ(840,grade.getObservations(3,0));
-	ASSERT_EQ(12,grade.getObservations(3,1));
-	ASSERT_EQ(1081,grade.getObservations(3,2));
-	ASSERT_EQ(205,grade.getObservations(3,3));
+	ASSERT_EQ(914u,grade.getObservations(1,0));
+	ASSERT_EQ(94u,grade.getObservations(1,2));
+	ASSERT_EQ(924u,grade.getObservations(1,1));
+	ASSERT_EQ(465u,grade.getObservations(1,3));
+	ASSERT_EQ(1136u,grade.getObservations(2,0));
+	ASSERT_EQ(84u,grade.getObservations(2,1));
+	ASSERT_EQ(399u,grade.getObservations(2,2));
+	ASSERT_EQ(304u,grade.getObservations(2,3));
+	ASSERT_EQ(840u,grade.getObservations(3,0));
+	ASSERT_EQ(12u,grade.getObservations(3,1));
+	ASSERT_EQ(1081u,grade.getObservations(3,2));
+	ASSERT_EQ(205u,grade.getObservations(3,3));
 
 	Node& SAT = n.getNode("SAT");
-	ASSERT_EQ(16641,SAT.getObservations(0,0));
-	ASSERT_EQ(7332,SAT.getObservations(0,1));
+	ASSERT_EQ(16641u,SAT.getObservations(0,0));
+	ASSERT_EQ(7332u,SAT.getObservations(0,1));
 
-	ASSERT_EQ(10601,SAT.getObservations(1,0));
-	ASSERT_EQ(1018,SAT.getObservations(1,1));
-	ASSERT_EQ(587,SAT.getObservations(2,0));
-	ASSERT_EQ(3822,SAT.getObservations(2,1));
+	ASSERT_EQ(10601u,SAT.getObservations(1,0));
+	ASSERT_EQ(1018u,SAT.getObservations(1,1));
+	ASSERT_EQ(587u,SAT.getObservations(2,0));
+	ASSERT_EQ(3822u,SAT.getObservations(2,1));
 	
 	Node& Letter = n.getNode("Letter");
-	ASSERT_EQ(8570 , Letter.getObservations(0,0));
-	ASSERT_EQ(7136 , Letter.getObservations(0,1));
-	ASSERT_EQ(8266 , Letter.getObservations(0,2));
+	ASSERT_EQ(8570u , Letter.getObservations(0,0));
+	ASSERT_EQ(7136u , Letter.getObservations(0,1));
+	ASSERT_EQ(8266u , Letter.getObservations(0,2));
 	
-	ASSERT_EQ(547 , Letter.getObservations(1,0));
-	ASSERT_EQ(1856 , Letter.getObservations(1,1));
-	ASSERT_EQ(5494 , Letter.getObservations(1,2));
-	ASSERT_EQ(5206 , Letter.getObservations(2,0));
-	ASSERT_EQ(2875 , Letter.getObservations(2,1));
-	ASSERT_EQ(51, Letter.getObservations(2,2));
+	ASSERT_EQ(547u , Letter.getObservations(1,0));
+	ASSERT_EQ(1856u , Letter.getObservations(1,1));
+	ASSERT_EQ(5494u , Letter.getObservations(1,2));
+	ASSERT_EQ(5206u , Letter.getObservations(2,0));
+	ASSERT_EQ(2875u , Letter.getObservations(2,1));
+	ASSERT_EQ(51u, Letter.getObservations(2,2));
 }

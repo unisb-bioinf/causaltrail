@@ -26,7 +26,7 @@ TEST_F(NodeTest,getName){
 }
 
 TEST_F(NodeTest,getIndex){
-	ASSERT_EQ(0, n_.getIndex());
+	ASSERT_EQ(0u, n_.getIndex());
 }
 
 TEST_F(NodeTest,getID){
@@ -49,12 +49,12 @@ TEST_F(NodeTest,setProbabilityToOne){
 }
 
 TEST_F(NodeTest,getObservations){
-	ASSERT_EQ(42,n_.getObservations(0,0));
+	ASSERT_EQ(42u, n_.getObservations(0,0));
 }
 
 TEST_F(NodeTest,setObservations){	
 	n_.setObservations(44,0,0);
-	ASSERT_EQ(44,n_.getObservations(0,0));
+	ASSERT_EQ(44u, n_.getObservations(0,0));
 }
 
 TEST_F(NodeTest,backupDoInterventions){

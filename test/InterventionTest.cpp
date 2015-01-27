@@ -29,13 +29,13 @@ TEST_F(InterventionTest, doInterventionEdges){
 	Interventions i(c);
 	Network& n = c.getNetwork();
 	Node& grade = n.getNode("Grade");
-	ASSERT_EQ(2,grade.getParents().size());
+	ASSERT_EQ(2u, grade.getParents().size());
 	i.createBackupOfNetworkStructure();
 	i.doIntervention("Grade","g3");
-	ASSERT_EQ(0,grade.getParents().size());	
+	ASSERT_EQ(0u, grade.getParents().size());
 	i.reverseDoIntervention("Grade");
 	i.loadBackupOfNetworkStructure();
-	ASSERT_EQ(2,grade.getParents().size());
+	ASSERT_EQ(2u, grade.getParents().size());
 }
 
 TEST_F(InterventionTest, doInterventionProbabilities){
@@ -88,16 +88,16 @@ TEST_F(InterventionTest, addEdgeNetworkStructure){
 	Interventions i(c);
 	Network& n = c.getNetwork();
 	Node& letter = n.getNode("Letter");
-	ASSERT_EQ(1,letter.getParents().size());
+	ASSERT_EQ(1u, letter.getParents().size());
 	ASSERT_TRUE("Grade"==n.getNode(letter.getParents()[0]).getName());
 	i.createBackupOfNetworkStructure();
 	i.addEdge("SAT","Letter");
-	ASSERT_EQ(2,letter.getParents().size());
+	ASSERT_EQ(2u, letter.getParents().size());
 	ASSERT_TRUE("Grade"==n.getNode(letter.getParents()[0]).getName());
 	ASSERT_TRUE("SAT"==n.getNode(letter.getParents()[1]).getName());
 	i.loadBackupOfNetworkStructure();
 	i.removeEdge("SAT","Letter");
-	ASSERT_EQ(1,letter.getParents().size());
+	ASSERT_EQ(1u, letter.getParents().size());
 	ASSERT_TRUE("Grade"==n.getNode(letter.getParents()[0]).getName());	
 }
 
@@ -106,20 +106,20 @@ TEST_F(InterventionTest, addEdgeProbability){
 	Network& n = c.getNetwork();
 	Node& letter = n.getNode("Letter");
 	Matrix<float> prob = letter.getProbabilityMatrix();
-	ASSERT_EQ(2,prob.getColCount());	
-	ASSERT_EQ(3,prob.getRowCount());
+	ASSERT_EQ(2u, prob.getColCount());
+	ASSERT_EQ(3u, prob.getRowCount());
 	i.createBackupOfNetworkStructure();
 	i.addEdge(3,4);
 	c.trainNetwork();
 	Matrix<float> probAdd = letter.getProbabilityMatrix();
-	ASSERT_EQ(2,probAdd.getColCount());	
-	ASSERT_EQ(6,probAdd.getRowCount());
+	ASSERT_EQ(2u, probAdd.getColCount());
+	ASSERT_EQ(6u, probAdd.getRowCount());
 	i.loadBackupOfNetworkStructure();
 	i.removeEdge(3,4);
 	c.trainNetwork();
 	Matrix<float> probNew = letter.getProbabilityMatrix();
-	ASSERT_EQ(2,probNew.getColCount());	
-	ASSERT_EQ(3,probNew.getRowCount());
+	ASSERT_EQ(2u, probNew.getColCount());
+	ASSERT_EQ(3u, probNew.getRowCount());
 	i.createBackupOfNetworkStructure();
 }
 
@@ -127,14 +127,14 @@ TEST_F(InterventionTest, removeEdgeNetworkStructure){
 	Interventions i(c);
 	Network& n = c.getNetwork();
 	Node& letter = n.getNode("Letter");
-	ASSERT_EQ(1,letter.getParents().size());
+	ASSERT_EQ(1u, letter.getParents().size());
 	ASSERT_TRUE("Grade"==n.getNode(letter.getParents()[0]).getName());
 	i.createBackupOfNetworkStructure();
 	i.removeEdge("Grade","Letter");
-	ASSERT_EQ(0,letter.getParents().size());
+	ASSERT_EQ(0u, letter.getParents().size());
 	i.loadBackupOfNetworkStructure();
 	i.addEdge("Grade","Letter");
-	ASSERT_EQ(1,letter.getParents().size());
+	ASSERT_EQ(1u, letter.getParents().size());
 	ASSERT_TRUE("Grade"==n.getNode(letter.getParents()[0]).getName());	
 
 }
@@ -144,20 +144,20 @@ TEST_F(InterventionTest, removeEdgeProbability){
 	Network& n = c.getNetwork();
 	Node& letter = n.getNode("Letter");
 	Matrix<float> prob = letter.getProbabilityMatrix();
-	ASSERT_EQ(2,prob.getColCount());	
-	ASSERT_EQ(3,prob.getRowCount());
+	ASSERT_EQ(2u, prob.getColCount());
+	ASSERT_EQ(3u, prob.getRowCount());
 	i.createBackupOfNetworkStructure();
 	i.removeEdge("Grade","Letter");
 	c.trainNetwork();
 	Matrix<float> probAdd = letter.getProbabilityMatrix();
-	ASSERT_EQ(2,probAdd.getColCount());	
-	ASSERT_EQ(1,probAdd.getRowCount());
+	ASSERT_EQ(2u, probAdd.getColCount());
+	ASSERT_EQ(1u, probAdd.getRowCount());
 	i.loadBackupOfNetworkStructure();
 	i.addEdge("Grade","Letter");
 	c.trainNetwork();
 	Matrix<float> probNew = letter.getProbabilityMatrix();
-	ASSERT_EQ(2,probNew.getColCount());	
-	ASSERT_EQ(3,probNew.getRowCount());
+	ASSERT_EQ(2u, probNew.getColCount());
+	ASSERT_EQ(3u, probNew.getRowCount());
 
 }
 

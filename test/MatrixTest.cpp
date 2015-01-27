@@ -21,11 +21,11 @@ class MatrixTest : public ::testing::Test{
 };
 
 TEST_F(MatrixTest,RowSize){
-	ASSERT_EQ(3,m_.getColCount());
+	ASSERT_EQ(3u,m_.getColCount());
 }
 
 TEST_F(MatrixTest,ColSize){
-	ASSERT_EQ(2,m_.getRowCount());
+	ASSERT_EQ(2u,m_.getRowCount());
 }
 
 TEST_F(MatrixTest,AccessOperator){
@@ -131,15 +131,15 @@ TEST_F(MatrixTest,containsElementCol){
 }
 
 TEST_F(MatrixTest,countElement){
-	ASSERT_EQ(1,m_.countElement(1,0,1));
-	ASSERT_EQ(0,m_.countElement(1,0,42));
+	ASSERT_EQ(1u,m_.countElement(1,0,1));
+	ASSERT_EQ(0u,m_.countElement(1,0,42));
 }
 
 TEST_F(MatrixTest,resize){
 	m_.resize(10,12,0);
 	ASSERT_EQ(1,m_(0,0));
-	ASSERT_EQ(12,m_.getRowCount());
-	ASSERT_EQ(10,m_.getColCount());
+	ASSERT_EQ(12u,m_.getRowCount());
+	ASSERT_EQ(10u,m_.getColCount());
 }
 
 TEST_F(MatrixTest, resizeOutOfBound){
@@ -150,8 +150,8 @@ TEST_F(MatrixTest,readMatrix){
 	m_.readMatrix(TEST_DATA_PATH("testObservations2.txt"),false,true,0);
 	ASSERT_TRUE(m_.getRowNames()[0]=="Difficulty");
 	ASSERT_TRUE(m_.getRowNames()[4]=="Letter");
-	ASSERT_EQ(5,m_.getRowCount());
-	ASSERT_EQ(8,m_.getColCount());
+	ASSERT_EQ(5u,m_.getRowCount());
+	ASSERT_EQ(8u,m_.getColCount());
 	ASSERT_EQ(5,m_(0,0));
 	ASSERT_EQ(12,m_(7,0));
 	ASSERT_EQ(3,m_(2,3));
