@@ -27,7 +27,7 @@ template <typename T> class Matrix
 	 *	
 	 * Creates a Matrix containing the data from the specified file
 	 */
-	Matrix(std::string filename, bool colNames, bool rowNames, T initialValue);
+	Matrix(const std::string& filename, bool colNames, bool rowNames, T initialValue);
 
 	/**Detailed Constructor
 	 *
@@ -40,8 +40,8 @@ template <typename T> class Matrix
 	 * Creates a Matrix with the specified name vectors. The size of the matrix is calculated 
 	 * using the number of entries in the name vectors.
 	 */
-	Matrix(std::vector<std::string> colNames = {"NA"},
-	       std::vector<std::string> rowNames = {"NA"}, T initialValue = NULL);
+	Matrix(const std::vector<std::string>& colNames = {"NA"},
+	       const std::vector<std::string>& rowNames = {"NA"}, T initialValue = NULL);
 
 	/**Detailed Constructor
 	 *
@@ -55,8 +55,8 @@ template <typename T> class Matrix
 	 * Creates a Matrix with the specified number of columns and rows
 	 */
 	Matrix(int colCount = 0, int rowCount = 0, T initialValue = NULL,
-	       std::vector<std::string> colNames = {"NA"},
-	       std::vector<std::string> rowNames = {"NA"});
+	       const std::vector<std::string>& colNames = {"NA"},
+	       const std::vector<std::string>& rowNames = {"NA"});
 
 	/**Operator()
 	 *
@@ -553,7 +553,7 @@ template <typename T> class Matrix
 };
 
 template <typename T>
-Matrix<T>::Matrix(std::string filename, bool colNames, bool rowNames,
+Matrix<T>::Matrix(const std::string& filename, bool colNames, bool rowNames,
                   T initialValue)
 {
 	colCount_ = 0;
@@ -562,8 +562,8 @@ Matrix<T>::Matrix(std::string filename, bool colNames, bool rowNames,
 }
 
 template <typename T>
-Matrix<T>::Matrix(std::vector<std::string> colNames,
-                  std::vector<std::string> rowNames, T initialValue)
+Matrix<T>::Matrix(const std::vector<std::string>& colNames,
+                  const std::vector<std::string>& rowNames, T initialValue)
     : rowCount_(rowNames.size()),
       colCount_(colNames.size()),
       data_(rowNames.size() * colNames.size(), initialValue)
@@ -574,8 +574,8 @@ Matrix<T>::Matrix(std::vector<std::string> colNames,
 
 template <typename T>
 Matrix<T>::Matrix(int colCount, int rowCount, T initialValue,
-                  std::vector<std::string> colNames,
-                  std::vector<std::string> rowNames)
+                  const std::vector<std::string>& colNames,
+                  const std::vector<std::string>& rowNames)
     : rowCount_(rowCount),
       colCount_(colCount),
       data_(rowCount * colCount, initialValue)
@@ -637,12 +637,12 @@ std::ostream& operator<<(std::ostream& os, const Matrix<T>& m)
 		os << *it << "\t";
 	os << "\n";
 	// Write Content & Row Names
-	for(int row = 0; row < m.rowCount_; row++) {
+	for(unsigned int row = 0; row < m.rowCount_; row++) {
 		if(row < m.rowNames_.size())
 			os << m.rowNames_[row] << "\t";
 		else
 			os << "\t";
-		for(int col = 0; col < m.colCount_; col++)
+		for(unsigned int col = 0; col < m.colCount_; col++)
 			os << m.data_[col + row * m.colCount_] << "\t";
 		if(row < m.rowCount_ - 1)
 			os << "\n";
@@ -765,7 +765,7 @@ template <typename T>
 std::vector<T> Matrix<T>::getUniqueRowValues(unsigned int row)
 {
 	std::set<T> tempSet;
-	for(int col = 0; col < colCount_; col++) {
+	for(unsigned int col = 0; col < colCount_; col++) {
 		tempSet.insert(data_[col + row * colCount_]);
 	}
 	return std::vector<T>(tempSet.begin(), tempSet.end());
@@ -775,7 +775,7 @@ template <typename T>
 std::vector<T> Matrix<T>::getUniqueRowValues(unsigned int row, const T& exclud)
 {
 	std::set<T> tempSet;
-	for(int col = 0; col < colCount_; col++) {
+	for(unsigned int col = 0; col < colCount_; col++) {
 		if(exclud != data_[col + row * colCount_]) {
 			tempSet.insert(data_[col + row * colCount_]);
 		}
@@ -787,7 +787,7 @@ template <typename T>
 std::vector<T> Matrix<T>::getUniqueColValues(unsigned int col)
 {
 	std::set<T> tempSet;
-	for(int row = 0; row < rowCount_; row++) {
+	for(unsigned int row = 0; row < rowCount_; row++) {
 		tempSet.insert(data_[col + row * colCount_]);
 	}
 	return std::vector<T>(tempSet.begin(), tempSet.end());
@@ -797,7 +797,7 @@ template <typename T>
 std::vector<T> Matrix<T>::getUniqueColValues(unsigned int col, const T& exclud)
 {
 	std::set<T> tempSet;
-	for(int row = 0; row < rowCount_; row++) {
+	for(unsigned int row = 0; row < rowCount_; row++) {
 		if(exclud != data_[col + row * colCount_]) {
 			tempSet.insert(data_[col + row * colCount_]);
 		}
@@ -809,7 +809,7 @@ template <typename T>
 std::vector<T> Matrix<T>::getUniqueRowValues(unsigned int row) const
 {
 	std::set<T> tempSet;
-	for(int col = 0; col < colCount_; col++) {
+	for(unsigned int col = 0; col < colCount_; col++) {
 		tempSet.insert(data_[col + row * colCount_]);
 	}
 	return std::vector<T>(tempSet.begin(), tempSet.end());
@@ -819,7 +819,7 @@ template <typename T>
 std::vector<T> Matrix<T>::getUniqueRowValues(unsigned int row, const T& exclud) const
 {
 	std::set<T> tempSet;
-	for(int col = 0; col < colCount_; col++) {
+	for(unsigned int col = 0; col < colCount_; col++) {
 		if(exclud != data_[col + row * colCount_]) {
 			tempSet.insert(data_[col + row * colCount_]);
 		}
@@ -831,7 +831,7 @@ template <typename T>
 std::vector<T> Matrix<T>::getUniqueColValues(unsigned int col) const
 {
 	std::set<T> tempSet;
-	for(int row = 0; row < rowCount_; row++) {
+	for(unsigned int row = 0; row < rowCount_; row++) {
 		tempSet.insert(data_[col + row * colCount_]);
 	}
 	return std::vector<T>(tempSet.begin(), tempSet.end());
@@ -841,7 +841,7 @@ template <typename T>
 std::vector<T> Matrix<T>::getUniqueColValues(unsigned int col, const T& exclud) const
 {
 	std::set<T> tempSet;
-	for(int row = 0; row < rowCount_; row++) {
+	for(unsigned int row = 0; row < rowCount_; row++) {
 		if(exclud != data_[col + row * colCount_]) {
 			tempSet.insert(data_[col + row * colCount_]);
 		}
@@ -1043,11 +1043,11 @@ void Matrix<T>::resize(unsigned int colCount, unsigned int rowCount,
 			for(int col = colCount_ - 1; col >= 0; col--)
 				data_[col + row * colCount_ + (colCount - colCount_) * row] =
 				    data_[col + row * colCount_];
-		for(int row = 0; row < rowCount_; row++)
-			for(int col = colCount_; col < colCount; col++)
+		for(unsigned int row = 0; row < rowCount_; row++)
+			for(unsigned int col = colCount_; col < colCount; col++)
 				data_[col + row * colCount] = initialValue;
-		for(int row = rowCount_; row < rowCount; row++)
-			for(int col = 0; col < colCount; col++)
+		for(unsigned int row = rowCount_; row < rowCount; row++)
+			for(unsigned int col = 0; col < colCount; col++)
 				data_[col + row * colCount] = initialValue;
 	}
 	colCount_ = colCount;
@@ -1058,7 +1058,7 @@ template <typename T> float Matrix<T>::calculateRowSum(unsigned int row)
 {
 	float sum = 0;
 	if (std::is_arithmetic<T>::value){
-		for(int col = 0; col < colCount_; col++)
+		for(unsigned int col = 0; col < colCount_; col++)
 			sum += (float)data_[col + row * colCount_];
 		return sum;
 	}
@@ -1069,7 +1069,7 @@ template <typename T> float Matrix<T>::calculateColSum(unsigned int col)
 {
 	float sum = 0;
 	if (std::is_arithmetic<T>::value){
-		for(int row = 0; row < rowCount_; row++)
+		for(unsigned int row = 0; row < rowCount_; row++)
 			sum += (float)data_[col + row * colCount_];
 		return sum;
 		}
@@ -1081,7 +1081,7 @@ float Matrix<T>::calculateRowSum(unsigned int row) const
 {
 	float sum = 0;
 	if (std::is_arithmetic<T>::value){
-		for(int col = 0; col < colCount_; col++)
+		for(unsigned int col = 0; col < colCount_; col++)
 			sum += (float)data_[col + row * colCount_];
 		return sum;
 		}
@@ -1093,7 +1093,7 @@ float Matrix<T>::calculateColSum(unsigned int col) const
 {
 	float sum = 0;
 	if (std::is_arithmetic<T>::value){
-		for(int row = 0; row < rowCount_; row++)
+		for(unsigned int row = 0; row < rowCount_; row++)
 			sum += (float)data_[col + row * colCount_];
 		return sum;
 		}
