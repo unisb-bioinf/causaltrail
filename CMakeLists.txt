@@ -16,62 +16,6 @@ target_link_libraries(CausalTrail CausalTrailLib ${Boost_LIBRARIES})
 IF(GTEST_SRC_DIR)
 
 enable_testing()
-include(CausalAnalysisTest.cmake)
-create_test_config_file()
-add_subdirectory(${GTEST_SRC_DIR} "gtest")
-include_directories("${GTEST_SRC_DIR}/include")
-
-add_executable(runMatrixTests test/MatrixTest.cpp)
-target_link_libraries(runMatrixTests gtest gtest_main)
-add_test(NAME runMatrixTests COMMAND runMatrixTests)
-
-add_executable(runNodeTests test/NodeTest.cpp)
-target_link_libraries(runNodeTests CausalTrailLib gtest gtest_main)
-add_test(NAME runNodeTests COMMAND runNodeTests)
-
-add_executable(runNetworkTests test/NetworkTest.cpp)
-target_link_libraries(runNetworkTests CausalTrailLib ${Boost_LIBRARIES} gtest gtest_main)
-add_test(NAME runNetworkTests COMMAND runNetworkTests)
-
-add_executable(runNetworkControllerTests test/NetworkControllerTest.cpp)
-target_link_libraries(runNetworkControllerTests CausalTrailLib ${Boost_LIBRARIES} gtest gtest_main)
-add_test(NAME runNetworkControllerTests COMMAND runNetworkControllerTests)
-
-add_executable(runDataDistributionTests test/DataDistributionTest.cpp)
-target_link_libraries(runDataDistributionTests CausalTrailLib ${Boost_LIBRARIES} gtest gtest_main)
-add_test(NAME runDataDistributionTests COMMAND runDataDistributionTests)
-
-add_executable(runDiscretiserTest test/DiscretiserTest.cpp)
-target_link_libraries(runDiscretiserTest CausalTrailLib ${Boost_LIBRARIES} gtest gtest_main)
-add_test(NAME runDiscretiserTest COMMAND runDiscretiserTest)
-
-add_executable(runCombinationsTests test/CombinationsTest.cpp)
-target_link_libraries(runCombinationsTests CausalTrailLib gtest gtest_main)
-add_test(NAME runCombinationsTests COMMAND runCombinationsTests)
-
-add_executable(runEMTests test/EMTest.cpp)
-target_link_libraries(runEMTests ${Boost_LIBRARIES} CausalTrailLib gtest gtest_main)
-add_test(NAME runEMTests COMMAND runEMTests)
-
-add_executable(runInterventionTests test/InterventionTest.cpp)
-target_link_libraries(runInterventionTests ${Boost_LIBRARIES} CausalTrailLib gtest gtest_main)
-add_test(NAME runInterventionTests COMMAND runInterventionTests)
-
-add_executable(runProbabilityTests test/ProbabilityTest.cpp)
-target_link_libraries(runProbabilityTests ${Boost_LIBRARIES} CausalTrailLib gtest gtest_main)
-add_test(NAME runProbabilityTests COMMAND runProbabilityTests)
-
-add_executable(runQueryExecuterTests test/QueryExecuterTest.cpp)
-target_link_libraries(runQueryExecuterTests ${Boost_LIBRARIES} CausalTrailLib gtest gtest_main)
-add_test(NAME runQueryExecuterTests COMMAND runQueryExecuterTests)
-
-add_executable(runParserTests test/ParserTest.cpp)
-target_link_libraries(runParserTests ${Boost_LIBRARIES} CausalTrailLib gtest gtest_main)
-add_test(NAME runParserTests COMMAND runParserTests)
-
-add_executable(runFactorTests test/FactorTest.cpp)
-target_link_libraries(runFactorTests ${Boost_LIBRARIES} CausalTrailLib gtest gtest_main)
-add_test(NAME runFactorTests COMMAND runFactorTests)
-
+add_subdirectory(test)
 
 endif()
