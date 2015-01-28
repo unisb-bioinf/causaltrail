@@ -29,7 +29,7 @@ TEST_F(CombinationsTest,Int){
 	Combinations<int> c(keys,mapInt);
 	c.createCombinations();
 	std::vector<std::vector<int>> result = c.getResult();
-	ASSERT_EQ(6,result.size());
+	ASSERT_EQ(6u, result.size());
 	ASSERT_EQ(1,result[0][0]);
 	ASSERT_EQ(1,result[0][1]);
 	ASSERT_EQ(1,result[1][0]);
@@ -48,7 +48,7 @@ TEST_F(CombinationsTest,String){
 	Combinations<std::string> c(keys,mapString);
 	c.createCombinations();
 	std::vector<std::vector<std::string>> result = c.getResult();
-	ASSERT_EQ(6,result.size());
+	ASSERT_EQ(6u, result.size());
 	ASSERT_EQ("A",result[0][0]);
 	ASSERT_EQ("A",result[0][1]);
 	ASSERT_EQ("A",result[1][0]);

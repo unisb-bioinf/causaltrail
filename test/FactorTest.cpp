@@ -71,10 +71,10 @@ TEST_F(FactorTest, setGetProbability){
 TEST_F(FactorTest, getIndex){	
 	std::vector<unsigned int> testIds = {3,2,1,0};
 	Factor f (10,testIds);
-	ASSERT_EQ(0, f.getIndex(3));
-	ASSERT_EQ(1, f.getIndex(2));
-	ASSERT_EQ(2, f.getIndex(1));
-	ASSERT_EQ(3, f.getIndex(0));
+	ASSERT_EQ(0u, f.getIndex(3));
+	ASSERT_EQ(1u, f.getIndex(2));
+	ASSERT_EQ(2u, f.getIndex(1));
+	ASSERT_EQ(3u, f.getIndex(0));
 	ASSERT_THROW(f.getIndex(4), std::invalid_argument);	
 }
 

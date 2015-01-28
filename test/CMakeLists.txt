@@ -1,0 +1,22 @@
+project(CausalAnalysisTest)
+
+include(CausalAnalysisTest.cmake)
+
+create_test_config_file()
+add_subdirectory(${GTEST_SRC_DIR} "gtest")
+include_directories("${GTEST_SRC_DIR}/include")
+
+add_test_case(runMatrixTests MatrixTest.cpp)
+add_test_case(runNodeTests NodeTest.cpp)
+add_test_case(runNetworkTests NetworkTest.cpp)
+add_test_case(runNetworkControllerTests NetworkControllerTest.cpp)
+add_test_case(runDataDistributionTests DataDistributionTest.cpp)
+add_test_case(runDiscretiserTest DiscretiserTest.cpp)
+add_test_case(runCombinationsTests CombinationsTest.cpp)
+add_test_case(runEMTests EMTest.cpp)
+add_test_case(runInterventionTests InterventionTest.cpp)
+add_test_case(runProbabilityTests ProbabilityTest.cpp)
+add_test_case(runQueryExecuterTests QueryExecuterTest.cpp)
+add_test_case(runParserTests ParserTest.cpp)
+add_test_case(runFactorTests FactorTest.cpp)
+

@@ -24,7 +24,7 @@ class Combinations{
 	 *
 	 * Recursively creates a enumeration of all possible combinations given the keys and their possible values
 	 */
-	void createCombinations(unsigned int position);
+	void createCombinations(unsigned int position = 0);
 
 	/**getResult
 	 *
@@ -58,7 +58,7 @@ Combinations<T>::Combinations(const std::vector<unsigned int>& keys, const std::
 	}
 
 template<typename T>
-void Combinations<T>::createCombinations(unsigned int position=0){
+void Combinations<T>::createCombinations(unsigned int position){
 	if (position == keys_.size()){
 		result_.push_back(temp_);
 		}

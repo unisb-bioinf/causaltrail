@@ -1,14 +1,14 @@
 #include "Node.h"
 
 Node::Node(unsigned int index, unsigned int id, const std::string& name)
-    : index_(index),
-      id_(id),
-      name_(name),
-      ProbabilityMatrix_(Matrix<float>(0, 0, 0.0f)),
-      ProbabilityMatrixBackup_(Matrix<float>(0, 0, 0.0f)),
-      ObservationMatrix_(Matrix<int>(0, 0, 0)),
-      ObservationBackup_(Matrix<int>(0, 0, 0)),
-	  DynProgMatrix_(Matrix<float>(0, 0, -1.0f))
+	: index_(index),
+	  id_(id),
+	  name_(name),
+	  ProbabilityMatrix_(0, 0, 0.0f),
+	  ProbabilityMatrixBackup_(0, 0, 0.0f),
+	  ObservationMatrix_(0, 0, 0),
+	  ObservationBackup_(0, 0, 0),
+	  DynProgMatrix_(0, 0, -1.0f)
 {
 }
 
