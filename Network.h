@@ -360,6 +360,12 @@ class Network{
 		 * @return the hypothetical node identifier
 		 */
 		unsigned int getHypoID(unsigned int originalID);
+		/**reset
+		 *
+		 * Calls the reset function of all nodes in the NodeList_
+		 */
+		void reset();
+
 	private:
 		/**getParents 
 		 *

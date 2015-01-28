@@ -512,3 +512,9 @@ unsigned int Network::getHypoStart(){
 unsigned int Network::getHypoID(unsigned int originalID){
 	return IDMap_[originalID];
 }
+
+void Network::reset(){
+	for (auto& node : NodeList_){
+		node.reset();
+	}
+}
