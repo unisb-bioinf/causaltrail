@@ -966,7 +966,6 @@ void Matrix<T>::readMatrix(const std::string& filename, bool colNames, bool rowN
 	int numCols = 0;
 	rowNames_.clear();
 	colNames_.clear();
-	std::vector<std::string> rowNBuffer;
 	std::vector<std::string> colNBuffer;
 	// Determine number of rows
 	while(std::getline(input, line)) {
@@ -983,50 +982,48 @@ void Matrix<T>::readMatrix(const std::string& filename, bool colNames, bool rowN
 		numCols++;
 	}
 	// Adapt matrix
-	resize(numCols - int(rowNames), numRows - int(colNames), initialValue);
+	colCount_ = numCols - int(rowNames);
+	rowCount_ = numRows - int(colNames);
+	data_.clear();
+	data_.reserve(colCount_ * rowCount_);
+
 	// Read data
 	input.clear();
 	input.seekg(0);
-	int row = 0;
-	int col = 0;
-	
-	const auto finder = token_finder(boost::algorithm::is_any_of("\t "),boost::token_compress_on);
 
-	std::string tmp;
+	const auto matcher = [](char c) { return c == '\t' || c == ' '; };
+	const auto finder = token_finder(matcher, boost::token_compress_on);
+	const auto split_iter_end = boost::algorithm::split_iterator<std::string::iterator>();
+
 	if(colNames) {
-		auto it = make_split_iterator(line,finder);
-		for(; it != boost::algorithm::split_iterator<std::string::iterator>(); ++it) {
-			tmp = boost::copy_range<std::string>(*it);
-			if(tmp == "") {
+		auto it = boost::algorithm::make_split_iterator(line,finder);
+		for(; it != split_iter_end; ++it) {
+			if(boost::begin(*it) == boost::end(*it)) {
 				continue;
 			}
-			colNBuffer.push_back(tmp);
+
+			colNBuffer.push_back(boost::copy_range<std::string>(*it));
 		}
 	}
 
+	std::vector<std::string> rowNBuffer;
 	while(std::getline(input, line)) {
-		auto it = make_split_iterator(line, finder);
+		auto it = boost::algorithm::make_split_iterator(line, finder);
 
 		if(rowNames) {
-			rowNBuffer.push_back(std::move(boost::copy_range<std::string>(*it)));
+			rowNBuffer.push_back(boost::copy_range<std::string>(*it));
 			++it;
 		}
 
-		for(; it != boost::algorithm::split_iterator<std::string::iterator>(); ++it) {
-			tmp = boost::copy_range<std::string>(*it);
-
-			if(tmp == "") {
+		for(; it != split_iter_end; ++it) {
+			if(boost::begin(*it) == boost::end(*it)) {
 				continue;
 			}
 
-			data_[col + row * colCount_] = boost::lexical_cast<T>(tmp);
-			col++;
+			data_.push_back(boost::lexical_cast<T>(boost::copy_range<std::string>(*it)));
 		}
-		
-		col = 0;
-		row++;
 	}
-	input.close();
+
 	setRowNames(rowNBuffer);
 	setColNames(colNBuffer);
 }
