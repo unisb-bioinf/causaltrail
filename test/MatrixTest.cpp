@@ -135,13 +135,30 @@ TEST_F(MatrixTest,countElement){
 	ASSERT_EQ(0,m_.countElement(1,0,42));
 }
 
-TEST_F(MatrixTest,resize){
+TEST_F(MatrixTest,resize1){
 	m_.resize(10,12,0);
 	ASSERT_EQ(1,m_(0,0));
 	ASSERT_EQ(12,m_.getRowCount());
 	ASSERT_EQ(10,m_.getColCount());
 }
 
+TEST_F(MatrixTest,resize2){
+	std::cout<<m_<<std::endl;
+	m_.resize(3,5,0);
+	ASSERT_EQ(1,m_(0,0));
+	ASSERT_EQ(5,m_.getRowCount());
+	ASSERT_EQ(3,m_.getColCount());
+	std::cout<<m_<<std::endl;
+}
+
+TEST_F(MatrixTest,resize3){
+	std::cout<<m_<<std::endl;
+	m_.resize(5,2,0);
+	ASSERT_EQ(1,m_(0,0));
+	ASSERT_EQ(2,m_.getRowCount());
+	ASSERT_EQ(5,m_.getColCount());
+	std::cout<<m_<<std::endl;
+}
 TEST_F(MatrixTest, resizeOutOfBound){
 	ASSERT_THROW(m_.resize(2,2,0), std::invalid_argument);
 }

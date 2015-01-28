@@ -1050,6 +1050,14 @@ void Matrix<T>::resize(unsigned int colCount, unsigned int rowCount,
 			for(int col = 0; col < colCount; col++)
 				data_[col + row * colCount] = initialValue;
 	}
+	else{
+		if (rowCount_ < rowCount){
+			data_.resize(colCount_ * rowCount);
+			for(int row = rowCount_; row < rowCount; row++)
+				for(int col = 0; col < colCount_; col++)
+					data_[col + row * colCount_] = initialValue;
+		}
+	}
 	colCount_ = colCount;
 	rowCount_ = rowCount;
 }
