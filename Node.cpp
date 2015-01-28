@@ -301,3 +301,11 @@ void Node::setName(std::string name){
 void Node::setID(unsigned int id){
 	id_ = id;
 }
+
+void Node::reset(){
+	ProbabilityMatrix_ =  Matrix<float>(0, 0, 0.0f);
+	ProbabilityMatrixBackup_ = Matrix<float>(0, 0, 0.0f);
+    ObservationMatrix_ = Matrix<int>(0, 0, 0);
+    ObservationBackup_ = Matrix<int>(0, 0, 0);
+	DynProgMatrix_ =Matrix<float>(0, 0, -1.0f);
+}

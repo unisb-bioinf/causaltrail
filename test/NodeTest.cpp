@@ -113,3 +113,11 @@ TEST_F(NodeTest, visit){
 	n_.visit();
 	ASSERT_TRUE(n_.isVisited());
 }
+
+TEST_F(NodeTest, reset){
+	n_.reset();
+	ASSERT_EQ(0,n_.getProbabilityMatrix().getRowCount());
+	ASSERT_EQ(0,n_.getProbabilityMatrix().getColCount());
+	ASSERT_EQ(0,n_.getObservationMatrix().getRowCount());
+	ASSERT_EQ(0,n_.getObservationMatrix().getColCount());
+}

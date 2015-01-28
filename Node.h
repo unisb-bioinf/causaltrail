@@ -517,6 +517,12 @@ class Node {
 	 */
 	const std::vector<std::vector<int>>& getParentValues() const;
 	
+	/**reset
+	 *
+	 * Resets the node such that all its members are empty
+	 */
+	void reset();
+
 	/**operator<<
 	 *
 	 * @param os, Reference to an ostream
