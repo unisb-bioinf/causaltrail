@@ -145,19 +145,15 @@ TEST_F(MatrixTest,resize1){
 TEST_F(MatrixTest,resize2){
 	m_.resize(3,5,0);
 	ASSERT_EQ(1,m_(0,0));
-	ASSERT_EQ(5,m_.getRowCount());
-	ASSERT_EQ(3,m_.getColCount());
+	ASSERT_EQ(5u, m_.getRowCount());
+	ASSERT_EQ(3u, m_.getColCount());
 }
 
 TEST_F(MatrixTest,resize3){
 	m_.resize(5,2,0);
 	ASSERT_EQ(1,m_(0,0));
-	ASSERT_EQ(2,m_.getRowCount());
-	ASSERT_EQ(5,m_.getColCount());
-}
-
-TEST_F(MatrixTest, resizeOutOfBound1){
-	ASSERT_THROW(m_.resize(2,2,0), std::invalid_argument);
+	ASSERT_EQ(2u, m_.getRowCount());
+	ASSERT_EQ(5u, m_.getColCount());
 }
 
 TEST_F(MatrixTest, resizeOnlyCols){

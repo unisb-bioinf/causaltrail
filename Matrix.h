@@ -1047,8 +1047,8 @@ void Matrix<T>::resize(unsigned int colCount, unsigned int rowCount,
 	else{
 		if (rowCount_ < rowCount){
 			data_.resize(colCount_ * rowCount);
-			for(int row = rowCount_; row < rowCount; row++)
-				for(int col = 0; col < colCount_; col++)
+			for(unsigned int row = rowCount_; row < rowCount; row++)
+				for(unsigned int col = 0; col < colCount_; col++)
 					data_[col + row * colCount_] = initialValue;
 		}
 	}
