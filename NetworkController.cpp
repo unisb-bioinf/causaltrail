@@ -51,9 +51,21 @@ void NetworkController::saveParameters() const{
 	network_.saveParameters();
 }
 
-bool NetworkController::isEdgePossible(unsigned int sourceID, unsigned int targetID){
-	network_.addEdge(sourceID,targetID);
-	bool edgePossible = network_.checkCycleExistence(sourceID);
-	network_.removeEdge(sourceID,targetID);
+bool NetworkController::isEdgePossible(unsigned int sourceID, unsigned int targetID, std::vector<std::pair<unsigned int, unsigned int>>& addedEdges,std::vector<std::pair<unsigned int, unsigned int>>& removedEdges){
+	for (auto& pair : addedEdges){
+		network_.addEdge(pair.second,pair.first);
+	}
+	for (auto& pair : removedEdges){
+		network_.removeEdge(pair.second,pair.first);
+	}
+	network_.addEdge(targetID,sourceID);
+	bool edgePossible = not network_.checkCycleExistence(sourceID);
+	network_.removeEdge(targetID,sourceID);
+	for (auto& pair : removedEdges){
+		network_.addEdge(pair.second,pair.first);
+	}
+	for (auto& pair : addedEdges){
+		network_.removeEdge(pair.second,pair.first);
+	}
 	return edgePossible;
 }

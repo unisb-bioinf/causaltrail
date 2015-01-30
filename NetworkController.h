@@ -87,7 +87,7 @@ class NetworkController{
 	 * @param targetID, Identifier of the target node
 	 * @return true, if the edge does not induce a cycle, false otherwise
 	 */
-	bool isEdgePossible(unsigned int sourceID, unsigned int targetID);
+	bool isEdgePossible(unsigned int sourceID, unsigned int targetID, std::vector<std::pair<unsigned int, unsigned int>>& addedEdges, std::vector<std::pair<unsigned int, unsigned int>>& removedEdges);
 	
 	private:
 

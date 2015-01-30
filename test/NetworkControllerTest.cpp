@@ -214,10 +214,15 @@ TEST_F(NetworkControllerTest, DataLikelihood){
 
 TEST_F(NetworkControllerTest, EdgeAdditionPossibility){
 	NetworkController n;
+	std::vector<std::pair<unsigned int, unsigned int >> addedEdges{};
+	std::vector<std::pair<unsigned int, unsigned int >> removedEdges{};
 	n.loadNetwork(TEST_DATA_PATH("Student.na"));
 	n.loadNetwork(TEST_DATA_PATH("Student.sif"));
-	ASSERT_TRUE(n.isEdgePossible(2,4));
-	ASSERT_FALSE(n.isEdgePossible(4,2));	
+	ASSERT_TRUE(n.isEdgePossible(0,4,addedEdges,removedEdges));
+	ASSERT_FALSE(n.isEdgePossible(4,0,addedEdges,removedEdges));
+
+	removedEdges.push_back(std::make_pair(0,1));
+	ASSERT_TRUE(n.isEdgePossible(4,0,addedEdges,removedEdges));
 }
 
 
