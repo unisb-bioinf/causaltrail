@@ -38,7 +38,7 @@ TEST_F(DataDistributionTest, assignObservationsToNodesTestStudentComplet){
 	Network n;
 	n.readNetwork(TEST_DATA_PATH("Student.na"));
 	n.readNetwork(TEST_DATA_PATH("Student.sif"));
-	Matrix<std::string> originalObservations (TEST_DATA_PATH("StudentData.txt"),false,true,"NA");
+	Matrix<std::string> originalObservations (TEST_DATA_PATH("StudentData.txt"),false,true);
 	Matrix<int> observations (0,0,-1);
 	Discretiser disc = Discretiser(originalObservations,TEST_DATA_PATH("controlStudent.txt"), observations, n);
 	DataDistribution db (n, observations);
@@ -103,7 +103,7 @@ TEST_F(DataDistributionTest, assignObservationsToNodesTestStudentInComplet){
 	Network n;
 	n.readNetwork(TEST_DATA_PATH("Student.na"));
 	n.readNetwork(TEST_DATA_PATH("Student.sif"));
-	Matrix<std::string> originalObservations (TEST_DATA_PATH("dataStudent60.txt"),false,true,"NA");
+	Matrix<std::string> originalObservations (TEST_DATA_PATH("dataStudent60.txt"),false,true);
 	Matrix<int> observations (0,0,-1);
 	Discretiser disc = Discretiser(originalObservations,TEST_DATA_PATH("controlStudent.txt"), observations, n);
 	DataDistribution db (n, observations);
@@ -168,7 +168,7 @@ TEST_F(DataDistributionTest, distributeObservationsTestStudentComplet){
 	Network n;
 	n.readNetwork(TEST_DATA_PATH("Student.na"));
 	n.readNetwork(TEST_DATA_PATH("Student.sif"));
-	Matrix<std::string> originalObservations (TEST_DATA_PATH("StudentData.txt"),false,true,"NA");
+	Matrix<std::string> originalObservations (TEST_DATA_PATH("StudentData.txt"),false,true);
 	Matrix<int> observations (0,0,-1);
 	Discretiser disc = Discretiser(originalObservations,TEST_DATA_PATH("controlStudent.txt"), observations, n);
 	DataDistribution db (n, observations);
@@ -215,7 +215,7 @@ TEST_F(DataDistributionTest, distributeObservationsTestStudentInComplet){
 	Network n;
 	n.readNetwork(TEST_DATA_PATH("Student.na"));
 	n.readNetwork(TEST_DATA_PATH("Student.sif"));
-	Matrix<std::string> originalObservations (TEST_DATA_PATH("dataStudent60.txt"),false,true,"NA");
+	Matrix<std::string> originalObservations (TEST_DATA_PATH("dataStudent60.txt"),false,true);
 	Matrix<int> observations (0,0,-1);
 	Discretiser disc = Discretiser(originalObservations,TEST_DATA_PATH("controlStudent.txt"), observations, n);
 	DataDistribution db (n, observations);

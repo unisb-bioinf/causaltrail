@@ -99,12 +99,12 @@ void QueryExecuter::executeInterventions(){
 	networkController_.getNetwork().clearDynProgMatrices();
 	interventions_.createBackupOfNetworkStructure();
 	bool topologyChange = false;
-	if (not addEdgeNodeIDs_.empty()){
-		executeEdgeAdditions();
-		topologyChange = true;
-	}
 	if (not removeEdgeNodeIDs_.empty()){
 		executeEdgeDeletions();
+		topologyChange = true;
+	}
+	if (not addEdgeNodeIDs_.empty()){
+		executeEdgeAdditions();
 		topologyChange = true;
 	}
 	if (topologyChange){

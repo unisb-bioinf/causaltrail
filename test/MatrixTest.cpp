@@ -211,7 +211,7 @@ TEST_F(MatrixTest, resizeOutOfBoundCols) {
 }
 
 TEST_F(MatrixTest,readMatrix){
-	m_.readMatrix(TEST_DATA_PATH("testObservations2.txt"),false,true,0);
+	m_.readMatrix(TEST_DATA_PATH("testObservations2.txt"),false,true);
 	ASSERT_TRUE(m_.getRowNames()[0]=="Difficulty");
 	ASSERT_TRUE(m_.getRowNames()[4]=="Letter");
 	ASSERT_EQ(5u,m_.getRowCount());

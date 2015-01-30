@@ -27,7 +27,7 @@ template <typename T> class Matrix
 	 *	
 	 * Creates a Matrix containing the data from the specified file
 	 */
-	Matrix(const std::string& filename, bool colNames, bool rowNames, T initialValue);
+    Matrix(const std::string& filename, bool colNames, bool rowNames);
 
 	/**Detailed Constructor
 	 *
@@ -423,8 +423,7 @@ template <typename T> class Matrix
 	 *
 	 * This methods reads a tab or space delimited file containing a matrix.
 	 */
-	void readMatrix(const std::string& filename, bool colNames, bool rowNames,
-	                const T& initialValue);
+    void readMatrix(const std::string& filename, bool colNames, bool rowNames);
 
 	/**countElement
 	 *
@@ -553,12 +552,11 @@ template <typename T> class Matrix
 };
 
 template <typename T>
-Matrix<T>::Matrix(const std::string& filename, bool colNames, bool rowNames,
-                  T initialValue)
+Matrix<T>::Matrix(const std::string& filename, bool colNames, bool rowNames)
 {
 	colCount_ = 0;
 	rowCount_ = 0;
-	readMatrix(filename, colNames, rowNames, initialValue);
+    readMatrix(filename, colNames, rowNames);
 }
 
 template <typename T>
@@ -954,8 +952,7 @@ bool Matrix<T>::containsElement(unsigned int colrow, unsigned int number,const T
 }
 
 template <typename T>
-void Matrix<T>::readMatrix(const std::string& filename, bool colNames, bool rowNames,
-                           const T& initialValue)
+void Matrix<T>::readMatrix(const std::string& filename, bool colNames, bool rowNames)
 {
 	std::ifstream input(filename, std::ifstream::in);
 	if (!input.good()){
