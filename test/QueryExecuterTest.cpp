@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "../NetworkController.h"
-#include "../QueryExecuter.h"
+#include "../core/NetworkController.h"
+#include "../core/QueryExecuter.h"
 #include "config.h"
 
 class QueryExecuterTest : public ::testing::Test{

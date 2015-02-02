@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../Node.h"
+#include "../core/Node.h"
 
 class NodeTest : public ::testing::Test{
 	protected:

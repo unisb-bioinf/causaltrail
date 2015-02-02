@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 2.8.11)
 
 project (Causal-Analysis)
 
@@ -7,11 +7,16 @@ add_definitions(-std=c++11 -Wall -pedantic)
 find_package(Boost COMPONENTS system filesystem)
 include_directories(${Boost_INCLUDE_DIRS}) 
 
-add_library(CausalTrailLib Matrix.h Node.h Node.cpp Network.h Network.cpp Combinations.h ProbabilityHandler.h ProbabilityHandler.cpp EM.h EM.cpp NetworkController.h NetworkController.cpp Discretiser.h Discretiser.cpp DataDistribution.h DataDistribution.cpp Interventions.h Interventions.cpp QueryExecuter.h QueryExecuter.cpp Parser.h Parser.cpp Factor.h Factor.cpp)
-target_link_libraries(CausalTrailLib ${Boost_LIBRARIES})
+add_subdirectory(core)
 
-add_executable(CausalTrail main.cpp)
-target_link_libraries(CausalTrail CausalTrailLib ${Boost_LIBRARIES})
+set(Qt5Widgets_DIR "/local/fschmidt/QT/5.3/gcc_64/lib/cmake/Qt5Widgets")
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Core REQUIRED)
+get_target_property(QtCore_location Qt5::Core LOCATION)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+add_subdirectory(gui)
 
 IF(GTEST_SRC_DIR)
 

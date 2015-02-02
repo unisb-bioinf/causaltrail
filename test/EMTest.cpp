@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "../NetworkController.h"
-#include "../EM.h"
+#include "../core/NetworkController.h"
+#include "../core/EM.h"
 #include "config.h"
 
 class EMTest : public ::testing::Test{

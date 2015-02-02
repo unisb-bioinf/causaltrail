@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "../Discretiser.h"
-#include "../Network.h"
+#include "../core/Discretiser.h"
+#include "../core/Network.h"
 #include "config.h"
 
 class DiscretiserTest : public ::testing::Test{

@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../Combinations.h"
+#include "../core/Combinations.h"
 
 class CombinationsTest : public ::testing::Test{
 	protected:

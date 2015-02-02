@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../Network.h"
+#include "../core/Network.h"
 #include "config.h"
 
 class NetworkTest : public ::testing::Test{

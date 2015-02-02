@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../Matrix.h"
+#include "../core/Matrix.h"
 #include "config.h"
 
 class MatrixTest : public ::testing::Test{

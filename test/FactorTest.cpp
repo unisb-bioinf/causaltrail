@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "../Factor.h"
-#include "../NetworkController.h"
+#include "../core/Factor.h"
+#include "../core/NetworkController.h"
 #include "config.h"
 
 class FactorTest : public ::testing::Test{

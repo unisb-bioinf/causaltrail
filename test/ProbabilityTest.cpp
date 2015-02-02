@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "../ProbabilityHandler.h"
-#include "../NetworkController.h"
+#include "../core/ProbabilityHandler.h"
+#include "../core/NetworkController.h"
 #include "config.h"
 
 class ProbabilityTest : public ::testing::Test{

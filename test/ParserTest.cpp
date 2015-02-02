@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "../NetworkController.h"
-#include "../Parser.h"
+#include "../core/NetworkController.h"
+#include "../core/Parser.h"
 #include "config.h"
 
 class ParserTest : public ::testing::Test{

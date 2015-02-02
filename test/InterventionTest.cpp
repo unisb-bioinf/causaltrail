@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../Interventions.h"
+#include "../core/Interventions.h"
 #include "config.h"
 class InterventionTest : public ::testing::Test{
 	protected:
