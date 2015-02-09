@@ -86,6 +86,14 @@ class Discretiser{
  	 */
 	void discretiseFloor(unsigned int row);
 
+	/**discretiseZ
+ 	 *
+	 * @param row, row to discretise
+	 *
+ 	 * Discretises the given row by calculating the z-score for each feature and discretising accordingly.
+ 	 */
+	void discretiseZ(unsigned int row);
+
 	/**discretiseCeil
  	 *
 	 * @param row, row to discretise

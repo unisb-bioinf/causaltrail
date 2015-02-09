@@ -136,3 +136,14 @@ TEST_F(DiscretiserTest,MapNamesToIntWithNA){
 	ASSERT_EQ(-1,d.getEntry(4,10));
 	ASSERT_EQ(0,d.getEntry(5,10));
 }
+
+TEST_F(DiscretiserTest, Z){
+	Discretiser d = Discretiser(oobs_,dobs_,n_);
+	d.discretiseRow(11,10,0.0f);	
+	ASSERT_EQ(0,d.getEntry(0,11));
+	ASSERT_EQ(0,d.getEntry(1,11));
+	ASSERT_EQ(1,d.getEntry(2,11));
+	ASSERT_EQ(0,d.getEntry(3,11));
+	ASSERT_EQ(0,d.getEntry(4,11));
+	ASSERT_EQ(0,d.getEntry(5,11));
+}
