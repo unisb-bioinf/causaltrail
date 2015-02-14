@@ -392,10 +392,10 @@ int Network::reverseFactor(const Node& n, unsigned int parentID, int row)
 	for(const auto& key : n.getParents()) {
 		int factor = computeFactor(n, key);
 		int result = value / factor;
-		value = (value % computeFactor(n, key));
 		if(key == parentID) {
 			return result;
 		}
+		value = (value % factor);
 	}
 	return -1;
 }
@@ -448,11 +448,19 @@ void Network::saveParameters() const{
 	std::string filename = "Parameters_"+ts;
 	file.open(filename);
 	for (auto& n : NodeList_){
+		std::vector<unsigned int> parents = n.getParents();
 		unsigned int rowCount=n.getNumberOfParentValues();
 		unsigned int colCount=n.getNumberOfUniqueValuesExcludingNA();
 		for (unsigned int row=0;row<rowCount;row++)
-			for (unsigned int col=0;col<colCount;col++)
+			for (unsigned int col=0;col<colCount;col++){
+				file<<n.getName()<<"\t";
+				file<<n.getProbabilityMatrix().getColNames()[col]<<"\t";
+				for (auto& id : parents){
+					file<<getNode(id).getName()<<"\t";
+				}
+				file<<n.getProbabilityMatrix().getRowNames()[row]<<"\t";
 				file<<n.getProbability(col,row)<<"\n";
+			}
 		}
 	file.close();
 }

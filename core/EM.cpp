@@ -12,13 +12,13 @@ EM::EM(Network& network, Matrix<int>& observations, float difference,
 }
 void EM::performEM()
 {
-	start = std::chrono::system_clock::now();
 	unsigned int runs = 0;
 	float difference = 1.0f;
 	float maxprob = 0.0f;
 	unsigned int maxmethod = 0;
 	// Check completness of the data
 	if(observations_.contains(-1)) {
+		start = std::chrono::system_clock::now();
 		for(int method = 0; method < 2; method++) {
 			// Initialize and iterate E/M-Phase
 			method_ = method;
@@ -46,6 +46,7 @@ void EM::performEM()
 		neededRuns_=runs;
 	} else {
 		// Calculat parameters directly
+		start = std::chrono::system_clock::now();
 		finalDifference_=mPhase();
 		neededRuns_=1;
 	}
@@ -103,22 +104,23 @@ void EM::calculateMaximumLikelihood(unsigned int row, unsigned int& counter,
                                     const Matrix<int>& obMatrix)
 {
 	float rowsum = obMatrix.calculateRowSum(row);
-	if(obMatrix.hasNACol())
+	if(obMatrix.hasNACol()){
 			for(unsigned int col = 1; col < obMatrix.getColCount(); col++) {
 				float probability = 0.0f;
-				if (rowsum != 0){
-					probability = n.getObservationMatrix()(col, row) /
+				if ((rowsum-obMatrix(0,row)) > 0.0){
+					probability = obMatrix(col, row) /
 			    	                (rowsum - obMatrix(0, row));
 					difference += fabs(n.getProbability(col - 1, row) - probability);
 				}
 				n.setProbability(probability, col - 1, row);
 				counter++;
+				}
 			}
 	else {
 			for(unsigned int col = 0; col < obMatrix.getColCount(); col++) {
 				float probability =  0.0f;
 				if (rowsum != 0){
-					probability = n.getObservationMatrix()(col, row) / rowsum;
+					probability = obMatrix(col, row) / rowsum;
 					difference += fabs(n.getProbability(col, row) - probability);
 				}
 				n.setProbability(probability, col, row);

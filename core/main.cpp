@@ -14,13 +14,17 @@ int main(int argc, char *argv[]){
 	}
 	c.loadNetwork(networkfile);
 	c.loadObservations(datafile,controlfile);
+	float time = 0.0;
 	c.trainNetwork();
-	std::cout<<c.getNetwork()<<std::endl;
-	std::cout<<"Number of EM runs: "<<c.getNumberOfEMRuns()<<std::endl;
-	std::cout<<"Time passed in microseconds: "<<c.getTimeInMicroSeconds()<<std::endl;
-//	c.saveParameters();
+//	std::cout<<c.getNetwork()<<std::endl;
+//	std::cout<<"Number of EM runs: "<<c.getNumberOfEMRuns()<<std::endl;
+	for (int i = 1; i< 51; i++){
+		time+=c.getTimeInMicroSeconds();
+	}
+	std::cout<<time/50<<std::endl;
+	c.saveParameters();
 	std::string input = "";
-	std::cout<<"Please enter a query"<<std::endl;
+/*	std::cout<<"Please enter a query"<<std::endl;
 	std::getline(std::cin,input);
 	while (input != "exit"){
 		try{
@@ -38,6 +42,6 @@ int main(int argc, char *argv[]){
 		}
 		std::cout<<"Please enter a query"<<std::endl;
 		std::getline(std::cin,input);
-	}
+	}*/
 	return 0;
 }
