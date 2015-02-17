@@ -24,9 +24,9 @@ int main(int argc, char *argv[]){
 	std::cout<<time/50<<std::endl;
 	c.saveParameters();
 	std::string input = "";
-/*	std::cout<<"Please enter a query"<<std::endl;
+	std::cout<<"Please enter a query"<<std::endl;
 	std::getline(std::cin,input);
-	while (input != "exit"){
+/*	while (input != "exit"){
 		try{
 		Parser p3 = Parser(input,c);
 		QueryExecuter qe3 = p3.parseQuery();

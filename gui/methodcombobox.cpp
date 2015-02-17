@@ -13,6 +13,7 @@ methodComboBox::methodComboBox(unsigned int id):
     addItem("BracketMedians");
     addItem("PearsonTukey");
     addItem("Is Discrete");
+	addItem("Z-Score");
     setCurrentIndex(9);
     connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(box_Index_Changed(int)));
 }
