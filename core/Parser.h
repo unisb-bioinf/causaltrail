@@ -3,8 +3,7 @@
 
 #include "Network.h"
 #include "QueryExecuter.h"
-#include "boost/algorithm/string/split.hpp" 
-#include "boost/algorithm/string/classification.hpp"
+#include "boost/tokenizer.hpp"
 
 class Parser
 {

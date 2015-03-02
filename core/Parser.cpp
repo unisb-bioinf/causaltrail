@@ -118,6 +118,9 @@ void Parser::parseCondition(unsigned int& index)
 		if(query_[index] != "=")
 			throw std::invalid_argument("In parseCondition, invalid sign, expected = but found "+query_[index]);
 		index++;
+		if (index >= query_.size()){
+			throw std::invalid_argument("No value specified for " +query_[index-2]);
+		}
 		if(not getValue(query_[index - 2], query_[index])){
 			throw std::invalid_argument("In parseCondition, node "+query_[index-2]+" does not have a value "+query_[index]);
 		}
@@ -223,6 +226,16 @@ unsigned int Parser::getValueID(const std::string& nodeName, const std::string& 
 Parser::Parser(std::string userInput, NetworkController& networkController)
     : userInput_(userInput), network_(networkController.getNetwork()), qe_(QueryExecuter(networkController))
 {
-	boost::split(query_, userInput_, boost::is_any_of(" "));
+	if (userInput != ""){
+		typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
+		boost::char_separator<char> sep(" ","=()");
+		tokenizer tokens(userInput,sep);
+		for (tokenizer::iterator tok_iter = tokens.begin(); tok_iter != tokens.end(); ++tok_iter){
+			query_.push_back(*tok_iter);
+		}
+	}
+	else {
+		throw std::invalid_argument("Empty Query!");	
+	}
 }
 

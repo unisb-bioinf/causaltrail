@@ -20,8 +20,7 @@ class ParserTest : public ::testing::Test{
 
 TEST_F(ParserTest,ParserCheck0){
 	std::string query("");
-	Parser p (query,c);
-	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
+	ASSERT_THROW(Parser p (query,c),std::invalid_argument);
 }
 
 TEST_F(ParserTest,ParserCheck1){
@@ -224,13 +223,13 @@ TEST_F(ParserTest,ParserCheck33){
 }
 
 TEST_F(ParserTest,ParserCheck34){
-	std::string query("? argmax( Letter )");
+	std::string query("? argma( Letter )");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
 
 TEST_F(ParserTest,ParserCheck35){
-	std::string query("? argmax ( Letter)");
+	std::string query(" argmax ( Letter)");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery(),std::invalid_argument);
 }
