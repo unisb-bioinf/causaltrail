@@ -310,7 +310,7 @@ void Discretiser::discretisePearsonTukey(unsigned int row)
 {
 	const std::vector<float>& templist = createSortedVector(row);
 	const std::vector<float> borderValues = {
-	    // Calculate borders
+	    // Calculate borders: Constants are defined by the method
 	    FLT_MIN, templist[ceil(0.185 * templist.size())],
 	    templist[ceil(0.815 * templist.size())], FLT_MAX};
 	// Fill intervals

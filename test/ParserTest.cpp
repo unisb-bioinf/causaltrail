@@ -413,7 +413,14 @@ TEST_F(ParserTest, ParserCheck60){
 }
 
 
-TEST_F(ParserTest,ParserCheck61){
+TEST_F(ParserTest, ParserCheck61){
+	std::string query("? Letter = l1 ! do Intelligence = i1 | Intelligence = i0");
+	Parser p (query, c);
+	QueryExecuter qe = p.parseQuery();
+	ASSERT_THROW(p.parseQuery().execute(),std::invalid_argument);
+}
+
+TEST_F(ParserTest,ParserCheck62){
 	std::string query("? Letter = l1 ! + Letter Intelligence");
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery().execute(),std::invalid_argument);
