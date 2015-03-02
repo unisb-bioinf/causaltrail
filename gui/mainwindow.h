@@ -181,7 +181,15 @@ private:
     QString path;
 
 private slots:
-    /**
+
+	/**
+	 * @brief checkAllEmpty()
+	 * If all elements of a query are deleted, a new query will be triggered
+	 * automatically
+	 */
+	void checkAllEmpty();
+
+	/**
      * @brief on_actionClose_triggered
 	 * Terminates the GUI 
      */

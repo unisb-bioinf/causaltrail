@@ -100,6 +100,17 @@ void MainWindow::initaliseVisibility(){
     ui->actionLoad_Samples_2->setEnabled(false  );
 }
 
+void MainWindow::checkAllEmpty()
+{
+	if((ui->queryVariableList->count() == 0)
+		&&(ui->conditionVariableList->count() == 0) &&
+		    (ui->interventionVariableList->count() == 0) &&
+		    (ui->edgeAdditionsRemovalList->count() == 0))
+		{
+			on_newQuery_clicked();
+		}
+}
+
 void MainWindow::checkEmptyList(QListWidget *widget, QLabel *label)
 {
     if (widget->count() == 0){
@@ -717,28 +728,30 @@ QString MainWindow::buildQuery(){
 
 void MainWindow::on_queryVariableList_itemDoubleClicked(QListWidgetItem* item)
 {
-   int index = ui->tabWidget->currentIndex();
-   QColor queryColor;
-   queryColor.setHsv(100,30,250);
-   QStringList list = item->text().split(" ");
-   if (list[0] == "argmax"){
-     networks[index].removeNodeColor(list[1],queryColor);
-   }
-   else{
-    networks[index].removeNodeColor(list[0],queryColor);
-   }
-   delete item;
-   checkEmptyList(ui->queryVariableList,ui->queryLabel);
+    int index = ui->tabWidget->currentIndex();
+    QColor queryColor;
+    queryColor.setHsv(100,30,250);
+    QStringList list = item->text().split(" ");
+    if (list[0] == "argmax"){
+      networks[index].removeNodeColor(list[1],queryColor);
+    }
+    else{
+     networks[index].removeNodeColor(list[0],queryColor);
+    }
+    delete item;
+    checkEmptyList(ui->queryVariableList,ui->queryLabel);
+	checkAllEmpty();
 }
 
 void MainWindow::on_conditionVariableList_itemDoubleClicked(QListWidgetItem *item)
 {
-   int index = ui->tabWidget->currentIndex();
-   QColor queryColor;
-   queryColor.setHsv(20,30,250);
-   networks[index].removeNodeColor(item->text().split(" ")[0],queryColor);
-   delete item;
-   checkEmptyList(ui->conditionVariableList,ui->conditionLabel);
+	int index = ui->tabWidget->currentIndex();
+    QColor queryColor;
+    queryColor.setHsv(20,30,250);
+    networks[index].removeNodeColor(item->text().split(" ")[0],queryColor);
+    delete item;
+    checkEmptyList(ui->conditionVariableList,ui->conditionLabel);
+	checkAllEmpty();
 }
 
 void MainWindow::on_interventionVariableList_itemDoubleClicked(QListWidgetItem *item)
@@ -747,6 +760,7 @@ void MainWindow::on_interventionVariableList_itemDoubleClicked(QListWidgetItem *
     networks[index].removeDoIntervention(item->text().split(" ")[0]);
     delete item;
     checkEmptyList(ui->interventionVariableList,ui->interventionLabel);
+	checkAllEmpty();
 }
 
 void MainWindow::on_edgeAdditionsRemovalList_itemDoubleClicked(QListWidgetItem *item)
@@ -761,6 +775,7 @@ void MainWindow::on_edgeAdditionsRemovalList_itemDoubleClicked(QListWidgetItem *
     }
     delete item;
     checkEmptyList(ui->edgeAdditionsRemovalList,ui->edgeAdReLabel);
+	checkAllEmpty();
 }
 
 
