@@ -228,7 +228,7 @@ Parser::Parser(std::string userInput, NetworkController& networkController)
 {
 	if (userInput != ""){
 		typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
-		boost::char_separator<char> sep(" ","=()!|");
+		boost::char_separator<char> sep(" ","=()!|?");
 		tokenizer tokens(userInput,sep);
 		for (tokenizer::iterator tok_iter = tokens.begin(); tok_iter != tokens.end(); ++tok_iter){
 			query_.push_back(*tok_iter);
