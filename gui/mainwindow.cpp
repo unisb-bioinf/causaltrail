@@ -109,6 +109,7 @@ void MainWindow::checkAllEmpty()
 		{
 			on_newQuery_clicked();
 		}
+	ui->Input->setFocus();
 }
 
 void MainWindow::checkEmptyList(QListWidget *widget, QLabel *label)
