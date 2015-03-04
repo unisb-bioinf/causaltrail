@@ -54,31 +54,33 @@ void MainWindow::on_actionClose_triggered()
 }
 
 void MainWindow::checkQueriesLeft(){
-   int index = ui->tabWidget->currentIndex();
-   if (networks[index].getNumberOfQueries() > 0){
-       ui->actionCreate_Batchfile->setEnabled(true);
-       ui->actionCreate_Batchfile_2->setEnabled(true);
-   }
-   else{
-       ui->actionCreate_Batchfile->setEnabled(false);
-       ui->actionCreate_Batchfile_2->setEnabled(false);
-   }
-   if (networks[index].isFirstQuery()){
-       ui->loadPreviousQueryButton->setEnabled(false);
-       ui->loadPreviousQueryButton_2->setEnabled(false);
-   }
-   else{
-       ui->loadPreviousQueryButton->setEnabled(true);
-       ui->loadPreviousQueryButton_2->setEnabled(true);
-   }
-   if (networks[index].isLastQuery()){
-       ui->loadSuccessorQueryButton->setEnabled(false);
-       ui->loadSuccessorQueryButton_2->setEnabled(false);
-   }
-   else{
-       ui->loadSuccessorQueryButton->setEnabled(true);
-       ui->loadSuccessorQueryButton_2->setEnabled(true);
-   }
+	if (networks.size() > 0){
+ 	   int index = ui->tabWidget->currentIndex();
+ 	   if (networks[index].getNumberOfQueries() > 0){
+ 	       ui->actionCreate_Batchfile->setEnabled(true);
+ 	       ui->actionCreate_Batchfile_2->setEnabled(true);
+ 	   }
+ 	   else{
+ 	       ui->actionCreate_Batchfile->setEnabled(false);
+	       ui->actionCreate_Batchfile_2->setEnabled(false);
+	   }
+	   if (networks[index].isFirstQuery()){
+    	   ui->loadPreviousQueryButton->setEnabled(false);
+	       ui->loadPreviousQueryButton_2->setEnabled(false);
+	   }
+	   else{
+	       ui->loadPreviousQueryButton->setEnabled(true);
+	       ui->loadPreviousQueryButton_2->setEnabled(true);
+	   }
+	   if (networks[index].isLastQuery()){
+	       ui->loadSuccessorQueryButton->setEnabled(false);
+	       ui->loadSuccessorQueryButton_2->setEnabled(false);
+	   }
+	   else{
+	       ui->loadSuccessorQueryButton->setEnabled(true);
+	       ui->loadSuccessorQueryButton_2->setEnabled(true);
+	   }
+	}
 }
 
 void MainWindow::initaliseVisibility(){
@@ -298,16 +300,16 @@ void MainWindow::on_executeQueryButton_clicked()
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)
 {
-    ui->tabWidget->removeTab(index);
     networks.erase(networks.begin()+index);
+	ui->tabWidget->removeTab(index);
 }
 
 void MainWindow::on_actionDeleteNetwork_triggered()
 {
-    if (networks.empty()==false){
+    if (networks.size()>0){
         int index = ui->tabWidget->currentIndex();
+		networks.erase(networks.begin()+index);
         ui->tabWidget->removeTab(index);
-        networks.erase(networks.begin()+index);
     }
 }
 
