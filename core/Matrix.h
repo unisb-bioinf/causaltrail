@@ -1004,21 +1004,29 @@ void Matrix<T>::readMatrix(const std::string& filename, bool colNames, bool rowN
 	}
 
 	std::vector<std::string> rowNBuffer;
+	unsigned int counter;
+	unsigned int row = colNames+1;
 	while(std::getline(input, line)) {
 		auto it = boost::algorithm::make_split_iterator(line, finder);
-
+		counter=0;
 		if(rowNames) {
 			rowNBuffer.push_back(boost::copy_range<std::string>(*it));
 			++it;
 		}
-
+		
 		for(; it != split_iter_end; ++it) {
 			if(boost::begin(*it) == boost::end(*it)) {
 				continue;
 			}
-
+			else{
+				counter++;
+			}
 			data_.push_back(boost::lexical_cast<T>(boost::copy_range<std::string>(*it)));
 		}
+		if (counter != colCount_){
+			throw std::invalid_argument("Row "+std::to_string(row)+" does not contain the specified number of samples");
+		}
+		row++;
 	}
 
 	setRowNames(rowNBuffer);
