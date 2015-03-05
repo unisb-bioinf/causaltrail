@@ -15,9 +15,10 @@ void matrixPopup::initaliseTable(unsigned int rowCount, unsigned int colCount)
     ui->matrixVis->setColumnCount(colCount);
 }
 
-void matrixPopup::setRowNames(const std::vector<std::string> &rowNames)
+
+void matrixPopup::setRowNames(const std::vector<std::string> &rowNames,int startposition)
 {
-    int row = 1;
+    int row = startposition;
     int col;
     QFont fnt;
     fnt.setPointSize(10);

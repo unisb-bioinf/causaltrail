@@ -474,6 +474,19 @@ class NetworkInstance{
      */
     void resetNetwork();
 
+    /**
+     * @brief setDeselectedSamples
+     * @param ids vector containing the column indexes of deselected samples
+     */
+    void setDeselectedSamples(const std::vector<unsigned int>& ids);
+
+    /**
+     * @brief getDeselectedSamples
+     * @return a vector containing the column indexes of deselected samples
+     */
+    std::vector<unsigned int>& getDeselectedSamples();
+
+
 private:
 
     /**
@@ -599,6 +612,13 @@ private:
      * Name of the file containing discretisation informaiton
      */
     QString discretisationControl_;
+
+    /**
+     * @brief deselectedSamples_
+     * Vector of samples that are not used for training. The vector contains the
+     * index of the deselected columns in the original matrix. Counting starts at 1.
+     */
+    std::vector<unsigned int > deselectedSamples_;
 
 };
 

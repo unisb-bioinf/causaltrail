@@ -27,12 +27,13 @@ public:
      */
     void initaliseTable(unsigned int rowCount, unsigned int colCount);
 
+
     /**
      * @brief setRowNames
      * Sets the rowNames for the matrix
      * @param rowNames Vector containing the rowNames
      */
-    void setRowNames(const std::vector<std::string>& rowNames);
+    void setRowNames(const std::vector<std::string>& rowNames, int startposition = 1);
 
     /**
      * @brief setColNames

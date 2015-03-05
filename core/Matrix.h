@@ -20,14 +20,26 @@ template <typename T> class Matrix
 	 *
 	 * @param filename The file containing the data to be stored in the matrix
 	 * @param colNames Flag to indicate the existence of column names
-	 * @param rowNames Flag to indicate the existence of row names
-	 * @param initialValue Initial value for all points in the matrix
+     * @param rowNames Flag to indicate the existence of row names
 	 *
 	 * @return A Matrix Object
 	 *	
 	 * Creates a Matrix containing the data from the specified file
 	 */
     Matrix(const std::string& filename, bool colNames, bool rowNames);
+
+    /**Detailed Constructor
+     *
+     * @param filename The file containing the data to be stored in the matrix
+     * @param colNames Flag to indicate the existence of column names
+     * @param rowNames Flag to indicate the existence of row names
+     * @param sampleToDelete Samples, that should be deleted
+     *
+     * @return A Matrix Object
+     *
+     * Creates a Matrix containing the data from the specified file
+     */
+    Matrix(const std::string& filename, bool colNames, bool rowNames, const std::vector<unsigned int>& samplesToDelete);
 
 	/**Detailed Constructor
 	 *
@@ -418,12 +430,22 @@ template <typename T> class Matrix
 	 *
 	 * @param filename File that should be read
 	 * @param rowNames Flag indicating whether the matrix contains rowNames
-	 * @param colNames Flag indicating whether the matrix contains colNames
-	 * @param initialValue value that should be used for initilization
+     * @param colNames Flag indicating whether the matrix contains colNames
 	 *
 	 * This methods reads a tab or space delimited file containing a matrix.
 	 */
     void readMatrix(const std::string& filename, bool colNames, bool rowNames);
+
+    /**readMatrixDeletion
+     *
+     * @param filename File that should be read
+     * @param rowNames Flag indicating whether the matrix contains rowNames
+     * @param colNames Flag indicating whether the matrix contains colNames
+     * @param vector of column IDs that should be deleted
+     *
+     * This methods reads a tab or space delimited file containing a matrix.
+     */
+    void readMatrixDeletion(const std::string& filename, bool colNames, bool rowNames, const std::vector<unsigned int>& deletedSamples);
 
 	/**countElement
 	 *
@@ -557,6 +579,14 @@ Matrix<T>::Matrix(const std::string& filename, bool colNames, bool rowNames)
 	colCount_ = 0;
 	rowCount_ = 0;
     readMatrix(filename, colNames, rowNames);
+}
+
+template <typename T>
+Matrix<T>::Matrix(const std::string& filename, bool colNames, bool rowNames, const std::vector<unsigned int> &samplesToDelete)
+{
+    colCount_ = 0;
+    rowCount_ = 0;
+    readMatrixDeletion(filename, colNames, rowNames, samplesToDelete);
 }
 
 template <typename T>
@@ -1031,6 +1061,94 @@ void Matrix<T>::readMatrix(const std::string& filename, bool colNames, bool rowN
 
 	setRowNames(rowNBuffer);
 	setColNames(colNBuffer);
+}
+
+template <typename T>
+void Matrix<T>::readMatrixDeletion(const std::string& filename, bool colNames, bool rowNames, const std::vector<unsigned int>& deletedSamples)
+{
+	std::vector<unsigned int> deSelected = deletedSamples;
+	std::sort(deSelected.begin(), deSelected.end());
+    std::ifstream input(filename, std::ifstream::in);
+    if (!input.good()){
+        throw std::invalid_argument("File not found");
+    }
+    std::string line;
+    int numRows = 0;
+    int numCols = 0;
+    rowNames_.clear();
+    colNames_.clear();
+    std::vector<std::string> colNBuffer;
+    // Determine number of rows
+    while(std::getline(input, line)) {
+        numRows++;
+    }
+    // Determine number of columns
+    input.clear();
+    input.seekg(0);
+    std::stringstream content;
+    std::string n;
+    std::getline(input, line);
+    content << line;
+    while(content >> n) {
+        numCols++;
+    }
+	numCols=numCols-deletedSamples.size();
+
+    // Adapt matrix
+    colCount_ = numCols - int(rowNames);
+    rowCount_ = numRows - int(colNames);
+    data_.clear();
+    data_.reserve(colCount_ * rowCount_);
+
+    // Read data
+    input.clear();
+    input.seekg(0);
+
+    const auto matcher = [](char c) { return c == '\t' || c == ' '; };
+    const auto finder = token_finder(matcher, boost::token_compress_on);
+    const auto split_iter_end = boost::algorithm::split_iterator<std::string::iterator>();
+
+    if(colNames) {
+        auto it = boost::algorithm::make_split_iterator(line,finder);
+        for(; it != split_iter_end; ++it) {
+            if(boost::begin(*it) == boost::end(*it)) {
+                continue;
+            }
+
+            colNBuffer.push_back(boost::copy_range<std::string>(*it));
+        }
+    }
+
+    std::vector<std::string> rowNBuffer;
+    unsigned int counter;
+    unsigned int row = colNames+1;
+    while(std::getline(input, line)) {
+        auto it = boost::algorithm::make_split_iterator(line, finder);
+        counter=0;
+        if(rowNames) {
+            rowNBuffer.push_back(boost::copy_range<std::string>(*it));
+            ++it;
+        }
+
+        for(; it != split_iter_end; ++it) {
+            if(boost::begin(*it) == boost::end(*it)) {
+                continue;
+            }
+            else{
+                counter++;
+            }
+			if (not std::binary_search(deSelected.begin(), deSelected.end(),(counter+1))){
+	            data_.push_back(boost::lexical_cast<T>(boost::copy_range<std::string>(*it)));
+				}
+        }
+        if (counter != colCount_+deletedSamples.size()){
+            throw std::invalid_argument("Row "+std::to_string(row)+" does not contain the specified number of samples");
+        }
+        row++;
+    }
+
+    setRowNames(rowNBuffer);
+    setColNames(colNBuffer);
 }
 
 template <typename T>

@@ -79,6 +79,8 @@ public:
      */
     QueryManager& getQma(unsigned int index);
 
+	const std::vector<unsigned int>& getDeSelectedData(unsigned int index);
+
 private:
     /**
      * @brief isTerminal
@@ -92,7 +94,7 @@ private:
      * @brief networkInformation_
      * vector of tuples containing the filenames of NA/TGF, SIF, Data and Discretisation Control File for each NetworkInstance in the current session
      */
-    std::vector<std::tuple<QString,QString,QString,QString>> networkInformation_;
+    std::vector<std::tuple<QString,QString,QString,QString,std::vector<unsigned int>>> networkInformation_;
 
     /**
      * @brief qmaVec_

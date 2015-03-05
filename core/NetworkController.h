@@ -38,6 +38,16 @@ class NetworkController{
 	 */
 	void loadObservations(const std::string& datafile, const std::string& controlFile);
 
+    /**loadObservations
+     *
+     * @param datafile, file containing the raw sample data
+     * @param controlFile, controlFile for discretisation
+     * @param samplesToDelete, vector containing the column index of samples that should be deleted
+     *
+     * Reads the raw sample data and performs the discretisation
+     */
+    void loadObservations(const std::string& datafile, const std::string& controlFile, const std::vector<unsigned int>& samplesToDelete);
+
 	/**trainNetwork
 	 *
 	 * Trains the network using the EM algorithm

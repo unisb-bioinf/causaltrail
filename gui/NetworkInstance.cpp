@@ -2,9 +2,8 @@
 #include "../core/Parser.h"
 #include "NodeGui.h"
 NetworkInstance::NetworkInstance()
-    :trained_(false), argmax_(false),remainingNodesForEdgeAddition_(0), id1_(-1), id2_(-1), naOrTgf_("%"), sif_("%"),dataFile_("%"),discretisationControl_("%")
-  {
-
+    :trained_(false), argmax_(false),remainingNodesForEdgeAddition_(0), id1_(-1), id2_(-1), naOrTgf_("%"), sif_("%"),dataFile_("%"),discretisationControl_("%"),deselectedSamples_({})
+  {    
   }
 
 void NetworkInstance::loadNetwork(QString filename){
@@ -16,7 +15,12 @@ void NetworkInstance::visualize(QWidget* tabwidget){
 }
 
 void NetworkInstance::loadSamples(QString filename, QString controlfile){
-    nc_.loadObservations(filename.toStdString(),controlfile.toStdString());
+    if (deselectedSamples_.empty()){
+        nc_.loadObservations(filename.toStdString(),controlfile.toStdString());
+    }
+    else{
+        nc_.loadObservations(filename.toStdString(),controlfile.toStdString(),deselectedSamples_);
+    }
     nc_.trainNetwork();
     trained_=true;
 }
@@ -399,4 +403,14 @@ void NetworkInstance::setQMA(QueryManager& qma){
 
 void NetworkInstance::resetNetwork(){
     nc_.getNetwork().reset();
+}
+
+void NetworkInstance::setDeselectedSamples(const std::vector<unsigned int> &ids)
+{
+    deselectedSamples_=ids;
+}
+
+std::vector<unsigned int> &NetworkInstance::getDeselectedSamples()
+{
+    return deselectedSamples_;
 }

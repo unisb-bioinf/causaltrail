@@ -15,6 +15,10 @@ void dataStorage::saveSession(std::vector<NetworkInstance> &currentNetworks, QSt
      output<<networkInst.getSif().toStdString()<<std::endl;
      output<<networkInst.getDataFile().toStdString()<<std::endl;
      output<<networkInst.getDiscretisationControlFile().toStdString()<<std::endl;
+     for (unsigned int i = 0; i < networkInst.getDeselectedSamples().size(); i++){
+	 	output<<networkInst.getDeselectedSamples()[i]<<"\t";
+     }
+	 output<<std::endl;
      for (unsigned int i = 0; i < networkInst.getNumberOfQueries(); i++){
         output<<"query"<<std::endl;
         output<<networkInst.getQuery(i).toStdString()<<std::endl;
@@ -49,6 +53,12 @@ void dataStorage::createQueryBatchFile(NetworkInstance &currentNetwork, QString 
     output.close();
 }
 
+const std::vector<unsigned int> fromString(const std::string& line){
+	std::vector<unsigned int> temp;
+
+	return temp;
+}
+
 void dataStorage::loadSession(QString filename)
 {
     QString naOrTgf;
@@ -56,7 +66,9 @@ void dataStorage::loadSession(QString filename)
     QString sample;
     QString controlSample;
     std::ifstream input;
+	std::stringstream deletedSamplesString;
     std::string line;
+	std::vector<unsigned int> deletedSamples;
     input.open(filename.toStdString());
     std::getline(input,line);
     while(!input.eof()){
@@ -70,8 +82,13 @@ void dataStorage::loadSession(QString filename)
             sample = QString::fromStdString(line);
             input >> line;
             controlSample = QString::fromStdString(line);
+			input >> line;
+			deletedSamplesString << line;
+			int i;
+			while (deletedSamplesString >> i)
+				deletedSamples.push_back(i);
             std::getline(input,line);
-            networkInformation_.push_back(std::make_tuple(naOrTgf,sif,sample,controlSample));
+            networkInformation_.push_back(std::make_tuple(naOrTgf,sif,sample,controlSample,deletedSamples));
             std::getline(input,line);
         }
         if (line == "query"){
@@ -129,8 +146,12 @@ const QString& dataStorage::getData(unsigned int index){
    return std::get<2>(networkInformation_[index]);
 }
 
-const QString&dataStorage::getDiscretiseControl(unsigned int index){
+const QString& dataStorage::getDiscretiseControl(unsigned int index){
     return std::get<3>(networkInformation_[index]);
+}
+
+const std::vector<unsigned int>& dataStorage::getDeSelectedData(unsigned int index){
+    return std::get<4>(networkInformation_[index]);
 }
 
 bool dataStorage::isTerminal(QString line, std::ifstream& input)

@@ -180,6 +180,8 @@ private:
      */
     QString path;
 
+
+
 private slots:
 
 	/**
@@ -188,6 +190,12 @@ private slots:
 	 * automatically
 	 */
 	void checkAllEmpty();
+
+    /**
+     * @brief discretiseSelection
+     * @param samples name of the file containing the original observations
+     */
+    void discretiseSelection(QString samples, std::vector<uint> deselected);
 
 	/**
      * @brief on_actionClose_triggered
@@ -413,6 +421,10 @@ private slots:
      * @param index Item index of the item that was double clicked
      */
     void on_queryHistory_doubleClicked(const QModelIndex &index);
+
+    void dataSelected(std::vector<uint> deselected);
+
+    void dataRejected();
 };
 
 #endif // MAINWINDOW_H

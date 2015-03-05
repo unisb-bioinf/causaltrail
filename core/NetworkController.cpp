@@ -18,6 +18,11 @@ void NetworkController::loadObservations(const std::string& datafile, const std:
 	Discretiser disc = Discretiser(originalObservations, controlFile, observations_, network_);
 }
 
+void NetworkController::loadObservations(const std::string& datafile, const std::string& controlFile, const std::vector<unsigned int>& samplesToDelete){
+    Matrix<std::string> originalObservations (datafile,false,true, samplesToDelete);
+    Discretiser disc = Discretiser(originalObservations, controlFile, observations_, network_);
+}
+
 
 void NetworkController::trainNetwork(){
 	DataDistribution datadu= DataDistribution(network_, observations_);

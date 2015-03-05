@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include "matrixpopup.h"
 #include "ui_matrixpopup.h"
+#include "dataview.h"
+#include "ui_dataview.h"
 #include "discretisationselection.h"
 #include "ui_discretisationselection.h"
 #include "QFileDialog"
@@ -206,32 +208,86 @@ void MainWindow::loadSamples(QString samples, QString controlDiscret, int index)
     on_newQuery_clicked();
 }
 
+void MainWindow::discretisationFileCreated(QString control, QString samples, int index){
+    try{
+        loadSamples(samples,control,index);
+    }
+    catch (std::exception& e){
+        ui->Output->addItem(e.what());
+        adaptQueryEvaluationButtons(false);
+        networks[index].resetNetwork();
+    }
+    ui->Output->scrollToBottom();
+}
+
+void MainWindow::discretiseSelection(QString samples, std::vector<uint> deselected){
+    int index = ui->tabWidget->currentIndex();
+    networks[index].setDeselectedSamples(deselected);
+    QString control;
+    QMessageBox boxDisc;
+    boxDisc.setIcon(QMessageBox::Question);
+    boxDisc.setText("Please specify discretisation information source.");
+    QPushButton* file = boxDisc.addButton("Load from File",QMessageBox::ActionRole);
+    QPushButton* choose = boxDisc.addButton("Choose Methods", QMessageBox::ActionRole);
+    boxDisc.exec();
+	try{
+	    if (boxDisc.clickedButton()==file){
+	         control = QFileDialog::getOpenFileName(this, tr("Open txt file containing discretisation information"),path,"*.txt");
+	         loadSamples(samples,control,index);
+	    }
+	    else{
+	        if (boxDisc.clickedButton()==choose){
+	            discretisationSelection* discSel = new discretisationSelection(0,path,samples,index);
+	            connect(discSel,SIGNAL(fileSaved(QString,QString,int)),this,SLOT(discretisationFileCreated(QString,QString,int)));
+    	        discSel->adaptGUIToData();
+	            discSel->show();
+	        }
+	        else{
+	            throw std::invalid_argument("Discretisation information is not specified");
+	        }
+	    }
+	}
+	catch(std::exception& e){
+		ui->Output->addItem(e.what());
+		adaptQueryEvaluationButtons(false);
+		networks[index].resetNetwork();
+	}
+	ui->Output->scrollToBottom();
+
+}
+
+void MainWindow::dataRejected(){
+    ui->Output->addItem("No samples loaded");
+	adaptQueryEvaluationButtons(false);
+	int index = ui->tabWidget->currentIndex();
+	networks[index].resetNetwork();
+	ui->Output->scrollToBottom();
+}
+
 void MainWindow::on_actionLoad_Samples_triggered()
 {
     int index = ui->tabWidget->currentIndex();
     try {
         QString samples = QFileDialog::getOpenFileName(this, tr("Open txt file containing samples"),path,"*.txt");
-        QString control;
-        QMessageBox box;
-        box.setIcon(QMessageBox::Question);
-        box.setText("Please specify discretisation information source.");
-        QPushButton* file = box.addButton("Load from File",QMessageBox::ActionRole);
-        QPushButton* choose = box.addButton("Choose Methods", QMessageBox::ActionRole);
-        box.exec();
-        if (box.clickedButton()==file){
-             control = QFileDialog::getOpenFileName(this, tr("Open txt file containing discretisation information"),path,"*.txt");
-             loadSamples(samples,control,index);
+        QMessageBox boxSamples;
+        boxSamples.setIcon(QMessageBox::Question);
+        boxSamples.setText("Do you want to view/edit the data?");
+        QPushButton* yes = boxSamples.addButton("Yes", QMessageBox::ActionRole);
+        boxSamples.addButton("No",QMessageBox::ActionRole);
+        boxSamples.exec();
+        if (boxSamples.clickedButton()==yes){
+            //View -> Call a new window
+             dataview* dView = new dataview(0,samples);
+             dView->setWindowTitle("Data contained in "+samples);
+             connect(dView,SIGNAL(dataSubmitted(QString, std::vector<uint>)),this,SLOT(discretiseSelection(QString,std::vector<uint>)));
+             connect(dView,SIGNAL(dataRejected()),this,SLOT(dataRejected()));
+             dView->adjust();
+             dView->update();
+             dView->show();
         }
         else{
-            if (box.clickedButton()==choose){
-                discretisationSelection* discSel = new discretisationSelection(0,path,samples,index);
-                connect(discSel,SIGNAL(fileSaved(QString,QString,int)),this,SLOT(discretisationFileCreated(QString,QString,int)));
-                discSel->adaptGUIToData();
-                discSel->show();
-            }
-            else{
-                throw std::invalid_argument("Discretisation information is not specified");
-            }
+            std::vector<unsigned int> temp;
+            discretiseSelection(samples,temp);
         }
     }
     catch (std::exception& e){
@@ -243,17 +299,6 @@ void MainWindow::on_actionLoad_Samples_triggered()
 
 }
 
-void MainWindow::discretisationFileCreated(QString control,QString samples,int index){
-    try{
-        loadSamples(samples,control,index);
-    }
-    catch (std::exception& e){
-        ui->Output->addItem(e.what());
-        adaptQueryEvaluationButtons(false);
-        networks[index].resetNetwork();
-    }
-    ui->Output->scrollToBottom();
-}
 
 void MainWindow::on_actionAbout_triggered()
 {
@@ -810,6 +855,7 @@ void MainWindow::on_actionLoad_Session_triggered()
                 loadSif(dataStore.getSif(i),index);
             }
             visualise(index);
+			networks[index].setDeselectedSamples(dataStore.getDeSelectedData(index));
             loadSamples(dataStore.getData(i),dataStore.getDiscretiseControl(i),index);
             networks[index].setQMA(dataStore.getQma(i));
         }
