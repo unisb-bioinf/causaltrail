@@ -42,7 +42,7 @@ class NetworkController{
      *
      * @param datafile, file containing the raw sample data
      * @param controlFile, controlFile for discretisation
-     * @param samplesToDelete, vector containing the column index of samples that should be deleted
+     * @param samplesToDelete, vector containing the column index of samples that should not be read
      *
      * Reads the raw sample data and performs the discretisation
      */

@@ -441,7 +441,7 @@ template <typename T> class Matrix
      * @param filename File that should be read
      * @param rowNames Flag indicating whether the matrix contains rowNames
      * @param colNames Flag indicating whether the matrix contains colNames
-     * @param vector of column IDs that should be deleted
+     * @param deletedSamples vector of column IDs that should not be read
      *
      * This methods reads a tab or space delimited file containing a matrix.
      */
@@ -1108,19 +1108,24 @@ void Matrix<T>::readMatrixDeletion(const std::string& filename, bool colNames, b
     const auto finder = token_finder(matcher, boost::token_compress_on);
     const auto split_iter_end = boost::algorithm::split_iterator<std::string::iterator>();
 
+	unsigned int counter;
     if(colNames) {
+		counter = 0;
         auto it = boost::algorithm::make_split_iterator(line,finder);
         for(; it != split_iter_end; ++it) {
             if(boost::begin(*it) == boost::end(*it)) {
                 continue;
             }
-
-            colNBuffer.push_back(boost::copy_range<std::string>(*it));
+			else{
+				counter++;
+			}
+			if (not std::binary_search(deSelected.begin(), deSelected.end(),(counter+1))){
+	            colNBuffer.push_back(boost::copy_range<std::string>(*it));
+			}
         }
     }
 
     std::vector<std::string> rowNBuffer;
-    unsigned int counter;
     unsigned int row = colNames+1;
     while(std::getline(input, line)) {
         auto it = boost::algorithm::make_split_iterator(line, finder);

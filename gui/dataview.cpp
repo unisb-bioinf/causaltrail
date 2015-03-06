@@ -15,12 +15,12 @@ dataview::dataview(QWidget *parent, QString samples) :
     addCheckBoxes(data);
 }
 
-void dataview::adjustRowColCount(Matrix<std::string>& mat){
+void dataview::adjustRowColCount(const Matrix<std::string>& mat){
     ui->matrixVis->setRowCount(mat.getRowCount()+1);
     ui->matrixVis->setColumnCount(mat.getColCount()+1);
 }
 
-void dataview::loadRowNames(Matrix<std::string>& mat){
+void dataview::loadRowNames(const Matrix<std::string>& mat){
     QFont fnt;
     fnt.setBold(true);
     unsigned int row=1;
@@ -31,7 +31,7 @@ void dataview::loadRowNames(Matrix<std::string>& mat){
     }
 }
 
-void dataview::loadData(Matrix<std::string>& mat){
+void dataview::loadData(const Matrix<std::string>& mat){
     for (unsigned int row = 0; row < mat.getRowCount(); row++){
         for (unsigned int col = 0; col < mat.getColCount(); col++){
             QTableWidgetItem* item = new QTableWidgetItem(QString::fromStdString(mat(col,row)));
@@ -40,7 +40,7 @@ void dataview::loadData(Matrix<std::string>& mat){
     }
 }
 
-void dataview::addCheckBoxes(Matrix<std::string>& mat){
+void dataview::addCheckBoxes(const Matrix<std::string>& mat){
     QCheckBox* item = new QCheckBox(this);
     connect(item,SIGNAL(stateChanged(int)),this,SLOT(toogle_all_clicked(int)));
     QVBoxLayout* layout = new QVBoxLayout;
@@ -78,7 +78,7 @@ void dataview::toogle_all_clicked(int state){
     }
 }
 
-std::vector<unsigned int> dataview::getDeselectedSamples(){
+const std::vector<unsigned int> dataview::getDeselectedSamples(){
     std::vector<unsigned int> temp;
     for (unsigned int i = 1; i< boxes_.size(); i++){
         if (not boxes_[i]->isChecked()){

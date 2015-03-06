@@ -194,6 +194,7 @@ private slots:
     /**
      * @brief discretiseSelection
      * @param samples name of the file containing the original observations
+	 * @param deselected
      */
     void discretiseSelection(QString samples, std::vector<uint> deselected);
 
@@ -422,8 +423,10 @@ private slots:
      */
     void on_queryHistory_doubleClicked(const QModelIndex &index);
 
-    void dataSelected(std::vector<uint> deselected);
-
+	/**
+	 * @brief dataRejected
+	 * Resets the network if the user did not select data in the dataview
+	 */
     void dataRejected();
 };
 
