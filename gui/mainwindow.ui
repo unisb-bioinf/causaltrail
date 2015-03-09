@@ -144,7 +144,7 @@
     <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="windowTitle">
-    <string>Network Visualization</string>
+    <string>Network Visualisation</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
