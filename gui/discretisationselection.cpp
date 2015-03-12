@@ -62,6 +62,9 @@ void discretisationSelection::on_saveDiscretisation_clicked()
     dialog.setDefaultSuffix("txt");
     dialog.exec();
     QString filename = dialog.selectedFiles()[0];
+	if (filename.isNull()){
+		throw std::invalid_argument("No proper filename specified");
+	}
     std::ofstream output;
     output.open(filename.toStdString());
     for (int i = 1; i < ui->gridLayout->rowCount(); i++){

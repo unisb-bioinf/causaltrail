@@ -243,7 +243,12 @@ void MainWindow::discretiseSelection(QString samples, std::vector<uint> deselect
 	try{
 	    if (boxDisc.clickedButton()==file){
 	         control = QFileDialog::getOpenFileName(this, tr("Open txt file containing discretisation information"),path,"*.txt");
-	         loadSamples(samples,control,index);
+			 if (not control.isNull()){
+		         loadSamples(samples,control,index);
+			 }
+			else {
+				throw std::invalid_argument("Discretisation information is not specified");
+			}
 	    }
 	    else{
 	        if (boxDisc.clickedButton()==choose){
@@ -279,6 +284,9 @@ void MainWindow::on_actionLoad_Samples_triggered()
     int index = ui->tabWidget->currentIndex();
     try {
         QString samples = QFileDialog::getOpenFileName(this, tr("Open txt file containing samples"),path,"*.txt");
+		if (samples.isNull()){
+			throw std::invalid_argument("No file containing samples specified!");
+		}
         QMessageBox boxSamples;
         boxSamples.setIcon(QMessageBox::Question);
         boxSamples.setText("Do you want to view the data?");
