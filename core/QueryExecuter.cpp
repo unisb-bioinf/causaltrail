@@ -83,6 +83,9 @@ void QueryExecuter::adaptNodeIdentifiers()
 
 std::pair<float, std::vector<std::string>> QueryExecuter::execute()
 {
+	if ((nonInterventionNodeID_.size() == 0) and (argmaxNodeIDs_.size() ==0)){
+		throw std::invalid_argument("A query can not be composed of interventions and conditions only!");
+	}
 	std::pair<float, std::vector<std::string>> probability;
 	bool cf = false;
 	if(isCounterfactual()) {
