@@ -111,7 +111,7 @@ void MainWindow::initaliseVisibility(){
     ui->actionCreate_Batchfile_2->setEnabled(false);
     ui->actionExecute_Batchfile_2->setEnabled(false);
     ui->actionSave_Session->setEnabled(false);
-    ui->actionLoad_Samples_2->setEnabled(false  );
+    ui->actionLoad_Samples_2->setEnabled(false);
 }
 
 void MainWindow::checkAllEmpty()
@@ -195,6 +195,7 @@ void MainWindow::loadSif(QString filename, int index){
 void MainWindow::visualise(int index){
     networks[index].visualize(ui->tabWidget->widget(index));
     ui->actionLoad_Samples->setEnabled(true);
+	ui->actionLoad_Samples_2->setEnabled(true);
     ui->actionLayout->setEnabled(true);
     ui->tabWidget->widget(index)->setFocus();
     for (const NodeGui* ng: networks[index].getNodeGuiVec()){
