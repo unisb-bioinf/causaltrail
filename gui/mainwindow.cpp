@@ -60,8 +60,10 @@ void MainWindow::on_actionClose_triggered()
 
 void MainWindow::on_actionHelp_triggered()
 {
-	QString pathToDoku = QDir::currentPath();
+    QString pathToDoku = QDir::currentPath();
+    pathToDoku.replace("/build/gui","/Gui-Documentation-HTML/CausalTrailGuiDoku.html");
 	pathToDoku.replace("/build","/Gui-Documentation-HTML/CausalTrailGuiDoku.html");
+
     QDesktopServices::openUrl(QUrl(pathToDoku));
 }
 
