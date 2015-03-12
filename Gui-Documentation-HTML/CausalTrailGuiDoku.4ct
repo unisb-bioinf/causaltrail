@@ -1,0 +1,46 @@
+\expandafter\ifx\csname doTocEntry\endcsname\relax \expandafter\endinput\fi 
+\doTocEntry\toclikesection{}{\csname a:TocLink\endcsname{1}{x1-1000}{QQ2-1-1}{Contents}}{2}\relax 
+\doTocEntry\tocsection{1}{\csname a:TocLink\endcsname{1}{x1-20001}{QQ2-1-2}{Introduction}}{3}\relax 
+\doTocEntry\tocsection{2}{\csname a:TocLink\endcsname{1}{x1-30002}{QQ2-1-3}{Build CausalTrail including the Graphical User Interface}}{3}\relax 
+\doTocEntry\tocsection{3}{\csname a:TocLink\endcsname{1}{x1-40003}{QQ2-1-4}{Supported Data Formats}}{4}\relax 
+\doTocEntry\tocsubsection{3.1}{\csname a:TocLink\endcsname{1}{x1-50003.1}{QQ2-1-5}{Network Formats}}{4}\relax 
+\doTocEntry\tocsubsubsection{3.1.1}{\csname a:TocLink\endcsname{1}{x1-60003.1.1}{QQ2-1-6}{Trivial Graph Format}}{4}\relax 
+\doTocEntry\tocsubsubsection{3.1.2}{\csname a:TocLink\endcsname{1}{x1-70003.1.2}{QQ2-1-7}{Node Attribute Format}}{4}\relax 
+\doTocEntry\tocsubsubsection{3.1.3}{\csname a:TocLink\endcsname{1}{x1-80003.1.3}{QQ2-1-8}{Simple Interaction Format}}{5}\relax 
+\doTocEntry\tocsubsection{3.2}{\csname a:TocLink\endcsname{1}{x1-90003.2}{QQ2-1-9}{Data}}{5}\relax 
+\doTocEntry\tocsubsection{3.3}{\csname a:TocLink\endcsname{1}{x1-100003.3}{QQ2-1-10}{Discretisation Information}}{5}\relax 
+\doTocEntry\tocsection{4}{\csname a:TocLink\endcsname{1}{x1-110004}{QQ2-1-11}{Usage of the CausalTrail GUI}}{7}\relax 
+\doTocEntry\toclof{1}{\csname a:TocLink\endcsname{1}{x1-11001r1}{}{\ignorespaces Dialogue to specify the path to the data that should be used in \textit  {CausalTrail}.}}{figure}\relax 
+\doTocEntry\toclof{2}{\csname a:TocLink\endcsname{1}{x1-11002r2}{}{\ignorespaces Initial layout of \textit  {CausalTrail}. At this stage, the GUI consists of two main elements. The toolbar at the top and the \texttt  {Log} widget at the bottom. The toolbar can be used to trigger all main actions that can be performed within \textit  {CausalTrail}. The \texttt  {Log} shows status reports for the current session of \textit  {CausalTrail}.}}{figure}\relax 
+\doTocEntry\tocsubsection{4.1}{\csname a:TocLink\endcsname{1}{x1-120004.1}{QQ2-1-14}{Load a Network}}{13}\relax 
+\doTocEntry\toclof{3}{\csname a:TocLink\endcsname{1}{x1-12001r3}{}{\ignorespaces Dialogues to load networks. The dialogue on the left hand side can be used to load a \textit  {tgf} or a \textit  {na} file. The dialogue on the right hand-side is used to load a \textit  {sif} file. It is shown if a \textit  {na} file was loaded beforehand.}}{figure}\relax 
+\doTocEntry\toclof{4}{\csname a:TocLink\endcsname{1}{x1-12002r4}{}{\ignorespaces Visualisation of the \textit  {Student Network} presented in \textit  {Probabilistic Graphical Models} from \textit  {Koller and Friedman}.}}{figure}\relax 
+\doTocEntry\tocsubsection{4.2}{\csname a:TocLink\endcsname{1}{x1-130004.2}{QQ2-1-17}{Load Samples and Discretise the Data}}{19}\relax 
+\doTocEntry\toclof{5}{\csname a:TocLink\endcsname{1}{x1-13001r5}{}{\ignorespaces Dialogue to specify the name of the \textit  {txt} file to be loaded.}}{figure}\relax 
+\doTocEntry\toclof{6}{\csname a:TocLink\endcsname{1}{x1-13002r6}{}{\ignorespaces The user can either view the actual data or proceed directly to the discretisation step.}}{figure}\relax 
+\doTocEntry\toclof{7}{\csname a:TocLink\endcsname{1}{x1-13003r7}{}{\ignorespaces Visualisation of the Student data. Clicking on check boxes (de)selects the respective sample. Confirming the selection by clicking on \texttt  {Load data} proceeds with the discretisation. The entire process can be aborted by clicking on \texttt  {Do not load data}.}}{figure}\relax 
+\doTocEntry\toclof{8}{\csname a:TocLink\endcsname{1}{x1-13004r8}{}{\ignorespaces Dialogue to select the source of the discretisation information. This information can either be provided interactively by the user or read from a file.}}{figure}\relax 
+\doTocEntry\toclof{9}{\csname a:TocLink\endcsname{1}{x1-13005r9}{}{\ignorespaces Discretisation data for the \textit  {Student network} can be provided interactively. As the data is discrete in the first place, we chose the \texttt  {Is Discrete} option from the Combo Box}}{figure}\relax 
+\doTocEntry\toclof{10}{\csname a:TocLink\endcsname{1}{x1-13006r10}{}{\ignorespaces Layout of the graphical user interface once the currently represented network is trained.}}{figure}\relax 
+\doTocEntry\tocsubsection{4.3}{\csname a:TocLink\endcsname{1}{x1-140004.3}{QQ2-1-24}{Sessions}}{37}\relax 
+\doTocEntry\toclof{11}{\csname a:TocLink\endcsname{1}{x1-14001r11}{}{\ignorespaces Dialogues to handle sessions in \textit  {CausalTrail}. The dialogue on the left hand-side can be used to store a session, the dialogue on the right hand-side can be used to load a session. Sessions are stored in \textit  {CausalTrail Session Files (cts)}.}}{figure}\relax 
+\doTocEntry\tocsubsection{4.4}{\csname a:TocLink\endcsname{1}{x1-150004.4}{QQ2-1-26}{View Conditional Probability Tables}}{40}\relax 
+\doTocEntry\toclof{12}{\csname a:TocLink\endcsname{1}{x1-15001r12}{}{\ignorespaces The left part of this figure shows how to open a conditional probability table. The table itself is depicted in the right part of the figure. The name of the represented node is given in the header of the window. Columns in the CPT with an italic label represent the parent nodes and their respective values.}}{figure}\relax 
+\doTocEntry\tocsubsection{4.5}{\csname a:TocLink\endcsname{1}{x1-160004.5}{QQ2-1-28}{Queries}}{43}\relax 
+\doTocEntry\tocsubsubsection{4.5.1}{\csname a:TocLink\endcsname{1}{x1-170004.5.1}{QQ2-1-29}{Direct Query Formulation}}{43}\relax 
+\doTocEntry\toclof{13}{\csname a:TocLink\endcsname{1}{x1-17001r13}{}{\ignorespaces Direct input of queries using the \texttt  {Query Input} widget. Queries are submitted by a click on the green tick, or by pressing \textit  {Enter}. Clicking on the red cross resets the result box in the \texttt  {Query Control Panel}.}}{figure}\relax 
+\doTocEntry\tocsubsubsection{4.5.2}{\csname a:TocLink\endcsname{1}{x1-180004.5.2}{QQ2-1-31}{Interactive Query Construction}}{46}\relax 
+\doTocEntry\toclof{14}{\csname a:TocLink\endcsname{1}{x1-18001r14}{}{\ignorespaces The left hand-side shows the context menu for nodes, the right hand-side shows the context menu for edges. The context menus are empty if the network is not trained.}}{figure}\relax 
+\doTocEntry\toclof{15}{\csname a:TocLink\endcsname{1}{x1-18012r15}{}{\ignorespaces An example query in the \textit  {Student network}. In this example, we compute the probability that Intelligence has the value i1, given the SAT has the value s1, Letter is set to l1, there is an additional edge from Intelligence to Letter, and the edge from Intelligence to Grade is removed. Conditions are shown in bright red, do interventions in yellow, query probabilities in green. Additional edges are red, removed edges are dashed and shown in grey.}}{figure}\relax 
+\doTocEntry\tocsubsubsection{4.5.3}{\csname a:TocLink\endcsname{1}{x1-190004.5.3}{QQ2-1-34}{Query History}}{50}\relax 
+\doTocEntry\toclof{16}{\csname a:TocLink\endcsname{1}{x1-19005r16}{}{\ignorespaces The \texttt  {Query History} widget lists all valid, submitted queries. Double clicking a query reloads it. The network visualisation and the \texttt  {Query Control Panel} are updated according to the query. In this example, the second query is selected.}}{figure}\relax 
+\doTocEntry\tocsubsection{4.6}{\csname a:TocLink\endcsname{1}{x1-200004.6}{QQ2-1-36}{Query Batch Files}}{50}\relax 
+\doTocEntry\tocsubsection{4.7}{\csname a:TocLink\endcsname{1}{x1-210004.7}{QQ2-1-37}{Example Queries}}{51}\relax 
+\doTocEntry\tocsubsubsection{4.7.1}{\csname a:TocLink\endcsname{1}{x1-220004.7.1}{QQ2-1-38}{Predictions}}{51}\relax 
+\doTocEntry\toclof{17}{\csname a:TocLink\endcsname{1}{x1-22001r17}{}{\ignorespaces Example for a simple prediction: Computing the query \texttt  {? Intelligence = i1}.}}{figure}\relax 
+\doTocEntry\toclof{18}{\csname a:TocLink\endcsname{1}{x1-22002r18}{}{\ignorespaces Example for prediction together with a condition: Computing the query \texttt  {? Intelligence = i1 | Grade = g1 SAT = s1}.}}{figure}\relax 
+\doTocEntry\tocsubsubsection{4.7.2}{\csname a:TocLink\endcsname{1}{x1-230004.7.2}{QQ2-1-41}{Interventions}}{57}\relax 
+\doTocEntry\toclof{19}{\csname a:TocLink\endcsname{1}{x1-23001r19}{}{\ignorespaces Example for a do intervention: Computing the query \texttt  {? Intelligence = i1 ! do Grade = g1 | SAT = s1}.}}{figure}\relax 
+\doTocEntry\tocsubsubsection{4.7.3}{\csname a:TocLink\endcsname{1}{x1-240004.7.3}{QQ2-1-43}{Counterfactuals}}{60}\relax 
+\doTocEntry\toclof{20}{\csname a:TocLink\endcsname{1}{x1-24001r20}{}{\ignorespaces Example for a counterfactual: Computing the query \texttt  {? Letter = l1 | Letter = l0}.}}{figure}\relax 
+\par 
