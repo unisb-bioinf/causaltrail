@@ -271,7 +271,7 @@ void MainWindow::on_actionLoad_Samples_triggered()
         QString samples = QFileDialog::getOpenFileName(this, tr("Open txt file containing samples"),path,"*.txt");
         QMessageBox boxSamples;
         boxSamples.setIcon(QMessageBox::Question);
-        boxSamples.setText("Do you want to view/edit the data?");
+        boxSamples.setText("Do you want to view the data?");
         QPushButton* yes = boxSamples.addButton("Yes", QMessageBox::ActionRole);
         boxSamples.addButton("No",QMessageBox::ActionRole);
         boxSamples.exec();
@@ -543,7 +543,7 @@ void MainWindow::Node_context(QString name, uint id, QGraphicsSceneContextMenuEv
         menu->addSeparator();
 
         //Show Probability Matrix
-        connect(menu->addAction("Show Probability Matrix"), SIGNAL(triggered()), this, SLOT(context_Menu_ShowMatrix_selected()),Qt::UniqueConnection);
+        connect(menu->addAction("Show CPT"), SIGNAL(triggered()), this, SLOT(context_Menu_ShowMatrix_selected()),Qt::UniqueConnection);
 
     }
     else{
