@@ -217,6 +217,12 @@ private slots:
     void on_actionAbout_triggered();
 
     /**
+     * @brief on_actionHelp_triggered
+	 * Shows the documentation of Causal Trails GUI
+     */
+    void on_actionHelp_triggered();
+
+    /**
      * @brief on_tabWidget_tabCloseRequested
 	 * Closes the tab with the given index and removes the corresponding NetworkInstance
      * @param index Index of the closed tab
@@ -428,6 +434,13 @@ private slots:
 	 * Resets the network if the user did not select data in the dataview
 	 */
     void dataRejected();
+
+	/**
+	 * @brief Help_2_triggered
+	 * Shows the Documentation of CausalTrail
+	 */
+
+    void on_actionHelp_2_triggered();
 };
 
 #endif // MAINWINDOW_H

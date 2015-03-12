@@ -8,11 +8,14 @@
 #include "ui_discretisationselection.h"
 #include "QFileDialog"
 #include "QGraphicsSceneContextMenuEvent"
+#include "QDesktopServices"
+#include "QDir"
 #include "QMessageBox"
 #include "../core/Parser.h"
 #include "NodeGui.h"
 #include "edge.h"
 #include "datastorage.h"
+#include "listwidgetmulticopy.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -53,6 +56,13 @@ MainWindow::~MainWindow()
 void MainWindow::on_actionClose_triggered()
 {
     close();
+}
+
+void MainWindow::on_actionHelp_triggered()
+{
+	QString pathToDoku = QDir::currentPath();
+	pathToDoku.replace("/build","/Gui-Documentation-HTML/CausalTrailGuiDoku.html");
+    QDesktopServices::openUrl(QUrl(pathToDoku));
 }
 
 void MainWindow::checkQueriesLeft(){
@@ -942,4 +952,9 @@ void MainWindow::on_queryHistory_doubleClicked(const QModelIndex &index)
     writeListWidget(ui->interventionVariableList, ui->interventionLabel, networks[networkIndex].getInterventionItems(index.row()));
     writeListWidget(ui->edgeAdditionsRemovalList, ui->edgeAdReLabel, networks[networkIndex].getEdgeAddRemItems(index.row()));
     ui->Input->setFocus();
+}
+
+void MainWindow::on_actionHelp_2_triggered()
+{
+    on_actionHelp_triggered();
 }

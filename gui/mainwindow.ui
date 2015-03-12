@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>975</width>
+    <width>1108</width>
     <height>823</height>
    </rect>
   </property>
@@ -41,13 +41,13 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>975</width>
+     <width>1108</width>
      <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuProgram">
     <property name="title">
-     <string>Program</string>
+     <string>Programme</string>
     </property>
     <addaction name="actionAbout"/>
     <addaction name="actionClose"/>
@@ -103,6 +103,8 @@
    <addaction name="separator"/>
    <addaction name="actionCreate_Batchfile"/>
    <addaction name="actionExecute_Batchfile"/>
+   <addaction name="separator"/>
+   <addaction name="actionHelp_2"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
    <property name="sizePolicy">
@@ -256,7 +258,7 @@
       <number>0</number>
      </property>
      <item row="0" column="0">
-      <widget class="QListWidget" name="Output">
+      <widget class="ListWidgetMultiCopy" name="Output">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -280,6 +282,12 @@
        </property>
        <property name="sizeAdjustPolicy">
         <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::ContiguousSelection</enum>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectItems</enum>
        </property>
        <property name="movement">
         <enum>QListView::Static</enum>
@@ -981,8 +989,28 @@
     <string>Help</string>
    </property>
   </action>
+  <action name="actionHelp_2">
+   <property name="icon">
+    <iconset theme="help-contents">
+     <normaloff/>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Help</string>
+   </property>
+   <property name="toolTip">
+    <string>Shows the documentation of CausalTrail</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>ListWidgetMultiCopy</class>
+   <extends>QListWidget</extends>
+   <header location="global">listwidgetmulticopy.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
