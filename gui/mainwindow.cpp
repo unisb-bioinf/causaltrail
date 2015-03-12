@@ -397,6 +397,9 @@ void MainWindow::on_actionNewNetwork_triggered()
             ui->Output->addItem(e.what());
         }
     }
+	else{
+		ui->Output->addItem("No file containing network data specified.");
+	}
     ui->Output->scrollToBottom();
 }
 
@@ -852,8 +855,13 @@ void MainWindow::on_actionSaveSession_triggered()
     dialog.setDefaultSuffix("cts");
     dialog.exec();
     QString filename = dialog.selectedFiles()[0];
-    dataStore.saveSession(networks,filename);
-    ui->Output->addItem("Session saved");
+	if (not filename.isNull()){
+	   dataStore.saveSession(networks,filename);
+	   ui->Output->addItem("Session saved");
+	}
+	else{
+		ui->Output->addItem("No file specified. The Session was not stored!");
+	}
     ui->Output->scrollToBottom();
 }
 
@@ -887,6 +895,9 @@ void MainWindow::on_actionLoad_Session_triggered()
             loadQueriesToHistoryWindow(index);
         }
     }
+	else{
+		ui->Output->addItem("No file specified. No session loaded");
+	}
 }
 
 void MainWindow::loadQueriesToHistoryWindow(int index){
