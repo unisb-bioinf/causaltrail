@@ -183,16 +183,35 @@ Factor Factor::sumOut(unsigned int id, Network& network_,
 	}
 	unsigned int jumptimes = 0;
 	unsigned int newFactorLength = length_;
+	unsigned int totalCombinations = jump;
 	if(values[id] == -1) {
 		jumptimes =
 		    network_.getNode(id).getNumberOfUniqueValuesExcludingNA() - 1;
+		totalCombinations*=network_.getNode(id).getNumberOfUniqueValuesExcludingNA();
 		newFactorLength = length_/(jumptimes+1);
 	}
 	
 	std::vector<unsigned int> newIDs = nodeIDs_;
 	newIDs.erase(newIDs.begin() + index);
 	Factor newFactor(newFactorLength, newIDs);
-	unsigned int counter = 0;
+	for (unsigned int i = 0; i< newFactorLength; i++){
+		float prob = 0.0;
+		unsigned int old = (i % jump) + totalCombinations*div(i,jump).quot;
+		for (unsigned int j = 0; j<=jumptimes; j++){
+			prob+=probabilities_[old+j*jump];
+		}
+		for (unsigned int c = 0; c < nodeIDs_.size(); c++){
+				unsigned int d = c;
+				if (c != index){
+					if (c > index){
+						d = c - 1;
+					}
+					newFactor.val_[d+i*newIDs.size()]=val_[c+old*nodeIDs_.size()];
+				}
+			}
+			newFactor.setProbability(prob,i);	
+	}
+/*	unsigned int counter = 0;
 	int firstOb = val_[index];
 	for(int i = 0; i < length_; i++) {
 		if(val_[index+i*nodeIDs_.size()] == firstOb) {
@@ -212,7 +231,7 @@ Factor Factor::sumOut(unsigned int id, Network& network_,
 			newFactor.setProbability(prob,counter);
 			counter++;
 		}
-	}
+	}*/
 	return newFactor;
 }
 
