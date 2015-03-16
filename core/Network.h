@@ -281,15 +281,11 @@ class Network{
 		/**computeFactor 
 		 *
 		 * @param n Const reference to the node of interest
-		 * @param parentID Identifier of the parent in question
 		 *
-		 * @return factor, used for multiplication of the actual node value
-		 * The factor is depending on the parentValues
-		 *
-		 * Calculates the factor to be used for calculating a dense integer
+		 * Calculates the factors to be used for calculating a dense integer
 		 * representation of the node values. 
 		 */
-		int computeFactor(const Node& n, unsigned int parentID) const ;
+		void computeFactor(Node& n) const ;
 
 		/**reverseFactor 
 		 *

@@ -108,9 +108,10 @@ unsigned int Node::getNumberOfParents() const {
 void Node::setParents(const std::vector<unsigned int>& parents)
 {
 	Parents_ = parents;
+	factor_.resize(parents.size());
 }
 
-void Node::cutParents() { Parents_.clear(); parentValues_.clear();}
+void Node::cutParents() { Parents_.clear(); parentValues_.clear(); factor_.clear();}
 
 void Node::setUniqueValues(const std::vector<int>& uniqueValues)
 {
@@ -214,6 +215,7 @@ void Node::createBackupDoIntervention()
 {
 	ProbabilityMatrixBackup_ = ProbabilityMatrix_;
 	ParentsBackup_ = Parents_;
+	factorBackup_ = factor_;
 	parentValuesBackup_ = parentValues_;
 }
 
@@ -221,9 +223,11 @@ void Node::loadBackupDoIntervention()
 {
 	ProbabilityMatrix_ = ProbabilityMatrixBackup_;
 	Parents_ = ParentsBackup_;
+	factor_ = factorBackup_;
 	parentValues_ = parentValuesBackup_;
 	parentValuesBackup_.clear();
 	ParentsBackup_.clear();
+	factorBackup_.clear();
 	ProbabilityMatrixBackup_ = Matrix<float>(0, 0, 0.0);
 }
 
@@ -308,4 +312,12 @@ void Node::reset(){
     ObservationMatrix_ = Matrix<int>(0, 0, 0);
     ObservationBackup_ = Matrix<int>(0, 0, 0);
 	DynProgMatrix_ =Matrix<float>(0, 0, -1.0f);
+}
+
+void Node::setFactor(unsigned int factor, unsigned int id){
+	factor_[id]=factor;
+}
+
+unsigned int Node::getFactor(unsigned int id) const {
+	return factor_[id];
 }

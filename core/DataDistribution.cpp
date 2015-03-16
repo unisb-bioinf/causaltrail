@@ -112,31 +112,34 @@ int DataDistribution::getObservationColIndex(unsigned int sample, const Node& n)
 	}
 }
 
-int DataDistribution::getObservationRowIndex(unsigned int sample, const Node& n,
+int DataDistribution::getObservationRowIndex(unsigned int sample, Node& n,
                                              const Matrix<int>& obsMatrix)
 {
 	if(n.getParents().empty()) {
 		return 0;
 	}
 	int index = 0;
-	for(const auto& parentID : n.getParents()) {
-		Node& pn = network_.getNode(parentID);
+	const auto& parentID = n.getParents();
+	for(unsigned int i = 0; i< parentID.size(); i++) {
+		Node& pn = network_.getNode(parentID[i]);
 		int value = observations_(sample, pn.getObservationRow());
 		if(value == -1) {
 			return -1;
 		}
-		index += network_.computeFactor(n, parentID) * value;
+		index += n.getFactor(i) * value;
 	}
 	return index;
 }
 
-void DataDistribution::countObservations(Matrix<int>& obsMatrix, const Node& n)
+void DataDistribution::countObservations(Matrix<int>& obsMatrix, Node& n)
 {
 	for(unsigned int sample = 0; sample < observations_.getColCount();
 	    sample++) {
 
 		int column = getObservationColIndex(sample, n);
-
+		
+		network_.computeFactor(n);
+	
 		int row = getObservationRowIndex(sample, n, obsMatrix);
 
 		if(row != -1) {

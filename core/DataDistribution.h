@@ -72,7 +72,7 @@ class DataDistribution{
 	 * @return The index of the given value in the parent value list of the node
  	 *
 	 */
-	int getObservationRowIndex(unsigned int sample, const Node& n, const Matrix<int>& obsMatrix);
+	int getObservationRowIndex(unsigned int sample, Node& n, const Matrix<int>& obsMatrix);
 
 	/**assignParentNames
 	 *
@@ -91,7 +91,7 @@ class DataDistribution{
 	 *
  	 * This fills the observation matrix for a node, by iterating over the discretised samples
 	 */
-	void countObservations(Matrix<int>& obsMatrix, const Node& n);
+	void countObservations(Matrix<int>& obsMatrix, Node& n);
 	// A reference to the network
 	Network& network_;	
 	// A reference to the observation matrix

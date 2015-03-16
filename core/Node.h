@@ -516,7 +516,22 @@ class Node {
 	 *
 	 */
 	const std::vector<std::vector<int>>& getParentValues() const;
+
+	/**getFactor
+	 *
+	 * @param id, the identifier of the node for which we want to compute the factor
+	 *
+	 * @return the factor of the node
+	 */
+	unsigned int getFactor(unsigned int id) const;
 	
+	/**setFactor
+	 *
+	 * @param factor, factor to be stored
+	 * @param id, identifier of the factor
+	 */
+	void setFactor(unsigned int factor, unsigned int id);	
+
 	/**reset
 	 *
 	 * Resets the node such that all its members are empty
@@ -571,5 +586,8 @@ class Node {
 	int parentCombinations_;
 	//Indicates wheter a node is visited during DFS, initialized with false
 	bool visited_=false;
+	//An unordered map to store the computed factors
+	std::vector<unsigned int> factor_;
+	std::vector<unsigned int> factorBackup_;
 };
 #endif

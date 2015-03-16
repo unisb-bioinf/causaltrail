@@ -112,6 +112,7 @@ void Network::addEdge(unsigned int id1, unsigned int id2)
 {
 	AdjacencyMatrix_.setData(1, getIndex(id1), getIndex(id2));
 	getNode(id1).setParents(getParents(id1));
+	computeFactor(getNode(id1));
 }
 
 void Network::addEdge(const std::string& name1, const std::string& name2)
@@ -124,6 +125,7 @@ void Network::removeEdge(unsigned int id1, unsigned int id2)
 {
 	AdjacencyMatrix_.setData(0, getIndex(id1), getIndex(id2));
 	getNode(id1).setParents(getParents(id1));
+	computeFactor(getNode(id1));
 }
 
 void Network::removeEdge(const std::string& name1, const std::string& name2)
@@ -370,29 +372,25 @@ void Network::loadBackup()
 	AdjacencyMatrixBackup_ = Matrix<unsigned int>(0, 0, 0);
 }
 
-int Network::computeFactor(const Node& n, unsigned int parentID) const
+void Network::computeFactor(Node& n) const
 {
-	bool flag = false;
-	int factor = 1;
-	for(const auto& key : n.getParents()) {
-		if(flag) {
-			factor *= getNode(key).getUniqueValuesExcludingNA().size();
-		}
-		if(key == parentID) {
-			flag = true;
-		}
+	unsigned int factor = 1;
+	const auto& parents = n.getParents();
+	for (int i = parents.size()-1; i>=0; i--){
+		n.setFactor(factor,i);
+		factor *= getNode(parents[i]).getUniqueValuesExcludingNA().size();
 	}
-	return factor;
 }
 
 int Network::reverseFactor(const Node& n, unsigned int parentID, int row)
     const
 {
 	int value = row;
-	for(const auto& key : n.getParents()) {
-		int factor = computeFactor(n, key);
+	const auto& key = n.getParents();
+	for(unsigned int i = 0; i< key.size(); i++) {
+		int factor = n.getFactor(i);
 		int result = value / factor;
-		if(key == parentID) {
+		if(key[i] == parentID) {
 			return result;
 		}
 		value = (value % factor);

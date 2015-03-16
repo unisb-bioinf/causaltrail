@@ -127,9 +127,9 @@ int ProbabilityHandler::getParentValues(const Node& n, const Matrix<int>& obs,
 	const auto& parents = n.getParents();
 
 	int pos = 0;
-	for(auto pi : parents) {
-		const Node& parent = network_.getNode(pi);
-		pos += network_.computeFactor(n, pi) *
+	for(int i = 0; i< parents.size(); i++) {
+		const Node& parent = network_.getNode(parents[i]);
+		pos += n.getFactor(i)*
 		       obs(sample, parent.getObservationRow());
 	}
 
