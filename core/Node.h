@@ -532,6 +532,25 @@ class Node {
 	 */
 	void setFactor(unsigned int factor, unsigned int id);	
 
+
+	/**getFactor
+	 *
+	 * @param id, the identifier of the node for which we want to compute the factor
+	 *
+	 * @return the factor of the node
+	 */
+	unsigned int getRevFactor(unsigned int row, unsigned int id) const;
+	
+	/**setFactor
+	 *
+	 * @param factor, factor to be stored
+	 * @param id, identifier of the factor
+	 */
+	void setRevFactor(unsigned int factor, unsigned int row, unsigned int id);	
+
+	void initialiseRevFactor();
+	
+
 	/**reset
 	 *
 	 * Resets the node such that all its members are empty
@@ -586,8 +605,13 @@ class Node {
 	int parentCombinations_;
 	//Indicates wheter a node is visited during DFS, initialized with false
 	bool visited_=false;
-	//An unordered map to store the computed factors
+	//A vector to store the computed factors
 	std::vector<unsigned int> factor_;
+	//A vector to store a backup of the computed factors
 	std::vector<unsigned int> factorBackup_;
+	//Vector containing the reversed factors
+	std::vector<std::vector<unsigned int>> revFactor_;
+	//Vector containing a backup of the reversed factors
+	std::vector<std::vector<unsigned int>> revFactorBackup_;
 };
 #endif

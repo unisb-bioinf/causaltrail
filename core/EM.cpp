@@ -53,7 +53,7 @@ void EM::performEM()
 	end = std::chrono::system_clock::now();
 }
 
-float EM::calculateProbabilityEM(const Node& n, unsigned int col, unsigned int row)
+float EM::calculateProbabilityEM(Node& n, unsigned int col, unsigned int row)
 {
 	// get Parents
 	auto ParentIDs = n.getParents();
@@ -63,7 +63,7 @@ float EM::calculateProbabilityEM(const Node& n, unsigned int col, unsigned int r
 	float totProbParents = 1.0f;
 	for(unsigned int key = 0; key < n.getNumberOfParents(); key++) {
 		totProbParents *= probHandler_.computeTotalProbability(
-		    ParentIDs[key], network_.reverseFactor(n, ParentIDs[key], row));
+		    ParentIDs[key], network_.reverseFactor(n, key,row));
 	}
 
 	// computeNormalizingProb

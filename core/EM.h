@@ -67,7 +67,7 @@ class EM{
 	 * in the specified node
  	 *
 	 */
-	float calculateProbabilityEM(const Node& n, unsigned int col, unsigned int row);
+	float calculateProbabilityEM(Node& n, unsigned int col, unsigned int row);
 
 	/**EM
 	 *

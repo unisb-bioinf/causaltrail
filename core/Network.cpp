@@ -382,20 +382,22 @@ void Network::computeFactor(Node& n) const
 	}
 }
 
-int Network::reverseFactor(const Node& n, unsigned int parentID, int row)
-    const
+int Network::reverseFactor(Node& n, unsigned int i, int row)
 {
 	int value = row;
-	const auto& key = n.getParents();
-	for(unsigned int i = 0; i< key.size(); i++) {
-		int factor = n.getFactor(i);
-		int result = value / factor;
-		if(key[i] == parentID) {
-			return result;
+	unsigned int temp = n.getRevFactor(row,i);
+	if (temp==0){
+		int result = -1;
+		for(unsigned int j = 0; j<= i; j++) {
+			int factor = n.getFactor(j);
+			result = value / factor;
+			value = (value % factor);
+			}
+		n.setRevFactor(result,row,i);
+		return result;
 		}
-		value = (value % factor);
-	}
-	return -1;
+	else
+		return temp;
 }
 
 bool Network::hasNode(const std::string& name) const

@@ -12,9 +12,10 @@ float ProbabilityHandler::computeTotalProbabilityNormalized(int nodeID,
 	}
 
 	// Get Parents
-	const Node& node = network_.getNode(nodeID);
+	Node& node = network_.getNode(nodeID);
 	const auto& parentIDs = node.getParents();
 	const auto& probMatrix = node.getProbabilityMatrix();
+
 	// Check Existens
 	if(node.getNumberOfParents() != 0) {
 		// Yes -> Call recursively for all parent values
@@ -29,7 +30,7 @@ float ProbabilityHandler::computeTotalProbabilityNormalized(int nodeID,
 				    index2++) {
 					temp *= computeTotalProbability(
 					    parentIDs[index2],
-					    network_.reverseFactor(node, parentIDs[index2], row));
+					    network_.reverseFactor(node,index2,row));
 				}
 				queryResult += (temp * probMatrix(index, row));
 			}
@@ -55,10 +56,13 @@ float ProbabilityHandler::computeTotalProbability(int nodeID, int index)
 		throw std::invalid_argument(
 		    "The current node does not contain the query value");
 	}
+
+	
 	// Get Parents
 	Node& node = network_.getNode(nodeID);
 	const auto& parentIDs = node.getParents();
 	const auto& probMatrix = node.getProbabilityMatrix();
+
 	// Check Existens
 	if(node.getNumberOfParents() != 0) {
 		// Yes -> Call recursively for all parent values
@@ -72,7 +76,7 @@ float ProbabilityHandler::computeTotalProbability(int nodeID, int index)
 				    index2++) {
 					temp *= computeTotalProbability(
 					    parentIDs[index2],
-					    network_.reverseFactor(node, parentIDs[index2], row));
+					    network_.reverseFactor(node, index2, row));
 				}
 				float tempResult = temp * probMatrix(index, row);
 				node.setCalculatedValue(tempResult, index, row);
@@ -127,7 +131,7 @@ int ProbabilityHandler::getParentValues(const Node& n, const Matrix<int>& obs,
 	const auto& parents = n.getParents();
 
 	int pos = 0;
-	for(int i = 0; i< parents.size(); i++) {
+	for(unsigned int i = 0; i< parents.size(); i++) {
 		const Node& parent = network_.getNode(parents[i]);
 		pos += n.getFactor(i)*
 		       obs(sample, parent.getObservationRow());

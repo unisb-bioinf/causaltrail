@@ -280,7 +280,7 @@ class Network{
 
 		/**computeFactor 
 		 *
-		 * @param n Const reference to the node of interest
+		 * @param n Reference to the node of interest
 		 *
 		 * Calculates the factors to be used for calculating a dense integer
 		 * representation of the node values. 
@@ -289,8 +289,8 @@ class Network{
 
 		/**reverseFactor 
 		 *
-		 * @param n A cost reference to the node of interest
-		 * @param parentID Identifiert of the parent in question
+		 * @param n A reference to the node of interest
+		 * @param position of the parent in question in the parent list of n
 		 * @param row Row of the probability matrix in which the factor occures
 		 *
 		 * @return The original value of the given node
@@ -298,7 +298,7 @@ class Network{
 		 * Calculates the original value of a node given the dense integer
 		 * representation used for internal storage
 		 */
-		int reverseFactor(const Node& n, unsigned int parentID, int row) const;
+		int reverseFactor(Node& n, unsigned int i, int row);
 
 		/**size 
 		 *

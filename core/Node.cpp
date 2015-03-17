@@ -216,6 +216,7 @@ void Node::createBackupDoIntervention()
 	ProbabilityMatrixBackup_ = ProbabilityMatrix_;
 	ParentsBackup_ = Parents_;
 	factorBackup_ = factor_;
+	revFactorBackup_ = revFactor_;
 	parentValuesBackup_ = parentValues_;
 }
 
@@ -224,6 +225,7 @@ void Node::loadBackupDoIntervention()
 	ProbabilityMatrix_ = ProbabilityMatrixBackup_;
 	Parents_ = ParentsBackup_;
 	factor_ = factorBackup_;
+	revFactor_ = revFactorBackup_;
 	parentValues_ = parentValuesBackup_;
 	parentValuesBackup_.clear();
 	ParentsBackup_.clear();
@@ -320,4 +322,18 @@ void Node::setFactor(unsigned int factor, unsigned int id){
 
 unsigned int Node::getFactor(unsigned int id) const {
 	return factor_[id];
+}
+
+void Node::setRevFactor(unsigned int factor, unsigned int row, unsigned int id){
+	revFactor_[row][id]=factor;
+}
+
+unsigned int Node::getRevFactor(unsigned int row, unsigned int id) const {
+	return revFactor_[row][id];
+}
+
+void Node::initialiseRevFactor(){
+	std::vector<unsigned int> empty;
+	empty.resize(getParents().size(),0);	
+	revFactor_.resize(ProbabilityMatrix_.getRowCount(),empty);
 }

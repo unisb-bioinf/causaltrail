@@ -165,6 +165,7 @@ void DataDistribution::distributeObservations()
 		n.setObservations(obsMatrix);
 		n.setObservationBackup(obsMatrix);
 		n.setProbability(probMatrix);
+		n.initialiseRevFactor();
 		n.clearDynProgMatrix();
 		n.createBackup();
 	}
