@@ -28,7 +28,6 @@ TEST_F(NetworkTest, readNetworkTGF){
 	ASSERT_TRUE(n_.getNode(1).getName()=="Welt");
 	ASSERT_TRUE(n_.hasNode("!!!"));
 	ASSERT_TRUE(n_.getIndex("Hallo")==0);
-	ASSERT_TRUE(n_.getIndex(2)==2);
 }
 
 TEST_F(NetworkTest, getParents){

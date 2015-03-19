@@ -205,15 +205,6 @@ class Network{
 		 */
 		const std::vector<unsigned int> getNodeIDs() const;
 
-		/**getIndex 
-		 *
-		 * @param id Identifier of the node of interest
-		 *
-		 * @return Index of the given Node
-		 *
-		 * Returns the position of the given node in the nodelist of the network object
-		 */
-		unsigned int getIndex(unsigned int id) const ;
 
 		/**getIndex 
 		 *
@@ -460,7 +451,7 @@ class Network{
 		Matrix<unsigned int> AdjacencyMatrixBackup_;
 		//Maps the identifier of a node to its index in the NodeList_
 		std::unordered_map<unsigned int, unsigned int> IDToIndex_;
-		//Maps the name of a node to its index int he NodeList_
+		//Maps the name of a node to its index int the NodeList_
 		std::unordered_map<std::string, unsigned int> NameToIndex_;
 		//Depending on the file typ, an unsigned int is returned to allow for switching
 		std::unordered_map<std::string, unsigned int> ExtensionToIndex_;

@@ -23,18 +23,6 @@ struct Comp {
   
 };
 
-
-
-unsigned int Network::getIndex(unsigned int id) const
-{
-	auto res = IDToIndex_.find(id);
-	if(res == IDToIndex_.end()) {
-		throw std::invalid_argument("Identifier not found");
-	}
-	return res->second;
-}
-
-
 unsigned int Network::getIndex(const std::string& name) const
 {
 	auto res = NameToIndex_.find(name);
@@ -47,7 +35,7 @@ unsigned int Network::getIndex(const std::string& name) const
 const std::vector<unsigned int> Network::getParents(unsigned int id) const
 {
 	std::vector<unsigned int> parentIDs;
-	unsigned int index = getIndex(id);
+	unsigned int index = id;
 	for(unsigned int row = 0; row < AdjacencyMatrix_.getRowCount(); row++) {
 		if(AdjacencyMatrix_(index, row) == 1) {
 			unsigned int temp;
@@ -110,7 +98,7 @@ void Network::cutParents(const std::string& name)
 
 void Network::addEdge(unsigned int id1, unsigned int id2)
 {
-	AdjacencyMatrix_.setData(1, getIndex(id1), getIndex(id2));
+	AdjacencyMatrix_.setData(1, id1, id2);
 	getNode(id1).setParents(getParents(id1));
 	computeFactor(getNode(id1));
 }
@@ -123,7 +111,7 @@ void Network::addEdge(const std::string& name1, const std::string& name2)
 
 void Network::removeEdge(unsigned int id1, unsigned int id2)
 {
-	AdjacencyMatrix_.setData(0, getIndex(id1), getIndex(id2));
+	AdjacencyMatrix_.setData(0, id1, id2);
 	getNode(id1).setParents(getParents(id1));
 	computeFactor(getNode(id1));
 }
@@ -133,11 +121,11 @@ void Network::removeEdge(const std::string& name1, const std::string& name2)
 	removeEdge(getNode(name1).getID(), getNode(name2).getID());
 }
 
-Node& Network::getNode(unsigned int id) { return NodeList_[getIndex(id)]; }
+Node& Network::getNode(unsigned int id) { return NodeList_[id];}//[getIndex(id)]; }
 
 const Node& Network::getNode(const unsigned int id) const
 {
-	return NodeList_[getIndex(id)];
+	return NodeList_[id];//getIndex(id)];
 }
 
 Node& Network::getNode(const std::string& name)
