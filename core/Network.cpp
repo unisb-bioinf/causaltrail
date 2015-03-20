@@ -100,7 +100,6 @@ void Network::addEdge(unsigned int id1, unsigned int id2)
 {
 	AdjacencyMatrix_.setData(1, id1, id2);
 	getNode(id1).setParents(getParents(id1));
-	computeFactor(getNode(id1));
 }
 
 void Network::addEdge(const std::string& name1, const std::string& name2)
@@ -113,7 +112,6 @@ void Network::removeEdge(unsigned int id1, unsigned int id2)
 {
 	AdjacencyMatrix_.setData(0, id1, id2);
 	getNode(id1).setParents(getParents(id1));
-	computeFactor(getNode(id1));
 }
 
 void Network::removeEdge(const std::string& name1, const std::string& name2)

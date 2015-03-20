@@ -108,6 +108,7 @@ unsigned int Node::getNumberOfParents() const {
 void Node::setParents(const std::vector<unsigned int>& parents)
 {
 	Parents_ = parents;
+	factor_.clear();
 	factor_.resize(parents.size());
 }
 
@@ -334,6 +335,8 @@ unsigned int Node::getRevFactor(unsigned int row, unsigned int id) const {
 
 void Node::initialiseRevFactor(){
 	std::vector<unsigned int> empty;
+	empty.clear();
 	empty.resize(getParents().size(),0);	
+	revFactor_.clear();
 	revFactor_.resize(ProbabilityMatrix_.getRowCount(),empty);
 }

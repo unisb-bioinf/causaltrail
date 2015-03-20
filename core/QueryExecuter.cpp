@@ -101,7 +101,6 @@ std::pair<float, std::vector<std::string>> QueryExecuter::execute()
 		executeInterventions();
 	}
 	probability = computeProbability();
-
 	if(hasInterventions()) {
 		reverseInterventions();
 	}
