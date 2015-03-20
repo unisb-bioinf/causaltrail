@@ -211,27 +211,6 @@ Factor Factor::sumOut(unsigned int id, Network& network_,
 			}
 			newFactor.setProbability(prob,i);	
 	}
-/*	unsigned int counter = 0;
-	int firstOb = val_[index];
-	for(int i = 0; i < length_; i++) {
-		if(val_[index+i*nodeIDs_.size()] == firstOb) {
-			float prob = probabilities_[i];
-			for(unsigned int j = 1; j <= jumptimes; j++) {
-				prob += probabilities_[i + j * jump];
-			}
-			for (unsigned int c = 0; c < nodeIDs_.size(); c++){
-				unsigned int d = c;
-				if (c != index){
-					if (c > index){
-						d = c - 1;
-					}
-					newFactor.val_[d+counter*newIDs.size()]=val_[c+i*nodeIDs_.size()];
-				}
-			}
-			newFactor.setProbability(prob,counter);
-			counter++;
-		}
-	}*/
 	return newFactor;
 }
 
