@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1108</width>
-    <height>823</height>
+    <height>896</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -35,6 +35,42 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="currentIndex">
+       <number>-1</number>
+      </property>
+      <property name="tabsClosable">
+       <bool>true</bool>
+      </property>
+      <property name="movable">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -42,12 +78,12 @@
      <x>0</x>
      <y>0</y>
      <width>1108</width>
-     <height>19</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuProgram">
     <property name="title">
-     <string>Programme</string>
+     <string>Pro&amp;gramme</string>
     </property>
     <addaction name="actionAbout"/>
     <addaction name="actionClose"/>
@@ -106,101 +142,6 @@
    <addaction name="separator"/>
    <addaction name="actionHelp_2"/>
   </widget>
-  <widget class="QDockWidget" name="dockWidget">
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>141</width>
-     <height>37</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>1920</width>
-     <height>1080</height>
-    </size>
-   </property>
-   <property name="sizeIncrement">
-    <size>
-     <width>0</width>
-     <height>0</height>
-    </size>
-   </property>
-   <property name="baseSize">
-    <size>
-     <width>0</width>
-     <height>0</height>
-    </size>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="features">
-    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
-   </property>
-   <property name="windowTitle">
-    <string>Network Visualisation</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents">
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="layoutDirection">
-     <enum>Qt::LeftToRight</enum>
-    </property>
-    <layout class="QGridLayout" name="gridLayout">
-     <property name="leftMargin">
-      <number>0</number>
-     </property>
-     <property name="topMargin">
-      <number>0</number>
-     </property>
-     <property name="rightMargin">
-      <number>0</number>
-     </property>
-     <property name="bottomMargin">
-      <number>0</number>
-     </property>
-     <item row="1" column="0">
-      <widget class="QTabWidget" name="tabWidget">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="currentIndex">
-        <number>-1</number>
-       </property>
-       <property name="tabsClosable">
-        <bool>true</bool>
-       </property>
-       <property name="movable">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
   <widget class="QDockWidget" name="dockWidget_4">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -232,7 +173,7 @@
     <set>Qt::AllDockWidgetAreas</set>
    </property>
    <property name="windowTitle">
-    <string>Log</string>
+    <string>&amp;Log</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
@@ -248,7 +189,13 @@
      <property name="sizeConstraint">
       <enum>QLayout::SetNoConstraint</enum>
      </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
      <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
       <number>0</number>
      </property>
      <property name="bottomMargin">
@@ -331,10 +278,10 @@
     <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="windowTitle">
-    <string>Query Input</string>
+    <string>&amp;Query Input</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>1</number>
+    <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_4">
     <property name="enabled">
@@ -357,6 +304,12 @@
        </item>
        <item>
         <widget class="QToolButton" name="executeQueryButton">
+         <property name="minimumSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
+         </property>
          <property name="text">
           <string>...</string>
          </property>
@@ -369,11 +322,17 @@
        </item>
        <item>
         <widget class="QToolButton" name="deleteQueryButton">
+         <property name="minimumSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
+         </property>
          <property name="text">
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset theme="application-exit">
+          <iconset theme="edit-delete">
            <normaloff/>
           </iconset>
          </property>
@@ -383,6 +342,12 @@
         <widget class="QToolButton" name="loadPreviousQueryButton">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
          </property>
          <property name="text">
           <string>...</string>
@@ -398,6 +363,12 @@
         <widget class="QToolButton" name="loadSuccessorQueryButton">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
          </property>
          <property name="text">
           <string>...</string>
@@ -424,7 +395,7 @@
    <property name="minimumSize">
     <size>
      <width>357</width>
-     <height>578</height>
+     <height>637</height>
     </size>
    </property>
    <property name="font">
@@ -439,7 +410,7 @@
     <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="windowTitle">
-    <string>Query Control Panel</string>
+    <string>Query &amp;Control Panel</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -532,7 +503,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset theme="application-exit">
+          <iconset theme="edit-delete">
            <normaloff/>
           </iconset>
          </property>
@@ -816,13 +787,28 @@
     <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="windowTitle">
-    <string>Query History</string>
+    <string>Q&amp;uery History</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_3">
     <layout class="QVBoxLayout" name="verticalLayout_3">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
      <item>
       <widget class="QListWidget" name="queryHistory">
        <property name="maximumSize">
@@ -854,22 +840,22 @@
   </action>
   <action name="actionClose">
    <property name="text">
-    <string>Close</string>
+    <string>&amp;Close</string>
    </property>
   </action>
   <action name="actionAbout">
    <property name="text">
-    <string>About</string>
+    <string>&amp;About</string>
    </property>
   </action>
   <action name="actionNewNetwork">
    <property name="icon">
-    <iconset theme="document-new">
+    <iconset theme="document-open">
      <normaloff/>
     </iconset>
    </property>
    <property name="text">
-    <string>New Network</string>
+    <string>Load Network</string>
    </property>
   </action>
   <action name="actionDeleteNetwork">
@@ -909,28 +895,33 @@
    </property>
   </action>
   <action name="actionNew_Network">
+   <property name="icon">
+    <iconset theme="document-new">
+     <normaloff/>
+    </iconset>
+   </property>
    <property name="text">
-    <string>New Network</string>
+    <string>&amp;New Network</string>
    </property>
   </action>
   <action name="actionDelete_Network">
    <property name="text">
-    <string>Delete Network</string>
+    <string>&amp;Delete Network</string>
    </property>
   </action>
   <action name="actionLoad_Samples_2">
    <property name="text">
-    <string>Load Samples</string>
+    <string>&amp;Load Samples</string>
    </property>
   </action>
   <action name="actionSave_Session">
    <property name="text">
-    <string>Save Session</string>
+    <string>&amp;Save Session</string>
    </property>
   </action>
   <action name="actionLayout_2">
    <property name="text">
-    <string>Layout</string>
+    <string>La&amp;yout</string>
    </property>
   </action>
   <action name="actionLoad_Session">
@@ -945,7 +936,7 @@
   </action>
   <action name="actionLoad_Session_2">
    <property name="text">
-    <string>Load Session</string>
+    <string>L&amp;oad Session</string>
    </property>
   </action>
   <action name="actionCreate_Batchfile">
@@ -958,7 +949,7 @@
     </iconset>
    </property>
    <property name="text">
-    <string>Create Batchfile</string>
+    <string>Save Batchfile</string>
    </property>
   </action>
   <action name="actionExecute_Batchfile">
@@ -966,27 +957,27 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="document-open">
+    <iconset theme="system-run">
      <normaloff/>
     </iconset>
    </property>
    <property name="text">
-    <string>Execute Batchfile</string>
+    <string>Run Batchfile</string>
    </property>
   </action>
   <action name="actionCreate_Batchfile_2">
    <property name="text">
-    <string>Create Batchfile</string>
+    <string>&amp;Create Batchfile</string>
    </property>
   </action>
   <action name="actionExecute_Batchfile_2">
    <property name="text">
-    <string>Execute Batchfile</string>
+    <string>&amp;Execute Batchfile</string>
    </property>
   </action>
   <action name="actionHelp">
    <property name="text">
-    <string>Help</string>
+    <string>&amp;Help</string>
    </property>
   </action>
   <action name="actionHelp_2">

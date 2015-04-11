@@ -98,7 +98,6 @@ void MainWindow::checkQueriesLeft(){
 }
 
 void MainWindow::initaliseVisibility(){
-    ui->dockWidget->setVisible(false);
     ui->dockWidget_2->setVisible(false);
     ui->dockWidget_5->setVisible(false);
     ui->dockWidget_3->setVisible(false);
@@ -172,7 +171,6 @@ void MainWindow::writeListWidget(QListWidget *widget, QLabel* label, std::vector
 
 int MainWindow::generateNetworkInstance(){
     networks.push_back(NetworkInstance());
-    ui->dockWidget->setVisible(true);
     ui->tabWidget->addTab(new QWidget,"New Tab "+QString::number(ui->tabWidget->count()));
     int index = ui->tabWidget->count()-1;
     ui->tabWidget->setCurrentIndex(index);
