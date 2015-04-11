@@ -2,10 +2,15 @@ cmake_minimum_required (VERSION 2.8.11)
 
 project (Causal-Analysis-gui)
 
-add_definitions(-std=c++11 -Wall -pedantic)
+find_package(Qt5Widgets)
+find_package(Qt5Core)
+
+if(NOT Qt5Core_FOUND OR NOT Qt5Widgets_FOUND)
+	message(STATUS "Could not find a Qt5 installation. The GUI will not be built.")
+	return()
+endif()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
 set(CMAKE_AUTOMOC ON)
 
 QT5_WRAP_UI(ui_Headers
