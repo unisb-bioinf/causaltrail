@@ -261,7 +261,7 @@ void Network::readNA(const std::string& filename)
 		std::stringstream buffer;
 		buffer << line;
 		buffer >> id1 >> waste >> name;
-		if ((waste == "") or (name == "")){
+		if (waste == "" || name == "") {
 			throw std::invalid_argument("Invalid structure of na file");
 		}
 		id1=getDenseNodeIdentifier(id1);
@@ -320,7 +320,7 @@ void Network::performDFS(unsigned int id,
                          std::vector<unsigned int>& visitedNodes)
 {
 	Node& n = getNode(id);
-	if(not n.isVisited()) {
+	if(!n.isVisited()) {
 		n.visit();
 		visitedNodes.push_back(n.getID());
 		for(int pid : n.getParents()) {
@@ -464,7 +464,7 @@ void Network::removeHypoNodes(){
 void Network::createTwinNetwork(){
 	std::set<int> hypoNodes;
 	for (auto& n : NodeList_){
-		if (not n.getParents().empty()){
+		if (!n.getParents().empty()){
 			hypoNodes.insert(n.getID());
 		}	
 	}
