@@ -52,7 +52,7 @@ template <typename T> class Matrix
 	 * Creates a Matrix with the specified name vectors. The size of the matrix is calculated 
 	 * using the number of entries in the name vectors.
 	 */
-	Matrix(const std::vector<std::string>& colNames = {"NA"},
+	Matrix(const std::vector<std::string>& colNames,
 	       const std::vector<std::string>& rowNames = {"NA"}, T initialValue = NULL);
 
 	/**Detailed Constructor
