@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 2.8.11)
 
-set(CMAKE_POLICY_DEFAULT_CMP0054 NEW)
+if(POLICY CMP0054)
+	cmake_policy(SET CMP0054 NEW)
+endif()
 
 project (Causal-Analysis)
 
