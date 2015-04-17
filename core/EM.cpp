@@ -23,7 +23,7 @@ void EM::performEM()
 			// Initialize and iterate E/M-Phase
 			method_ = method;
 			initalise();
-			while((difference > differenceThreshold_)and(runs < maxRuns_)) {
+			while(difference > differenceThreshold_ && runs < maxRuns_) {
 				ePhase();
 				difference = mPhase();
 				runs++;
@@ -37,7 +37,7 @@ void EM::performEM()
 		initalise();
 		difference = 1.0f;
 		runs = 0;
-		while((difference > differenceThreshold_)and(runs < maxRuns_)) {
+		while(difference > differenceThreshold_ && runs < maxRuns_) {
 			ePhase();
 			difference = mPhase();
 			runs++;
