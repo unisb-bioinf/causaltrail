@@ -138,29 +138,13 @@ template <typename T> class Matrix
 	 */
 	void setColNames(const std::vector<std::string>& names);
 
-	/**getRowCount
-	 *
-	 * @return Number of rows
-	 *
-	 * This function returns the number of rows of the matrix
-	 */
-	unsigned int getRowCount();
-
-	/**getColCount
-	 *
-	 * @return Number of columns
-	 *
-	 * This function returns the number of columns
-	 */
-	unsigned int getColCount();
-
 	/**getRowCount const
 	 *
 	 * @return Number of rows
 	 *
 	 * This function returns the number of rows of the matrix
 	 */
-	unsigned int getRowCount() const;
+	size_t getRowCount() const;
 
 	/**getColCount const
 	 *
@@ -168,7 +152,7 @@ template <typename T> class Matrix
 	 *
 	 * This function returns the number of columns
 	 */
-	unsigned int getColCount() const;
+	size_t getColCount() const;
 
 	/**getValueByNames
   	 *
@@ -519,7 +503,7 @@ template <typename T> class Matrix
 	 * @throw Exception invalid_argument(If the original number of colums or rows is
 	 * smaller than the new one)
 	 */
-	void resize(unsigned int colCount, unsigned int rowCount, T initalValue);
+	void resize(size_t colCount, size_t rowCount, T initalValue);
 
 	/**hasNACol
 	 * 
@@ -561,8 +545,8 @@ template <typename T> class Matrix
 
 	private:
 	//Unsigned ints to store the size of the matrix
-	unsigned int rowCount_;
-	unsigned int colCount_;
+	size_t rowCount_;
+	size_t colCount_;
 	//Vectors to store the rowNames
 	std::vector<std::string> rowNames_;
 	std::vector<std::string> colNames_;
@@ -709,22 +693,12 @@ void Matrix<T>::setColNames(const std::vector<std::string>& names)
 	}
 }
 
-template <typename T> unsigned int Matrix<T>::getRowCount()
+template <typename T> size_t Matrix<T>::getRowCount() const
 {
 	return rowCount_;
 }
 
-template <typename T> unsigned int Matrix<T>::getColCount()
-{
-	return colCount_;
-}
-
-template <typename T> unsigned int Matrix<T>::getRowCount() const
-{
-	return rowCount_;
-}
-
-template <typename T> unsigned int Matrix<T>::getColCount() const
+template <typename T> size_t Matrix<T>::getColCount() const
 {
 	return colCount_;
 }
@@ -1157,7 +1131,7 @@ void Matrix<T>::readMatrixDeletion(const std::string& filename, bool colNames, b
 }
 
 template <typename T>
-void Matrix<T>::resize(unsigned int colCount, unsigned int rowCount,
+void Matrix<T>::resize(size_t colCount, size_t rowCount,
                        T initialValue)
 {
 	if(colCount_ > colCount || rowCount_ > rowCount)
