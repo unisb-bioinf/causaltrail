@@ -615,7 +615,7 @@ Matrix<T>::Matrix(int colCount, int rowCount, T initialValue,
 template <typename T>
 T& Matrix<T>::operator()(unsigned int col, unsigned int row)
 {
-	if((col > colCount_)or(row > rowCount_)) {
+	if(col > colCount_ || row > rowCount_) {
 		throw std::invalid_argument("In Matrix(), Invalid matrix position");
 	}
 	return data_[col + row * colCount_];
@@ -624,7 +624,7 @@ T& Matrix<T>::operator()(unsigned int col, unsigned int row)
 template <typename T>
 const T& Matrix<T>::operator()(unsigned int col, unsigned int row) const
 {
-	if((col > colCount_)or(row > rowCount_)) {
+	if(col > colCount_ || row > rowCount_) {
 		throw std::invalid_argument(
 		    "In Matrix() const, Invalid matrix position" +
 		    boost::lexical_cast<std::string>(col) + " " +
@@ -651,7 +651,7 @@ const T& Matrix<T>::getValueByNames(const std::string& colName,
 {
 	int col = findCol(colName);
 	int row = findRow(rowName);
-	if((row == -1)or(col == -1)) {
+	if(row == -1 || col == -1) {
 		throw std::invalid_argument("Specified elements not found");
 	} else
 		return data_[col + row * colCount_];
@@ -681,7 +681,7 @@ std::ostream& operator<<(std::ostream& os, const Matrix<T>& m)
 template <typename T>
 void Matrix<T>::setData(T value, unsigned int col, unsigned int row)
 {
-	if((col > colCount_)or(row > rowCount_)) {
+	if(col > colCount_ || row > rowCount_) {
 		throw std::invalid_argument("In setData, Invalid matrix position");
 	}
 	data_[col + row * colCount_] = value;
@@ -1119,7 +1119,7 @@ void Matrix<T>::readMatrixDeletion(const std::string& filename, bool colNames, b
 			else{
 				counter++;
 			}
-			if (not std::binary_search(deSelected.begin(), deSelected.end(),(counter+1))){
+			if (!std::binary_search(deSelected.begin(), deSelected.end(),(counter+1))){
 	            colNBuffer.push_back(boost::copy_range<std::string>(*it));
 			}
         }
@@ -1142,7 +1142,7 @@ void Matrix<T>::readMatrixDeletion(const std::string& filename, bool colNames, b
             else{
                 counter++;
             }
-			if (not std::binary_search(deSelected.begin(), deSelected.end(),(counter+1))){
+			if (!std::binary_search(deSelected.begin(), deSelected.end(),(counter+1))){
 	            data_.push_back(boost::lexical_cast<T>(boost::copy_range<std::string>(*it)));
 				}
         }
@@ -1160,7 +1160,7 @@ template <typename T>
 void Matrix<T>::resize(unsigned int colCount, unsigned int rowCount,
                        T initialValue)
 {
-	if((colCount_ > colCount)or(rowCount_ > rowCount))
+	if(colCount_ > colCount || rowCount_ > rowCount)
 		throw std::invalid_argument("Matrices can not be shrinked");
 	if(colCount_ < colCount) {
 		data_.resize(colCount * rowCount);
