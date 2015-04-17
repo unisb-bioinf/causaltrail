@@ -17,7 +17,7 @@ class DiscretiserTest : public ::testing::Test{
 };
 
 TEST_F(DiscretiserTest,Floor){
-	Discretiser d = Discretiser(oobs_,dobs_,n_);
+	Discretiser d(oobs_,dobs_,n_);
 	d.discretiseRow(0,1,0.0f);	
 	ASSERT_EQ(0,d.getEntry(0,0));
 	ASSERT_EQ(1,d.getEntry(1,0));
@@ -28,7 +28,7 @@ TEST_F(DiscretiserTest,Floor){
 }
 
 TEST_F(DiscretiserTest,Ceil){
-	Discretiser d = Discretiser(oobs_,dobs_,n_);
+	Discretiser d(oobs_,dobs_,n_);
 	d.discretiseRow(1,0,0.0f);	
 	ASSERT_EQ(0,d.getEntry(0,1));
 	ASSERT_EQ(1,d.getEntry(1,1));
@@ -39,7 +39,7 @@ TEST_F(DiscretiserTest,Ceil){
 }
 
 TEST_F(DiscretiserTest,Round){
-	Discretiser d = Discretiser(oobs_,dobs_,n_);
+	Discretiser d(oobs_,dobs_,n_);
 	d.discretiseRow(2,2,0.0f);	
 	ASSERT_EQ(0,d.getEntry(0,2));
 	ASSERT_EQ(0,d.getEntry(1,2));
@@ -50,7 +50,7 @@ TEST_F(DiscretiserTest,Round){
 }
 
 TEST_F(DiscretiserTest,AMean){
-	Discretiser d = Discretiser(oobs_,dobs_,n_);
+	Discretiser d(oobs_,dobs_,n_);
 	d.discretiseRow(3,3,0.0f);	
 	ASSERT_EQ(0,d.getEntry(0,3));
 	ASSERT_EQ(0,d.getEntry(1,3));
@@ -61,7 +61,7 @@ TEST_F(DiscretiserTest,AMean){
 }
 
 TEST_F(DiscretiserTest,HMean){
-	Discretiser d = Discretiser(oobs_,dobs_,n_);
+	Discretiser d(oobs_,dobs_,n_);
 	d.discretiseRow(4,4,0.0f);	
 	ASSERT_EQ(0,d.getEntry(0,4));
 	ASSERT_EQ(0,d.getEntry(1,4));
@@ -72,7 +72,7 @@ TEST_F(DiscretiserTest,HMean){
 }
 
 TEST_F(DiscretiserTest,Median){
-	Discretiser d = Discretiser(oobs_,dobs_,n_);
+	Discretiser d(oobs_,dobs_,n_);
 	d.discretiseRow(5,5,0.0f);	
 	ASSERT_EQ(0,d.getEntry(0,5));
 	ASSERT_EQ(0,d.getEntry(1,5));
@@ -83,7 +83,7 @@ TEST_F(DiscretiserTest,Median){
 }
 
 TEST_F(DiscretiserTest,Manually){
-	Discretiser d = Discretiser(oobs_,dobs_,n_);
+	Discretiser d(oobs_,dobs_,n_);
 	d.discretiseRow(6,6,3.0f);	
 	ASSERT_EQ(0,d.getEntry(0,6));
 	ASSERT_EQ(0,d.getEntry(1,6));
@@ -94,7 +94,7 @@ TEST_F(DiscretiserTest,Manually){
 }
 
 TEST_F(DiscretiserTest,BracketMedians){
-	Discretiser d = Discretiser(oobs_,dobs_,n_);
+	Discretiser d(oobs_,dobs_,n_);
 	d.discretiseRow(7,7,3.0);	
 	ASSERT_EQ(0,d.getEntry(0,7));
 	ASSERT_EQ(0,d.getEntry(1,7));
@@ -105,7 +105,7 @@ TEST_F(DiscretiserTest,BracketMedians){
 }
 
 TEST_F(DiscretiserTest,PerasonTukey){
-	Discretiser d = Discretiser(oobs_,dobs_,n_);
+	Discretiser d(oobs_,dobs_,n_);
 	d.discretiseRow(8,8,0.0f);	
 	ASSERT_EQ(0,d.getEntry(0,8));
 	ASSERT_EQ(1,d.getEntry(1,8));
@@ -116,7 +116,7 @@ TEST_F(DiscretiserTest,PerasonTukey){
 }
 
 TEST_F(DiscretiserTest,MapNamesToInt){
-	Discretiser d = Discretiser(oobs_,dobs_,n_);
+	Discretiser d(oobs_,dobs_,n_);
 	d.discretiseRow(9,9,0.0f);	
 	ASSERT_EQ(1,d.getEntry(0,9));
 	ASSERT_EQ(0,d.getEntry(1,9));
@@ -127,7 +127,7 @@ TEST_F(DiscretiserTest,MapNamesToInt){
 }
 
 TEST_F(DiscretiserTest,MapNamesToIntWithNA){
-	Discretiser d = Discretiser(oobs_,dobs_,n_);
+	Discretiser d(oobs_,dobs_,n_);
 	d.discretiseRow(10,9,0.0f);	
 	ASSERT_EQ(1,d.getEntry(0,10));
 	ASSERT_EQ(-1,d.getEntry(1,10));
@@ -138,7 +138,7 @@ TEST_F(DiscretiserTest,MapNamesToIntWithNA){
 }
 
 TEST_F(DiscretiserTest, Z){
-	Discretiser d = Discretiser(oobs_,dobs_,n_);
+	Discretiser d(oobs_,dobs_,n_);
 	d.discretiseRow(11,10,0.0f);	
 	ASSERT_EQ(0,d.getEntry(0,11));
 	ASSERT_EQ(0,d.getEntry(1,11));

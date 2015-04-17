@@ -40,7 +40,7 @@ TEST_F(DataDistributionTest, assignObservationsToNodesTestStudentComplet){
 	n.readNetwork(TEST_DATA_PATH("Student.sif"));
 	Matrix<std::string> originalObservations (TEST_DATA_PATH("StudentData.txt"),false,true);
 	Matrix<int> observations (0,0,-1);
-	Discretiser disc = Discretiser(originalObservations,TEST_DATA_PATH("controlStudent.txt"), observations, n);
+	Discretiser disc(originalObservations,TEST_DATA_PATH("controlStudent.txt"), observations, n);
 	DataDistribution db (n, observations);
 	db.assignObservationsToNodes();
 	std::vector<std::string> empty {"1"};
@@ -105,7 +105,7 @@ TEST_F(DataDistributionTest, assignObservationsToNodesTestStudentInComplet){
 	n.readNetwork(TEST_DATA_PATH("Student.sif"));
 	Matrix<std::string> originalObservations (TEST_DATA_PATH("dataStudent60.txt"),false,true);
 	Matrix<int> observations (0,0,-1);
-	Discretiser disc = Discretiser(originalObservations,TEST_DATA_PATH("controlStudent.txt"), observations, n);
+	Discretiser disc(originalObservations,TEST_DATA_PATH("controlStudent.txt"), observations, n);
 	DataDistribution db (n, observations);
 	db.assignObservationsToNodes();
 	std::vector<std::string> empty {"1"};
@@ -170,7 +170,7 @@ TEST_F(DataDistributionTest, distributeObservationsTestStudentComplet){
 	n.readNetwork(TEST_DATA_PATH("Student.sif"));
 	Matrix<std::string> originalObservations (TEST_DATA_PATH("StudentData.txt"),false,true);
 	Matrix<int> observations (0,0,-1);
-	Discretiser disc = Discretiser(originalObservations,TEST_DATA_PATH("controlStudent.txt"), observations, n);
+	Discretiser disc(originalObservations,TEST_DATA_PATH("controlStudent.txt"), observations, n);
 	DataDistribution db (n, observations);
 	db.assignObservationsToNodes();
 	db.distributeObservations();
@@ -217,7 +217,7 @@ TEST_F(DataDistributionTest, distributeObservationsTestStudentInComplet){
 	n.readNetwork(TEST_DATA_PATH("Student.sif"));
 	Matrix<std::string> originalObservations (TEST_DATA_PATH("dataStudent60.txt"),false,true);
 	Matrix<int> observations (0,0,-1);
-	Discretiser disc = Discretiser(originalObservations,TEST_DATA_PATH("controlStudent.txt"), observations, n);
+	Discretiser disc(originalObservations,TEST_DATA_PATH("controlStudent.txt"), observations, n);
 	DataDistribution db (n, observations);
 	db.assignObservationsToNodes();
 	
