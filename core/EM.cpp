@@ -19,7 +19,7 @@ void EM::performEM()
 	// Check completness of the data
 	if(observations_.contains(-1)) {
 		start = std::chrono::system_clock::now();
-		for(int method = 0; method < 2; method++) {
+		for(unsigned int method = 0; method < 2; method++) {
 			// Initialize and iterate E/M-Phase
 			method_ = method;
 			initalise();
