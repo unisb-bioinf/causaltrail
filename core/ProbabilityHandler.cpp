@@ -201,7 +201,7 @@ std::vector<unsigned int> ProbabilityHandler::getOrdering(
 	auto temp = conditionNodes;
 	for(auto& id : factorisation) {
 		if((std::find(conditionNodes.begin(), conditionNodes.end(), id) ==
-		   conditionNodes.end()) and (std::find(nonInterventionNodes.begin(), nonInterventionNodes.end(), id) == nonInterventionNodes.end())) {
+		   conditionNodes.end()) && (std::find(nonInterventionNodes.begin(), nonInterventionNodes.end(), id) == nonInterventionNodes.end())) {
 			temp.push_back(id);
 		}
 	}
@@ -232,7 +232,7 @@ void ProbabilityHandler::eliminate(const unsigned int id,
 			tempFactor = tempFactor.product(factorlist[neededFactors[i]],network_,values);
 		}
 	}
-	if ((nonInterventionValues.empty()) or (values[id] != -1) or ((values[id] == -1) and (nonInterventionValues[id] == -1))){
+	if (nonInterventionValues.empty() || values[id] != -1 || (values[id] == -1 && nonInterventionValues[id] == -1)) {
 		tempFactor = tempFactor.sumOut(id, network_, values);
 	}
 	for(auto& neededFactorID : neededFactorsIDs) {
