@@ -256,17 +256,6 @@ template <typename T> class Matrix
 	 */
 	int findCol(const std::string& element) const;
 
-	/**calculateRowSum
-	 *
-	 * @param row Index of the row of interest
-	 *
-	 * @return col sum of the values
-	 *
-	 * If a matrix contains numerical values, this method computes the sum of
-	 * those values that are assigned to the specified row
-	 */
-	float calculateRowSum(unsigned int row);
-
 	/**calculateRowSum const
 	 *
 	 * @param row Index of the row of interest
@@ -276,18 +265,8 @@ template <typename T> class Matrix
 	 * If a matrix contains numerical values, this method computes the sum of
 	 * those values that are assigned to the specified row
 	 */
-	float calculateRowSum(unsigned int row) const;
+	T calculateRowSum(unsigned int row) const;
 
-	/**calculateColSum
-	 *
-	 * @param col Index of the row of interest
-	 *
-	 * @return col sum of the values
-	 *
-	 * If a matrix contains numerical values, this method computes the sum of
-	 * those values that are assigned to the specified column
-	 */
-	float calculateColSum(unsigned int col);
 	/**calculateColSum const 
 	 *
 	 * @param col Index of the col of interest
@@ -297,7 +276,7 @@ template <typename T> class Matrix
 	 * If a matrix contains numerical values, this method computes the sum of
 	 * those values that are assigned to the specified column
 	 */
-	float calculateColSum(unsigned int col) const;
+	T calculateColSum(unsigned int col) const;
 
 	/**getUniqueRowValues
 	 *
@@ -1161,50 +1140,22 @@ void Matrix<T>::resize(size_t colCount, size_t rowCount,
 	rowCount_ = rowCount;
 }
 
-template <typename T> float Matrix<T>::calculateRowSum(unsigned int row)
+template <typename T>
+T Matrix<T>::calculateColSum(unsigned int col) const
 {
-	float sum = 0;
-	if (std::is_arithmetic<T>::value){
-		for(unsigned int col = 0; col < colCount_; col++)
-			sum += (float)data_[col + row * colCount_];
-		return sum;
-	}
-	return -1.0f;
-}
-
-template <typename T> float Matrix<T>::calculateColSum(unsigned int col)
-{
-	float sum = 0;
-	if (std::is_arithmetic<T>::value){
-		for(unsigned int row = 0; row < rowCount_; row++)
-			sum += (float)data_[col + row * colCount_];
-		return sum;
-		}
-	return -1.0f;
+	T sum = T();
+	for(unsigned int row = 0; row < rowCount_; row++)
+		sum += data_[col + row * colCount_];
+	return sum;
 }
 
 template <typename T>
-float Matrix<T>::calculateRowSum(unsigned int row) const
+T Matrix<T>::calculateRowSum(unsigned int row) const
 {
-	float sum = 0;
-	if (std::is_arithmetic<T>::value){
-		for(unsigned int col = 0; col < colCount_; col++)
-			sum += (float)data_[col + row * colCount_];
-		return sum;
-		}
-	return -1.0;
-}
-
-template <typename T>
-float Matrix<T>::calculateColSum(unsigned int col) const
-{
-	float sum = 0;
-	if (std::is_arithmetic<T>::value){
-		for(unsigned int row = 0; row < rowCount_; row++)
-			sum += (float)data_[col + row * colCount_];
-		return sum;
-		}
-	return -1.0;
+	T sum = T();
+	for(unsigned int col = 0; col < colCount_; col++)
+		sum += data_[col + row * colCount_];
+	return sum;
 }
 
 template <typename T> bool Matrix<T>::hasNACol()
