@@ -158,8 +158,8 @@ void Discretiser::discretiseZ(unsigned int row)
 	float standardDeviation = sqrt(expValue2 - (expValue*expValue));
 	for(unsigned int col = 0; col < originalObservations_.getColCount(); col++){
 		float value = getNumber(col,row);
-		float z = abs((value - expValue)/standardDeviation);
-		if (z < 2.0){
+		float z = std::abs((value - expValue)/standardDeviation);
+		if (z < 2.0f) {
 			observations_.setData(0,col,row);		
 		}
 		else{
