@@ -64,7 +64,7 @@ bool NetworkController::isEdgePossible(unsigned int sourceID, unsigned int targe
 		network_.removeEdge(pair.second,pair.first);
 	}
 	network_.addEdge(targetID,sourceID);
-	bool edgePossible = not network_.checkCycleExistence(sourceID);
+	bool edgePossible = !network_.checkCycleExistence(sourceID);
 	network_.removeEdge(targetID,sourceID);
 	for (auto& pair : removedEdges){
 		network_.addEdge(pair.second,pair.first);
