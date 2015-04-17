@@ -407,9 +407,9 @@ bool Network::hasValue(const std::string& nodeName,
 	return true;
 }
 
-unsigned int Network::getDenseNodeIdentifier(unsigned int originialIdentifier)
+size_t Network::getDenseNodeIdentifier(unsigned int originialIdentifier)
 {
-	unsigned int newID = NodeList_.size();
+	size_t newID = NodeList_.size();
 	originalIDToDense_.push_back(std::make_pair(originialIdentifier, newID));
 	return newID;
 }
@@ -425,7 +425,7 @@ unsigned int Network::getNewID(unsigned int originalIdentifier)
 	throw std::invalid_argument("Identifier not found");
 }
 
-unsigned int Network::size() const { return getNodes().size(); }
+size_t Network::size() const { return getNodes().size(); }
 
 void Network::saveParameters() const{
 	std::chrono::time_point<std::chrono::system_clock> time = std::chrono::system_clock::now();
@@ -436,10 +436,10 @@ void Network::saveParameters() const{
 	file.open(filename);
 	for (auto& n : NodeList_){
 		std::vector<unsigned int> parents = n.getParents();
-		unsigned int rowCount=n.getNumberOfParentValues();
-		unsigned int colCount=n.getNumberOfUniqueValuesExcludingNA();
-		for (unsigned int row=0;row<rowCount;row++)
-			for (unsigned int col=0;col<colCount;col++){
+		size_t rowCount=n.getNumberOfParentValues();
+		size_t colCount=n.getNumberOfUniqueValuesExcludingNA();
+		for (size_t row = 0; row < rowCount; row++)
+			for (size_t col = 0; col < colCount; col++){
 				file<<n.getName()<<"\t";
 				file<<n.getProbabilityMatrix().getColNames()[col]<<"\t";
 				for (auto& id : parents){
@@ -469,11 +469,11 @@ void Network::createTwinNetwork(){
 			hypoNodes.insert(n.getID());
 		}	
 	}
-	unsigned int shift = NodeList_.size();
+	size_t shift = NodeList_.size();
 	hypostart_ = shift;
 	IDMap_.resize(shift,-1);
-	unsigned int index = shift;
-	unsigned int newID = shift;
+	size_t index = shift;
+	size_t newID = shift;
 	for (auto id : hypoNodes){
 		IDMap_[id]=newID;
 		newID++;

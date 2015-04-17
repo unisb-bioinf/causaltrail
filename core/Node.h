@@ -223,7 +223,7 @@ class Node {
 	 * @return The number of parents
 	 *
 	 */
-	unsigned int getNumberOfParents() const;
+	size_t getNumberOfParents() const;
 	
 	/**setParents
 	 *
@@ -281,21 +281,21 @@ class Node {
 	 * @return The number of different value combinatons with respect to the parents
 	 *
 	 */
-	unsigned int getNumberOfParentValues() const;
+	size_t getNumberOfParentValues() const;
 
 	/**getNumberOfUnqiueValues
 	 *
 	 * @return The number of unique values occuring in this node
 	 *
 	 */
-	unsigned int getNumberOfUniqueValues() const;
+	size_t getNumberOfUniqueValues() const;
 
 	/**getNumberOfUnqiueValuesExcludingNA
 	 *
 	 * @return The number of unique values occuring in this node excluding NAs
 	 *
 	 */
-	unsigned int getNumberOfUniqueValuesExcludingNA() const;
+	size_t getNumberOfUniqueValuesExcludingNA() const;
 
 	/**setObservationRow
 	 *

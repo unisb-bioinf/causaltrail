@@ -295,7 +295,7 @@ class Network{
 		 * @return Returns the number of nodes in network
 		 *
 		 */
-		unsigned int size() const;
+		size_t size() const;
 
 		/**saveParameters 
 		 *
@@ -409,7 +409,7 @@ class Network{
 		 *
 		 * Creates a dense node identifier, given the original one
 		 */
-		unsigned int getDenseNodeIdentifier(unsigned int originialIdentifier);
+		size_t getDenseNodeIdentifier(unsigned int originialIdentifier);
 
 		/**assignParents 
 		 *

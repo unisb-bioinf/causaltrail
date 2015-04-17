@@ -1142,18 +1142,18 @@ void Matrix<T>::resize(size_t colCount, size_t rowCount,
 			for(int col = colCount_ - 1; col >= 0; col--)
 				data_[col + row * colCount_ + (colCount - colCount_) * row] =
 				    data_[col + row * colCount_];
-		for(unsigned int row = 0; row < rowCount_; row++)
-			for(unsigned int col = colCount_; col < colCount; col++)
+		for(size_t row = 0; row < rowCount_; row++)
+			for(size_t col = colCount_; col < colCount; col++)
 				data_[col + row * colCount] = initialValue;
-		for(unsigned int row = rowCount_; row < rowCount; row++)
-			for(unsigned int col = 0; col < colCount; col++)
+		for(size_t row = rowCount_; row < rowCount; row++)
+			for(size_t col = 0; col < colCount; col++)
 				data_[col + row * colCount] = initialValue;
 	}
 	else{
 		if (rowCount_ < rowCount){
 			data_.resize(colCount_ * rowCount);
-			for(unsigned int row = rowCount_; row < rowCount; row++)
-				for(unsigned int col = 0; col < colCount_; col++)
+			for(size_t row = rowCount_; row < rowCount; row++)
+				for(size_t col = 0; col < colCount_; col++)
 					data_[col + row * colCount_] = initialValue;
 		}
 	}
