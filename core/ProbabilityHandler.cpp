@@ -120,7 +120,7 @@ std::vector<std::vector<int>> ProbabilityHandler::enumerate(
     const std::vector<unsigned int>& factorisation,
     const std::vector<std::vector<int>>& valueAssignment)
 {
-	Combinations<int> com = Combinations<int>(factorisation, valueAssignment);
+	Combinations<int> com(factorisation, valueAssignment);
 	com.createCombinations(0);
 	return com.getResult();
 }

@@ -63,7 +63,7 @@ void DataDistribution::assignParentNames(Node& n)
 			    network_.getNode(id).getUniqueValuesExcludingNA();
 		}
 
-		auto comb = Combinations<int>(n.getParents(), uniqueValuesExcludingNA);
+		Combinations<int> comb(n.getParents(), uniqueValuesExcludingNA);
 		comb.createCombinations(0);
 		std::vector<std::vector<int>> tempParentNames = comb.getResult();
 		std::vector<std::vector<int>> parentValues;

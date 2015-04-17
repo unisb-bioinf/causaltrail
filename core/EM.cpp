@@ -4,7 +4,7 @@ EM::EM(Network& network, Matrix<int>& observations, float difference,
        unsigned int runs)
     : network_(network),
       observations_(observations),
-      probHandler_(ProbabilityHandler(network)),
+      probHandler_(network),
       differenceThreshold_(difference),
       maxRuns_(runs)
 {

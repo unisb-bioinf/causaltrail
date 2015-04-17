@@ -226,7 +226,7 @@ unsigned int Parser::getValueID(const std::string& nodeName, const std::string& 
  * @return Parser object
  */
 Parser::Parser(std::string userInput, NetworkController& networkController)
-    : userInput_(userInput), network_(networkController.getNetwork()), qe_(QueryExecuter(networkController))
+    : userInput_(userInput), network_(networkController.getNetwork()), qe_(networkController)
 {
 	if (userInput != ""){
 		typedef boost::tokenizer<boost::char_separator<char>> tokenizer;

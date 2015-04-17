@@ -2,7 +2,7 @@
 
 QueryExecuter::QueryExecuter(NetworkController& c)
     : networkController_(c),
-      probHandler_(ProbabilityHandler(c.getNetwork())),
+      probHandler_(c.getNetwork()),
       interventions_(c)
 {
 	size_t size = c.getNetwork().size();
