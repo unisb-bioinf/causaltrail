@@ -112,8 +112,7 @@ int DataDistribution::getObservationColIndex(unsigned int sample, const Node& n)
 	}
 }
 
-int DataDistribution::getObservationRowIndex(unsigned int sample, Node& n,
-                                             const Matrix<int>& obsMatrix)
+int DataDistribution::getObservationRowIndex(unsigned int sample, Node& n)
 {
 	if(n.getParents().empty()) {
 		return 0;
@@ -140,7 +139,7 @@ void DataDistribution::countObservations(Matrix<int>& obsMatrix, Node& n)
 		
 		network_.computeFactor(n);
 	
-		int row = getObservationRowIndex(sample, n, obsMatrix);
+		int row = getObservationRowIndex(sample, n);
 
 		if(row != -1) {
 			obsMatrix(column, row)++;

@@ -75,7 +75,7 @@ class DataDistribution{
 	 * @return The index of the given value in the parent value list of the node
  	 *
 	 */
-	int getObservationRowIndex(unsigned int sample, Node& n, const Matrix<int>& obsMatrix);
+	int getObservationRowIndex(unsigned int sample, Node& n);
 
 	/**assignParentNames
 	 *
