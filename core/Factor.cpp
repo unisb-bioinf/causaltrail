@@ -26,7 +26,7 @@ Factor::Factor(const Node& n, const std::vector<int>& values)
 					v.insert(v.end(), n.getParentValues()[row].begin(),
 					         n.getParentValues()[row].end());
 				}
-				if((not parentsKnown)and(usedValues.find(v) ==
+				if(!parentsKnown && (usedValues.find(v) ==
 				                         usedValues.end())) {
 					val_.insert(val_.end(), v.begin(), v.end());
 					addProbability(p(col, row));
@@ -39,7 +39,7 @@ Factor::Factor(const Node& n, const std::vector<int>& values)
 							useRow = false;
 						}
 					}
-					if((useRow)and(usedValues.find(v) == usedValues.end())) {
+					if(useRow && (usedValues.find(v) == usedValues.end())) {
 						val_.insert(val_.end(), v.begin(), v.end());
 						addProbability(p(col, row));
 						length_++;
@@ -55,7 +55,7 @@ Factor::Factor(const Node& n, const std::vector<int>& values)
 				v.insert(v.end(), n.getParentValues()[row].begin(),
 				         n.getParentValues()[row].end());
 			}
-			if((not parentsKnown)and(usedValues.find(v) == usedValues.end())) {
+			if(!parentsKnown && (usedValues.find(v) == usedValues.end())) {
 				val_.insert(val_.end(), v.begin(), v.end());
 				addProbability(p(values[n.getID()], row));
 				length_++;
@@ -67,7 +67,7 @@ Factor::Factor(const Node& n, const std::vector<int>& values)
 						useRow = false;
 					}
 				}
-				if((useRow)and(usedValues.find(v) == usedValues.end())) {
+				if(useRow && (usedValues.find(v) == usedValues.end())) {
 					val_.insert(val_.end(), v.begin(), v.end());
 					addProbability(p(values[n.getID()], row));
 					length_++;
