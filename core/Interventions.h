@@ -31,6 +31,10 @@ class Interventions{
 	 */
 	Interventions(NetworkController& c);
 
+#if defined __GNUC__ || defined __clang__
+	Interventions(const Interventions&) = default;
+#endif
+
 	Interventions& operator=(const Interventions&) = delete;
 	Interventions& operator=(Interventions&&) = delete;
 

@@ -25,8 +25,12 @@ class ProbabilityHandler
 	 */
 	ProbabilityHandler(Network& network);
 
+#if defined __GNUC__ || defined __clang__
+	ProbabilityHandler(const ProbabilityHandler&) = default;
+#endif
+
 	ProbabilityHandler& operator=(const ProbabilityHandler&) = delete;
-	ProbabilityHandler(ProbabilityHandler&& handler);
+	ProbabilityHandler& operator=(ProbabilityHandler&&) = delete;
 
 	/**computeTotalProbability
 	 *

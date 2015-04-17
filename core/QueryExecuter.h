@@ -16,6 +16,10 @@ class QueryExecuter{
 	 */
 	QueryExecuter(NetworkController& c);
 
+#if defined __GNUC__ || defined __clang__
+	QueryExecuter(const QueryExecuter&) = default;
+#endif
+
 	QueryExecuter& operator=(const QueryExecuter&) = delete;
 	QueryExecuter& operator=(QueryExecuter&&) = delete;
 
