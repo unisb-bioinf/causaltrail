@@ -81,7 +81,7 @@ void Parser::parseInterventions(unsigned int& index)
 			ato=true;
 		}
 		index++;
-		if (not ato){
+		if (!ato) {
 			throw std::invalid_argument("In parseInterventions, no inverventions found");
 		}
 	}
@@ -90,7 +90,7 @@ void Parser::parseInterventions(unsigned int& index)
 void Parser::parseNonIntervention(unsigned int& index)
 {
 	while(terminationSymbol(index)) {
-		if(not getNode(query_[index])) {
+		if(!getNode(query_[index])) {
 			throw std::invalid_argument("In parseNonIntervention, invalid node name "+query_[index]);
 		}
 		index++;
@@ -98,7 +98,7 @@ void Parser::parseNonIntervention(unsigned int& index)
 			throw std::invalid_argument("In parseNonIntervention, invalid sign expected = but found "+query_[index]);
 		}
 		index++;
-		if(not getValue(query_[index - 2], query_[index])) {
+		if(!getValue(query_[index - 2], query_[index])) {
 			throw std::invalid_argument("In parsenNonIntervention, invalid value "+query_[index]);
 		}
 		else{
@@ -111,7 +111,7 @@ void Parser::parseNonIntervention(unsigned int& index)
 void Parser::parseCondition(unsigned int& index)
 {
 	while(terminationSymbol(index)) {
-		if(not getNode(query_[index])){
+		if(!getNode(query_[index])){
 			throw std::invalid_argument("In parseCondition, invalid node name "+query_[index]);
 		}
 		index++;
@@ -121,7 +121,7 @@ void Parser::parseCondition(unsigned int& index)
 		if (index >= query_.size()){
 			throw std::invalid_argument("No value specified for " +query_[index-2]);
 		}
-		if(not getValue(query_[index - 2], query_[index])){
+		if(!getValue(query_[index - 2], query_[index])){
 			throw std::invalid_argument("In parseCondition, node "+query_[index-2]+" does not have a value "+query_[index]);
 		}
 		else{
@@ -133,14 +133,14 @@ void Parser::parseCondition(unsigned int& index)
 
 void Parser::parseDoIntervention(unsigned int& index)
 {
-	if(not getNode(query_[index])){
+	if(!getNode(query_[index])){
 		throw std::invalid_argument("In parseDoIntervention, invalid node name "+query_[index]);
 	}
 	index++;
 	if(query_[index] != "=")
 		throw std::invalid_argument("In parseDoIntervention, invalid sign expected = but found "+query_[index]);
 	index++;
-	if(not getValue(query_[index - 2], query_[index])){
+	if(!getValue(query_[index - 2], query_[index])){
 		throw std::invalid_argument("In parseDoIntervention, node "+query_[index-2]+" does not have a value "+query_[index]);
 	}
 	else{
@@ -151,11 +151,11 @@ void Parser::parseDoIntervention(unsigned int& index)
 void Parser::parseAddEdge(unsigned int& index)
 {
 	if ((index+1) < query_.size()){
-		if(not getNode(query_[index])){
+		if(!getNode(query_[index])){
 			throw std::invalid_argument("In parseAddEdge, invalid node name "+query_[index]);
 		}
 		index++;
-		if(not getNode(query_[index])){
+		if(!getNode(query_[index])){
 			throw std::invalid_argument("In parseAddEdge, invalid node name "+query_[index]);
 		}
 		qe_.setAddEdge(getNodeID(query_[index-1]),getNodeID(query_[index]));	
@@ -168,11 +168,11 @@ void Parser::parseAddEdge(unsigned int& index)
 void Parser::parseRemoveEdge(unsigned int& index)
 {
 	if ((index+1) < query_.size()){
-		if(not getNode(query_[index])){
+		if(!getNode(query_[index])){
 			throw std::invalid_argument("In parseRemoveEdge, invalid node name "+query_[index]);
 		}
 		index++;
-		if(not getNode(query_[index])){
+		if(!getNode(query_[index])){
 			throw std::invalid_argument("In parseRemoveEdge, invalid node name "+query_[index]);
 		}
 		qe_.setRemoveEdge(getNodeID(query_[index-1]),getNodeID(query_[index]));
@@ -189,7 +189,7 @@ void Parser::parseArgMax(unsigned int& index)
 		throw std::invalid_argument("In parseArgMax, invalid sign expected ( but found  "+query_[index]);
 	index++;
 	while(terminationSymbolArgMax(index)) {
-		if(not getNode(query_[index]))
+		if(!getNode(query_[index]))
 			throw std::invalid_argument("Invalid node name "+query_[index]);
 		else {
 		qe_.setArgMax(getNodeID(query_[index]));
