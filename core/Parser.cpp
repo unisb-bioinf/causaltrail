@@ -1,5 +1,7 @@
 #include "Parser.h"
 
+#include "boost/tokenizer.hpp"
+
 QueryExecuter Parser::parseQuery()
 {
 	unsigned int index = 0;

@@ -1,7 +1,8 @@
 #ifndef EM_H
 #define EM_H
+
 #include "ProbabilityHandler.h"
-#include <boost/algorithm/string/split.hpp>
+
 #include <cmath>
 #include <chrono>
 

@@ -3,7 +3,6 @@
 
 #include "Node.h"
 #include <map>
-#include <boost/filesystem.hpp>
 
 class Network{
 	public:
