@@ -28,7 +28,7 @@ void NetworkController::trainNetwork(){
 	DataDistribution datadu= DataDistribution(network_, observations_);
 	datadu.assignObservationsToNodes();
 	datadu.distributeObservations();
-	EM em = EM(network_,observations_,0.001,100000);
+	EM em = EM(network_, observations_, 0.001f, 100000);
 	eMRuns_ = em.getNumberOfRuns();
 	finalDifference_ = em.getDifference();
 	likelihoodOfTheData_ = em.calculateLikelihoodOfTheData();

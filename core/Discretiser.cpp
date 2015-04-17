@@ -226,7 +226,7 @@ void Discretiser::discretiseByHMean(unsigned int row)
 	for(unsigned int col = 0; col < originalObservations_.getColCount();
 	    col++) {
 		float value = getNumber(col, row);
-		mean += 1.0 / value;
+		mean += 1.0f / value;
 	}
 	mean = originalObservations_.getColCount() / mean;
 	for(unsigned int col = 0; col < originalObservations_.getColCount();
@@ -251,7 +251,7 @@ void Discretiser::discretiseByMedian(unsigned int row)
 	} else {
 		median = (templist[(templist.size() / 2) - 1] +
 		          templist[templist.size() / 2]) /
-		         2.0;
+		         2.0f;
 	}
 	for(unsigned int col = 0; col < originalObservations_.getColCount();
 	    col++) {
