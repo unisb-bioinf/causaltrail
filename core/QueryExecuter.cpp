@@ -5,7 +5,7 @@ QueryExecuter::QueryExecuter(NetworkController& c)
       probHandler_(ProbabilityHandler(c.getNetwork())),
       interventions_(c)
 {
-	unsigned int size = c.getNetwork().size();
+	size_t size = c.getNetwork().size();
 	nonInterventionValues_.resize(size, -1);
 	conditionValues_.resize(size, -1);
 	doInterventionValues_.resize(size, -1);
@@ -38,7 +38,7 @@ bool QueryExecuter::isCounterfactual()
 
 void QueryExecuter::adaptNodeIdentifiers()
 {
-	unsigned int size = networkController_.getNetwork().size();
+	size_t size = networkController_.getNetwork().size();
 	nonInterventionValues_.resize(size, -1);
 	conditionValues_.resize(size, -1);
 	doInterventionValues_.resize(size, -1);
