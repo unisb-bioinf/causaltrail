@@ -25,6 +25,9 @@ class ProbabilityHandler
 	 */
 	ProbabilityHandler(Network& network);
 
+	ProbabilityHandler& operator=(const ProbabilityHandler&) = delete;
+	ProbabilityHandler(ProbabilityHandler&& handler);
+
 	/**computeTotalProbability
 	 *
 	 * @param nodeID, identifier of the node in focus

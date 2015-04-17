@@ -24,6 +24,9 @@ class EM{
 	 */
 	EM(Network& network, Matrix<int>& observations_,float differenceThreshold_ = 0.0001f, unsigned int maxRuns_=10000);	
 
+	EM& operator=(const EM&) = delete;
+	EM& operator=(EM&&) = delete;
+
 	/**EM
 	 *
 	 * This method executes the algorithm. 

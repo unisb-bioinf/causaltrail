@@ -32,7 +32,10 @@ class Discretiser{
 	 * all observations that are listed in this file
  	 */
 	Discretiser(const Matrix<std::string>& originalObservations,const std::string& filename, Matrix<int>& obsMatrix, Network& network);
-	
+
+	Discretiser& operator=(const Discretiser&) = delete;
+	Discretiser& operator=(Discretiser&&) = delete;
+
 	/**discretiseRow
  	 *
 	 * @param row, row to discretise

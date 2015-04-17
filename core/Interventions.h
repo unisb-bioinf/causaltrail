@@ -31,6 +31,9 @@ class Interventions{
 	 */
 	Interventions(NetworkController& c);
 
+	Interventions& operator=(const Interventions&) = delete;
+	Interventions& operator=(Interventions&&) = delete;
+
 	/**createBackupOfNetworkStructure
 	 *
 	 * Creates a backup of the network structure to be able

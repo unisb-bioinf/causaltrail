@@ -18,6 +18,9 @@ class Combinations{
 	 */
 	Combinations(const std::vector<unsigned int>& keys, const std::vector<std::vector<T>>& values);
 
+	Combinations& operator=(const Combinations&) = delete;
+	Combinations& operator=(Combinations&&) = delete;
+
 	/**createCombinations
 	 *
 	 * @param position The position of the start key (0 if all enumeration should be constructed)

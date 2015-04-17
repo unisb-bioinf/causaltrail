@@ -17,6 +17,9 @@ class DataDistribution{
 	 */
 	DataDistribution(Network& network, Matrix<int>& observations);
 
+	DataDistribution& operator=(const DataDistribution&) = delete;
+	DataDistribution& operator=(DataDistribution&&) = delete;
+
 	/**assignObservationsToNodes
 	 *
 	 * This method initalises each node with the correct value and name vectors.

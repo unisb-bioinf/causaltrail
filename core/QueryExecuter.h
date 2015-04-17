@@ -16,6 +16,9 @@ class QueryExecuter{
 	 */
 	QueryExecuter(NetworkController& c);
 
+	QueryExecuter& operator=(const QueryExecuter&) = delete;
+	QueryExecuter& operator=(QueryExecuter&&) = delete;
+
 	/**QueryExecuter
 	 * 
 	 * @return pair of 
