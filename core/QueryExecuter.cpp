@@ -44,7 +44,7 @@ void QueryExecuter::adaptNodeIdentifiers()
 	doInterventionValues_.resize(size, -1);
 	for(unsigned int i = 0; i < nonInterventionNodeID_.size(); i++) {
 		auto id = nonInterventionNodeID_[i];
-		if(not networkController_.getNetwork()
+		if(!networkController_.getNetwork()
 		           .getNode(id)
 		           .getParents()
 		           .empty()) {
@@ -62,7 +62,7 @@ void QueryExecuter::adaptNodeIdentifiers()
 	}
 	for(unsigned int j = 0; j < doInterventionNodeID_.size(); j++) {
 		auto id = doInterventionNodeID_[j];
-		if(not networkController_.getNetwork()
+		if(!networkController_.getNetwork()
 		           .getNode(id)
 		           .getParents()
 		           .empty()) {
@@ -83,13 +83,13 @@ void QueryExecuter::adaptNodeIdentifiers()
 
 std::pair<float, std::vector<std::string>> QueryExecuter::execute()
 {
-	if ((nonInterventionNodeID_.size() == 0) and (argmaxNodeIDs_.size() ==0)){
+	if (nonInterventionNodeID_.empty() && argmaxNodeIDs_.empty()) {
 		throw std::invalid_argument("A query can not be composed of interventions and conditions only!");
 	}
 	std::pair<float, std::vector<std::string>> probability;
 	bool cf = false;
 	if(isCounterfactual()) {
-		if((not addEdgeNodeIDs_.empty()) || (not removeEdgeNodeIDs_.empty())) {
+		if(!addEdgeNodeIDs_.empty() || !removeEdgeNodeIDs_.empty()) {
 			throw std::invalid_argument("Edge additions and removals are not "
 			                            "defined for counterfactuals");
 		}
@@ -113,9 +113,9 @@ std::pair<float, std::vector<std::string>> QueryExecuter::execute()
 std::pair<float, std::vector<std::string>> QueryExecuter::computeProbability()
 {
 	std::vector<std::string> temp;
-	if(not argmaxNodeIDs_.empty()) {
+	if(!argmaxNodeIDs_.empty()) {
 		return executeArgMax();
-	} else if(not conditionNodeID_.empty()) {
+	} else if(!conditionNodeID_.empty()) {
 		return std::make_pair(executeCondition(), temp);
 	} else {
 		return std::make_pair(executeProbability(), temp);
@@ -127,18 +127,18 @@ void QueryExecuter::executeInterventions()
 	networkController_.getNetwork().clearDynProgMatrices();
 	interventions_.createBackupOfNetworkStructure();
 	bool topologyChange = false;
-	if(not removeEdgeNodeIDs_.empty()) {
+	if(!removeEdgeNodeIDs_.empty()) {
 		executeEdgeDeletions();
 		topologyChange = true;
 	}
-	if(not addEdgeNodeIDs_.empty()) {
+	if(!addEdgeNodeIDs_.empty()) {
 		executeEdgeAdditions();
 		topologyChange = true;
 	}
 	if(topologyChange) {
 		networkController_.trainNetwork();
 	}
-	if(not doInterventionValues_.empty()) {
+	if(!doInterventionValues_.empty()) {
 		executeDoInterventions();
 	}
 }
@@ -147,15 +147,15 @@ void QueryExecuter::reverseInterventions()
 {
 	networkController_.getNetwork().clearDynProgMatrices();
 	interventions_.loadBackupOfNetworkStructure();
-	if(not doInterventionValues_.empty()) {
+	if(!doInterventionValues_.empty()) {
 		executeReverseDoInterventions();
 	}
 	bool topologyChange = false;
-	if(not addEdgeNodeIDs_.empty()) {
+	if(!addEdgeNodeIDs_.empty()) {
 		executeEdgeAdditionsReverse();
 		topologyChange = true;
 	}
-	if(not removeEdgeNodeIDs_.empty()) {
+	if(!removeEdgeNodeIDs_.empty()) {
 		executeEdgeDeletionsReverse();
 		topologyChange = true;
 	}
