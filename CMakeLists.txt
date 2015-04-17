@@ -1,11 +1,13 @@
 cmake_minimum_required (VERSION 2.8.11)
 
+cmake_policy(SET CMP0054 NEW)
+
 project (Causal-Analysis)
 
-add_definitions(-std=c++11 -Wall -pedantic)
+include(cmake/CompilerSpecific.cmake)
 
 find_package(Boost COMPONENTS system filesystem)
-include_directories(${Boost_INCLUDE_DIRS}) 
+include_directories(${Boost_INCLUDE_DIR})
 
 add_subdirectory(core)
 
