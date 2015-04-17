@@ -237,8 +237,6 @@ void Network::readSIF(const std::string& filename)
 			throw std::invalid_argument("Invalid file structure of sif file");
 		}
 		addEdge(getNewID(id2), getNewID(id1));
-		id2 = -1;
-		id1 = -1;
 		relation = "";
 	}
 	input.close();
