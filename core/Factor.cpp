@@ -1,6 +1,7 @@
 #include "Factor.h"
 #include "cmath"
 #include "algorithm"
+#include <cstdlib>
 
 Factor::Factor(const Node& n, const std::vector<int>& values)
 {
@@ -194,9 +195,11 @@ Factor Factor::sumOut(unsigned int id, Network& network_,
 	std::vector<unsigned int> newIDs = nodeIDs_;
 	newIDs.erase(newIDs.begin() + index);
 	Factor newFactor(newFactorLength, newIDs);
-	for (unsigned int i = 0; i< newFactorLength; i++){
+	// std::div only works for _signed_ integers, hence i is of type int
+	for (int i = 0; i < newFactorLength; i++) {
 		float prob = 0.0;
-		unsigned int old = (i % jump) + totalCombinations*div(i,jump).quot;
+		auto division = std::div(i, jump);
+		unsigned int old = division.rem + totalCombinations * division.quot;
 		for (unsigned int j = 0; j<=jumptimes; j++){
 			prob+=probabilities_[old+j*jump];
 		}

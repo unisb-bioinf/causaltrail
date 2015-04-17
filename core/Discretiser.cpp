@@ -290,7 +290,7 @@ void Discretiser::discretiseBracketMedians(unsigned int row,
 	borderValues.push_back(templist[0]);
 	// Calculat Borders
 	for(unsigned int i = 1; i < number; i++) {
-		borderValues.push_back(templist[div(templist.size(), number).quot * i]);
+		borderValues.push_back(templist[templist.size() / number * i]);
 	}
 	borderValues.push_back(FLT_MAX);
 	// Fill intervals
