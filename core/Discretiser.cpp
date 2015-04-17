@@ -296,8 +296,8 @@ void Discretiser::discretiseBracketMedians(unsigned int row,
 	// Fill intervals
 	for(unsigned int col = 0; col < templist.size(); col++) {
 		for(unsigned int i = 1; i <= number; i++) {
-			if((templist[col] >= borderValues[i - 1])and(templist[col] <
-			                                             borderValues[i])) {
+			if((templist[col] >= borderValues[i - 1]) && (templist[col] <
+			                                              borderValues[i])) {
 				observations_.setData(i - 1, col, row);
 				createNameEntry(i - 1, row);
 				break;
@@ -317,7 +317,7 @@ void Discretiser::discretisePearsonTukey(unsigned int row)
 	for(unsigned int col = 0; col < templist.size(); col++) {
 		for(int i = 1; i < 4; i++) {
 			float value = getNumber(col, row);
-			if((value >= borderValues[i - 1])and(value < borderValues[i])) {
+			if(value >= borderValues[i - 1] && value < borderValues[i]) {
 				observations_.setData(i - 1, col, row);
 				createNameEntry(i - 1, row);
 				break;
