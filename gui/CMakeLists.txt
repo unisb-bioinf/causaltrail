@@ -20,6 +20,22 @@ QT5_WRAP_UI(ui_Headers
     dataview.ui
 )
 
-add_executable(CausalTrailGui main.cpp datastorage.cpp listwidgetmulticopy.cpp mainwindow.cpp mainwindow.ui matrixpopup.cpp matrixpopup.ui methodcombobox.cpp NetworkInstance.cpp networkvis.cpp NodeGui.cpp querymanager.cpp discretisationselection.cpp discretisationselection.ui dataview.cpp dataview.ui edge.cpp ${ui_Headers}) 
+add_executable(CausalTrailGui
+	Config.cpp
+	datastorage.cpp
+	dataview.cpp
+	discretisationselection.cpp
+	edge.cpp
+	listwidgetmulticopy.cpp
+	main.cpp
+	mainwindow.cpp
+	matrixpopup.cpp
+	methodcombobox.cpp
+	NetworkInstance.cpp
+	networkvis.cpp
+	NodeGui.cpp
+	querymanager.cpp
+	${ui_Headers}
+)
 
 target_link_libraries(CausalTrailGui CausalTrailLib ${Boost_LIBRARIES} Qt5::Widgets)
