@@ -2,17 +2,16 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "qlistwidget.h"
-#include "QLabel"
 
-
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/path.hpp>
 #include "NetworkInstance.h"
 
 namespace Ui {
 class MainWindow;
 }
+
+class QLabel;
+
+class Config;
 
 class MainWindow : public QMainWindow
 {
@@ -24,19 +23,13 @@ public:
      * Constructor of the Mainindow. Initialises the visibility of GUI components
      * @param parent
      */
-    explicit MainWindow(QWidget *parent = 0);
+    MainWindow(Config* config, QWidget *parent = 0);
 
     /**
      * @brief ~MainWindow()
      * Destructor of MainWindow
      */
     ~MainWindow();
-
-    /**
-     * @brief loadConfigFile
-     * Loads the config file containing the standard path for saving and loading files
-     */
-    void loadConfigFile();
 
 public slots:
     /**
@@ -174,13 +167,7 @@ private:
      */
     std::vector<NetworkInstance> networks;
 
-    /**
-     * @brief path
-	 * The Standard path for I/O operations
-     */
-    QString path;
-
-
+	Config* config_;
 
 private slots:
 

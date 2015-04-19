@@ -1,51 +1,37 @@
 #include "mainwindow.h"
+
 #include "ui_mainwindow.h"
-#include "matrixpopup.h"
-#include "ui_matrixpopup.h"
-#include "dataview.h"
-#include "ui_dataview.h"
-#include "discretisationselection.h"
-#include "ui_discretisationselection.h"
-#include "QFileDialog"
-#include "QGraphicsSceneContextMenuEvent"
-#include "QDesktopServices"
-#include "QDir"
-#include "QMessageBox"
-#include "../core/Parser.h"
-#include "NodeGui.h"
-#include "edge.h"
+
+#include "Config.h"
 #include "datastorage.h"
+#include "dataview.h"
+#include "discretisationselection.h"
+#include "edge.h"
 #include "listwidgetmulticopy.h"
+#include "matrixpopup.h"
+#include "NodeGui.h"
 
+#include "../core/Parser.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+#include <QtCore/QDir>
+#include <QtGui/QDesktopServices>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QGraphicsSceneContextMenuEvent>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QListWidget>
+#include <QtWidgets/QMessageBox>
+
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/path.hpp>
+
+MainWindow::MainWindow(Config* config, QWidget *parent)
+	: QMainWindow(parent),
+      ui(new Ui::MainWindow),
+	  config_(config)
 {
     ui->setupUi(this);
-    loadConfigFile();
     showMaximized();
     initaliseVisibility();
-}
-
-void MainWindow::loadConfigFile(){
-    std::ifstream configfile;
-    configfile.open("CausalTrailPathConfig.txt");
-    if (configfile){
-        ui->Output->addItem("Found CausalTrailPathConfig.txt, path  loaded");
-        std::string ts;
-        configfile >> ts;
-        path = QString::fromStdString(ts);
-        configfile.close();
-    }
-    else {
-        std::ofstream newConfigfile;
-        newConfigfile.open("CausalTrailPathConfig.txt");
-        QString pathtemp = QFileDialog::getExistingDirectory(0,"Specify the folder containing your data",QString(),QFileDialog::ShowDirsOnly);
-        path = pathtemp;
-        newConfigfile<<pathtemp.toStdString();
-        newConfigfile.close();
-    }
 }
 
 MainWindow::~MainWindow()
@@ -243,7 +229,7 @@ void MainWindow::discretiseSelection(QString samples, std::vector<uint> deselect
     boxDisc.exec();
 	try{
 	    if (boxDisc.clickedButton()==file){
-	         control = QFileDialog::getOpenFileName(this, tr("Open txt file containing discretisation information"),path,"*.txt");
+	         control = QFileDialog::getOpenFileName(this, tr("Open txt file containing discretisation information"),config_->dataDir(),"*.txt");
 			 if (not control.isNull()){
 		         loadSamples(samples,control,index);
 			 }
@@ -253,7 +239,7 @@ void MainWindow::discretiseSelection(QString samples, std::vector<uint> deselect
 	    }
 	    else{
 	        if (boxDisc.clickedButton()==choose){
-	            discretisationSelection* discSel = new discretisationSelection(0,path,samples,index);
+	            discretisationSelection* discSel = new discretisationSelection(0,config_->dataDir(),samples,index);
 	            connect(discSel,SIGNAL(fileSaved(QString,QString,int)),this,SLOT(discretisationFileCreated(QString,QString,int)));
     	        discSel->adaptGUIToData();
 	            discSel->show();
@@ -284,7 +270,7 @@ void MainWindow::on_actionLoad_Samples_triggered()
 {
     int index = ui->tabWidget->currentIndex();
     try {
-        QString samples = QFileDialog::getOpenFileName(this, tr("Open txt file containing samples"),path,"*.txt");
+        QString samples = QFileDialog::getOpenFileName(this, tr("Open txt file containing samples"),config_->dataDir(),"*.txt");
 		if (samples.isNull()){
 			throw std::invalid_argument("No file containing samples specified!");
 		}
@@ -382,13 +368,13 @@ void MainWindow::on_actionNewNetwork_triggered()
     if (ui->deleteQueryButton->isEnabled()){
         on_deleteQueryButton_clicked();
     }
-    QString filename = QFileDialog::getOpenFileName(this,tr("Load network file"),path,tr("*tgf *na"));
+    QString filename = QFileDialog::getOpenFileName(this,tr("Load network file"),config_->dataDir(),"*tgf *na");
     if (filename != ""){
         try {
             int index = generateNetworkInstance();
             loadNAorTGF(filename,index);
             if (boost::filesystem::extension(filename.toStdString())==".na"){
-                filename = QFileDialog::getOpenFileName(this,tr("Load sif file"),path,tr("*sif"));
+                filename = QFileDialog::getOpenFileName(this,tr("Load sif file"),config_->dataDir(),"*.sif");
                 loadSif(filename,index);
             }
             visualise(index);
@@ -871,7 +857,7 @@ void MainWindow::on_actionSaveSession_triggered()
 void MainWindow::on_actionLoad_Session_triggered()
 {
     dataStorage dataStore;
-    QString filename = QFileDialog::getOpenFileName(this,tr("Load session file"),path,tr("*cts"));
+    QString filename = QFileDialog::getOpenFileName(this,tr("Load session file"), config_->dataDir(),"*.cts");
     int index = 0;
     if (filename != ""){
         dataStore.loadSession(filename);
@@ -925,7 +911,7 @@ void MainWindow::on_actionCreate_Batchfile_triggered()
 void MainWindow::on_actionExecute_Batchfile_triggered()
 {
     std::ifstream input;
-    QString filename = QFileDialog::getOpenFileName(this,tr("Load batch file"),path,tr("*txt"));
+    QString filename = QFileDialog::getOpenFileName(this,tr("Load batch file"),config_->dataDir(),"*.txt");
     if (filename != ""){
         input.open(filename.toStdString());
         std::string line;

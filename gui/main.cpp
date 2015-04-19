@@ -1,11 +1,13 @@
+#include "Config.h"
 #include "mainwindow.h"
-#include <QApplication>
 
+#include <QtWidgets/QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
+	Config config;
+    MainWindow w(&config);
     w.show();
     return a.exec();
 }
