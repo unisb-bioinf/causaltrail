@@ -230,7 +230,7 @@ void MainWindow::discretiseSelection(QString samples, std::vector<uint> deselect
 	try{
 	    if (boxDisc.clickedButton()==file){
 	         control = QFileDialog::getOpenFileName(this, tr("Open txt file containing discretisation information"),config_->dataDir(),"*.txt");
-			 if (not control.isNull()){
+			 if (!control.isNull()){
 		         loadSamples(samples,control,index);
 			 }
 			else {
@@ -472,7 +472,7 @@ void MainWindow::Node_double_clicked(uint id, QString name){
             ui->edgeAdditionsRemovalList->setVisible(true);
             networks[index].NodeForEdgeAdditionSelected(id);
             ui->edgeAdditionsRemovalList->addItem("+ "+sourceName+" "+name);
-            if (not networks[index].EdgeAddition()){
+            if (!networks[index].EdgeAddition()){
                 ui->Input->setFocus();
             }
         }
@@ -517,7 +517,7 @@ void MainWindow::Node_context(QString name, uint id, QGraphicsSceneContextMenuEv
         networks[index].setSelectedNode(id,name);
         QMenu* submenu;
        //Non-Intervention Query
-        if ((ui->queryVariableList->count()==0) ||(not networks[index].isArgMax())){
+        if (ui->queryVariableList->count() == 0 || !networks[index].isArgMax()) {
            submenu = menu->addMenu("Probability of");
            for (auto& value : values){
                 submenu->addAction(QString::fromStdString(value));
@@ -738,14 +738,14 @@ void MainWindow::context_Menu_ShowMatrix_selected(){
 }
 
 void MainWindow::resizeEvent(QResizeEvent *){
-   if (not networks.empty()){
+   if (!networks.empty()) {
     networks[0].setWidth(MainWindow::width()-ui->dockWidget_5->width());
     networks[0].resizeNV(networks[0].getNVSizeHint());
    }
 }
 
 void MainWindow::on_Input_textChanged(const QString &arg1){
-    if (not networks.empty()){
+    if (!networks.empty()) {
         if (arg1==""){
             on_deleteQueryButton_clicked();
             clearLabelsAndValueList();
@@ -842,7 +842,7 @@ void MainWindow::on_actionSaveSession_triggered()
     dialog.setDefaultSuffix("cts");
     dialog.exec();
     QString filename = dialog.selectedFiles()[0];
-	if (not filename.isNull()){
+	if (!filename.isNull()) {
 	   dataStore.saveSession(networks,filename);
 	   ui->Output->addItem("Session saved");
 	}
