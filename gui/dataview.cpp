@@ -79,7 +79,7 @@ void dataview::toogle_all_clicked(int state){
 }
 
 const std::vector<unsigned int> dataview::getDeselectedSamples(){
-    std::vector<unsigned int> temp;
+    std::vector<unsigned int> temp = {};
     for (unsigned int i = 1; i< boxes_.size(); i++){
         if (!boxes_[i]->isChecked()){
             temp.push_back(i);

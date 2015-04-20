@@ -1050,6 +1050,12 @@ void Matrix<T>::readMatrixDeletion(const std::string& filename, bool colNames, b
     // Adapt matrix
     colCount_ = numCols - int(rowNames);
     rowCount_ = numRows - int(colNames);
+	if (rowCount_ <= 0){
+		throw std::invalid_argument("Matrix containing data is improperly formatted. No features were found.");
+	}
+	else if (colCount_ <=0){
+			throw std::invalid_argument("Matrix containing data is improperly formatted. No samples were found.");
+		}	
     data_.clear();
     data_.reserve(colCount_ * rowCount_);
 
