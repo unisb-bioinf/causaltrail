@@ -1,6 +1,10 @@
+#define _USE_MATH_DEFINES
+#include <cmath>
+#undef _USE_MATH_DEFINES
+
 #include "edge.h"
 #include "NodeGui.h"
-#include "math.h"
+
 #include "QGraphicsLineItem"
 
 Edge::Edge(NodeGui *src, NodeGui *tar)
