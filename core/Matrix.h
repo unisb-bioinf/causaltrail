@@ -1026,8 +1026,10 @@ void Matrix<T>::readMatrixDeletion(const std::string& filename, bool colNames, b
         throw std::invalid_argument("File not found");
     }
     std::string line;
-    int numRows = 0;
-    int numCols = 0;
+
+	size_t numRows = 0;
+    size_t numCols = 0;
+
     rowNames_.clear();
     colNames_.clear();
     std::vector<std::string> colNBuffer;
@@ -1045,17 +1047,27 @@ void Matrix<T>::readMatrixDeletion(const std::string& filename, bool colNames, b
     while(content >> n) {
         numCols++;
     }
-	numCols=numCols-deletedSamples.size();
 
-    // Adapt matrix
+	if(numCols < deletedSamples.size()) {
+		throw std::invalid_argument(
+		    "Attempted to delete more samples than present in the matrix.");
+	}
+
+	numCols -= deletedSamples.size();
+
+	// Adapt matrix
     colCount_ = numCols - int(rowNames);
     rowCount_ = numRows - int(colNames);
 	if (rowCount_== 0 ||rowCount_ > numRows){
-		throw std::invalid_argument("Matrix containing data is improperly formatted. No features were found.");
+		throw std::invalid_argument("Matrix containing data is improperly "
+		                            "formatted. No features were found.");
 	}
-	else if (colCount_ == 0 || colCount_ > numCols){
-			throw std::invalid_argument("Matrix containing data is improperly formatted. No samples were found.");
-		}	
+
+	if (colCount_ == 0 || colCount_ > numCols){
+		throw std::invalid_argument("Matrix containing data is improperly "
+		                            "formatted. No samples were found.");
+	}
+
     data_.clear();
     data_.reserve(colCount_ * rowCount_);
 
