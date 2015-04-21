@@ -118,29 +118,47 @@ void Discretiser::discretiseRow(unsigned int row, unsigned int method,
 	}
 }
 
-void Discretiser::discretise(const std::string& controlFile)
+Discretiser::Discretisations Discretiser::loadControlFile(const std::string& controlFile)
 {
+	Discretiser::Discretisations discs;
 	std::ifstream input(controlFile, std::ifstream::in);
 	if(!input.good()) {
 		throw std::invalid_argument("Controlfile not found");
 	}
+
 	std::string line;
-	unsigned int row;
-	unsigned int method;
 	while(std::getline(input, line)) {
+		unsigned int row;
+		unsigned int method;
 		std::stringstream buffer;
 		float threshold = 0.0;
 		buffer << line;
 		buffer >> row >> method >> threshold;
-		if(row > originalObservations_.getRowCount()) {
-			throw std::invalid_argument("Row does not exist");
-		}
 		if(method > 9) {
 			throw std::invalid_argument("Method not known");
 		}
-		discretiseRow(row, method, threshold);
+
+		discs.emplace_back(row, method, threshold);
 	}
+
 	input.close();
+
+	return discs;
+}
+
+void Discretiser::discretise(const Discretiser::Discretisations& control) {
+	for(auto&& c : control) {
+		if(c.row > originalObservations_.getRowCount()) {
+			throw std::invalid_argument("Row does not exist");
+		}
+
+		discretiseRow(c.row, c.method, c.threshold);
+	}
+}
+
+void Discretiser::discretise(const std::string& controlFile)
+{
+	discretise(loadControlFile(controlFile));
 }
 
 void Discretiser::discretiseZ(unsigned int row)

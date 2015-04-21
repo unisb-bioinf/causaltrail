@@ -1,16 +1,21 @@
 #ifndef DISCRETISATIONSELECTION_H
 #define DISCRETISATIONSELECTION_H
 
-#include <QWidget>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QLineEdit>
+
+#include "../core/Discretiser.h"
 #include "../core/Matrix.h"
-#include "QLineEdit"
+
 #include "methodcombobox.h"
 
 namespace Ui {
-class discretisationSelection;
+class DiscretisationSelection;
 }
 
-class discretisationSelection : public QWidget
+class QAbstractButton;
+
+class discretisationSelection : public QDialog
 {
     Q_OBJECT
 
@@ -23,7 +28,27 @@ public:
      * @param samples The filename of the samples file
      * @param index The index of the current Session
      */
-    discretisationSelection(QWidget *parent, QString path, QString samples, int index);
+    discretisationSelection(QWidget* parent);
+
+	/**
+	 * Show and reconfigure the dialog
+	 */
+	void show(const QString& path, const QString& samples, int index);
+
+	/**
+	 * Get the sample file.
+	 */
+	const QString& samples() const;
+
+	/**
+	 * Get the chosen discretisation settings.
+	 */
+	Discretiser::Discretisations control() const;
+
+	/**
+	 * Get the configured index.
+	 */
+	int index() const;
 
     /**
      * @brief adaptGUIToData
@@ -37,19 +62,17 @@ public:
      */
     ~discretisationSelection();
 
-signals:
     /**
-     * @brief fileSaved
-     * Emits if a control file is saved
-     */
-    void fileSaved(QString,QString,int);
-
-private slots:
-    /**
-     * @brief on_saveDiscretisation_clicked
      * Saves the selected discretisation methods in a user specified file
      */
-    void on_saveDiscretisation_clicked();
+    void saveDiscretisations();
+
+private slots:
+	/**
+	 * Slot which is called when a button in the
+	 * QDialogButtonBox has been clicked.
+	 */
+	void clicked(QAbstractButton* btn);
 
     /**
      * @brief box_Index_Changed
@@ -81,7 +104,7 @@ private:
      * @brief ui
      * Graphical User Interface
      */
-    Ui::discretisationSelection *ui;
+    Ui::DiscretisationSelection* ui;
 
     /**
      * @brief newFeatureName

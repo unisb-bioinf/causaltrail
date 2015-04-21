@@ -7,6 +7,23 @@
 
 class Discretiser{
 	public: 
+	struct Discretisation {
+		Discretisation(size_t arow, int amethod, float athreshold)
+		    : row(arow), method(amethod), threshold(athreshold)
+		{}
+
+		size_t row;
+		int method;
+		float threshold;
+	};
+
+	using Discretisations = std::vector<Discretisation>;
+
+	/**
+	 * Parses a discretisation control file.
+	 */
+	static Discretisations loadControlFile(const std::string& controlFile);
+
 	/**Discretiser
  	 *
 	 * @param originalObservations, a const reference to the matrix containing the raw sample data
@@ -55,8 +72,6 @@ class Discretiser{
  	 */
 	int getEntry(unsigned int col, unsigned int row);
 
-	private:
-
 	/**discretise
  	 *
 	 * @param filename, name of the controlFile
@@ -79,7 +94,14 @@ class Discretiser{
 	 *	8: discretisePearsonTukey
 	 *	9: mapNamesToInt
  	 */
+	void discretise(const Discretisations& control);
+
+	/**
+	 * Convenience overload for Discretiser::discretise(const Discretisations&)
+	 */
 	void discretise(const std::string& filename);
+
+	private:
 
 	/**discretiseFloor
  	 *

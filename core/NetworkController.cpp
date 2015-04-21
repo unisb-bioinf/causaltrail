@@ -13,16 +13,39 @@ Network& NetworkController::getNetwork(){
 	return network_;
 }
 
-void NetworkController::loadObservations(const std::string& datafile, const std::string& controlFile){
-	Matrix<std::string> originalObservations (datafile,false,true); 
-	Discretiser(originalObservations, controlFile, observations_, network_);
+void NetworkController::loadObservations(const std::string& datafile,
+                                         const std::string& controlFile)
+{
+	auto control = Discretiser::loadControlFile(controlFile);
+	loadObservations(datafile, control);
 }
 
-void NetworkController::loadObservations(const std::string& datafile, const std::string& controlFile, const std::vector<unsigned int>& samplesToDelete){
-    Matrix<std::string> originalObservations (datafile,false,true, samplesToDelete);
-    Discretiser(originalObservations, controlFile, observations_, network_);
+void NetworkController::loadObservations(
+    const std::string& datafile, const std::string& controlFile,
+    const std::vector<unsigned int>& samplesToDelete)
+{
+	auto control = Discretiser::loadControlFile(controlFile);
+	loadObservations(datafile, control, samplesToDelete);
 }
 
+void NetworkController::loadObservations(
+    const std::string& datafile,
+    const Discretiser::Discretisations& control)
+{
+	Matrix<std::string> originalObservations(datafile, false, true);
+	Discretiser d(originalObservations, observations_, network_);
+	d.discretise(control);
+}
+
+void NetworkController::loadObservations(
+    const std::string& datafile,
+    const Discretiser::Discretisations& control,
+    const std::vector<unsigned int>& samplesToDelete)
+{
+	Matrix<std::string> originalObservations(datafile, false, true, samplesToDelete);
+	Discretiser d(originalObservations, observations_, network_);
+	d.discretise(control);
+}
 
 void NetworkController::trainNetwork(){
 	DataDistribution datadu(network_, observations_);

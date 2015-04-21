@@ -12,6 +12,7 @@ class MainWindow;
 class QLabel;
 
 class Config;
+class discretisationSelection;
 
 class MainWindow : public QMainWindow
 {
@@ -30,16 +31,6 @@ public:
      * Destructor of MainWindow
      */
     ~MainWindow();
-
-public slots:
-    /**
-     * @brief discretisationFileCreated
-	 * Calls methods to train the network given the created control file and the given samples
-     * @param control Name of the created control file
-     * @param samples Name of the file containing samples
-     * @param index Index of the NetworkInstance
-     */
-    void discretisationFileCreated(QString control, QString samples, int index);
 
 private:
 
@@ -108,7 +99,7 @@ private:
      * @param controlDiscret
      * @param index Index of the NetworkInstance
      */
-    void loadSamples(QString samples, QString controlDiscret, int index);
+    void loadSamples(const QString& samples, const Discretiser::Discretisations& control, int index);
 
     /**
      * @brief visualise
@@ -168,6 +159,7 @@ private:
     std::vector<NetworkInstance> networks;
 
 	Config* config_;
+	discretisationSelection* discretisationSelection_;
 
 private slots:
 
@@ -190,6 +182,12 @@ private slots:
 	 * Terminates the GUI 
      */
     void on_actionClose_triggered();
+
+	/**
+	 * Discretises the data currently configured
+	 * in discretisationSelection_.
+	 */
+    void loadSamples();
 
     /**
      * @brief on_actionLoad_Samples_triggered

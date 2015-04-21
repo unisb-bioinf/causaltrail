@@ -2,9 +2,17 @@
 #include "../core/Parser.h"
 #include "NodeGui.h"
 NetworkInstance::NetworkInstance()
-    :trained_(false), argmax_(false),remainingNodesForEdgeAddition_(0), id1_(-1), id2_(-1), naOrTgf_("%"), sif_("%"),dataFile_("%"),discretisationControl_("%"),deselectedSamples_({})
-  {    
-  }
+    : trained_(false),
+      argmax_(false),
+      remainingNodesForEdgeAddition_(0),
+      id1_(-1),
+      id2_(-1),
+      naOrTgf_("%"),
+      sif_("%"),
+      dataFile_("%"),
+      discretisationControl_("%")
+{
+}
 
 void NetworkInstance::loadNetwork(QString filename){
     nc_.loadNetwork(filename.toStdString());
@@ -14,13 +22,13 @@ void NetworkInstance::visualize(QWidget* tabwidget){
     nv_ = new NetworkVis(tabwidget, nc_);
 }
 
-void NetworkInstance::loadSamples(QString filename, QString controlfile){
+void NetworkInstance::loadSamples(const QString& filename, const Discretiser::Discretisations& control){
     if (deselectedSamples_.empty()){
-        nc_.loadObservations(filename.toStdString(),controlfile.toStdString());
-    }
-    else{
-        nc_.loadObservations(filename.toStdString(),controlfile.toStdString(),deselectedSamples_);
-    }
+		nc_.loadObservations(filename.toStdString(), control);
+	} else {
+		nc_.loadObservations(filename.toStdString(), control,
+		                     deselectedSamples_);
+	}
     nc_.trainNetwork();
     trained_=true;
 }
@@ -381,19 +389,19 @@ QString NetworkInstance::getDiscretisationControlFile(){
     return discretisationControl_;
 }
 
-void NetworkInstance::setNaOrTgf(QString& filename){
+void NetworkInstance::setNaOrTgf(const QString& filename){
     naOrTgf_= filename;
 }
 
-void NetworkInstance::setSif(QString& filename){
+void NetworkInstance::setSif(const QString& filename){
     sif_= filename;
 }
 
-void NetworkInstance::setDataFile(QString& filename){
+void NetworkInstance::setDataFile(const QString& filename){
     dataFile_= filename;
 }
 
-void NetworkInstance::setDiscretisationControlFile(QString& filename){
+void NetworkInstance::setDiscretisationControlFile(const QString& filename){
     discretisationControl_ = filename;
 }
 

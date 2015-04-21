@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>discretisationSelection</class>
- <widget class="QWidget" name="discretisationSelection">
+ <class>DiscretisationSelection</class>
+ <widget class="QDialog" name="DiscretisationSelection">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -57,8 +57,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>497</width>
-        <height>324</height>
+        <width>495</width>
+        <height>310</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -185,14 +185,34 @@
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="saveDiscretisation">
-     <property name="text">
-      <string>Set Discretisation</string>
+    <widget class="QDialogButtonBox" name="dialogButtons">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::Save</set>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>dialogButtons</sender>
+   <signal>clicked(QAbstractButton*)</signal>
+   <receiver>DiscretisationSelection</receiver>
+   <slot>clicked(QAbstractButton*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>471</x>
+     <y>331</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>519</x>
+     <y>478</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>clicked(QAbstractButton*)</slot>
+ </slots>
 </ui>

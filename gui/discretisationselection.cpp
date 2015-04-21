@@ -2,13 +2,40 @@
 #include "ui_discretisationselection.h"
 #include "QFileDialog"
 
-discretisationSelection::discretisationSelection(QWidget *parent,QString path, QString samples, int index) :
-    QWidget(parent),path_(path),samples_(samples),index_(index),
-    ui(new Ui::discretisationSelection)
+discretisationSelection::discretisationSelection(QWidget* parent)
+    : QDialog(parent), index_(-1), ui(new Ui::DiscretisationSelection)
 {
     ui->setupUi(this);
 
 }
+
+void discretisationSelection::show(const QString& path, const QString& samples,
+                              int index)
+{
+	path_ = path;
+	samples_ = samples;
+	index_ = index;
+
+	adaptGUIToData();
+	QDialog::show();
+}
+
+const QString& discretisationSelection::samples() const { return samples_; }
+
+Discretiser::Discretisations discretisationSelection::control() const
+{
+	Discretiser::Discretisations disc;
+	disc.reserve(ui->gridLayout->rowCount() - 1);
+
+	for (int i = 1; i < ui->gridLayout->rowCount(); i++){
+		disc.emplace_back(i - 1, boxes_[i - 1]->currentIndex(),
+		                  optionalValues_[i - 1]->text().toFloat());
+	}
+
+	return disc;
+}
+
+int discretisationSelection::index() const { return index_; }
 
 void discretisationSelection::adaptGUIToData(){
     QLineEdit* featureName;
@@ -56,15 +83,19 @@ QLineEdit *discretisationSelection::newOptionalValue()
     return optionalValue;
 }
 
-void discretisationSelection::on_saveDiscretisation_clicked()
+void discretisationSelection::saveDiscretisations()
 {
     QFileDialog dialog;
-    dialog.setDefaultSuffix("txt");
-    dialog.exec();
+    dialog.setDefaultSuffix(".txt");
+    if(!dialog.exec()) {
+		return;
+	}
+
     QString filename = dialog.selectedFiles()[0];
-	if (filename.isNull()){
+	if(filename.isNull()) {
 		throw std::invalid_argument("No proper filename specified");
 	}
+
     std::ofstream output;
     output.open(filename.toStdString());
     for (int i = 1; i < ui->gridLayout->rowCount(); i++){
@@ -75,9 +106,25 @@ void discretisationSelection::on_saveDiscretisation_clicked()
             output<<i-1<<"\t"<<boxes_[i-1]->currentIndex()<<std::endl;
         }
     }
-    emit fileSaved(filename,samples_,index_);
+
     output.close();
-    close();
+}
+
+void discretisationSelection::clicked(QAbstractButton* btn)
+{
+	switch(ui->dialogButtons->standardButton(btn)) {
+		case QDialogButtonBox::Save:
+			saveDiscretisations();
+			break;
+		case QDialogButtonBox::Ok:
+			accept();
+			break;
+		case QDialogButtonBox::Cancel:
+			reject();
+			break;
+		default:
+			break;
+	}
 }
 
 void discretisationSelection::box_Index_Changed(uint position, int index)

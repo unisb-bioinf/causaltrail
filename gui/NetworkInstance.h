@@ -1,10 +1,13 @@
 #ifndef NETWORKINSTANCE_H
 #define NETWORKINSTANCE_H
 
-#include <QString>
-#include <QListWidget>
+#include <QtCore/QString>
+#include <QtWidgets/QListWidget>
+
 #include "networkvis.h"
 #include "querymanager.h"
+
+#include "../core/Discretiser.h"
 #include "../core/NetworkController.h"
 
 
@@ -36,7 +39,7 @@ class NetworkInstance{
      * @param filename Name of the file containing samples
      * @param controlfile Name of the file containing discretisation control information
      */
-    void loadSamples(QString filename, QString controlfile);
+    void loadSamples(const QString& filename, const Discretiser::Discretisations& control);
 
     /**
      * @brief calculate
@@ -441,25 +444,25 @@ class NetworkInstance{
      * @brief setNaOrTgf
      * @param filename Name of the .NA or .TGF file
      */
-    void setNaOrTgf(QString& filename);
+    void setNaOrTgf(const QString& filename);
 
     /**
      * @brief setSif
      * @param filename Name of the .SIF file
      */
-    void setSif(QString& filename);
+    void setSif(const QString& filename);
 
     /**
      * @brief setDataFile
      * @param filename Name of the file containing samples
      */
-    void setDataFile(QString& filename);
+    void setDataFile(const QString& filename);
 
     /**
      * @brief setDiscretisationControlFile
      * @param filename Name of the file containing discretisation control information
      */
-    void setDiscretisationControlFile(QString& filename);
+    void setDiscretisationControlFile(const QString& filename);
 
     /**
      * @brief setQMA
