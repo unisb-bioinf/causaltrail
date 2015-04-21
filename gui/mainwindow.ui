@@ -83,10 +83,9 @@
    </property>
    <widget class="QMenu" name="menuProgram">
     <property name="title">
-     <string>Pro&amp;gramme</string>
+     <string>&amp;Help</string>
     </property>
     <addaction name="actionAbout"/>
-    <addaction name="actionClose"/>
     <addaction name="actionHelp"/>
    </widget>
    <widget class="QMenu" name="menuFile">
@@ -102,6 +101,8 @@
     <addaction name="separator"/>
     <addaction name="actionExecute_Batchfile_2"/>
     <addaction name="actionLayout_2"/>
+    <addaction name="separator"/>
+    <addaction name="actionClose"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuProgram"/>
@@ -839,6 +840,9 @@
    </property>
   </action>
   <action name="actionClose">
+   <property name="icon">
+    <iconset theme="application-exit"/>
+   </property>
    <property name="text">
     <string>&amp;Close</string>
    </property>
@@ -905,16 +909,25 @@
    </property>
   </action>
   <action name="actionDelete_Network">
+   <property name="icon">
+    <iconset theme="document-close"/>
+   </property>
    <property name="text">
     <string>&amp;Delete Network</string>
    </property>
   </action>
   <action name="actionLoad_Samples_2">
+   <property name="icon">
+    <iconset theme="document-open"/>
+   </property>
    <property name="text">
     <string>&amp;Load Samples</string>
    </property>
   </action>
   <action name="actionSave_Session">
+   <property name="icon">
+    <iconset theme="document-save"/>
+   </property>
    <property name="text">
     <string>&amp;Save Session</string>
    </property>
@@ -935,6 +948,9 @@
    </property>
   </action>
   <action name="actionLoad_Session_2">
+   <property name="icon">
+    <iconset theme="document-open"/>
+   </property>
    <property name="text">
     <string>L&amp;oad Session</string>
    </property>
@@ -966,6 +982,9 @@
    </property>
   </action>
   <action name="actionCreate_Batchfile_2">
+   <property name="icon">
+    <iconset theme="document-new"/>
+   </property>
    <property name="text">
     <string>&amp;Create Batchfile</string>
    </property>
