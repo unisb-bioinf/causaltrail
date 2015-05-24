@@ -41,7 +41,12 @@ void JPorter::initialiseNameVector(){
 }
 
 void JPorter::importFile(const std::string& filename){
+	try{
 	boost::property_tree::read_json(filename,pt_);
+	}
+	catch(const boost::property_tree::json_parser::json_parser_error& e){
+	std::cout<<"Invalid JSON file"<<std::endl;
+	}
 }
 
 
