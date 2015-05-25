@@ -1,7 +1,7 @@
 #include "Discretiser.h"
 #include <algorithm>
 #include "math.h"
-#include "JPorter.h"
+#include "SerializeDeserializeJson.h"
 
 Discretiser::Discretiser(const Matrix<std::string>& originalObservations,
                          Matrix<int>& obsMatrix, Network& network)
