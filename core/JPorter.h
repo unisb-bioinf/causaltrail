@@ -23,9 +23,11 @@ class JPorter{
 	*
 	* @param filename Name of the file containing discretisation information
 	*
+	* @return bool True, if the fild could be read, false otherwise
+	*
 	* Creates a boost property tree representing the specified json file
 	*/
-	void importFile(const std::string& filename);
+	bool importFile(const std::string& filename);
 
 	/**printContent
 	*
@@ -99,7 +101,13 @@ class JPorter{
         void addToTree(const std::string& name, const std::string& method, float value);
 
 
-	private:
+	/**getPropertyTree
+	*
+	* @return a const Reference to the current Property Tree
+	*
+	* Returns a const Reference to the PropertyTree
+	*/
+	const boost::property_tree::ptree& getPropertyTree() const;
 
 	/**convertMethodToIntegerCode
 	*
@@ -111,6 +119,7 @@ class JPorter{
 	*/
 	unsigned int convertMethodToIntegerCode(const std::string& method) const;
 
+	private:
 	/**initialiseNameVector
 	*
 	* Initialises a vector to convert discretisation methods from integer code to full name

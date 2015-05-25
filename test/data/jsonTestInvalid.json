@@ -3,20 +3,24 @@
 	{
 	"method": "BracketMedians",
 	"buckets": "3"
-	},
+	}
+
 	"Grade":
 	{
 	"method": "Threshold",
 	"threshold": "4.5"
-	},
+	}
+
 	"Intelligence":
 	{
 	"method": "none"
 	},
+
 	"SAT":
 	{
 	"method": "none"
 	},
+
 	"Letter":
 	{
 	"method": "none"

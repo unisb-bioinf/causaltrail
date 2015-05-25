@@ -40,13 +40,15 @@ void JPorter::initialiseNameVector(){
 	intToMethod_[10]="Z-Score";
 }
 
-void JPorter::importFile(const std::string& filename){
+bool JPorter::importFile(const std::string& filename){
 	try{
 	boost::property_tree::read_json(filename,pt_);
 	}
 	catch(const boost::property_tree::json_parser::json_parser_error& e){
-	std::cout<<"Invalid JSON file"<<std::endl;
+	std::cerr<<"Invalid JSON file"<<std::endl;
+	return false;
 	}
+	return true;
 }
 
 
@@ -82,12 +84,13 @@ unsigned int JPorter::convertMethodToIntegerCode(const std::string& method) cons
 
 std::pair<unsigned int, float> JPorter::getDiscretisationDetails(const std::string& name) const{
 	unsigned int method = convertMethodToIntegerCode(pt_.get<std::string>(name+".method"));
+	std::cout<<method<<std::endl;
 	if (method == 6) {
 		float threshold = pt_.get<float>(name+".threshold");
 		return std::make_pair(method,threshold);
 	}
 	else if (method == 7) {
-		unsigned int buckets = pt_.get<unsigned int>(name+".buckets");
+		float buckets = pt_.get<float>(name+".buckets");
 		return std::make_pair(method,buckets);
 	}
 	return std::make_pair(method,0);
@@ -115,3 +118,6 @@ void JPorter::addToTree(const std::string& name, const std::string& method, floa
 	}
 }
 
+const boost::property_tree::ptree& JPorter::getPropertyTree() const {
+	return pt_;
+}
