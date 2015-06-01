@@ -314,8 +314,9 @@ void Discretiser::discretiseBracketMedians(unsigned int row,
 	borderValues.push_back(FLT_MAX);
 	// Fill intervals
 	for(unsigned int col = 0; col < templist.size(); col++) {
+		float value = getNumber(col,row);
 		for(unsigned int i = 1; i <= number; i++) {
-			if((templist[col] >= borderValues[i - 1]) && (templist[col] <
+			if((value >= borderValues[i - 1]) && (value <
 			                                              borderValues[i])) {
 				observations_.setData(i - 1, col, row);
 				createNameEntry(i - 1, row);

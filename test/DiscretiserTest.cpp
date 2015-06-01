@@ -95,13 +95,13 @@ TEST_F(DiscretiserTest,Manually){
 
 TEST_F(DiscretiserTest,BracketMedians){
 	Discretiser d(oobs_,dobs_,n_);
-	d.discretiseRow(7,7,3.0);	
+	d.discretiseRow(7,7,2.0);	
 	ASSERT_EQ(0,d.getEntry(0,7));
 	ASSERT_EQ(0,d.getEntry(1,7));
-	ASSERT_EQ(1,d.getEntry(2,7));
+	ASSERT_EQ(0,d.getEntry(2,7));
 	ASSERT_EQ(1,d.getEntry(3,7));
-	ASSERT_EQ(2,d.getEntry(4,7));
-	ASSERT_EQ(2,d.getEntry(5,7));
+	ASSERT_EQ(1,d.getEntry(4,7));
+	ASSERT_EQ(1,d.getEntry(5,7));
 }
 
 TEST_F(DiscretiserTest,PerasonTukey){
