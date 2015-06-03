@@ -24,6 +24,10 @@ add_executable(CausalTrailGui
 	Config.cpp
 	datastorage.cpp
 	dataview.cpp
+	DataMatrixView.h
+	DataMatrixView.cpp
+	DataMatrixModel.h
+	DataMatrixModel.cpp
 	discretisationselection.cpp
 	edge.cpp
 	listwidgetmulticopy.cpp
