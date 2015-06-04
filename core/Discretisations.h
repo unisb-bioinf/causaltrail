@@ -1,7 +1,7 @@
 #ifndef DISCRETISATIONS_H
 #define DISCRETISATIONS_H
 
-include "Matrix.h" 
+#include "Matrix.h" 
 
 class Discretisations {
 	public:
