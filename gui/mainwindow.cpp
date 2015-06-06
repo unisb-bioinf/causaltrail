@@ -369,13 +369,13 @@ void MainWindow::on_actionNewNetwork_triggered()
     if (ui->deleteQueryButton->isEnabled()){
         on_deleteQueryButton_clicked();
     }
-    QString filename = QFileDialog::getOpenFileName(this,tr("Load network file"),config_->dataDir(),"*tgf *na");
+    QString filename = QFileDialog::getOpenFileName(this,tr("Load network file"), config_->dataDir(), "*.tgf *.na");
     if (filename != ""){
         try {
             int index = generateNetworkInstance();
             loadNAorTGF(filename,index);
-            if (boost::filesystem::extension(filename.toStdString())==".na"){
-                filename = QFileDialog::getOpenFileName(this,tr("Load sif file"),config_->dataDir(),"*.sif");
+            if (filename.endsWith(".na")){
+                filename = QFileDialog::getOpenFileName(this, tr("Load sif file"), QFileInfo(filename).absolutePath(), "*.sif");
                 loadSif(filename,index);
             }
             visualise(index);
