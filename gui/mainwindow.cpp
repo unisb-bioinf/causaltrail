@@ -21,9 +21,6 @@
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QMessageBox>
 
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/path.hpp>
-
 MainWindow::MainWindow(Config* config, QWidget *parent)
 	: QMainWindow(parent),
       ui(new Ui::MainWindow),
@@ -863,7 +860,7 @@ void MainWindow::on_actionLoad_Session_triggered()
         for (unsigned int i = 0; i< dataStore.getNumberOfLoadedNetworks(); i++){
             index = generateNetworkInstance();
             loadNAorTGF(dataStore.getNAorTGf(i),index);
-            if (boost::filesystem::extension(dataStore.getNAorTGf(i).toStdString())==".na"){
+            if (dataStore.getNAorTGf(i).endsWith(".na")){
                 loadSif(dataStore.getSif(i),index);
             }
             visualise(index);

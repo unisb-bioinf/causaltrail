@@ -9,7 +9,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 include(cmake/CompilerSpecific.cmake)
 
-find_package(Boost COMPONENTS system filesystem)
+find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 
 add_subdirectory(core)

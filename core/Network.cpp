@@ -1,7 +1,5 @@
 #include "Network.h"
 
-#include <boost/filesystem.hpp>
-
 #include <ctime>
 #include <chrono>
 #include <fstream>
@@ -150,8 +148,13 @@ std::ostream& operator<<(std::ostream& os, const Network& n)
 
 void Network::readNetwork(const std::string& filename)
 {
-	std::string extension = boost::filesystem::extension(filename);
-	switch(ExtensionToIndex_[extension]) {
+	auto idx = filename.find_last_of('.');
+
+	if(idx == std::string::npos) {
+		throw std::invalid_argument("Cannot determine file type of '" + filename + "'");
+	}
+
+	switch(ExtensionToIndex_[filename.substr(idx)]) {
 		case 1:
 			readTGF(filename);
 			break;
