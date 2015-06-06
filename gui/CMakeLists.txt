@@ -17,7 +17,7 @@ QT5_WRAP_UI(ui_Headers
     mainwindow.ui
     matrixpopup.ui
     discretisationselection.ui
-    dataview.ui
+    DataView.ui
 )
 
 add_executable(CausalTrailGui

@@ -175,7 +175,7 @@ private slots:
      * @param samples name of the file containing the original observations
 	 * @param deselected
      */
-    void discretiseSelection(QString samples, std::vector<uint> deselected);
+    void discretiseSelection(const QString& samples, const std::vector<uint>& deselected);
 
 	/**
      * @brief on_actionClose_triggered

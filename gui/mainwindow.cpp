@@ -222,7 +222,7 @@ void MainWindow::loadSamples(const QString& samples, const Discretiser::Discreti
     on_newQuery_clicked();
 }
 
-void MainWindow::discretiseSelection(QString samples, std::vector<uint> deselected){
+void MainWindow::discretiseSelection(const QString& samples, const std::vector<uint>& deselected){
     int index = ui->tabWidget->currentIndex();
     networks[index].setDeselectedSamples(deselected);
     QMessageBox boxDisc;
@@ -285,10 +285,8 @@ void MainWindow::on_actionLoad_Samples_triggered()
             //View -> Call a new window
              dataview* dView = new dataview(0,samples);
              dView->setWindowTitle("Data contained in "+samples);
-             connect(dView,SIGNAL(dataSubmitted(QString, std::vector<uint>)),this,SLOT(discretiseSelection(QString,std::vector<uint>)));
-             connect(dView,SIGNAL(dataRejected()),this,SLOT(dataRejected()));
-             dView->adjust();
-             dView->update();
+             connect(dView, SIGNAL(dataAccepted(const QString&, std::vector<uint>)), this, SLOT(discretiseSelection(const QString&, std::vector<uint>)));
+             connect(dView, SIGNAL(rejected()), this, SLOT(dataRejected()));
              dView->show();
         }
         else{
