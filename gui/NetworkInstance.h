@@ -47,7 +47,7 @@ class NetworkInstance{
      * @param query Query to calculate
      * @return A pair of the resulting probability and a vector containing value assignments for MAP queries.
      */
-    std::pair<float,std::vector<std::string>> calculate(QString query);
+    std::pair<float,std::vector<std::string>> calculate(const std::string& query);
 
     /**
      * @brief isFirstQuery
@@ -119,14 +119,14 @@ class NetworkInstance{
      * @brief getNumberOfQueries
      * @return The number of stored queries
      */
-    unsigned int getNumberOfQueries();
+    unsigned int getNumberOfQueries() const;
 
     /**
      * @brief getQuery
      * @param index The index of the desired query
      * @return The query at the given index
      */
-    QString &getQuery(unsigned int index);
+	const QString& getQuery (unsigned int index) const;
 
     /**
      * @brief getQueryItems
@@ -220,7 +220,7 @@ class NetworkInstance{
      * @param name1 Name of the source node
      * @param name2 Name of the target node
      */
-    void EdgeRemoval(unsigned int srcId, unsigned int tarId, QString name1, QString name2);
+    void EdgeRemoval(unsigned int srcId, unsigned int tarId);
 
     /**
      * @brief RemoveSelectedEdge
@@ -283,13 +283,13 @@ class NetworkInstance{
      * @brief removedEdgeSourceName
      * @return The name of the source node of the currently selected removed edge
      */
-    QString removedEdgeSourceName();
+    const std::string& removedEdgeSourceName() const;
 
     /**
      * @brief removedEdgeTargetName
      * @return The name of the target node of the currently selected removed edge
      */
-    QString removedEdgeTargetName();
+    const std::string& removedEdgeTargetName() const;
 
     /**
      * @brief getSelectedNodeID
@@ -567,18 +567,6 @@ private:
      * Identifier of the edge target node
      */
     int id2_;
-
-    /**
-     * @brief name1_
-     * Name of the edge source ndoe
-     */
-    QString name1_;
-
-    /**
-     * @brief name2_
-     * Name of the edge target node
-     */
-    QString name2_;
 
     /**
      * @brief selectedNode_

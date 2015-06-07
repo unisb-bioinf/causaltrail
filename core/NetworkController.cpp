@@ -13,6 +13,10 @@ Network& NetworkController::getNetwork(){
 	return network_;
 }
 
+const Network& NetworkController::getNetwork() const {
+	return network_;
+}
+
 void NetworkController::loadObservations(const std::string& datafile,
                                          const std::string& controlFile)
 {

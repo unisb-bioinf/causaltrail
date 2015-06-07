@@ -99,14 +99,14 @@ public:
      * @brief getNumberOfQueries
      * @return The number of stored queries
      */
-    unsigned int getNumberOfQueries();
+    unsigned int getNumberOfQueries() const;
 
     /**
      * @brief getQuery
      * @param index The index of the desired query
      * @return The query at the given index
      */
-    QString& getQuery(unsigned int index);
+    const QString& getQuery(unsigned int index) const;
 
     /**
      * @brief getQueryItems
