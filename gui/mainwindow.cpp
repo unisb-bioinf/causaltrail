@@ -54,30 +54,12 @@ void MainWindow::checkQueriesLeft()
 		return;
 	}
 
-	int index = ui->tabWidget->currentIndex();
-	if(networks[index].getNumberOfQueries() > 0) {
-		ui->actionCreate_Batchfile->setEnabled(true);
-		ui->actionCreate_Batchfile_2->setEnabled(true);
-	} else {
-		ui->actionCreate_Batchfile->setEnabled(false);
-		ui->actionCreate_Batchfile_2->setEnabled(false);
-	}
-
-	if(networks[index].isFirstQuery()) {
-		ui->loadPreviousQueryButton->setEnabled(false);
-		ui->loadPreviousQueryButton_2->setEnabled(false);
-	} else {
-		ui->loadPreviousQueryButton->setEnabled(true);
-		ui->loadPreviousQueryButton_2->setEnabled(true);
-	}
-
-	if(networks[index].isLastQuery()) {
-		ui->loadSuccessorQueryButton->setEnabled(false);
-		ui->loadSuccessorQueryButton_2->setEnabled(false);
-	} else {
-		ui->loadSuccessorQueryButton->setEnabled(true);
-		ui->loadSuccessorQueryButton_2->setEnabled(true);
-	}
+	auto& currentNetwork = networks[ui->tabWidget->currentIndex()];
+	ui->actionCreate_Batchfile->setEnabled(currentNetwork.getNumberOfQueries() > 0);
+	ui->loadPreviousQueryButton->setEnabled(!currentNetwork.isFirstQuery());
+	ui->loadPreviousQueryButton_2->setEnabled(!currentNetwork.isFirstQuery());
+	ui->loadSuccessorQueryButton->setEnabled(!currentNetwork.isLastQuery());
+	ui->loadSuccessorQueryButton_2->setEnabled(!currentNetwork.isLastQuery());
 }
 
 void MainWindow::initaliseVisibility()
@@ -93,10 +75,7 @@ void MainWindow::initaliseVisibility()
 	ui->interventionLabel->setVisible(false);
 	ui->edgeAdditionsRemovalList->setVisible(false);
 	ui->edgeAdReLabel->setVisible(false);
-	ui->actionCreate_Batchfile_2->setEnabled(false);
-	ui->actionExecute_Batchfile_2->setEnabled(false);
 	ui->actionSave_Session->setEnabled(false);
-	ui->actionLoad_Samples_2->setEnabled(false);
 }
 
 void MainWindow::checkAllEmpty()
@@ -190,7 +169,6 @@ void MainWindow::visualise(int index)
 {
 	networks[index].visualize(ui->tabWidget->widget(index));
 	ui->actionLoad_Samples->setEnabled(true);
-	ui->actionLoad_Samples_2->setEnabled(true);
 	ui->actionLayout->setEnabled(true);
 	ui->tabWidget->widget(index)->setFocus();
 	for(const NodeGui* ng : networks[index].getNodeGuiVec()) {
@@ -489,17 +467,11 @@ void MainWindow::on_tabWidget_currentChanged(int index)
 		}
 	} else {
 		ui->actionLoad_Samples->setEnabled(false);
-		ui->actionLoad_Samples_2->setEnabled(false);
 		ui->actionLayout->setEnabled(false);
-		ui->actionLayout_2->setEnabled(false);
-		ui->actionSaveSession->setEnabled(false);
 		ui->actionSave_Session->setEnabled(false);
 		ui->actionLoad_Session->setEnabled(true);
-		ui->actionLoad_Session_2->setEnabled(true);
 		ui->actionExecute_Batchfile->setEnabled(false);
-		ui->actionExecute_Batchfile_2->setEnabled(false);
 		ui->actionCreate_Batchfile->setEnabled(false);
-		ui->actionCreate_Batchfile_2->setEnabled(false);
 	}
 
 	clearLabelsAndValueList();
@@ -644,10 +616,8 @@ void MainWindow::adaptQueryEvaluationButtons(bool show)
 	ui->dockWidgetContents_2->setEnabled(show);
 	ui->executeQueryButton_2->setEnabled(show);
 	ui->deleteQueryButton_2->setEnabled(show);
-	ui->actionSaveSession->setEnabled(show);
 	ui->actionSave_Session->setEnabled(show);
 	ui->actionExecute_Batchfile->setEnabled(show);
-	ui->actionExecute_Batchfile_2->setEnabled(show);
 }
 
 void MainWindow::clearLabelsAndValueList()
@@ -933,7 +903,7 @@ MainWindow::on_edgeAdditionsRemovalList_itemDoubleClicked(QListWidgetItem* item)
 	checkAllEmpty();
 }
 
-void MainWindow::on_actionSaveSession_triggered()
+void MainWindow::on_actionSave_Session_triggered()
 {
 	dataStorage dataStore;
 	QFileDialog dialog;
@@ -977,7 +947,6 @@ void MainWindow::on_actionLoad_Session_triggered()
 		ui->Output->scrollToBottom();
 		if(networks.back().getNumberOfQueries() > 0) {
 			ui->actionCreate_Batchfile->setEnabled(true);
-			ui->actionCreate_Batchfile_2->setEnabled(true);
 			ui->loadPreviousQueryButton->setEnabled(true);
 			ui->loadPreviousQueryButton_2->setEnabled(true);
 			loadQueriesToHistoryWindow(networks[index]);
@@ -1066,5 +1035,3 @@ void MainWindow::on_queryHistory_doubleClicked(const QModelIndex& index)
 	                currentNetwork.getEdgeAddRemItems(index.row()));
 	ui->Input->setFocus();
 }
-
-void MainWindow::on_actionHelp_2_triggered() { on_actionHelp_triggered(); }

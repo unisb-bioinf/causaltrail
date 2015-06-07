@@ -384,7 +384,7 @@ private slots:
      * @brief on_actionSaveSession_triggered
 	 * Saves the current session
      */
-    void on_actionSaveSession_triggered();
+    void on_actionSave_Session_triggered();
 
     /**
      * @brief on_actionLoad_Session_triggered
@@ -416,13 +416,6 @@ private slots:
 	 * Resets the network if the user did not select data in the dataview
 	 */
     void dataRejected();
-
-	/**
-	 * @brief Help_2_triggered
-	 * Shows the Documentation of CausalTrail
-	 */
-
-    void on_actionHelp_2_triggered();
 };
 
 #endif // MAINWINDOW_H

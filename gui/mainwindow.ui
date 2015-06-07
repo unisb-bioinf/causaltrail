@@ -78,10 +78,10 @@
      <x>0</x>
      <y>0</y>
      <width>1108</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuProgram">
+   <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>&amp;Help</string>
     </property>
@@ -94,18 +94,18 @@
     </property>
     <addaction name="actionNew_Network"/>
     <addaction name="actionDelete_Network"/>
-    <addaction name="actionLoad_Samples_2"/>
+    <addaction name="actionLoad_Samples"/>
     <addaction name="actionSave_Session"/>
-    <addaction name="actionLoad_Session_2"/>
-    <addaction name="actionCreate_Batchfile_2"/>
+    <addaction name="actionLoad_Session"/>
+    <addaction name="actionCreate_Batchfile"/>
     <addaction name="separator"/>
-    <addaction name="actionExecute_Batchfile_2"/>
-    <addaction name="actionLayout_2"/>
+    <addaction name="actionExecute_Batchfile"/>
+    <addaction name="actionLayout"/>
     <addaction name="separator"/>
     <addaction name="actionClose"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuProgram"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="enabled">
@@ -135,13 +135,13 @@
    <addaction name="separator"/>
    <addaction name="actionLoad_Samples"/>
    <addaction name="separator"/>
-   <addaction name="actionSaveSession"/>
+   <addaction name="actionSave_Session"/>
    <addaction name="actionLoad_Session"/>
    <addaction name="separator"/>
    <addaction name="actionCreate_Batchfile"/>
    <addaction name="actionExecute_Batchfile"/>
    <addaction name="separator"/>
-   <addaction name="actionHelp_2"/>
+   <addaction name="actionHelp"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget_4">
    <property name="sizePolicy">
@@ -152,8 +152,8 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>41</width>
+     <height>19</height>
     </size>
    </property>
    <property name="maximumSize">
@@ -260,8 +260,8 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>136</width>
+     <height>57</height>
     </size>
    </property>
    <property name="maximumSize">
@@ -397,8 +397,8 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>358</width>
+     <height>581</height>
     </size>
    </property>
    <property name="font">
@@ -783,8 +783,8 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>70</width>
+     <height>89</height>
     </size>
    </property>
    <property name="font">
@@ -895,19 +895,6 @@
     <string>Layout</string>
    </property>
   </action>
-  <action name="actionSaveSession">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="icon">
-    <iconset theme="document-save">
-     <normaloff/>
-    </iconset>
-   </property>
-   <property name="text">
-    <string>Save Session</string>
-   </property>
-  </action>
   <action name="actionNew_Network">
    <property name="icon">
     <iconset theme="document-new">
@@ -928,16 +915,6 @@
     <string>&amp;Delete Network</string>
    </property>
   </action>
-  <action name="actionLoad_Samples_2">
-   <property name="icon">
-    <iconset theme="document-open">
-     <normaloff/>
-    </iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Load Samples</string>
-   </property>
-  </action>
   <action name="actionSave_Session">
    <property name="icon">
     <iconset theme="document-save">
@@ -946,11 +923,6 @@
    </property>
    <property name="text">
     <string>&amp;Save Session</string>
-   </property>
-  </action>
-  <action name="actionLayout_2">
-   <property name="text">
-    <string>La&amp;yout</string>
    </property>
   </action>
   <action name="actionLoad_Session">
@@ -963,16 +935,6 @@
     <string>Load Session</string>
    </property>
   </action>
-  <action name="actionLoad_Session_2">
-   <property name="icon">
-    <iconset theme="document-open">
-     <normaloff/>
-    </iconset>
-   </property>
-   <property name="text">
-    <string>L&amp;oad Session</string>
-   </property>
-  </action>
   <action name="actionCreate_Batchfile">
    <property name="enabled">
     <bool>false</bool>
@@ -983,7 +945,7 @@
     </iconset>
    </property>
    <property name="text">
-    <string>Save Batchfile</string>
+    <string>Create Batchfile</string>
    </property>
   </action>
   <action name="actionExecute_Batchfile">
@@ -999,27 +961,7 @@
     <string>Run Batchfile</string>
    </property>
   </action>
-  <action name="actionCreate_Batchfile_2">
-   <property name="icon">
-    <iconset theme="document-new">
-     <normaloff/>
-    </iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Create Batchfile</string>
-   </property>
-  </action>
-  <action name="actionExecute_Batchfile_2">
-   <property name="text">
-    <string>&amp;Execute Batchfile</string>
-   </property>
-  </action>
   <action name="actionHelp">
-   <property name="text">
-    <string>&amp;Help</string>
-   </property>
-  </action>
-  <action name="actionHelp_2">
    <property name="icon">
     <iconset theme="help-contents">
      <normaloff/>
@@ -1044,34 +986,18 @@
  <resources/>
  <connections>
   <connection>
-   <sender>actionLoad_Samples_2</sender>
-   <signal>triggered()</signal>
-   <receiver>actionLoad_Samples</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>deleteQueryButton_2</sender>
    <signal>clicked()</signal>
    <receiver>deleteQueryButton</receiver>
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>966</x>
-     <y>159</y>
+     <x>925</x>
+     <y>202</y>
     </hint>
     <hint type="destinationlabel">
-     <x>472</x>
-     <y>682</y>
+     <x>1038</x>
+     <y>106</y>
     </hint>
    </hints>
   </connection>
@@ -1082,12 +1008,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>966</x>
-     <y>215</y>
+     <x>1011</x>
+     <y>202</y>
     </hint>
     <hint type="destinationlabel">
-     <x>501</x>
-     <y>682</y>
+     <x>1068</x>
+     <y>106</y>
     </hint>
    </hints>
   </connection>
@@ -1098,12 +1024,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>966</x>
-     <y>187</y>
+     <x>1097</x>
+     <y>202</y>
     </hint>
     <hint type="destinationlabel">
-     <x>530</x>
-     <y>682</y>
+     <x>1098</x>
+     <y>106</y>
     </hint>
    </hints>
   </connection>
@@ -1114,12 +1040,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>966</x>
-     <y>131</y>
+     <x>839</x>
+     <y>202</y>
     </hint>
     <hint type="destinationlabel">
-     <x>443</x>
-     <y>682</y>
+     <x>1008</x>
+     <y>106</y>
     </hint>
    </hints>
   </connection>
@@ -1156,98 +1082,18 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionSave_Session</sender>
-   <signal>triggered()</signal>
-   <receiver>actionSaveSession</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionLayout_2</sender>
-   <signal>triggered()</signal>
-   <receiver>actionLayout</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>Input</sender>
    <signal>returnPressed()</signal>
    <receiver>executeQueryButton</receiver>
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>212</x>
-     <y>683</y>
+     <x>962</x>
+     <y>106</y>
     </hint>
     <hint type="destinationlabel">
-     <x>443</x>
-     <y>682</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionLoad_Session_2</sender>
-   <signal>triggered()</signal>
-   <receiver>actionLoad_Session</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionCreate_Batchfile_2</sender>
-   <signal>triggered()</signal>
-   <receiver>actionCreate_Batchfile</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionExecute_Batchfile_2</sender>
-   <signal>triggered()</signal>
-   <receiver>actionExecute_Batchfile</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
+     <x>1008</x>
+     <y>106</y>
     </hint>
    </hints>
   </connection>
