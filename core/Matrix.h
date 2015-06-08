@@ -117,6 +117,18 @@ template <typename T> class Matrix
 	 */
 	void setData(T value, unsigned int col, unsigned int row);
 
+	/**
+	 * getData
+	 *
+	 * @param col Desired column
+	 * @param row Desired row
+	 *
+	 * This method retrieves a value in the matrix at the specified position.
+	 *
+	 * @throw Exception
+	 */
+	const T& getData(unsigned int col, unsigned int row) const;
+
 	/**setRowNames
 	 *
 	 * @param names Vector containing row names
@@ -649,6 +661,16 @@ void Matrix<T>::setData(T value, unsigned int col, unsigned int row)
 	}
 	data_[col + row * colCount_] = value;
 }
+
+template <typename T>
+const T& Matrix<T>::getData(unsigned int col, unsigned int row) const
+{
+	if(col > colCount_ || row > rowCount_) {
+		throw std::invalid_argument("In setData, Invalid matrix position");
+	}
+	return data_[col + row * colCount_];
+}
+
 
 template <typename T>
 void Matrix<T>::setRowNames(const std::vector<std::string>& names)

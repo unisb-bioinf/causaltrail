@@ -88,7 +88,13 @@ class NetworkController{
 	 * @return a reference to the network
 	 */	 
 	Network& getNetwork();
-	
+
+	/**getNetwork
+	 *
+	 * @return a reference to the network
+	 */
+	const Network& getNetwork() const;
+
 	/**getNumberOfEMRuns
 	 *
 	 * @return the number of executed EM iterations

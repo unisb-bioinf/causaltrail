@@ -64,11 +64,11 @@ std::vector<QString>& QueryManager::getSubsequentEdgeChangeItems(){
     return  edgeAddRemItems_[index_];
 }
 
-unsigned int QueryManager::getNumberOfQueries(){
+unsigned int QueryManager::getNumberOfQueries() const {
     return queryVector_.size();
 }
 
-QString& QueryManager::getQuery(unsigned int index)
+const QString& QueryManager::getQuery(unsigned int index) const
 {
     return queryVector_[index];
 }

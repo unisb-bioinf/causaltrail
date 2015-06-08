@@ -39,7 +39,7 @@ private:
 	 * Adds all queries contained in the QueryManager of the current NetworkInstance to the QueryHistory ListWidget
      * @param index Index of the NetworkInstance
      */
-    void loadQueriesToHistoryWindow(int index);
+    void loadQueriesToHistoryWindow(const NetworkInstance& net);
 
     /**
      * @brief clearLabelsAndValueList
@@ -175,7 +175,7 @@ private slots:
      * @param samples name of the file containing the original observations
 	 * @param deselected
      */
-    void discretiseSelection(QString samples, std::vector<uint> deselected);
+    void discretiseSelection(const QString& samples, const std::vector<uint>& deselected);
 
 	/**
      * @brief on_actionClose_triggered
@@ -283,13 +283,10 @@ private slots:
     /**
      * @brief Edge_context
 	 * Handles a right click on an edge, generates the context menu
-     * @param sourcename Name of source node of the selected edge
-     * @param destName Name of the target node of the selected edge
-     * @param sourceID Identifier of the source node of the selected edge
-     * @param destID Identifier of the target node of the selected edge
+     * @param edge The edge for which the context menu was invoked
      * @param event QGraphicsSceneContextMenuEvent Pointer
      */
-    void Edge_context(QString sourcename, QString destName, unsigned int sourceID, unsigned int destID, QGraphicsSceneContextMenuEvent *event);
+    void Edge_context(Edge* edge, QGraphicsSceneContextMenuEvent *event);
 
     /**
      * @brief context_Menu_QueryValue_Selected
@@ -387,7 +384,7 @@ private slots:
      * @brief on_actionSaveSession_triggered
 	 * Saves the current session
      */
-    void on_actionSaveSession_triggered();
+    void on_actionSave_Session_triggered();
 
     /**
      * @brief on_actionLoad_Session_triggered
@@ -419,13 +416,6 @@ private slots:
 	 * Resets the network if the user did not select data in the dataview
 	 */
     void dataRejected();
-
-	/**
-	 * @brief Help_2_triggered
-	 * Shows the Documentation of CausalTrail
-	 */
-
-    void on_actionHelp_2_triggered();
 };
 
 #endif // MAINWINDOW_H

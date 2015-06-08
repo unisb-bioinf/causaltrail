@@ -110,7 +110,7 @@ signals:
      * @param destID Identifier of the target node
      * @param event QGraphicsSceneContextMenuEvent pointer
      */
-    void context(QString sourcename, QString destName, unsigned int sourceID, unsigned int destID, QGraphicsSceneContextMenuEvent* event);
+    void context(Edge* edge, QGraphicsSceneContextMenuEvent* event);
 
 protected:
     /**

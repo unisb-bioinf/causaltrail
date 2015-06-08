@@ -33,10 +33,10 @@ void NetworkInstance::loadSamples(const QString& filename, const Discretiser& d)
     trained_=true;
 }
 
-std::pair<float,std::vector<std::string>> NetworkInstance::calculate(QString query){
-    Parser p (query.toStdString(),nc_);
-    QueryExecuter qe = p.parseQuery();
-    return qe.execute();
+std::pair<float, std::vector<std::string>>
+NetworkInstance::calculate(const std::string& query)
+{
+	return Parser(query, nc_).parseQuery().execute();
 }
 
 bool NetworkInstance::isFirstQuery(){
@@ -247,19 +247,17 @@ void NetworkInstance::NodeForEdgeAdditionSelected(unsigned int id){
     remainingNodesForEdgeAddition_--;
 }
 
-void NetworkInstance::EdgeRemoval(unsigned int srcId, unsigned int tarId, QString name1, QString name2){
+void NetworkInstance::EdgeRemoval(unsigned int srcId, unsigned int tarId) {
    id1_ = srcId;
    id2_ = tarId;
-   name1_ = name1;
-   name2_ = name2;
 }
 
-QString NetworkInstance::removedEdgeSourceName(){
-    return name1_;
+const std::string& NetworkInstance::removedEdgeSourceName() const {
+    return nc_.getNetwork().getNode(id1_).getName();
 }
 
-QString NetworkInstance::removedEdgeTargetName(){
-    return name2_;
+const std::string& NetworkInstance::removedEdgeTargetName() const {
+    return nc_.getNetwork().getNode(id2_).getName();
 }
 
 void NetworkInstance::RemoveSelectedEdge(){
@@ -352,11 +350,11 @@ QString NetworkInstance::getDataFile(){
     return dataFile_;
 }
 
-unsigned int NetworkInstance::getNumberOfQueries(){
+unsigned int NetworkInstance::getNumberOfQueries() const{
     return qma_.getNumberOfQueries();
 }
 
-QString& NetworkInstance::getQuery(unsigned int index)
+const QString& NetworkInstance::getQuery(unsigned int index) const
 {
     return qma_.getQuery(index);
 }
