@@ -37,7 +37,7 @@ class NetworkController{
 	 * Reads the raw sample data and performs the discretisation
 	 */
 	void loadObservations(const std::string& datafile,
-	                      const Discretiser::Discretisations& control);
+	                      const Discretiser& d);
 
 	/**loadObservations
 	 *
@@ -49,7 +49,7 @@ class NetworkController{
 	 * Reads the raw sample data and performs the discretisation
 	 */
 	void loadObservations(const std::string& datafile,
-	                      const Discretiser::Discretisations& control,
+	                      const Discretiser& d,
 	                      const std::vector<unsigned int>& samplesToDelete);
 
 	/**loadObservations

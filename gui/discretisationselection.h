@@ -43,7 +43,7 @@ public:
 	/**
 	 * Get the chosen discretisation settings.
 	 */
-	Discretiser::Discretisations control() const;
+//	Discretiser::Discretisations control() const;
 
 	/**
 	 * Get the configured index.

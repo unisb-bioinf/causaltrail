@@ -1,29 +1,13 @@
 #ifndef DISCRETISER_H
 #define DISCRETISER_H
 
+#include "Discretisations.h"
 #include "Network.h"
 #include "float.h"
 #include <map>
 
 class Discretiser{
 	public: 
-	struct Discretisation {
-		Discretisation(size_t arow, int amethod, float athreshold)
-		    : row(arow), method(amethod), threshold(athreshold)
-		{}
-
-		size_t row;
-		int method;
-		float threshold;
-	};
-
-	using Discretisations = std::vector<Discretisation>;
-
-	/**
-	 * Parses a discretisation control file.
-	 */
-	static Discretisations loadControlFile(const std::string& controlFile);
-
 	/**Discretiser
  	 *
 	 * @param originalObservations, a const reference to the matrix containing the raw sample data
@@ -34,7 +18,9 @@ class Discretiser{
 	 *
  	 *
  	 */
-	Discretiser(const Matrix<std::string>& originalObservations, Matrix<int>& obsMatrix, Network& network);
+	Discretiser(const Matrix<std::string>& originalObservations, 
+			Matrix<int>& obsMatrix, 
+			Network& network);
 
 	/**Discretiser
  	 *
@@ -48,19 +34,15 @@ class Discretiser{
 	 * In contrast to the before declared constructor, this constructor uses the controlFile and automatically discretises
 	 * all observations that are listed in this file
  	 */
-	Discretiser(const Matrix<std::string>& originalObservations,const std::string& filename, Matrix<int>& obsMatrix, Network& network);
+	Discretiser(const Matrix<std::string>& originalObservations,
+		const std::string& filename, 
+		Matrix<int>& obsMatrix, 
+		Network& network);
 
 	Discretiser& operator=(const Discretiser&) = delete;
+	
 	Discretiser& operator=(Discretiser&&) = delete;
 
-	/**discretiseRow
- 	 *
-	 * @param row, row to discretise
-	 * @param method, ID of the method to use for discretisatoin
-	 * @param threshold, obtional argument needed for some discretisation methods
-	 *
- 	 */
-	void discretiseRow(unsigned int row, unsigned int method, float threshold);
 
 	/**getEntry
  	 *
@@ -72,36 +54,12 @@ class Discretiser{
  	 */
 	int getEntry(unsigned int col, unsigned int row);
 
-	/**discretise
- 	 *
-	 * @param filename, name of the controlFile
-	 *
- 	 * Discretises each row as specified in the controlFile. The structure of the file
-	 * is as follows:
-	 * Row	MethodCode
-	 *
-	 * Row numbers start at 0.
- 	 *
- 	 * The method integer codes are:
-	 *	0: discretiseCeil
-	 *	1: discretiseFloor
-	 *	2: discretiseRound
-	 *	3: discretiseByAMean
-	 *	4: discretiseByHMean
-	 *	5: discretiseByMedian
-	 *	6: discretiseManually
-	 *	7: discretiseBracketMedians
-	 *	8: discretisePearsonTukey
-	 *	9: mapNamesToInt
- 	 */
-	void discretise(const Discretisations& control);
 
-	/**
-	 * Convenience overload for Discretiser::discretise(const Discretisations&)
-	 */
-	void discretise(const std::string& filename);
+	void discretise(const std::string& controlFile);
 
 	private:
+	void createDiscretisationClasses(const std::string& controlFile);
+
 
 	/**discretiseFloor
  	 *
@@ -193,45 +151,12 @@ class Discretiser{
  	 */
 	void mapNamesToInt(unsigned int row);
 
-	/**getNumber
- 	 *
-	 * @param col, column of intererst
-	 * @param row, row of interest
- 	 *
-	 * Converts the string at the given position into a float value
- 	 */
-	float getNumber(unsigned int col, unsigned int row);
-
-	/**convertToDenseNumbers,
- 	 *
-	 * @param row, row to convert
-	 *
- 	 * Converts the entries in a given row to dense numbers
- 	 */
-	void convertToDenseNumbers(unsigned int row);
-
-	/**createNameEntry
- 	 *
-	 * @param value, value to convert
-	 * @param row, row in focus
-	 *
- 	 * Creates an entry in the ObservationsMap_ and the ObservationsMapR_ for the given value and the given row
- 	 */
-	void createNameEntry(int value, unsigned int row);
-
 	/**adaptFormat
  	 *
  	 * Replaces various kinds of NA representations by a unqiue version
  	 */
 	void adaptFormat();
 
-	/**createSortedVector
- 	 *
-	 * @param row, row to sort
-	 *
- 	 * @return a sorted vector (small -> large)  containing the entries of the given row
- 	 */
-	std::vector<float> createSortedVector(unsigned int row);
 	//Matrix containing the original raw sample data
 	Matrix<std::string> originalObservations_;
 	//Matrix containing the discretised data
@@ -239,6 +164,8 @@ class Discretiser{
 	//Map from original value to integer representation
 	std::unordered_map<std::string,int>& observationsMap_;
 	//Map from integer representation (and observationRow from class Node) to the original representation
-    std::map<std::pair<int,int>, std::string>& observationsMapR_;
+	std::map<std::pair<int,int>, std::string>& observationsMapR_;
+	//Vector of unique pointers, pointing to discretisation objects
+	std::vector<std::unique_ptr<Discretisations>> discretisations_;
 };
 #endif

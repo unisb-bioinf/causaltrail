@@ -1,7 +1,8 @@
+#include "SerializeDeserializeJson.h"
 #include "Discretiser.h"
+#include "DiscretisationFactory.h"
 #include <algorithm>
 #include "math.h"
-#include "SerializeDeserializeJson.h"
 
 Discretiser::Discretiser(const Matrix<std::string>& originalObservations,
                          Matrix<int>& obsMatrix, Network& network)
@@ -33,135 +34,30 @@ Discretiser::Discretiser(const Matrix<std::string>& originalObservations,
 	discretise(filename);
 }
 
+
 int Discretiser::getEntry(unsigned int col, unsigned int row)
 {
 	int value = observations_(col, row);
 	return value;
 }
 
-float Discretiser::getNumber(unsigned int col, unsigned int row)
-{
-	std::stringstream ss;
-	std::string temp;
-	float value;
-	temp = originalObservations_(col, row);
-	if(temp == "NA")
-		return -1;
-	ss << temp;
-	ss >> value;
-	return value;
-}
-
-std::vector<float> Discretiser::createSortedVector(unsigned int row)
-{
-	std::vector<float> templist;
-	for(unsigned int col = 0; col < originalObservations_.getColCount();
-	    col++) {
-		templist.push_back(getNumber(col, row));
-	}
-	std::sort(templist.begin(), templist.end());
-	return templist;
-}
-
-void Discretiser::convertToDenseNumbers(unsigned int row)
-{
-	const std::vector<int>& obs = observations_.getUniqueRowValues(row);
-	for(unsigned int key = 0; key < obs.size(); key++) {
-		for(unsigned int col = 0; col < observations_.getColCount(); col++) {
-			if(obs[key] == observations_(col, row)) {
-				observations_.setData(key, col, row);
-				createNameEntry(key, row);
-			}
-		}
-	}
-}
-
-void Discretiser::discretiseRow(unsigned int row, unsigned int method,
-                                float threshold)
-{
-	switch(method) {
-		case 0:
-			discretiseCeil(row);
-			convertToDenseNumbers(row);
-			break;
-		case 1:
-			discretiseFloor(row);
-			convertToDenseNumbers(row);
-			break;
-		case 2:
-			discretiseRound(row);
-			convertToDenseNumbers(row);
-			break;
-		case 3:
-			discretiseByAMean(row);
-			break;
-		case 4:
-			discretiseByHMean(row);
-			break;
-		case 5:
-			discretiseByMedian(row);
-			break;
-		case 6:
-			discretiseManually(row, threshold);
-			break;
-		case 7:
-			discretiseBracketMedians(row, int(threshold));
-			break;
-		case 8:
-			discretisePearsonTukey(row);
-			break;
-		case 9:
-			mapNamesToInt(row);
-			break;
-		case 10:
-			discretiseZ(row);
-			break;
-	}
-}
-
-Discretiser::Discretisations Discretiser::loadControlFile(const std::string& controlFile)
-{
-	Discretiser::Discretisations discs;
-	std::ifstream input(controlFile, std::ifstream::in);
-	if(!input.good()) {
-		throw std::invalid_argument("Controlfile not found");
-	}
-
-	std::string line;
-	while(std::getline(input, line)) {
-		unsigned int row;
-		unsigned int method;
-		std::stringstream buffer;
-		float threshold = 0.0;
-		buffer << line;
-		buffer >> row >> method >> threshold;
-		if(method > 9) {
-			throw std::invalid_argument("Method not known");
-		}
-
-		discs.emplace_back(row, method, threshold);
-	}
-
-	input.close();
-
-	return discs;
-}
-
-void Discretiser::discretise(const Discretiser::Discretisations& control) {
-	for(auto&& c : control) {
-		if(c.row > originalObservations_.getRowCount()) {
-			throw std::invalid_argument("Row does not exist");
-		}
-
-		discretiseRow(c.row, c.method, c.threshold);
-	}
-}
-
 void Discretiser::discretise(const std::string& controlFile)
 {
-	discretise(loadControlFile(controlFile));
-}
+	SerializeDeserializeJson jsonTree(controlFile);
+	//Create Factory
+	DiscretisationFactory dF(jsonTree,
+			originalObservations_,
+                        observations_,
+                        observationsMap_,
+                        observationsMapR_);
 
+	//Create Discretisations Objects
+	for (unsigned int i = 0; i< originalObservations_.getRowCount(); i++){
+		discretisations_.push_back(dF.create(originalObservations_.getRowNames()[i],i));	
+	} 
+	//createDiscretisationClasses(controlFile);
+}
+/*
 void Discretiser::discretiseZ(unsigned int row)
 {
 	float expValue = 0.0;
@@ -201,7 +97,7 @@ void Discretiser::discretiseCeil(unsigned int row)
 {
 	for(unsigned int col = 0; col < originalObservations_.getColCount();
 	    col++) {
-		float value = getNumber(col, row);
+	float value = getNumber(col, row);
 		int dvalue = ceil(value);
 		observations_.setData(dvalue, col, row);
 	}
@@ -365,17 +261,7 @@ void Discretiser::mapNamesToInt(unsigned int row)
 		observations_.setData(observationsMap_[originalObservations_(col, row)],
 		                      col, row);
 	}
-}
-
-void Discretiser::createNameEntry(int value, unsigned int row)
-{
-	std::stringstream ss;
-	std::string ssvalue;
-	ss << value;
-	ss >> ssvalue;
-	observationsMap_[ssvalue] = value;
-	observationsMapR_[std::make_pair(value, row)] = ssvalue;
-}
+}*/
 
 void Discretiser::adaptFormat()
 {

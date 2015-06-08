@@ -22,6 +22,8 @@ void discretisationSelection::show(const QString& path, const QString& samples,
 
 const QString& discretisationSelection::samples() const { return samples_; }
 
+/*
+//ToDo Update!
 Discretiser::Discretisations discretisationSelection::control() const
 {
 	Discretiser::Discretisations disc;
@@ -34,7 +36,7 @@ Discretiser::Discretisations discretisationSelection::control() const
 
 	return disc;
 }
-
+*/
 int discretisationSelection::index() const { return index_; }
 
 void discretisationSelection::adaptGUIToData(){

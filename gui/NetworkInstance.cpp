@@ -22,11 +22,11 @@ void NetworkInstance::visualize(QWidget* tabwidget){
     nv_ = new NetworkVis(tabwidget, nc_);
 }
 
-void NetworkInstance::loadSamples(const QString& filename, const Discretiser::Discretisations& control){
+void NetworkInstance::loadSamples(const QString& filename, const Discretiser& d){
     if (deselectedSamples_.empty()){
-		nc_.loadObservations(filename.toStdString(), control);
+		nc_.loadObservations(filename.toStdString(), d);
 	} else {
-		nc_.loadObservations(filename.toStdString(), control,
+		nc_.loadObservations(filename.toStdString(), d,
 		                     deselectedSamples_);
 	}
     nc_.trainNetwork();
@@ -226,7 +226,6 @@ bool NetworkInstance::EdgeAddition(){
 }
 
 bool NetworkInstance::checkEdgeAddition(unsigned int id){
-    //TODO Remove Edges to be removed
     std::vector<std::pair<unsigned int, unsigned int>> addedEdgeList = nv_->getAddedEdgeIDs();
     std::vector<std::pair<unsigned int, unsigned int>> removedEdgeList = nv_->getRemovedEdgeIDs();
     if (id1_ != -1){

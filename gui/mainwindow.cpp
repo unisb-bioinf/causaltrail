@@ -30,8 +30,8 @@ MainWindow::MainWindow(Config* config, QWidget *parent)
 	  config_(config)
 {
 	discretisationSelection_ = new discretisationSelection(this);
-	connect(discretisationSelection_, SIGNAL(accepted()), this,
-	        SLOT(loadSamples()));
+//	connect(discretisationSelection_, SIGNAL(accepted()), this,
+//	        SLOT(loadSamples()));
 
 	ui->setupUi(this);
     showMaximized();
@@ -201,7 +201,7 @@ void MainWindow::visualise(int index){
 
 void MainWindow::loadSamples()
 {
-	try {
+/*	try {
 		loadSamples(discretisationSelection_->samples(),
 		            discretisationSelection_->control(),
 		            discretisationSelection_->index());
@@ -210,16 +210,16 @@ void MainWindow::loadSamples()
 		adaptQueryEvaluationButtons(false);
 		networks[discretisationSelection_->index()].resetNetwork();
 	}
-	ui->Output->scrollToBottom();
+	ui->Output->scrollToBottom();*/
 }
 
-void MainWindow::loadSamples(const QString& samples, const Discretiser::Discretisations& control, int index)
+void MainWindow::loadSamples(const QString& samples, const Discretiser& d, int index)
 {
 	ui->Output->addItem("Reading samples: " + samples);
-	networks[index].loadSamples(samples, control);
+	networks[index].loadSamples(samples, d);
 	networks[index].setDataFile(samples);
-    adaptQueryEvaluationButtons(true);
-    on_newQuery_clicked();
+	adaptQueryEvaluationButtons(true);
+	on_newQuery_clicked();
 }
 
 void MainWindow::discretiseSelection(QString samples, std::vector<uint> deselected){
@@ -228,9 +228,10 @@ void MainWindow::discretiseSelection(QString samples, std::vector<uint> deselect
     QMessageBox boxDisc;
     boxDisc.setIcon(QMessageBox::Question);
     boxDisc.setText("Please specify discretisation information source.");
-    QPushButton* file = boxDisc.addButton("Load from File",QMessageBox::ActionRole);
-    QPushButton* choose = boxDisc.addButton("Choose Methods", QMessageBox::ActionRole);
+    //QPushButton* file = boxDisc.addButton("Load from File",QMessageBox::ActionRole);
+   // QPushButton* choose = boxDisc.addButton("Choose Methods", QMessageBox::ActionRole);
     boxDisc.exec();
+	/*
 	try{
 	    if (boxDisc.clickedButton()==file){
 	         QString control = QFileDialog::getOpenFileName(this, tr("Open txt file containing discretisation information"),config_->dataDir(),"*.txt");
@@ -256,7 +257,7 @@ void MainWindow::discretiseSelection(QString samples, std::vector<uint> deselect
 		networks[index].resetNetwork();
 	}
 	ui->Output->scrollToBottom();
-
+*/
 }
 
 void MainWindow::dataRejected(){
@@ -285,7 +286,7 @@ void MainWindow::on_actionLoad_Samples_triggered()
             //View -> Call a new window
              dataview* dView = new dataview(0,samples);
              dView->setWindowTitle("Data contained in "+samples);
-             connect(dView,SIGNAL(dataSubmitted(QString, std::vector<uint>)),this,SLOT(discretiseSelection(QString,std::vector<uint>)));
+  //           connect(dView,SIGNAL(dataSubmitted(QString, std::vector<uint>)),this,SLOT(discretiseSelection(QString,std::vector<uint>)));
              connect(dView,SIGNAL(dataRejected()),this,SLOT(dataRejected()));
              dView->adjust();
              dView->update();
@@ -293,7 +294,7 @@ void MainWindow::on_actionLoad_Samples_triggered()
         }
         else{
             std::vector<unsigned int> temp;
-            discretiseSelection(samples,temp);
+    //        discretiseSelection(samples,temp);
         }
     }
     catch (std::exception& e){
@@ -870,10 +871,10 @@ void MainWindow::on_actionLoad_Session_triggered()
             }
             visualise(index);
 			networks[index].setDeselectedSamples(dataStore.getDeSelectedData(index));
-			loadSamples(
-			    dataStore.getData(i),
-			    Discretiser::loadControlFile(dataStore.getDiscretiseControl(i).toStdString()),
-			    index);
+			//loadSamples(
+			   // dataStore.getData(i),
+			   // Discretiser::loadControlFile(dataStore.getDiscretiseControl(i).toStdString()),
+			   // index);
 			networks[index].setQMA(dataStore.getQma(i));
         }
         ui->Output->addItem("Session loaded");

@@ -15,7 +15,7 @@ class DiscretiserTest : public ::testing::Test{
 	Matrix<int> dobs_;
 	Network n_;
 };
-
+/*
 TEST_F(DiscretiserTest,Floor){
 	Discretiser d(oobs_,dobs_,n_);
 	d.discretiseRow(0,1,0.0f);	
@@ -146,4 +146,4 @@ TEST_F(DiscretiserTest, Z){
 	ASSERT_EQ(0,d.getEntry(3,11));
 	ASSERT_EQ(0,d.getEntry(4,11));
 	ASSERT_EQ(0,d.getEntry(5,11));
-}
+}*/
