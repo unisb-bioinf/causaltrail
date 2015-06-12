@@ -1,0 +1,6 @@
+graph G {
+	graph[width=100.2];
+	u [label="Node 1"];
+	v [label="Node 2"];
+	u -- v [color="blue"];
+}
