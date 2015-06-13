@@ -272,6 +272,14 @@ private:
 	 * layout algorithm.
 	 */
 	void forceDirectedLayout();
+
+    /**
+     * Computes a graph layout using the graphviz dot command.
+     */
+    bool dotLayout();
+
+    void writeDot_(QIODevice& dev, const Network& network) const;
+    bool readDot_(const QByteArray& data);
 };
 
 #endif // NETWORKVIS_H

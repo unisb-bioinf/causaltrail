@@ -1,6 +1,7 @@
 #include "networkvis.h"
 #include "NodeGui.h"
 #include "edge.h"
+#include "../core/DotReader.h"
 #include "../core/Network.h"
 
 #include <QtCore/QProcess>
@@ -62,7 +63,9 @@ void NetworkVis::loadEdges() {
 }
 
 void NetworkVis::layoutGraph() {
-	forceDirectedLayout();
+	if(!dotLayout()) {
+		forceDirectedLayout();
+	}
 }
 
 void NetworkVis::forceDirectedLayout(){
@@ -79,6 +82,21 @@ void NetworkVis::forceDirectedLayout(){
     }
     shiftNodes();
     centerOn(0,0);
+}
+
+bool NetworkVis::dotLayout() {
+	QProcess dotProcess(this);
+
+	dotProcess.start("dot");
+	writeDot_(dotProcess, net_);
+	dotProcess.closeWriteChannel();
+	dotProcess.waitForFinished();
+
+	if(dotProcess.error() != QProcess::UnknownError) {
+		return false;
+	}
+
+	return readDot_(dotProcess.readAllStandardOutput());
 }
 
 void NetworkVis::keyPressEvent(QKeyEvent *event)
@@ -277,4 +295,52 @@ void NetworkVis::originalNodeState(){
     for (NodeGui* node : pointerVec_){
         node->originalState();
     }
+}
+
+bool NetworkVis::readDot_(const QByteArray& data)
+{
+	Dot::Reader parser;
+	parser.parse(data.constData(), data.constData() + data.size());
+
+	for(const auto& n : parser.getGraph().nodes) {
+		size_t index;
+		try {
+			index = std::stoi(n.name.name);
+		} catch(std::exception& e) {
+			return false;
+		}
+
+		auto res = n.attributes.find("pos");
+
+		if(res == n.attributes.end()) {
+			return false;
+		}
+
+		auto list = QString::fromStdString(res->second).split(",");
+
+		if(list.size() != 2) {
+			return false;
+		}
+
+		pointerVec_[index]->setPos(QPointF(
+			 list[0].toDouble(),
+			-list[1].toDouble()
+		));
+	}
+
+	return true;
+}
+
+void NetworkVis::writeDot_(QIODevice& dev, const Network& network) const
+{
+	dev.write("digraph G {\n");
+	for(const Node& n : network.getNodes()) {
+		for(auto& parent : n.getParents()) {
+			dev.write(QByteArray::number(parent));
+			dev.write(" -> ");
+			dev.write(QByteArray::number(n.getID()));
+			dev.write(";\n");
+		}
+	}
+	dev.write("}\n");
 }
