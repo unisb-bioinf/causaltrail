@@ -49,11 +49,6 @@ const std::vector<unsigned int> Network::getParents(unsigned int id) const
 	return parentIDs;
 }
 
-const std::vector<unsigned int> Network::getParents(Node& n) const
-{
-	return getParents(n.getID());
-}
-
 const std::vector<unsigned int> Network::getParents(const Node& n) const
 {
 	return getParents(n.getID());
@@ -67,25 +62,7 @@ const std::vector<unsigned int> Network::getParents(const std::string& name)
 
 std::vector<Node>& Network::getNodes() { return NodeList_; }
 
-std::vector<unsigned int> Network::getNodeIDs()
-{
-	std::vector<unsigned int> temp;
-	for(const auto& n : NodeList_) {
-		temp.push_back(n.getID());
-	}
-	return temp;
-}
-
 const std::vector<Node>& Network::getNodes() const { return NodeList_; }
-
-const std::vector<unsigned int> Network::getNodeIDs() const
-{
-	std::vector<unsigned int> temp;
-	for(const auto& n : NodeList_) {
-		temp.push_back(n.getID());
-	}
-	return temp;
-}
 
 void Network::cutParents(unsigned int id)
 {
@@ -327,7 +304,7 @@ void Network::performDFS(unsigned int id,
 	if(!n.isVisited()) {
 		n.visit();
 		visitedNodes.push_back(n.getID());
-		for(int pid : n.getParents()) {
+		for(auto pid : n.getParents()) {
 			performDFS(pid, visitedNodes);
 		}
 	}
