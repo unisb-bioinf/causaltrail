@@ -39,11 +39,7 @@ const std::vector<unsigned int> Network::getParents(unsigned int id) const
 	unsigned int index = id;
 	for(unsigned int row = 0; row < AdjacencyMatrix_.getRowCount(); row++) {
 		if(AdjacencyMatrix_(index, row) == 1) {
-			unsigned int temp;
-			std::stringstream ss;
-			ss << AdjacencyMatrix_.getRowNames()[row];
-			ss >> temp;
-			parentIDs.push_back(temp);
+			parentIDs.push_back(row);
 		}
 	}
 	return parentIDs;
