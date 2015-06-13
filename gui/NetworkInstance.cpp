@@ -267,18 +267,6 @@ void NetworkInstance::RemoveSelectedEdge(){
     id2_=-1;
 }
 
-QSize NetworkInstance::getNVSizeHint(){
-    return nv_->sizeHint();
-}
-
-void NetworkInstance::resizeNV(QSize qSize){
-    nv_->resize(qSize);
-}
-
-void NetworkInstance::setWidth(unsigned int width){
-    nv_->setWidth(width);
-}
-
 const std::vector<NodeGui*>& NetworkInstance::getNodeGuiVec(){
     return nv_->getNodeGuiVec();
 }

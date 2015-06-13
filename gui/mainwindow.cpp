@@ -185,8 +185,6 @@ void MainWindow::visualise(int index)
 		    this,
 		    SLOT(Edge_context(Edge*, QGraphicsSceneContextMenuEvent*)));
 	}
-	networks[index].setWidth(MainWindow::width() - ui->dockWidget_5->width());
-	networks[index].resizeNV(networks[index].getNVSizeHint());
 }
 
 void MainWindow::loadSamples()
@@ -803,14 +801,6 @@ void MainWindow::context_Menu_ShowMatrix_selected()
 	mp->adjust();
 	mp->show();
 	currentNetwork.removeHighlighting();
-}
-
-void MainWindow::resizeEvent(QResizeEvent*)
-{
-	if(!networks.empty()) {
-		networks[0].setWidth(MainWindow::width() - ui->dockWidget_5->width());
-		networks[0].resizeNV(networks[0].getNVSizeHint());
-	}
 }
 
 void MainWindow::on_Input_textChanged(const QString& arg1)

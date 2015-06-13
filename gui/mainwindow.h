@@ -334,12 +334,6 @@ private slots:
     void context_Menu_ShowMatrix_selected();
 
     /**
-     * @brief resizeEvent
-	 * Handles the resizeEvent. Adapts the QDockWidget containing the network visualization to the biggest size possible
-     */
-    void resizeEvent(QResizeEvent *);
-
-    /**
      * @brief on_Input_textChanged
 	 * If the input value is cleared, all selected query items are deleted
      * @param arg1 New text
