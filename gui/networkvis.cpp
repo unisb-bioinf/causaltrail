@@ -1,24 +1,26 @@
 #include "networkvis.h"
 #include "NodeGui.h"
 #include "edge.h"
-#include <QGridLayout>
-#include <QWheelEvent>
-#include <QKeyEvent>
+#include "../core/Network.h"
 
+#include <QtCore/QProcess>
+#include <QtGui/QWheelEvent>
+#include <QtGui/QKeyEvent>
+#include <QtWidgets/QGridLayout>
 
-NetworkVis::NetworkVis(QWidget *parent, NetworkController& nc)
-    :QGraphicsView(parent)
+NetworkVis::NetworkVis(QWidget *parent, const Network& net)
+    : QGraphicsView(parent),
+      net_(net)
 {
     createLayout(parent);
 
     createScene();
 
-    loadNoads(nc);
+    loadNodes();
 
-    loadEdges(nc);
+    loadEdges();
 
-    forceDirectedLayout();
-
+    layoutGraph();
 }
 
 void NetworkVis::createLayout(QWidget *parent){
@@ -38,17 +40,17 @@ void NetworkVis::createScene(){
     setDragMode(QGraphicsView::ScrollHandDrag);
 }
 
-void NetworkVis::loadNoads(NetworkController& nc){
-    pointerVec_.resize(nc.getNetwork().size());
-    for (Node& node : nc.getNetwork().getNodes()){
+void NetworkVis::loadNodes() {
+    pointerVec_.resize(net_.size());
+    for (const Node& node : net_.getNodes()) {
         NodeGui* newNode = new NodeGui(node.getID(), node.getName());
         pointerVec_[node.getID()]=newNode;
         scence_->addItem(newNode);
     }
 }
 
-void NetworkVis::loadEdges(NetworkController& nc){
-    for (auto& node : nc.getNetwork().getNodes()){
+void NetworkVis::loadEdges() {
+    for (const auto& node : net_.getNodes()) {
         NodeGui* tar = pointerVec_[node.getID()];
         for (auto& parent : node.getParents()){
             NodeGui* src = pointerVec_[parent];
@@ -57,6 +59,10 @@ void NetworkVis::loadEdges(NetworkController& nc){
             pointerVecEdges_.push_back(newEdge);
         }
     }
+}
+
+void NetworkVis::layoutGraph() {
+	forceDirectedLayout();
 }
 
 void NetworkVis::forceDirectedLayout(){

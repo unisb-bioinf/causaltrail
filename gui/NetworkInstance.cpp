@@ -19,7 +19,7 @@ void NetworkInstance::loadNetwork(QString filename){
 }
 
 void NetworkInstance::visualize(QWidget* tabwidget){
-    nv_ = new NetworkVis(tabwidget, nc_);
+    nv_ = new NetworkVis(tabwidget, nc_.getNetwork());
 }
 
 void NetworkInstance::loadSamples(const QString& filename, const Discretiser::Discretisations& control){
@@ -200,7 +200,7 @@ void NetworkInstance::visualizeEdgeChanges(std::vector<QString> &edgeChanges)
 }
 
 void NetworkInstance::layout(){
-    nv_->forceDirectedLayout();
+    nv_->layoutGraph();
 }
 
 const std::vector<std::string>& NetworkInstance::getValues(unsigned int id){

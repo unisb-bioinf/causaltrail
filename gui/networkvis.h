@@ -1,10 +1,7 @@
 #ifndef NETWORKVIS_H
 #define NETWORKVIS_H
 
-#include <QMainWindow>
-#include <QGraphicsView>
-#include <QListView>
-#include "../core/NetworkController.h"
+#include <QtWidgets/QGraphicsView>
 
 /**
  * This class is based on the Elastic Nodes Example from the Qt documentation:
@@ -14,10 +11,18 @@
 
 class Edge;
 class NodeGui;
+class Network;
+
 class NetworkVis : public QGraphicsView
 {
 
     Q_OBJECT
+
+public slots:
+	/**
+	 * Compute a graph layout for the network.
+	 */
+	void layoutGraph();
 
 public:
     /**
@@ -26,13 +31,7 @@ public:
      * @param parent Pointer to the parent QWidget
      * @param nc
      */
-    NetworkVis(QWidget *parent, NetworkController& nc);
-
-    /**
-     * @brief forceDirectedLayout
-     * Layout the network using force directed layout algorithms
-     */
-    void forceDirectedLayout();
+    NetworkVis(QWidget *parent, const Network& net);
 
     /**
      * @brief getNodeGuiVec
@@ -169,6 +168,11 @@ private:
      */
     QGraphicsScene *scence_;
 
+	/**
+	 * The network that is represented by this NetworkVis.
+	 */
+	const Network& net_;
+
     /**
      * @brief pointerVec_
      * Vector holding pointers to all NodeGui objects
@@ -217,14 +221,14 @@ private:
      * Generates NodeGui objects for all nodes contained in the given NetworkController object
      * @param nc Reference to a NetworkController object
      */
-    void loadNoads(NetworkController& nc);
+    void loadNodes();
 
     /**
      * @brief loadEdges
      * Generates Edges objects for all edges contained in the given NetworkController object
      * @param nc Reference to a NetworkController object
      */
-    void loadEdges(NetworkController& nc);
+    void loadEdges();
 
     /**
      * @brief keyPressEvent
@@ -263,6 +267,11 @@ private:
      */
     void shiftNodes();
 
+	/**
+	 * Computes a graph layout using a force directed
+	 * layout algorithm.
+	 */
+	void forceDirectedLayout();
 };
 
 #endif // NETWORKVIS_H
