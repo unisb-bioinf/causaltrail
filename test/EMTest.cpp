@@ -19,8 +19,8 @@ class EMTest : public ::testing::Test{
 TEST_F(EMTest,Complete){
 	c.loadNetwork(TEST_DATA_PATH("Student.na"));
 	c.loadNetwork(TEST_DATA_PATH("Student.sif"));
-//	c.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.txt"));
-//	c.trainNetwork();
+	c.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.json"));
+	c.trainNetwork();
 	Network n = c.getNetwork();
 	Node grade = n.getNode("Grade");
 	ASSERT_NEAR(0.3f,grade.getProbability(0,0),0.001);
@@ -59,8 +59,8 @@ TEST_F(EMTest,Complete){
 TEST_F(EMTest,UnComplete){
 	c.loadNetwork(TEST_DATA_PATH("Student.na"));
 	c.loadNetwork(TEST_DATA_PATH("Student.sif"));
-//	c.loadObservations(TEST_DATA_PATH("dataStudent60.txt"),TEST_DATA_PATH("controlStudent.txt"));
-//	c.trainNetwork();
+	c.loadObservations(TEST_DATA_PATH("dataStudent60.txt"),TEST_DATA_PATH("controlStudent.json"));
+	c.trainNetwork();
 	Network n = c.getNetwork();
 	Node grade = n.getNode("Grade");
 	ASSERT_NEAR(0.3f,grade.getProbability(0,0),0.2);

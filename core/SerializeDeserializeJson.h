@@ -31,11 +31,9 @@ class SerializeDeserializeJson{
 	*
 	* @param filename Name of the file containing discretisation information
 	*
-	* @return bool True, if the fild could be read, false otherwise
-	*
 	* Creates a boost property tree representing the specified json file
 	*/
-	bool importFile(const std::string& filename);
+	void importFile(const std::string& filename);
 
 	/**exportToFile
 	*

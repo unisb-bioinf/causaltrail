@@ -191,7 +191,7 @@ void MainWindow::visualise(int index)
 
 void MainWindow::loadSamples()
 {
-	try {
+/*	try {
 		loadSamples(discretisationSelection_->samples(),
 		            discretisationSelection_->control(),
 		            discretisationSelection_->index());
@@ -200,15 +200,15 @@ void MainWindow::loadSamples()
 		adaptQueryEvaluationButtons(false);
 		networks[discretisationSelection_->index()].resetNetwork();
 	}
-	ui->Output->scrollToBottom();
+	ui->Output->scrollToBottom();*/
 }
 
 void MainWindow::loadSamples(const QString& samples,
-                             const Discretiser::Discretisations& control,
+                             Discretiser& control,
                              int index)
 {
 	ui->Output->addItem("Reading samples: " + samples);
-	networks[index].loadSamples(samples, control);
+	//networks[index].loadSamples(control);
 	networks[index].setDataFile(samples);
 	adaptQueryEvaluationButtons(true);
 	on_newQuery_clicked();
@@ -227,7 +227,7 @@ void MainWindow::discretiseSelection(const QString& samples,
 	QPushButton* choose =
 	    boxDisc.addButton("Choose Methods", QMessageBox::ActionRole);
 	boxDisc.exec();
-	try {
+	/*try {
 		if(boxDisc.clickedButton() == file) {
 			QString control = QFileDialog::getOpenFileName(
 			    this, tr("Open txt file containing discretisation information"),
@@ -254,7 +254,7 @@ void MainWindow::discretiseSelection(const QString& samples,
 		adaptQueryEvaluationButtons(false);
 		networks[index].resetNetwork();
 	}
-	ui->Output->scrollToBottom();
+	ui->Output->scrollToBottom();*/
 }
 
 void MainWindow::dataRejected()
@@ -937,10 +937,10 @@ void MainWindow::on_actionLoad_Session_triggered()
 			visualise(index);
 			networks[index].setDeselectedSamples(
 			    dataStore.getDeSelectedData(index));
-			loadSamples(dataStore.getData(i),
+/*			loadSamples(dataStore.getData(i),
 			            Discretiser::loadControlFile(
 			                dataStore.getDiscretiseControl(i).toStdString()),
-			            index);
+			            index);*/
 			networks[index].setQMA(dataStore.getQma(i));
 		}
 		ui->Output->addItem("Session loaded");

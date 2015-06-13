@@ -8,5 +8,4 @@ Manually	1.5                 2.3                 2.1                 4.9        
 BrackedMedian	1.5                 2.3                 2.1                 4.9                 6.5                 7.9
 PersonTukey	1.5                 2.3                 2.1                 4.9                 6.5                 7.9
 mapNamesToInt	Up	Down	Up	Up	Down	Down
-Unknown	Up	NA	-	na	/	Down
 Z	1	15	150  50	21	2

@@ -22,12 +22,11 @@ void NetworkInstance::visualize(QWidget* tabwidget){
     nv_ = new NetworkVis(tabwidget, nc_);
 }
 
-void NetworkInstance::loadSamples(const QString& filename, const Discretiser& d){
+void NetworkInstance::loadSamples(const QString& filename, Discretiser& d){
     if (deselectedSamples_.empty()){
-		nc_.loadObservations(filename.toStdString(), d);
+		nc_.loadObservations(d);
 	} else {
-		nc_.loadObservations(filename.toStdString(), d,
-		                     deselectedSamples_);
+		nc_.loadObservations(d);
 	}
     nc_.trainNetwork();
     trained_=true;

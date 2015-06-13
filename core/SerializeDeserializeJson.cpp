@@ -16,15 +16,8 @@ SerializeDeserializeJson::SerializeDeserializeJson(const std::string& filename)
 SerializeDeserializeJson::~SerializeDeserializeJson(){
 }
 
-bool SerializeDeserializeJson::importFile(const std::string& filename){
-	try{
+void SerializeDeserializeJson::importFile(const std::string& filename){
 	boost::property_tree::read_json(filename,pt_);
-	}
-	catch(const boost::property_tree::json_parser::json_parser_error& e){
-	std::cerr<<"Invalid JSON file"<<std::endl;
-	return false;
-	}
-	return true;
 }
 
 

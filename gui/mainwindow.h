@@ -99,7 +99,7 @@ private:
      * @param controlDiscret
      * @param index Index of the NetworkInstance
      */
-    void loadSamples(const QString& samples, const Discretiser& d, int index);
+    void loadSamples(const QString& samples, Discretiser& d, int index);
 
     /**
      * @brief visualise

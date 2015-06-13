@@ -14,10 +14,11 @@ DiscretiseFloor::DiscretiseFloor(unsigned int row,
 }
 
 void DiscretiseFloor::apply(){
-        for(unsigned int col = 0; col < originalObservations_.getColCount();
+	for(unsigned int col = 0; col < originalObservations_.getColCount();
             col++) {
                 float value = getNumber(col, row_);
                 int dvalue = floor(value);
                 discretisedObservations_.setData(dvalue, col, row_);
-       }
+	}
+	convertToDenseNumbers(row_);
 }

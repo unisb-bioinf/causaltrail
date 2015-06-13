@@ -16,11 +16,15 @@ TEST_F(SerializeDeserializeJsonTest,Constructor){
 }
 
 TEST_F(SerializeDeserializeJsonTest,importFile){
-	ASSERT_TRUE(jp.importFile(TEST_DATA_PATH("jsonTest.json")));
+	ASSERT_NO_THROW(jp.importFile(TEST_DATA_PATH("jsonTest.json")));
 }
 
+TEST_F(SerializeDeserializeJsonTest,invalidFile){
+	ASSERT_ANY_THROW(jp.importFile(TEST_DATA_PATH("jsonTestInvalid.json")));
+	}
+
 TEST_F(SerializeDeserializeJsonTest,containsNode){
-	ASSERT_TRUE(jp.importFile(TEST_DATA_PATH("jsonTest.json")));
+	jp.importFile(TEST_DATA_PATH("jsonTest.json"));
 	ASSERT_TRUE(jp.containsNode("Grade"));
 	ASSERT_TRUE(jp.containsNode("Difficulty"));
 	ASSERT_TRUE(jp.containsNode("SAT"));
@@ -63,10 +67,6 @@ TEST_F(SerializeDeserializeJsonTest,addNode){
 	ASSERT_TRUE(jp.getMethod("Intelligence")=="none");
 	ASSERT_TRUE(jp.getMethod("Letter")=="none");
 	
-}
-
-TEST_F(SerializeDeserializeJsonTest,importInvalidFile){
-	ASSERT_FALSE(jp.importFile(TEST_DATA_PATH("jsonTestInvalid.json")));
 }
 
 TEST_F(SerializeDeserializeJsonTest,exportFile){

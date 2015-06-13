@@ -9,7 +9,7 @@ class QueryExecuterTest : public ::testing::Test{
 		:c(NetworkController())	{
 		c.loadNetwork(TEST_DATA_PATH("Student.na"));
 		c.loadNetwork(TEST_DATA_PATH("Student.sif"));
-//		c.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.txt"));
+		c.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.json"));
 		c.trainNetwork();
 	}
 

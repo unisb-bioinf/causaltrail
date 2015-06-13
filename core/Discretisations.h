@@ -1,8 +1,9 @@
 #ifndef DISCRETISATIONS_H
 #define DISCRETISATIONS_H
 
-#include "Matrix.h" 
-#include "map"
+#include "Matrix.h"
+#include <map>
+
 class Discretisations {
 	public:
 	Discretisations(unsigned int row, 
@@ -11,7 +12,8 @@ class Discretisations {
 			std::unordered_map<std::string,int>& observationsMap,
 		        std::map<std::pair<int,int>, std::string>& observationsMapR);
 
-	virtual void apply();	
+	virtual ~Discretisations() = default;
+	virtual void apply() = 0;	
 
 	protected:
 	float getNumber(unsigned int col, unsigned int row);
@@ -31,6 +33,5 @@ class Discretisations {
         std::unordered_map<std::string,int>& observationsMap_;
 
         std::map<std::pair<int,int>, std::string>& observationsMapR_;
-
 };
 #endif

@@ -37,7 +37,7 @@ TEST_F(NetworkControllerTest, getNetwork){
 	NetworkController n;
 	n.loadNetwork(TEST_DATA_PATH("Student.na"));
 	n.loadNetwork(TEST_DATA_PATH("Student.sif"));
-//	n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.txt"));
+	n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.json"));
 	ASSERT_TRUE(5 == n.getNetwork().size());
 }
 
@@ -104,7 +104,7 @@ TEST_F(NetworkControllerTest, loadObservations){
 	NetworkController n;
 	n.loadNetwork(TEST_DATA_PATH("Student.na"));
 	n.loadNetwork(TEST_DATA_PATH("Student.sif"));
-//	n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.txt"));
+	n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.json"));
 	SUCCEED();
 }
 
@@ -119,28 +119,28 @@ TEST_F(NetworkControllerTest, loadObservationsInvalidControlFileName){
 	NetworkController n;
 	n.loadNetwork(TEST_DATA_PATH("Student.na"));
 	n.loadNetwork(TEST_DATA_PATH("Student.sif"));
-	ASSERT_THROW(n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStud.txt")), std::invalid_argument);
+	ASSERT_ANY_THROW(n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStud.txt")));
 }
 
 TEST_F(NetworkControllerTest, loadObservationsInvalidControlFile1){
 	NetworkController n;
 	n.loadNetwork(TEST_DATA_PATH("Student.na"));
 	n.loadNetwork(TEST_DATA_PATH("Student.sif"));
-	ASSERT_THROW(n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("invalidControl1.txt")), std::invalid_argument);
+	ASSERT_ANY_THROW(n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("invalidControl1.txt")));
 }
 
 TEST_F(NetworkControllerTest, loadObservationsInvalidControlFile2){
 	NetworkController n;
 	n.loadNetwork(TEST_DATA_PATH("Student.na"));
 	n.loadNetwork(TEST_DATA_PATH("Student.sif"));
-	ASSERT_THROW(n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("invalidControl2.txt")), std::invalid_argument);
+	ASSERT_ANY_THROW(n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("invalidControl2.txt")));
 }
 
 TEST_F(NetworkControllerTest, trainNet){
 	NetworkController nc;
 	nc.loadNetwork(TEST_DATA_PATH("Student.na"));
 	nc.loadNetwork(TEST_DATA_PATH("Student.sif"));
-//	nc.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.txt"));
+	nc.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.json"));
 	nc.trainNetwork();
 	Network n = nc.getNetwork();
 	Node grade = n.getNode("Grade");
@@ -180,8 +180,8 @@ TEST_F(NetworkControllerTest, Runs){
 	NetworkController n;
 	n.loadNetwork(TEST_DATA_PATH("Student.na"));
 	n.loadNetwork(TEST_DATA_PATH("Student.sif"));
-//	n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.txt"));
-//	n.trainNetwork();
+	n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.json"));
+	n.trainNetwork();
 	ASSERT_TRUE(1==n.getNumberOfEMRuns());
 }
 
@@ -189,8 +189,8 @@ TEST_F(NetworkControllerTest, Time){
 	NetworkController n;
 	n.loadNetwork(TEST_DATA_PATH("Student.na"));
 	n.loadNetwork(TEST_DATA_PATH("Student.sif"));
-//	n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.txt"));
-//	n.trainNetwork();
+	n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.json"));
+	n.trainNetwork();
 	ASSERT_TRUE(n.getTimeInMicroSeconds() > 0);
 }
 
@@ -198,8 +198,8 @@ TEST_F(NetworkControllerTest, ParamDifference){
 	NetworkController n;
 	n.loadNetwork(TEST_DATA_PATH("Student.na"));
 	n.loadNetwork(TEST_DATA_PATH("Student.sif"));
-//	n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.txt"));
-//	n.trainNetwork();
+	n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.json"));
+	n.trainNetwork();
 	ASSERT_TRUE(n.getParameterDifference() > 0.0f);
 }
 
@@ -207,8 +207,8 @@ TEST_F(NetworkControllerTest, DataLikelihood){
 	NetworkController n;
 	n.loadNetwork(TEST_DATA_PATH("Student.na"));
 	n.loadNetwork(TEST_DATA_PATH("Student.sif"));
-//	n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.txt"));
-//	n.trainNetwork();
+	n.loadObservations(TEST_DATA_PATH("StudentData.txt"),TEST_DATA_PATH("controlStudent.json"));
+	n.trainNetwork();
 	ASSERT_TRUE(n.getLikelihoodOfTheData() != 0.0f);
 }
 

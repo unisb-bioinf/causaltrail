@@ -11,6 +11,6 @@ class DiscretiseFloor : public Discretisations
 			Matrix<int>& discretisedObservations,
         		std::unordered_map<std::string,int>& observationsMap,
         		std::map<std::pair<int,int>, std::string>& observationsMapR);
-	void apply();	
+	void apply() override;	
 };
 #endif

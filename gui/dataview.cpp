@@ -1,5 +1,5 @@
 #include "dataview.h"
-#include "ui_DataView.h"
+#include "ui_dataView.h"
 
 #include "DataMatrixModel.h"
 #include <qpushbutton.h>
