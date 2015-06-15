@@ -2,6 +2,7 @@
 #define DISCRETISER_H
 
 #include "Discretisations.h"
+#include "SerializeDeserializeJson.h"
 #include "Network.h"
 #include "float.h"
 #include <map>
@@ -66,7 +67,8 @@ class Discretiser{
  	 * Replaces various kinds of NA representations by a unqiue version
  	 */
 	void adaptFormat();
-
+	//Json Tree
+	SerializeDeserializeJson jsonTree_;
 	//Matrix containing the original raw sample data
 	Matrix<std::string> originalObservations_;
 	//Matrix containing the discretised data

@@ -1,5 +1,4 @@
 #include "Discretiser.h"
-#include "SerializeDeserializeJson.h"
 #include "DiscretisationFactory.h"
 #include <algorithm>
 #include "math.h"
@@ -35,9 +34,9 @@ Discretiser::Discretiser(const Matrix<std::string>& originalObservations,
 
 void Discretiser::discretise(const std::string& controlFile)
 {
-	SerializeDeserializeJson jsonTree(controlFile);
+	jsonTree_= SerializeDeserializeJson(controlFile);
 	//Create Factory
-	DiscretisationFactory dF(jsonTree,
+	DiscretisationFactory dF(jsonTree_,
 			originalObservations_,
                         observations_,
                         network_.getObservationsMap(),

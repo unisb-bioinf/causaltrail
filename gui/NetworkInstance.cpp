@@ -26,6 +26,7 @@ void NetworkInstance::loadSamples(const QString& filename, Discretiser& d){
     if (deselectedSamples_.empty()){
 		nc_.loadObservations(d);
 	} else {
+//TODO Add deselectedSamples
 		nc_.loadObservations(d);
 	}
     nc_.trainNetwork();
