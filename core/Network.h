@@ -180,14 +180,6 @@ class Network{
 		 */
 		std::vector<Node>& getNodes();
 
-		/**getNodeIDs 
-		 *
-		 * @return  A vector containing the node identifiers of all nodes in the network
-		 *
-		 * Creates a vector of all node identifiers in the network
-		 */
-		std::vector<unsigned int> getNodeIDs();
-
 		/**getNodes 
 		 *
 		 * @return A const reference to all nodes in the network
@@ -195,15 +187,6 @@ class Network{
 		 * Getter for all nodes in the network
 		 */
 		const std::vector<Node>& getNodes() const;
-
-		/**getNodeIDs 
-		 *
-		 * @return A const vector containing the node identifiers of all nodes in the network
-		 *
-		 * Creates a vector of all node identifiers in the network
-		 */
-		const std::vector<unsigned int> getNodeIDs() const;
-
 
 		/**getIndex 
 		 *
@@ -376,18 +359,6 @@ class Network{
 		 * is only used for initilisation of the parents field within the Node class
 		 */
 		const std::vector<unsigned int> getParents(const std::string& name) const;
-
-		/**getParents 
-		 *
-		 * @param n A reference to the node of interest
-		 *
-		 * @return A const vector containig the identifiers of the nodes in question
-		 *
-		 * This method returns the parents of the given node and
-		 * stores those parents in the node itself. Hence this method is private and
-		 * is only used for initilisation of the parents field within the Node class 
-		 */
-		const std::vector<unsigned int> getParents(Node& n) const;
 
 		/**getParents 
 		 *

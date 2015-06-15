@@ -19,7 +19,7 @@ void NetworkInstance::loadNetwork(QString filename){
 }
 
 void NetworkInstance::visualize(QWidget* tabwidget){
-    nv_ = new NetworkVis(tabwidget, nc_);
+    nv_ = new NetworkVis(tabwidget, nc_.getNetwork());
 }
 
 void NetworkInstance::loadSamples(const QString& filename, Discretiser& d){
@@ -200,7 +200,7 @@ void NetworkInstance::visualizeEdgeChanges(std::vector<QString> &edgeChanges)
 }
 
 void NetworkInstance::layout(){
-    nv_->forceDirectedLayout();
+    nv_->layoutGraph();
 }
 
 const std::vector<std::string>& NetworkInstance::getValues(unsigned int id){
@@ -264,18 +264,6 @@ void NetworkInstance::RemoveSelectedEdge(){
     nv_->removeEdge(id1_,id2_);
     id1_=-1;
     id2_=-1;
-}
-
-QSize NetworkInstance::getNVSizeHint(){
-    return nv_->sizeHint();
-}
-
-void NetworkInstance::resizeNV(QSize qSize){
-    nv_->resize(qSize);
-}
-
-void NetworkInstance::setWidth(unsigned int width){
-    nv_->setWidth(width);
 }
 
 const std::vector<NodeGui*>& NetworkInstance::getNodeGuiVec(){
@@ -418,4 +406,9 @@ void NetworkInstance::setDeselectedSamples(const std::vector<unsigned int> &ids)
 std::vector<unsigned int> &NetworkInstance::getDeselectedSamples()
 {
     return deselectedSamples_;
+}
+
+void NetworkInstance::exportSvg(const QString& filename)
+{
+	nv_->exportSVG(filename);
 }

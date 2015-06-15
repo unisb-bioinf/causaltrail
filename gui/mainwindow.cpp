@@ -35,8 +35,6 @@ MainWindow::MainWindow(Config* config, QWidget* parent)
 
 MainWindow::~MainWindow() { delete ui; }
 
-void MainWindow::on_actionClose_triggered() { close(); }
-
 void MainWindow::on_actionHelp_triggered()
 {
 	QString pathToDoku = QDir::currentPath();
@@ -185,8 +183,6 @@ void MainWindow::visualise(int index)
 		    this,
 		    SLOT(Edge_context(Edge*, QGraphicsSceneContextMenuEvent*)));
 	}
-	networks[index].setWidth(MainWindow::width() - ui->dockWidget_5->width());
-	networks[index].resizeNV(networks[index].getNVSizeHint());
 }
 
 void MainWindow::loadSamples()
@@ -378,7 +374,7 @@ void MainWindow::on_actionDeleteNetwork_triggered()
 	}
 }
 
-void MainWindow::on_actionNewNetwork_triggered()
+void MainWindow::on_actionLoadNetwork_triggered()
 {
 	if(ui->deleteQueryButton->isEnabled()) {
 		on_deleteQueryButton_clicked();
@@ -805,14 +801,6 @@ void MainWindow::context_Menu_ShowMatrix_selected()
 	currentNetwork.removeHighlighting();
 }
 
-void MainWindow::resizeEvent(QResizeEvent*)
-{
-	if(!networks.empty()) {
-		networks[0].setWidth(MainWindow::width() - ui->dockWidget_5->width());
-		networks[0].resizeNV(networks[0].getNVSizeHint());
-	}
-}
-
 void MainWindow::on_Input_textChanged(const QString& arg1)
 {
 	if(!networks.empty() && arg1 == "") {
@@ -1034,4 +1022,13 @@ void MainWindow::on_queryHistory_doubleClicked(const QModelIndex& index)
 	writeListWidget(ui->edgeAdditionsRemovalList, ui->edgeAdReLabel,
 	                currentNetwork.getEdgeAddRemItems(index.row()));
 	ui->Input->setFocus();
+}
+
+void MainWindow::on_actionExportSvg_triggered()
+{
+	QString filename = QFileDialog::getSaveFileName(this, tr("Select SVG file."), config_->dataDir(), "*.svg");
+
+	if(filename != "") {
+		networks[ui->tabWidget->currentIndex()].exportSvg(filename);
+	}
 }

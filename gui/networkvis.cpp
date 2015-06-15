@@ -1,24 +1,28 @@
 #include "networkvis.h"
 #include "NodeGui.h"
 #include "edge.h"
-#include <QGridLayout>
-#include <QWheelEvent>
-#include <QKeyEvent>
+#include "../core/DotReader.h"
+#include "../core/Network.h"
 
+#include <QtCore/QProcess>
+#include <QtGui/QWheelEvent>
+#include <QtGui/QKeyEvent>
+#include <QtWidgets/QGridLayout>
+#include <QtSvg/QSvgGenerator>
 
-NetworkVis::NetworkVis(QWidget *parent, NetworkController& nc)
-    :QGraphicsView(parent)
+NetworkVis::NetworkVis(QWidget *parent, const Network& net)
+    : QGraphicsView(parent),
+      net_(net)
 {
     createLayout(parent);
 
     createScene();
 
-    loadNoads(nc);
+    loadNodes();
 
-    loadEdges(nc);
+    loadEdges();
 
-    forceDirectedLayout();
-
+    layoutGraph();
 }
 
 void NetworkVis::createLayout(QWidget *parent){
@@ -38,17 +42,17 @@ void NetworkVis::createScene(){
     setDragMode(QGraphicsView::ScrollHandDrag);
 }
 
-void NetworkVis::loadNoads(NetworkController& nc){
-    pointerVec_.resize(nc.getNetwork().size());
-    for (Node& node : nc.getNetwork().getNodes()){
+void NetworkVis::loadNodes() {
+    pointerVec_.resize(net_.size());
+    for (const Node& node : net_.getNodes()) {
         NodeGui* newNode = new NodeGui(node.getID(), node.getName());
         pointerVec_[node.getID()]=newNode;
         scence_->addItem(newNode);
     }
 }
 
-void NetworkVis::loadEdges(NetworkController& nc){
-    for (auto& node : nc.getNetwork().getNodes()){
+void NetworkVis::loadEdges() {
+    for (const auto& node : net_.getNodes()) {
         NodeGui* tar = pointerVec_[node.getID()];
         for (auto& parent : node.getParents()){
             NodeGui* src = pointerVec_[parent];
@@ -57,6 +61,12 @@ void NetworkVis::loadEdges(NetworkController& nc){
             pointerVecEdges_.push_back(newEdge);
         }
     }
+}
+
+void NetworkVis::layoutGraph() {
+	if(!dotLayout()) {
+		forceDirectedLayout();
+	}
 }
 
 void NetworkVis::forceDirectedLayout(){
@@ -73,6 +83,21 @@ void NetworkVis::forceDirectedLayout(){
     }
     shiftNodes();
     centerOn(0,0);
+}
+
+bool NetworkVis::dotLayout() {
+	QProcess dotProcess(this);
+
+	dotProcess.start("dot");
+	writeDot_(dotProcess, net_);
+	dotProcess.closeWriteChannel();
+	dotProcess.waitForFinished();
+
+	if(dotProcess.error() != QProcess::UnknownError) {
+		return false;
+	}
+
+	return readDot_(dotProcess.readAllStandardOutput());
 }
 
 void NetworkVis::keyPressEvent(QKeyEvent *event)
@@ -271,4 +296,64 @@ void NetworkVis::originalNodeState(){
     for (NodeGui* node : pointerVec_){
         node->originalState();
     }
+}
+
+void NetworkVis::exportSVG(const QString& filename) {
+	QSvgGenerator generator;
+	QFile output(filename);
+	generator.setOutputDevice(&output);
+	generator.setSize(QSize(width(), height()));
+	QPainter painter;
+	painter.begin(&generator);
+	render(&painter);
+	painter.end();
+	output.close();
+}
+
+bool NetworkVis::readDot_(const QByteArray& data)
+{
+	Dot::Reader parser;
+	parser.parse(data.constData(), data.constData() + data.size());
+
+	for(const auto& n : parser.getGraph().nodes) {
+		size_t index;
+		try {
+			index = std::stoi(n.name.name);
+		} catch(std::exception& e) {
+			return false;
+		}
+
+		auto res = n.attributes.find("pos");
+
+		if(res == n.attributes.end()) {
+			return false;
+		}
+
+		auto list = QString::fromStdString(res->second).split(",");
+
+		if(list.size() != 2) {
+			return false;
+		}
+
+		pointerVec_[index]->setPos(QPointF(
+			 list[0].toDouble(),
+			-list[1].toDouble()
+		));
+	}
+
+	return true;
+}
+
+void NetworkVis::writeDot_(QIODevice& dev, const Network& network) const
+{
+	dev.write("digraph G {\n");
+	for(const Node& n : network.getNodes()) {
+		for(auto& parent : n.getParents()) {
+			dev.write(QByteArray::number(parent));
+			dev.write(" -> ");
+			dev.write(QByteArray::number(n.getID()));
+			dev.write(";\n");
+		}
+	}
+	dev.write("}\n");
 }

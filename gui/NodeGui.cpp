@@ -1,17 +1,20 @@
-#include <QGraphicsScene>
-#include <QGraphicsSceneMouseEvent>
-#include <QPainter>
-#include <QStyleOption>
-#include <QMessageBox>
-#include <QMainWindow>
-
-#include "edge.h"
 #include "NodeGui.h"
-#include "iostream"
+#include "edge.h"
 
+#include <QtCore/QString>
+#include <QtGui/QCursor>
+#include <QtWidgets/QGraphicsScene>
+
+constexpr qreal ADJUST = 2;
 
 NodeGui::NodeGui(unsigned int id, std::string name)
-    :id_(id),name_(name),nodeColor(Qt::gray),secondNodeColor(Qt::gray),colorFixed(false)
+    : QGraphicsEllipseItem(-35 - ADJUST, -10 - ADJUST, 70 + ADJUST, 20 + ADJUST),
+      id_(id),
+      name_(name),
+      abbrev_(QString::fromStdString(name)),
+      nodeColor(Qt::gray),
+      secondNodeColor(Qt::gray),
+      colorFixed(false)
 {
     setFlag(ItemIsMovable);
     setFlag(ItemSendsGeometryChanges);
@@ -21,15 +24,23 @@ NodeGui::NodeGui(unsigned int id, std::string name)
     setZValue(-1);
 
     if (name.size() > 12){
-        setToolTip(QString::fromStdString(name));
+        setToolTip(abbrev_);
     }
-    abbrev_ = name;
+
     if (abbrev_.size() > 12){
         abbrev_.resize(12);
         for (int i = 10; i<12; i++){
             abbrev_[i]='.';
         }
     }
+
+	QGraphicsSimpleTextItem* child = new QGraphicsSimpleTextItem(this);
+	QFont f("Monospace", 7);
+	child->setFont(f);
+	child->setText(abbrev_);
+	child->setPos(getStart(abbrev_), - f.pointSizeF() / 2);
+
+	setColors(nodeColor, secondNodeColor);
 }
 
 void NodeGui::addEdge(Edge *edge){
@@ -37,22 +48,7 @@ void NodeGui::addEdge(Edge *edge){
     edge->adjust();
 }
 
-QRectF NodeGui::boundingRect() const
-{
-    qreal adjust = 2;
-    return QRectF( -35 - adjust, -10 - adjust,
-                  70 + adjust, 20 + adjust);
-}
-
-QPainterPath NodeGui::shape() const
-{
-    QPainterPath path;
-    path.addEllipse(-35, -10, 70, 20);
-    return path;
-}
-
-
-int NodeGui::getStart(const std::string& name){
+int NodeGui::getStart(const QString& name){
     int size = name.size();
     if (size > 12){
         return -30;
@@ -63,23 +59,6 @@ int NodeGui::getStart(const std::string& name){
     else{
     return -(ceil((size)/2)*5)-1;
     }
-}
-
-void NodeGui::paint(QPainter *painter, const QStyleOptionGraphicsItem * , QWidget *)
-{
-    QLinearGradient g(-35,0,35,0);
-    g.setColorAt(0,nodeColor);
-    g.setColorAt(1,secondNodeColor);
-    g.setStops({QGradientStop(0,nodeColor),QGradientStop(0.5,nodeColor),QGradientStop(0.5001,secondNodeColor),QGradientStop(1.0,secondNodeColor)});
-    painter->setPen(Qt::NoPen);
-    painter->setBrush(g);
-    painter->drawEllipse(-35, -10, 70, 20);
-
-    painter->setPen(QPen(Qt::black, 0));
-    painter->drawEllipse(-35, -10, 70, 20);
-
-    painter->setFont(QFont("Monospace",7));
-    painter->drawText(getStart(abbrev_),3,QString::fromStdString(abbrev_));
 }
 
 void NodeGui::calculateForces()
@@ -134,7 +113,7 @@ QVariant NodeGui::itemChange(GraphicsItemChange change, const QVariant &value){
         default:
             break;
         };
-    return QGraphicsItem::itemChange(change, value);
+    return QGraphicsEllipseItem::itemChange(change, value);
 }
 
 void NodeGui::resetAllNodesToNormalColor()
@@ -162,12 +141,11 @@ void NodeGui::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         originalColor = nodeColor;
         originalColor2 = secondNodeColor;
     }
-    nodeColor.setHsv(210,220,250);
-    secondNodeColor.setHsv(210,220,250);
+
+    setColors(QColor::fromHsv(210, 220, 250));
     colorFixed=true;
     if (originalColor != Qt::gray){
-        nodeColor=originalColor;
-        secondNodeColor=originalColor2;
+        setColors(originalColor, originalColor2);
     }
     update();
     emit context(QString::fromStdString(name_),id_,event);
@@ -177,8 +155,7 @@ void NodeGui::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 void NodeGui::hoverEnterEvent(QGraphicsSceneHoverEvent*)
 {
     if (!colorFixed){
-        nodeColor.setHsv(210,100,250);
-        secondNodeColor.setHsv(210,100,250);
+        setColors(QColor::fromHsv(210, 100, 250));
         update();
     }
 }
@@ -193,8 +170,7 @@ void NodeGui::hoverLeaveEvent(QGraphicsSceneHoverEvent*)
 
 void NodeGui::removeHighlighting(){
     if (!colorFixed){
-        nodeColor=Qt::gray;
-        secondNodeColor=Qt::gray;
+		setColors(Qt::gray);
         update();
     }
 }
@@ -247,11 +223,10 @@ void NodeGui::setColor(QColor color){
    QColor temp;
    temp.setHsv(210,220,250);
    if((nodeColor == temp) | (nodeColor == Qt::gray)){
-        nodeColor=color;
-        secondNodeColor=color;
+        setColors(color);
     }
     else{
-        secondNodeColor=color;
+        setSecondaryColor(color);
     }
     if (color != Qt::gray){
         colorFixed=true;
@@ -266,22 +241,58 @@ void NodeGui::setColor(QColor color){
 void NodeGui::removeColor(QColor color){
     if (nodeColor == color){
         if (secondNodeColor == color){
-            nodeColor=Qt::gray;
-            secondNodeColor=Qt::gray;
+            setColors(Qt::gray);
         }
         else{
-            nodeColor=secondNodeColor;
+            setColors(secondNodeColor);
         }
     }
     else{
-        secondNodeColor=nodeColor;
+        setColors(nodeColor);
     }
     update();
 }
 
 void NodeGui::originalState(){
-    nodeColor=Qt::gray;
-    secondNodeColor=Qt::gray;
+	setColors(Qt::gray);
     colorFixed=false;
     update();
+}
+
+void NodeGui::setColors(const QColor& primary, const QColor& secondary)
+{
+	nodeColor = primary;
+	secondNodeColor = secondary;
+
+    QLinearGradient g(rect().x(), 0, rect().x() + rect().width(), 0);
+
+    g.setColorAt(0, primary);
+    g.setColorAt(1, secondary);
+
+    g.setStops({
+		QGradientStop(0, nodeColor),
+		QGradientStop(0.5, nodeColor),
+		QGradientStop(0.5001, secondNodeColor),
+		QGradientStop(1.0, secondNodeColor)
+	});
+
+	setBrush(g);
+}
+
+void NodeGui::setColors(const QColor& color)
+{
+	nodeColor = color;
+	secondNodeColor = color;
+
+	setBrush(color);
+}
+
+void NodeGui::setPrimaryColor(const QColor& primary)
+{
+	setColors(primary, secondNodeColor);
+}
+
+void NodeGui::setSecondaryColor(const QColor& secondary)
+{
+	setColors(nodeColor, secondary);
 }

@@ -1,10 +1,7 @@
 #ifndef NETWORKVIS_H
 #define NETWORKVIS_H
 
-#include <QMainWindow>
-#include <QGraphicsView>
-#include <QListView>
-#include "../core/NetworkController.h"
+#include <QtWidgets/QGraphicsView>
 
 /**
  * This class is based on the Elastic Nodes Example from the Qt documentation:
@@ -14,10 +11,18 @@
 
 class Edge;
 class NodeGui;
+class Network;
+
 class NetworkVis : public QGraphicsView
 {
 
     Q_OBJECT
+
+public slots:
+	/**
+	 * Compute a graph layout for the network.
+	 */
+	void layoutGraph();
 
 public:
     /**
@@ -26,13 +31,7 @@ public:
      * @param parent Pointer to the parent QWidget
      * @param nc
      */
-    NetworkVis(QWidget *parent, NetworkController& nc);
-
-    /**
-     * @brief forceDirectedLayout
-     * Layout the network using force directed layout algorithms
-     */
-    void forceDirectedLayout();
+    NetworkVis(QWidget *parent, const Network& net);
 
     /**
      * @brief getNodeGuiVec
@@ -153,6 +152,10 @@ public:
      */
     void originalNodeState();
 
+	/**
+	 * Write the visualization to an SVG file.
+	 */
+	void exportSVG(const QString& filename);
 
 protected:
     /**
@@ -168,6 +171,11 @@ private:
      * Pointer to a QGraphicsScence object
      */
     QGraphicsScene *scence_;
+
+	/**
+	 * The network that is represented by this NetworkVis.
+	 */
+	const Network& net_;
 
     /**
      * @brief pointerVec_
@@ -213,18 +221,16 @@ private:
     void createScene();
 
     /**
-     * @brief loadNoads
-     * Generates NodeGui objects for all nodes contained in the given NetworkController object
-     * @param nc Reference to a NetworkController object
+     * Generates NodeGui objects for all nodes contained in the network
+	 * represented by this NetworkVis object.
      */
-    void loadNoads(NetworkController& nc);
+    void loadNodes();
 
     /**
-     * @brief loadEdges
-     * Generates Edges objects for all edges contained in the given NetworkController object
-     * @param nc Reference to a NetworkController object
+     * Generates Edges objects for all edges contained in the network
+	 * represented by this NetworkVis object.
      */
-    void loadEdges(NetworkController& nc);
+    void loadEdges();
 
     /**
      * @brief keyPressEvent
@@ -263,6 +269,19 @@ private:
      */
     void shiftNodes();
 
+	/**
+	 * Computes a graph layout using a force directed
+	 * layout algorithm.
+	 */
+	void forceDirectedLayout();
+
+    /**
+     * Computes a graph layout using the graphviz dot command.
+     */
+    bool dotLayout();
+
+    void writeDot_(QIODevice& dev, const Network& network) const;
+    bool readDot_(const QByteArray& data);
 };
 
 #endif // NETWORKVIS_H

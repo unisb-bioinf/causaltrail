@@ -178,12 +178,6 @@ private slots:
     void discretiseSelection(const QString& samples, const std::vector<uint>& deselected);
 
 	/**
-     * @brief on_actionClose_triggered
-	 * Terminates the GUI 
-     */
-    void on_actionClose_triggered();
-
-	/**
 	 * Discretises the data currently configured
 	 * in discretisationSelection_.
 	 */
@@ -230,7 +224,7 @@ private slots:
      * @brief on_actionNewNetwork_triggered
 	 * Loads a new network
      */
-    void on_actionNewNetwork_triggered();
+    void on_actionLoadNetwork_triggered();
 
     /**
      * @brief on_deleteQueryButton_clicked
@@ -334,12 +328,6 @@ private slots:
     void context_Menu_ShowMatrix_selected();
 
     /**
-     * @brief resizeEvent
-	 * Handles the resizeEvent. Adapts the QDockWidget containing the network visualization to the biggest size possible
-     */
-    void resizeEvent(QResizeEvent *);
-
-    /**
      * @brief on_Input_textChanged
 	 * If the input value is cleared, all selected query items are deleted
      * @param arg1 New text
@@ -410,6 +398,8 @@ private slots:
      * @param index Item index of the item that was double clicked
      */
     void on_queryHistory_doubleClicked(const QModelIndex &index);
+
+	void on_actionExportSvg_triggered();
 
 	/**
 	 * @brief dataRejected

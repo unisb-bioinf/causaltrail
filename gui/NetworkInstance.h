@@ -229,26 +229,6 @@ class NetworkInstance{
     void RemoveSelectedEdge();
 
     /**
-     * @brief getNVSizeHint
-     * @return QSize object of the network visualization
-     */
-    QSize getNVSizeHint();
-
-    /**
-     * @brief resizeNV
-     * Resize the network visualization according to the given QSize object
-     * @param qSize QSize object
-     */
-    void resizeNV(QSize qSize);
-
-    /**
-     * @brief setWidth
-     * Set the width of the network visualization according to the given width
-     * @param width Width of the network visualization
-     */
-    void setWidth(unsigned int width);
-
-    /**
      * @brief getNodeGuiVec
      * @return Reference to a vector of pointers containing all NodeGui objects
      */
@@ -489,6 +469,7 @@ class NetworkInstance{
      */
     std::vector<unsigned int>& getDeselectedSamples();
 
+	void exportSvg(const QString& filename);
 
 private:
 

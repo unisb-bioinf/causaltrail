@@ -5,7 +5,9 @@
 #include "edge.h"
 #include "NodeGui.h"
 
-#include "QGraphicsLineItem"
+#include <QtGui/QCursor>
+#include <QtGui/QPainter>
+#include <QtWidgets/QGraphicsLineItem>
 
 Edge::Edge(NodeGui *src, NodeGui *tar)
     :srcN_(src),tarN_(tar), arrowSize_(5), fixedColor_(false), edgeColor_(Qt::black),lineStyle_(Qt::SolidLine)
