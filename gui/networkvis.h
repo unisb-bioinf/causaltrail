@@ -217,16 +217,14 @@ private:
     void createScene();
 
     /**
-     * @brief loadNoads
-     * Generates NodeGui objects for all nodes contained in the given NetworkController object
-     * @param nc Reference to a NetworkController object
+     * Generates NodeGui objects for all nodes contained in the network
+	 * represented by this NetworkVis object.
      */
     void loadNodes();
 
     /**
-     * @brief loadEdges
-     * Generates Edges objects for all edges contained in the given NetworkController object
-     * @param nc Reference to a NetworkController object
+     * Generates Edges objects for all edges contained in the network
+	 * represented by this NetworkVis object.
      */
     void loadEdges();
 
