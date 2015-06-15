@@ -399,6 +399,8 @@ private slots:
      */
     void on_queryHistory_doubleClicked(const QModelIndex &index);
 
+	void on_actionExportSvg_triggered();
+
 	/**
 	 * @brief dataRejected
 	 * Resets the network if the user did not select data in the dataview

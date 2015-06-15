@@ -8,6 +8,7 @@
 #include <QtGui/QWheelEvent>
 #include <QtGui/QKeyEvent>
 #include <QtWidgets/QGridLayout>
+#include <QtSvg/QSvgGenerator>
 
 NetworkVis::NetworkVis(QWidget *parent, const Network& net)
     : QGraphicsView(parent),
@@ -295,6 +296,18 @@ void NetworkVis::originalNodeState(){
     for (NodeGui* node : pointerVec_){
         node->originalState();
     }
+}
+
+void NetworkVis::exportSVG(const QString& filename) {
+	QSvgGenerator generator;
+	QFile output(filename);
+	generator.setOutputDevice(&output);
+	generator.setSize(QSize(width(), height()));
+	QPainter painter;
+	painter.begin(&generator);
+	render(&painter);
+	painter.end();
+	output.close();
 }
 
 bool NetworkVis::readDot_(const QByteArray& data)

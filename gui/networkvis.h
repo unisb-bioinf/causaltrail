@@ -152,6 +152,10 @@ public:
      */
     void originalNodeState();
 
+	/**
+	 * Write the visualization to an SVG file.
+	 */
+	void exportSVG(const QString& filename);
 
 protected:
     /**

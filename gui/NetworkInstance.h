@@ -469,6 +469,7 @@ class NetworkInstance{
      */
     std::vector<unsigned int>& getDeselectedSamples();
 
+	void exportSvg(const QString& filename);
 
 private:
 

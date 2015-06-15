@@ -108,6 +108,7 @@
     <addaction name="actionDelete_Network"/>
     <addaction name="actionLoad_Samples"/>
     <addaction name="actionLayout"/>
+    <addaction name="actionExportSvg"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuNetwork"/>
@@ -984,6 +985,14 @@
    </property>
    <property name="shortcut">
     <string>F1</string>
+   </property>
+  </action>
+  <action name="actionExportSvg">
+   <property name="icon">
+    <iconset theme="image-svg+xml"/>
+   </property>
+   <property name="text">
+    <string>&amp;Export SVG</string>
    </property>
   </action>
  </widget>

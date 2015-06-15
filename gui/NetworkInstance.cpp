@@ -408,3 +408,8 @@ std::vector<unsigned int> &NetworkInstance::getDeselectedSamples()
 {
     return deselectedSamples_;
 }
+
+void NetworkInstance::exportSvg(const QString& filename)
+{
+	nv_->exportSVG(filename);
+}

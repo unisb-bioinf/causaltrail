@@ -1023,3 +1023,12 @@ void MainWindow::on_queryHistory_doubleClicked(const QModelIndex& index)
 	                currentNetwork.getEdgeAddRemItems(index.row()));
 	ui->Input->setFocus();
 }
+
+void MainWindow::on_actionExportSvg_triggered()
+{
+	QString filename = QFileDialog::getSaveFileName(this, tr("Select SVG file."), config_->dataDir(), "*.svg");
+
+	if(filename != "") {
+		networks[ui->tabWidget->currentIndex()].exportSvg(filename);
+	}
+}
