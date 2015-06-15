@@ -35,8 +35,6 @@ MainWindow::MainWindow(Config* config, QWidget* parent)
 
 MainWindow::~MainWindow() { delete ui; }
 
-void MainWindow::on_actionClose_triggered() { close(); }
-
 void MainWindow::on_actionHelp_triggered()
 {
 	QString pathToDoku = QDir::currentPath();
@@ -376,7 +374,7 @@ void MainWindow::on_actionDeleteNetwork_triggered()
 	}
 }
 
-void MainWindow::on_actionNewNetwork_triggered()
+void MainWindow::on_actionLoadNetwork_triggered()
 {
 	if(ui->deleteQueryButton->isEnabled()) {
 		on_deleteQueryButton_clicked();
