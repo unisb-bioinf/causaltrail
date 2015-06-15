@@ -3,6 +3,7 @@ cmake_minimum_required (VERSION 2.8.11)
 project (Causal-Analysis-gui)
 
 find_package(Qt5Widgets)
+find_package(Qt5Gui)
 find_package(Qt5Core)
 find_package(Qt5Svg)
 
@@ -43,4 +44,11 @@ add_executable(CausalTrailGui
 	${ui_Headers}
 )
 
-target_link_libraries(CausalTrailGui CausalTrailLib ${Boost_LIBRARIES} Qt5::Widgets Qt5::Core Qt5::Svg)
+target_link_libraries(CausalTrailGui
+	CausalTrailLib
+	${Boost_LIBRARIES}
+	Qt5::Widgets
+	Qt5::Core
+	Qt5::Svg
+	Qt5::Gui
+)
