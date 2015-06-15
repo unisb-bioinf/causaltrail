@@ -1,9 +1,7 @@
 #ifndef NODEGUI_H
 #define NODEGUI_H
 
-#include <QMainWindow>
-#include <QGraphicsObject>
-#include <QGraphicsView>
+#include <QtWidgets/QGraphicsEllipseItem>
 
 /**
  * This class is based on the Elastic Nodes Example from the Qt documentation:
@@ -15,7 +13,7 @@ class Edge;
 
 class QGraphicsSceneMouseEvent;
 
-class NodeGui : public QGraphicsObject{
+class NodeGui : public QObject, public QGraphicsEllipseItem {
     Q_OBJECT
 
 public:
@@ -26,17 +24,6 @@ public:
      * @param name Name of the current node
      */
     NodeGui(unsigned int id, std::string name);
-
-    enum { Type = UserType + 1 };
-
-    int type() const Q_DECL_OVERRIDE { return Type; }
-
-    /**
-     * @brief addParent
-     * Add a parent to the current node
-     * @param parent Reference to a NodeGui object
-     */
-    void addParent(NodeGui& parent);
 
     /**
      * @brief addEdge
@@ -51,27 +38,6 @@ public:
      * Considering repulsive and attractive forces
      */
     void calculateForces();
-
-    /**
-     * @brief boundingRect
-     * Reimplementation of the boundingRect() method from QGraphicsObject
-     * @return A QRectF object representing a rectangle. The node is positioned between its top left and bottom right boundary.
-     */
-    QRectF boundingRect() const;
-
-    /**
-     * @brief shape
-     * Reimplementation of the shape() method from QGraphicsObject
-     * @return An elliptic QPainterPath
-     */
-    QPainterPath shape() const;
-
-    /**
-     * @brief paint
-     * Reimplementation of the paint() method from QGraphicsObject
-     * @param painter A pointer to a QPainter object
-     */
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 
     /**
      * @brief removeHighlighting
@@ -159,34 +125,58 @@ protected:
      * @param value QVariant reference
      * @return QVariant Object
      */
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
     /**
      * @brief mouseDoubleClickEvent
      * Handles the mouseDoubleClickEvent: Removes highlighting and emits the doubleClick event
      */
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent*);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent*) override;
 
     /**
      * @brief contextMenuEvent
      * Handles the contextMenuEvent: Adapts the color of the node and emits the context event
      * @param event
      */
-    void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
 
     /**
      * @brief hoverEnterEvent
      * Adapts the color of the node to represent the hoverEnter event
      */
-    void hoverEnterEvent(QGraphicsSceneHoverEvent* );
+    void hoverEnterEvent(QGraphicsSceneHoverEvent* ) override;
 
     /**
      * @brief hoverLeaveEvent
      * Adapts the color of the node to represent the hoverLeave event
      */
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent*);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent*) override;
 
 private:
+	/**
+	 * Set primary and secondary color to the same color.
+	 * @param color The new primary and secondary color.
+	 */
+	void setColors(const QColor& color);
+
+	/**
+	 * Set primary and secondary color to the provided colors.
+	 * @param primary The new primary color.
+	 * @param secondary The new secondary color.
+	 */
+	void setColors(const QColor& primary, const QColor& secondary);
+
+	/**
+	 * Set primary color to the provided color.
+	 * @param primary The new primary color.
+	 */
+	void setPrimaryColor(const QColor& primary);
+
+	/**
+	 * Set secondary color to the provided color.
+	 * @param secondary The new secondary color.
+	 */
+	void setSecondaryColor(const QColor& secondary);
 
     /**
      * @brief getStart
@@ -195,7 +185,7 @@ private:
      * @param name Name of the Node
      * @return The start position of the node name in the visualisation of the node
      */
-    int getStart(const std::string& name);
+    int getStart( const QString& name );
 
     /**
      * @brief resetAllNodesToNormalColor
@@ -219,7 +209,7 @@ private:
      * @brief abbrev_
      * Abbreviatet name of the node
      */
-    std::string abbrev_;
+    QString abbrev_;
 
     /**
      * @brief edges_
