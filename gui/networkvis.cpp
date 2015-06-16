@@ -67,6 +67,9 @@ void NetworkVis::layoutGraph() {
 	if(!dotLayout()) {
 		forceDirectedLayout();
 	}
+
+	shiftNodes();
+	centerOn(0,0);
 }
 
 void NetworkVis::forceDirectedLayout(){
@@ -81,8 +84,6 @@ void NetworkVis::forceDirectedLayout(){
             node->calculateForces();
         }
     }
-    shiftNodes();
-    centerOn(0,0);
 }
 
 bool NetworkVis::dotLayout() {
