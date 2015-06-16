@@ -267,7 +267,16 @@ private:
      */
     bool dotLayout();
 
+    /**
+     * Helper function that writes the current network
+     * in DOT format to a QIODevice.
+     */
     void writeDot_(QIODevice& dev, const Network& network) const;
+
+    /**
+     * Helper function that reads a graph in DOT format
+     * and sets the node positions to the foudn positions.
+     */
     bool readDot_(const QByteArray& data);
 };
 
