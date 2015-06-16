@@ -470,6 +470,11 @@ class NetworkInstance : public QObject {
      */
     std::vector<unsigned int>& getDeselectedSamples();
 
+	/**
+	 * Exports the network to an SVG file that can be used in
+	 * publications. A recent version of Qt5 is needed, as older
+	 * versions will rasterize the nodes.
+	 */
 	void exportSvg(const QString& filename);
 
 	signals:
