@@ -53,20 +53,6 @@ public:
     NodeGui* getNode(unsigned int id);
 
     /**
-     * @brief sizeHint
-     * Reimplementation of the sizeHint() function from QGraphicsScene()
-     * @return QSize object
-     */
-    QSize sizeHint() const;
-
-    /**
-     * @brief setWidth
-     * Set width of the network visualization
-     * @param width New width of the network visualization
-     */
-    void setWidth(unsigned int width);
-
-    /**
      * @brief doIntervention
      * @param id Identifier of the node upon which a do intervention should be performed / reversed
      * @param flag Bool indicating whether a do intervention should be performed or reversed
@@ -179,12 +165,6 @@ protected:
 	void mousePressEvent(QMouseEvent* event) override;
 
 private:
-    /**
-     * @brief scence_
-     * Pointer to a QGraphicsScence object
-     */
-    QGraphicsScene *scence_;
-
 	/**
 	 * The network that is represented by this NetworkVis.
 	 */
@@ -213,12 +193,6 @@ private:
      * Vector holding pointers to all removed Edge objects
      */
     std::vector<Edge*> removedEdges_;
-
-    /**
-     * @brief width_
-     * Width of the network visualization
-     */
-    unsigned int width_;
 
     /**
      * @brief createLayout
