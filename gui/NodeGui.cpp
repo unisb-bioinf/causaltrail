@@ -3,6 +3,7 @@
 
 #include <QtCore/QString>
 #include <QtGui/QCursor>
+#include <QFontMetrics>
 #include <QtWidgets/QGraphicsScene>
 
 constexpr qreal ADJUST = 2;
@@ -38,7 +39,7 @@ NodeGui::NodeGui(unsigned int id, std::string name)
 	QFont f("Monospace", 7);
 	child->setFont(f);
 	child->setText(abbrev_);
-	child->setPos(getStart(abbrev_), - f.pointSizeF() / 2);
+	child->setPos(getStart(abbrev_), - QFontMetrics(f).height() / 2.f);
 
 	setColors(nodeColor, secondNodeColor);
 }
@@ -126,10 +127,10 @@ void NodeGui::resetAllNodesToNormalColor()
     }
 }
 
-void NodeGui::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* ){
+void NodeGui::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
+{
     removeHighlighting();
-    emit doubleClick(id_,QString::fromStdString(name_));
-
+    QGraphicsEllipseItem::mouseDoubleClickEvent(event);
 }
 
 void NodeGui::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
@@ -147,9 +148,8 @@ void NodeGui::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     if (originalColor != Qt::gray){
         setColors(originalColor, originalColor2);
     }
-    update();
-    emit context(QString::fromStdString(name_),id_,event);
-    update();
+
+    QGraphicsEllipseItem::contextMenuEvent(event);
 }
 
 void NodeGui::hoverEnterEvent(QGraphicsSceneHoverEvent*)

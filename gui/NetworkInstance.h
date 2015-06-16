@@ -11,13 +11,14 @@
 #include "../core/NetworkController.h"
 
 
-class NetworkInstance{
+class NetworkInstance : public QObject {
+	Q_OBJECT
  public:
     /**
      * @brief NetworkInstance
      * Constructor of the NetworkInstance class
      */
-    NetworkInstance();
+    NetworkInstance(QObject* parent = nullptr);
 
     /**
      * @brief loadNetwork
@@ -239,7 +240,7 @@ class NetworkInstance{
      * @param id Identifier of the selected node
      * @param name Name of the selected node
      */
-    void setSelectedNode(unsigned int id, QString name);
+    void setSelectedNode(unsigned int id);
 
     /**
      * @brief doIntervention
@@ -471,6 +472,22 @@ class NetworkInstance{
 
 	void exportSvg(const QString& filename);
 
+	signals:
+	/**
+	 * Signal that fires when a context menu for a node was requested.
+	 */
+	void context(NodeGui*, QContextMenuEvent*);
+
+	/**
+	 * Signal that fires when a context menu for an edge was requested.
+	 */
+	void context(Edge*, QContextMenuEvent*);
+
+	/**
+	 * Signal that fires when an node was double clicked.
+	 */
+	void doubleClick(NodeGui*);
+
 private:
 
     /**
@@ -554,12 +571,6 @@ private:
      * Identifer of the selected node
      */
     unsigned int selectedNode_;
-
-    /**
-     * @brief selectedNodeName_
-     * Name of the selected node
-     */
-    QString selectedNodeName_;
 
     /**
      * @brief naOrTgf_

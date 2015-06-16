@@ -21,7 +21,7 @@ public:
      * @param currentNetworks Vector containg the networkInstances of the current session
      * @param filename Name of the file to save the session to
      */
-    void saveSession(std::vector<NetworkInstance>& currentNetworks, QString filename);
+    void saveSession(std::vector<NetworkInstance*>& currentNetworks, QString filename);
 
     /**
      * @brief createQueryBatchFile

@@ -11,8 +11,7 @@
 
 class NodeGui;
 
-class Edge : public QGraphicsObject{
-    Q_OBJECT
+class Edge : public QGraphicsItem {
 
 public:
     /**
@@ -99,18 +98,6 @@ public:
      * Removes the highlighting from an edge
      */
     void removeHighlighting();
-
-signals:
-    /**
-     * @brief context
-     * Emits if the context event of the edge is opened
-     * @param sourcename Name of the source node of this edge
-     * @param destName Name of the target node of this edge
-     * @param sourceID Identifier of the source node
-     * @param destID Identifier of the target node
-     * @param event QGraphicsSceneContextMenuEvent pointer
-     */
-    void context(Edge* edge, QGraphicsSceneContextMenuEvent* event);
 
 protected:
     /**

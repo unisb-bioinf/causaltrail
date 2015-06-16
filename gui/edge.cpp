@@ -120,7 +120,7 @@ void Edge::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     edgeColor_.setHsv(210,220,250);
     update();
     fixedColor_=true;
-    emit context(this, event);
+    QGraphicsItem::contextMenuEvent(event);
 }
 
 void Edge::hoverEnterEvent(QGraphicsSceneHoverEvent* )

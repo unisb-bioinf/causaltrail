@@ -1,8 +1,10 @@
 #include "NetworkInstance.h"
 #include "../core/Parser.h"
 #include "NodeGui.h"
-NetworkInstance::NetworkInstance()
-    : trained_(false),
+NetworkInstance::NetworkInstance(QObject* parent)
+    : QObject(parent),
+      nv_(nullptr),
+      trained_(false),
       argmax_(false),
       remainingNodesForEdgeAddition_(0),
       id1_(-1),
@@ -19,7 +21,17 @@ void NetworkInstance::loadNetwork(QString filename){
 }
 
 void NetworkInstance::visualize(QWidget* tabwidget){
+	if(nv_) {
+		nv_->disconnect(this);
+	}
+
     nv_ = new NetworkVis(tabwidget, nc_.getNetwork());
+
+	connect(nv_,  SIGNAL(context(Edge*, QContextMenuEvent*)),
+	        this, SIGNAL(context(Edge*, QContextMenuEvent*)));
+	connect(nv_,  SIGNAL(context(NodeGui*, QContextMenuEvent*)),
+	        this, SIGNAL(context(NodeGui*, QContextMenuEvent*)));
+	connect(nv_, SIGNAL(doubleClick(NodeGui*)), this, SIGNAL(doubleClick(NodeGui*)));
 }
 
 void NetworkInstance::loadSamples(const QString& filename, const Discretiser::Discretisations& control){
@@ -179,7 +191,7 @@ void NetworkInstance::visualizeInterventions(std::vector<QString> &interventions
     for (QString& item : interventions){
         QString name = item.split(" ")[0];
         nv_->getNode(nc_.getNetwork().getNode(name.toStdString()).getID())->originalState();
-        setSelectedNode(nc_.getNetwork().getNode(name.toStdString()).getID(), name);
+        setSelectedNode(nc_.getNetwork().getNode(name.toStdString()).getID());
         doIntervention();
     }
 }
@@ -275,14 +287,13 @@ const std::vector<Edge*>& NetworkInstance::getEdgeVec(){
     return nv_->getEdgeVec();
 }
 
-void NetworkInstance::setSelectedNode(unsigned int id, QString name)
+void NetworkInstance::setSelectedNode(unsigned int id)
 {
     selectedNode_=id;
-    selectedNodeName_=name;
 }
 
-QString NetworkInstance::getSelectedNodeName(){
-    return selectedNodeName_;
+QString NetworkInstance::getSelectedNodeName() {
+    return QString::fromStdString(nc_.getNetwork().getNode(selectedNode_).getName());
 }
 
 unsigned int NetworkInstance::getSelectedNodeID()

@@ -156,7 +156,7 @@ private:
      * @brief networks
 	 * Vector holding all active NetworkInstances
      */
-    std::vector<NetworkInstance> networks;
+    std::vector<NetworkInstance*> networks;
 
 	Config* config_;
 	discretisationSelection* discretisationSelection_;
@@ -263,7 +263,7 @@ private slots:
      * @param id Identifier of the node upon whom the double click was executed
      * @param name Name of the node upon whom the double click was executed
      */
-    void Node_double_clicked(uint id, QString name);
+    void Node_double_clicked(NodeGui*);
 
     /**
      * @brief Node_context
@@ -272,7 +272,7 @@ private slots:
      * @param id Identifier of the node upon whom the right click was performed
      * @param event QGraphicsSceneContextMenuEvent Pointer
      */
-    void Node_context(QString name, uint id, QGraphicsSceneContextMenuEvent* event);
+    void Node_context(NodeGui* node, QContextMenuEvent* event);
 
     /**
      * @brief Edge_context
@@ -280,7 +280,7 @@ private slots:
      * @param edge The edge for which the context menu was invoked
      * @param event QGraphicsSceneContextMenuEvent Pointer
      */
-    void Edge_context(Edge* edge, QGraphicsSceneContextMenuEvent *event);
+    void Edge_context(Edge* edge, QContextMenuEvent *event);
 
     /**
      * @brief context_Menu_QueryValue_Selected

@@ -157,13 +157,26 @@ public:
 	 */
 	void exportSVG(const QString& filename);
 
+    signals:
+	/**
+	 * Signal that fires when a context menu for an edge was requested.
+	 */
+	void context(Edge*, QContextMenuEvent*);
+
+	/**
+	 * Signal that fires when a context menu for a node was requested.
+	 */
+	void context(NodeGui*, QContextMenuEvent*);
+
+	/**
+	 * Signal that fires when an node was double clicked.
+	 */
+	void doubleClick(NodeGui*);
+
 protected:
-    /**
-     * @brief mousePressEvent
-     * Handles the mouse press event. Removes the highlighting from all nodes and edges
-     * @param event QMouseEvent pointer
-     */
-    void mousePressEvent(QMouseEvent* event);
+	void contextMenuEvent(QContextMenuEvent* event) override;
+	void mouseDoubleClickEvent(QMouseEvent* event) override;
+	void mousePressEvent(QMouseEvent* event) override;
 
 private:
     /**

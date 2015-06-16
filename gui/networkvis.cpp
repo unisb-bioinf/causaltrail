@@ -285,6 +285,42 @@ std::vector<std::pair<unsigned int, unsigned int> > NetworkVis::getRemovedEdgeID
     return edgeList;
 }
 
+void NetworkVis::contextMenuEvent(QContextMenuEvent* event)
+{
+	QGraphicsItem* item = itemAt(event->pos());
+
+	if(!item) return;
+
+	while(item->parentItem()) {
+		item = item->parentItem();
+	}
+
+	switch(item->type()) {
+		case QGraphicsEllipseItem::Type:
+			emit context(static_cast<NodeGui*>(item), event);
+			break;
+		case Edge::Type:
+			emit context(static_cast<Edge*>(item), event);
+			break;
+	}
+}
+
+void NetworkVis::mouseDoubleClickEvent(QMouseEvent* event)
+{
+	QGraphicsItem* item = itemAt(event->pos());
+
+	if(!item) return;
+
+	while(item->parentItem()) {
+		item = item->parentItem();
+	}
+
+	if(item && item->type() == QGraphicsEllipseItem::Type) {
+		emit doubleClick(static_cast<NodeGui*>(item));
+	}
+}
+
+
 void NetworkVis::mousePressEvent(QMouseEvent *event)
 {
     removeNodeHighlighting();
