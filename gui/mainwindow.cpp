@@ -298,9 +298,16 @@ void MainWindow::on_actionAbout_triggered()
 {
 	QMessageBox box;
 	box.setIcon(QMessageBox::Information);
-	box.setText("CausalTrail");
-	box.setInformativeText("A statistical tool to performe inference in causal "
-	                       "bayesian networks using Do-Calculus.");
+	box.setWindowTitle(tr("About CausalTrail"));
+	// Hack around the line wrap for the copyright statement.
+	box.setText(tr("CausalTrail") + "                                                          ");
+	box.setInformativeText(tr(
+		"A statistical tool to perform inference in causal "
+		"bayesian networks using Do-Calculus.\n\n"
+		"Copyright 2014-2015, Florian Schmidt\n"
+		"Copyright 2014-2015, Daniel Stöckel"
+	));
+
 	box.exec();
 }
 
