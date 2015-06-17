@@ -157,16 +157,6 @@ void NetworkVis::shiftNodes()
     }
 }
 
-const std::vector<NodeGui*>& NetworkVis::getNodeGuiVec()
-{
-    return pointerVec_;
-}
-
-const std::vector<Edge *> &NetworkVis::getEdgeVec()
-{
-    return pointerVecEdges_;
-}
-
 void NetworkVis::removeNodeHighlighting(){
     for (NodeGui* node : pointerVec_){
         node->removeSelection();

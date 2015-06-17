@@ -61,76 +61,8 @@ NetworkInstance::calculate(const std::string& query)
 	return Parser(query, nc_).parseQuery().execute();
 }
 
-bool NetworkInstance::isFirstQuery(){
-    return qma_.isBeginning();
-}
-
-bool NetworkInstance::isLastQuery(){
-    return qma_.isFinal();
-}
-
 bool NetworkInstance::isTrained(){
     return trained_;
-}
-
-QString& NetworkInstance::getPreviousQuery(){
-    return qma_.getPreviousQuery();
-}
-
-QString& NetworkInstance::getSubsequentQuery(){
-    return qma_.getSubsequentQuery();
-}
-
-std::vector<QString> & NetworkInstance::getPreviousQueryItems(){
-    std::vector<QString>& items = qma_.getPreviousQueryItems();
-    visualizeNonInterventionNodes(items);
-    return items;
-}
-
-std::vector<QString> & NetworkInstance::getSubsequentQueryItems(){
-    std::vector<QString>& items = qma_.getSubsequentQueryItems();
-    visualizeNonInterventionNodes(items);
-    return items;
-}
-
-std::vector<QString> & NetworkInstance::getPreviousConditionItems(){
-    std::vector<QString>& items = qma_.getPreviousConditionItems();
-    visualizeCondition(items);
-    return items;
-}
-
-std::vector<QString> & NetworkInstance::getSubsequentConditionItems(){
-    std::vector<QString>& items = qma_.getSubsequentConditionItems();
-    visualizeCondition(items);
-    return items;
-}
-
-std::vector<QString> & NetworkInstance::getPreviousInterventionItems(){
-    std::vector<QString>& items = qma_.getPreviousInterventionItems();
-    visualizeInterventions(items);
-    return items;
-}
-
-std::vector<QString> & NetworkInstance::getSubsequentInterventionItems(){
-    std::vector<QString>& items = qma_.getSubsequentInterventionItems();
-    visualizeInterventions(items);
-    return items;
-}
-
-std::vector<QString> & NetworkInstance::getPreviousEdgeChangeItems(){
-    std::vector<QString>& items = qma_.getPreviousEdgeChangeItems();
-    visualizeEdgeChanges(items);
-    return items;
-}
-
-std::vector<QString> & NetworkInstance::getSubsequentEdgeChangeItems(){
-    std::vector<QString>& items = qma_.getSubsequentEdgeChangeItems();
-    visualizeEdgeChanges(items);
-    return items;
-}
-
-void NetworkInstance::storeQuery(QString query, std::vector<QString> queries, std::vector<QString> conditions, std::vector<QString> interventions, std::vector<QString> edgeChanges){
-    qma_.storeQuery(query,queries,conditions,interventions,edgeChanges);
 }
 
 unsigned int NetworkInstance::getRowCountOfCurrentProbMatrix()
@@ -263,6 +195,7 @@ void NetworkInstance::NodeForEdgeAdditionSelected(unsigned int id){
     else{
         id2_=id;
         nv_->addEdge(id1_,id2_);
+        emit edgeAdded(id1_, id2_);
         id1_=-1;
         id2_=-1;
     }
@@ -284,16 +217,9 @@ const std::string& NetworkInstance::removedEdgeTargetName() const {
 
 void NetworkInstance::RemoveSelectedEdge(){
     nv_->removeEdge(id1_,id2_);
+    emit edgeRemoved(id1_, id2_);
     id1_=-1;
     id2_=-1;
-}
-
-const std::vector<NodeGui*>& NetworkInstance::getNodeGuiVec(){
-    return nv_->getNodeGuiVec();
-}
-
-const std::vector<Edge*>& NetworkInstance::getEdgeVec(){
-    return nv_->getEdgeVec();
 }
 
 void NetworkInstance::setSelectedNode(unsigned int id)
@@ -320,15 +246,19 @@ void NetworkInstance::removeDoIntervention(QString name){
 }
 
 void NetworkInstance::removeHighlighting(){
-    nv_->removeNodeHighlighting();
-    nv_->removeEdgeHighlighting();
+	if(nv_) {
+		nv_->removeNodeHighlighting();
+		nv_->removeEdgeHighlighting();
+	}
 }
 
 void NetworkInstance::restoreOriginalNetworkRepresentation(){
-    nv_->unDoDoInt();
-    nv_->originalNodeState();
-    nv_->restoreEdges();
-    nv_->removeAdditionalEdges();
+	if(nv_) {
+		nv_->unDoDoInt();
+		nv_->originalNodeState();
+		nv_->restoreEdges();
+		nv_->removeAdditionalEdges();
+	}
 }
 
 void NetworkInstance::reverseEdgeRemoval(QString source, QString target){
@@ -359,38 +289,6 @@ QString NetworkInstance::getDataFile(){
     return dataFile_;
 }
 
-unsigned int NetworkInstance::getNumberOfQueries() const{
-    return qma_.getNumberOfQueries();
-}
-
-const QString& NetworkInstance::getQuery(unsigned int index) const
-{
-    return qma_.getQuery(index);
-}
-std::vector<QString>& NetworkInstance::getQueryItems(unsigned int index){
-    std::vector<QString>& items = qma_.getQueryItems(index);
-    visualizeNonInterventionNodes(items);
-    return items;
-}
-
-std::vector<QString>& NetworkInstance::getConditionItems(unsigned int index){
-     std::vector<QString>& items = qma_.getConditionItems(index);
-     visualizeCondition(items);
-     return items;
-}
-
-std::vector<QString>& NetworkInstance::getInterventionItems(unsigned int index){
-     std::vector<QString>& items = qma_.getInterventionItems(index);
-     visualizeInterventions(items);
-     return items;
-}
-
-std::vector<QString>& NetworkInstance::getEdgeAddRemItems(unsigned int index){
-     std::vector<QString>& items = qma_.getEdgeAddRemItems(index);
-     visualizeEdgeChanges(items);
-     return items;
-}
-
 QString NetworkInstance::getDiscretisationControlFile(){
     return discretisationControl_;
 }
@@ -413,6 +311,23 @@ void NetworkInstance::setDiscretisationControlFile(const QString& filename){
 
 void NetworkInstance::setQMA(QueryManager& qma){
     qma_=qma;
+}
+
+const NetworkController& NetworkInstance::getController() const {
+	return nc_;
+}
+
+NetworkController& NetworkInstance::getController() {
+	return nc_;
+}
+
+QueryManager& NetworkInstance::getQMA() {
+	return qma_;
+}
+
+const QueryManager& NetworkInstance::getQMA() const
+{
+	return qma_;
 }
 
 void NetworkInstance::resetNetwork(){

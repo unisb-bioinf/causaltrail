@@ -20,6 +20,7 @@ QT5_WRAP_UI(ui_Headers
     matrixpopup.ui
     discretisationselection.ui
     dataView.ui
+    QueryView.ui
 )
 
 add_executable(CausalTrailGui
@@ -41,6 +42,8 @@ add_executable(CausalTrailGui
 	networkvis.cpp
 	NodeGui.cpp
 	querymanager.cpp
+	QueryView.h
+	QueryView.cpp
 	${ui_Headers}
 )
 

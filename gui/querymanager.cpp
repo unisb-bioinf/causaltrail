@@ -22,50 +22,22 @@ bool QueryManager::isFinal() const{
     }
 }
 
-QString& QueryManager::getPreviousQuery(){
+const QString& QueryManager::getPreviousQuery(){
     index_-=1;
     return queryVector_[index_];
 }
 
-QString& QueryManager::getSubsequentQuery(){
+const QString& QueryManager::getSubsequentQuery(){
     index_+=1;
     return queryVector_[index_];
 }
 
-std::vector<QString>& QueryManager::getPreviousQueryItems(){
-    return queryItems_[index_];
-}
-
-std::vector<QString>& QueryManager::getSubsequentQueryItems(){
-    return queryItems_[index_];
-}
-
-std::vector<QString>& QueryManager::getPreviousConditionItems(){
-    return conditionItems_[index_];
-}
-
-std::vector<QString>& QueryManager::getSubsequentConditionItems(){
-    return conditionItems_[index_];
-}
-
-std::vector<QString>& QueryManager::getPreviousInterventionItems(){
-    return interventionItems_[index_];
-}
-
-std::vector<QString>& QueryManager::getSubsequentInterventionItems(){
-    return interventionItems_[index_];
-}
-
-std::vector<QString>& QueryManager::getPreviousEdgeChangeItems(){
-    return  edgeAddRemItems_[index_];
-}
-
-std::vector<QString>& QueryManager::getSubsequentEdgeChangeItems(){
-    return  edgeAddRemItems_[index_];
-}
-
 unsigned int QueryManager::getNumberOfQueries() const {
     return queryVector_.size();
+}
+
+const std::vector<QString>& QueryManager::getQueries() const {
+	return queryVector_;
 }
 
 const QString& QueryManager::getQuery(unsigned int index) const
@@ -73,23 +45,31 @@ const QString& QueryManager::getQuery(unsigned int index) const
     return queryVector_[index];
 }
 
-std::vector<QString>& QueryManager::getQueryItems(unsigned int index){
+const std::vector<QString>& QueryManager::getQueryItems(unsigned int index) const {
     return queryItems_[index];
 }
 
-std::vector<QString>& QueryManager::getConditionItems(unsigned int index){
+const std::vector<QString>& QueryManager::getConditionItems(unsigned int index) const {
     return conditionItems_[index];
 }
 
-std::vector<QString>& QueryManager::getInterventionItems(unsigned int index){
+const std::vector<QString>& QueryManager::getInterventionItems(unsigned int index) const {
     return interventionItems_[index];
 }
 
-std::vector<QString>& QueryManager::getEdgeAddRemItems(unsigned int index){
+const std::vector<QString>& QueryManager::getEdgeAddRemItems(unsigned int index) const {
     return edgeAddRemItems_[index];
 }
 
-void QueryManager::storeQuery(QString& query, std::vector<QString> queries, std::vector<QString> conditions, std::vector<QString> interventions, std::vector<QString> edgeChanges){
+unsigned int QueryManager::getCurrentQuery() const
+{
+	return index_;
+}
+
+void QueryManager::storeQuery(const QString& query, const std::vector<QString>& queries,
+                              const std::vector<QString>& conditions, const std::vector<QString>& interventions,
+                              const std::vector<QString>& edgeChanges)
+{
     queryVector_.push_back(query);
     queryItems_.push_back(queries);
     conditionItems_.push_back(conditions);
@@ -98,7 +78,7 @@ void QueryManager::storeQuery(QString& query, std::vector<QString> queries, std:
     index_=queryVector_.size()-1;
 }
 
-void QueryManager::storeQuery(QString line){
+void QueryManager::storeQuery(const QString& line){
     queryVector_.push_back(line);
     queryItems_.push_back({});
     conditionItems_.push_back({});

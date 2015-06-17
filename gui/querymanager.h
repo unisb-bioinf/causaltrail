@@ -25,64 +25,16 @@ public:
     bool isFinal() const;
 
     /**
-     * @brief getPreviousQueryItems
-     * @return A vector containing the non intervention items of the previous query
-     */
-    std::vector<QString>& getPreviousQueryItems();
-
-    /**
-     * @brief getSubsequentQueryItems
-     * @return A vector containing the non intervention items of the subsequent query
-     */
-    std::vector<QString>& getSubsequentQueryItems();
-
-    /**
-     * @brief getPreviousConditionItems
-     * @return A vector containing the conditional items of the previous query
-     */
-    std::vector<QString>& getPreviousConditionItems();
-
-    /**
-     * @brief getSubsequentConditionItems
-     * @return A vector containing the conditional items of the subsequent query
-     */
-    std::vector<QString>& getSubsequentConditionItems();
-
-    /**
-     * @brief getPreviousInterventionItems
-     * @return A vector containing the interventional items of the previous query
-     */
-    std::vector<QString>& getPreviousInterventionItems();
-
-    /**
-     * @brief getSubsequentInterventionItems
-     * @return A vector containing the interventional items of the subsequent query
-     */
-    std::vector<QString>& getSubsequentInterventionItems();
-
-    /**
-     * @brief getPreviousEdgeChangeItems
-     * @return A vector containing the edge change items of the previous query
-     */
-    std::vector<QString>& getPreviousEdgeChangeItems();
-
-    /**
-     * @brief getSubsequentEdgeChangeItems
-     * @return A vector containing the edge change items of the subsequent query
-     */
-    std::vector<QString>& getSubsequentEdgeChangeItems();
-
-    /**
      * @brief getPreviousQuery
      * @return The completed previous query
      */
-    QString &getPreviousQuery();
+    const QString& getPreviousQuery();
 
     /**
      * @brief getSubsequentQuery
      * @return The completed subsequent query
      */
-    QString &getSubsequentQuery();
+    const QString& getSubsequentQuery();
 
     /**
      * @brief storeQuery
@@ -93,13 +45,25 @@ public:
      * @param interventions Vector of all intervention query items
      * @param edgeChanges Vector of all edge Change operation items
      */
-    void storeQuery(QString &query, std::vector<QString> queries, std::vector<QString> conditions, std::vector<QString> interventions, std::vector<QString> edgeChanges);
+    void storeQuery(const QString &query, const std::vector<QString>& queries,
+                    const std::vector<QString>& conditions, const std::vector<QString>& interventions,
+                    const std::vector<QString>& edgeChanges);
+
+    /**
+     * Return the index of the currently selected query.
+     */
+    unsigned int getCurrentQuery() const;
 
     /**
      * @brief getNumberOfQueries
      * @return The number of stored queries
      */
     unsigned int getNumberOfQueries() const;
+
+    /**
+     * Get the collection of queries.
+     */
+    const std::vector<QString>& getQueries() const;
 
     /**
      * @brief getQuery
@@ -113,35 +77,35 @@ public:
      * @param index The index of the desired query
      * @return A vector of the non intervention query items of the query with the given index
      */
-    std::vector<QString>& getQueryItems(unsigned int index);
+    const std::vector<QString>& getQueryItems(unsigned int index) const;
 
     /**
      * @brief getConditionItems
      * @param index The index of the desired query
      * @return A vector of the conditional query items of the query with the given index
      */
-    std::vector<QString>& getConditionItems(unsigned int index);
+    const std::vector<QString>& getConditionItems(unsigned int index) const;
 
     /**
      * @brief getInterventionItems
      * @param index The index of the desired query
      * @return A vector of the intervention items of the query with the given index
      */
-    std::vector<QString>& getInterventionItems(unsigned int index);
+    const std::vector<QString>& getInterventionItems(unsigned int index) const;
 
     /**
      * @brief getEdgeAddRemItems
      * @param index The index of the desired query
      * @return A vector of the edge change items of the query with the given index
      */
-    std::vector<QString>& getEdgeAddRemItems(unsigned int index);
+    const std::vector<QString>& getEdgeAddRemItems(unsigned int index) const;
 
     /**
      * @brief storeQuery
      * Stores the provied line in the query vector
      * @param line Query to store
      */
-    void storeQuery(QString line);
+    void storeQuery(const QString& line);
 
     /**
      * @brief storeQueryItem

@@ -34,18 +34,6 @@ public:
     NetworkVis(QWidget *parent, const Network& net);
 
     /**
-     * @brief getNodeGuiVec
-     * @return A reference to a vector of pointers to all NodeGui objects included in the current scence
-     */
-    const std::vector<NodeGui*>& getNodeGuiVec();
-
-    /**
-     * @brief getEdgeVec
-     * @return A reference to a vector of pointers to all Edge objects included in the current scence
-     */
-    const std::vector<Edge*>& getEdgeVec();
-
-    /**
      * @brief getNode
      * @param id Identifier of the desired node
      * @return A pointer to the node with the given id

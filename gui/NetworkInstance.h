@@ -59,110 +59,10 @@ class NetworkInstance : public QObject {
     std::pair<float,std::vector<std::string>> calculate(const std::string& query);
 
     /**
-     * @brief isFirstQuery
-     * @return True if the current query is the first one in the query list, false otherwise.
-     */
-    bool isFirstQuery();
-
-    /**
-     * @brief isLastQuery
-     * @return True if the current query is the last one in the query list, false otherwise.
-     */
-    bool isLastQuery();
-
-    /**
      * @brief isTrained
      * @return True if the network is trained, false otherwise
      */
     bool isTrained();
-
-    /**
-     * @brief getPreviousQueryItems
-     * @return A vector containing the non intervention items of the previous query
-     */
-    std::vector<QString> &getPreviousQueryItems();
-
-    /**
-     * @brief getSubsequentQueryItems
-     * @return A vector containing the non intervention items of the subsequent query
-     */
-    std::vector<QString> &getSubsequentQueryItems();
-
-    /**
-     * @brief getPreviousConditionItems
-     * @return A vector containing the conditional items of the previous query
-     */
-    std::vector<QString> &getPreviousConditionItems();
-
-    /**
-     * @brief getSubsequentConditionItems
-     * @return A vector containing the conditional items of the subsequent query
-     */
-    std::vector<QString> &getSubsequentConditionItems();
-
-    /**
-     * @brief getPreviousInterventionItems
-     * @return A vector containing the interventional items of the previous query
-     */
-    std::vector<QString> &getPreviousInterventionItems();
-
-    /**
-     * @brief getSubsequentInterventionItems
-     * @return A vector containing the interventional items of the subsequent query
-     */
-    std::vector<QString> &getSubsequentInterventionItems();
-
-    /**
-     * @brief getPreviousEdgeChangeItems
-     * @return A vector containing the edge change items of the previous query
-     */
-    std::vector<QString> &getPreviousEdgeChangeItems();
-
-    /**
-     * @brief getSubsequentEdgeChangeItems
-     * @return  A vector containing the edge change items of the subsequent query
-     */
-    std::vector<QString> &getSubsequentEdgeChangeItems();
-
-    /**
-     * @brief getNumberOfQueries
-     * @return The number of stored queries
-     */
-    unsigned int getNumberOfQueries() const;
-
-    /**
-     * @brief getQuery
-     * @param index The index of the desired query
-     * @return The query at the given index
-     */
-	const QString& getQuery (unsigned int index) const;
-
-    /**
-     * @brief getQueryItems
-     * @param index The index of the desired query
-     * @return A vector of the non intervention query items of the query with the given index
-     */
-    std::vector<QString>& getQueryItems(unsigned int index);
-
-    /**
-     * @param index The index of the desired query
-     * @return A vector of the conditional query items of the query with the given index
-     */
-    std::vector<QString>& getConditionItems(unsigned int index);
-
-    /**
-     * @brief getInterventionItems
-     * @param index The index of the desired query
-     * @return A vector of the intervention items of the query with the given index
-     */
-    std::vector<QString>& getInterventionItems(unsigned int index);
-
-    /**
-     * @brief getEdgeAddRemItems
-     * @param index The index of the desired query
-     * @return A vector of the edge change items of the query with the given index
-     */
-    std::vector<QString>& getEdgeAddRemItems(unsigned int index);
 
     /**
      * @brief layout
@@ -238,12 +138,6 @@ class NetworkInstance : public QObject {
     void RemoveSelectedEdge();
 
     /**
-     * @brief getNodeGuiVec
-     * @return Reference to a vector of pointers containing all NodeGui objects
-     */
-    const std::vector<NodeGui*>& getNodeGuiVec();
-
-    /**
      * @brief setSelectedNode
      * @param id Identifier of the selected node
      * @param name Name of the selected node
@@ -287,12 +181,6 @@ class NetworkInstance : public QObject {
     unsigned int getSelectedNodeID();
 
     /**
-     * @brief getEdgeVec
-     * @return Reference to a vector of pointers containing all edge objects
-     */
-    const std::vector<Edge *> &getEdgeVec();
-
-    /**
      * @brief removeDoIntervention
      * Removes the do intervention on the node with the given name
      * @param name Name of the node upon which the do intervention should be reversed
@@ -314,17 +202,6 @@ class NetworkInstance : public QObject {
      * @param target Name of the target node
      */
     void reverseEdgeAddition(QString source, QString target);
-
-    /**
-     * @brief storeQuery
-     * Stores the provided query, including all subitems.
-     * @param query The completed query
-     * @param queries Vector of all non intervention query items
-     * @param conditions Vector of all condition query items
-     * @param interventions Vector of all intervention query items
-     * @param edgeChanges Vector of all edge Change operation items
-     */
-    void storeQuery(QString query, std::vector<QString> queries, std::vector<QString> conditions, std::vector<QString> interventions, std::vector<QString> edgeChanges);
 
     /**
      * @brief getRowCountOfCurrentProbMatrix
@@ -459,6 +336,12 @@ class NetworkInstance : public QObject {
      */
     void setQMA(QueryManager &qma);
 
+    const NetworkController& getController() const;
+    NetworkController& getController();
+
+    QueryManager& getQMA();
+    const QueryManager& getQMA() const;
+
     /**
      * @brief resetNetwork
      * Calls the reset network method of networkController. Reset all nodes to an empty state.
@@ -500,6 +383,16 @@ class NetworkInstance : public QObject {
 	 * Signal that fires when an node was double clicked.
 	 */
 	void doubleClick(NodeGui*);
+
+	/**
+	 * An edge has been removed from the underlying network.
+	 */
+	void edgeRemoved(int id1_, int id2_);
+
+	/**
+	 * An edge has been added to the underlying network.
+	 */
+	void edgeAdded(int id1_, int id2_);
 
 private:
 

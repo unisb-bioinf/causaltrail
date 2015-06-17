@@ -19,23 +19,25 @@ void dataStorage::saveSession(std::vector<NetworkInstance*>& currentNetworks, QS
 		output<<networkInst->getDeselectedSamples()[i]<<"\t";
      }
 	 output<<std::endl;
-     for (unsigned int i = 0; i < networkInst->getNumberOfQueries(); i++){
+
+	 const auto& queryManager = networkInst->getQMA();
+     for (unsigned int i = 0; i < queryManager.getNumberOfQueries(); i++){
         output<<"query"<<std::endl;
-        output<<networkInst->getQuery(i).toStdString()<<std::endl;
+        output<<queryManager.getQuery(i).toStdString()<<std::endl;
         output<<"queryItems"<<std::endl;
-        for (QString& queryItem : networkInst->getQueryItems(i)){
+        for (const QString& queryItem : queryManager.getQueryItems(i)){
             output<<queryItem.toStdString()<<std::endl;
         }
         output<<"conditionItems"<<std::endl;
-        for (QString& conditionItem : networkInst->getConditionItems(i)){
+        for (const QString& conditionItem : queryManager.getConditionItems(i)){
             output<<conditionItem.toStdString()<<std::endl;
         }
         output<<"interventionItems"<<std::endl;
-        for (QString& interventionItem : networkInst->getInterventionItems(i)){
+        for (const QString& interventionItem : queryManager.getInterventionItems(i)){
             output<<interventionItem.toStdString()<<std::endl;
         }
         output<<"edgeAddRemItems"<<std::endl;
-        for (QString& edgeAddRemItem : networkInst->getEdgeAddRemItems(i)){
+        for (const QString& edgeAddRemItem : queryManager.getEdgeAddRemItems(i)){
             output<<edgeAddRemItem.toStdString()<<std::endl;
         }
      }
@@ -47,8 +49,8 @@ void dataStorage::createQueryBatchFile(NetworkInstance &currentNetwork, QString 
 {
     std::ofstream output;
     output.open(filename.toStdString());
-    for (unsigned int i = 0; i< currentNetwork.getNumberOfQueries(); i++){
-        output<<currentNetwork.getQuery(i).toStdString()<<std::endl;
+    for (unsigned int i = 0; i< currentNetwork.getQMA().getNumberOfQueries(); i++){
+        output<<currentNetwork.getQMA().getQuery(i).toStdString()<<std::endl;
     }
     output.close();
 }
