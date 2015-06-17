@@ -5,37 +5,37 @@ dataStorage::dataStorage()
 
 }
 
-void dataStorage::saveSession(std::vector<NetworkInstance> &currentNetworks, QString filename)
+void dataStorage::saveSession(std::vector<NetworkInstance*>& currentNetworks, QString filename)
 {
  std::ofstream output;
  output.open(filename.toStdString());
- for (NetworkInstance& networkInst : currentNetworks){
+ for (NetworkInstance* networkInst : currentNetworks){
      output<<"network"<<std::endl;
-     output<<networkInst.getNaOrTgf().toStdString()<<std::endl;
-     output<<networkInst.getSif().toStdString()<<std::endl;
-     output<<networkInst.getDataFile().toStdString()<<std::endl;
-     output<<networkInst.getDiscretisationControlFile().toStdString()<<std::endl;
-     for (unsigned int i = 0; i < networkInst.getDeselectedSamples().size(); i++){
-	 	output<<networkInst.getDeselectedSamples()[i]<<"\t";
+     output<<networkInst->getNaOrTgf().toStdString()<<std::endl;
+     output<<networkInst->getSif().toStdString()<<std::endl;
+     output<<networkInst->getDataFile().toStdString()<<std::endl;
+     output<<networkInst->getDiscretisationControlFile().toStdString()<<std::endl;
+     for (unsigned int i = 0; i < networkInst->getDeselectedSamples().size(); i++){
+		output<<networkInst->getDeselectedSamples()[i]<<"\t";
      }
 	 output<<std::endl;
-     for (unsigned int i = 0; i < networkInst.getNumberOfQueries(); i++){
+     for (unsigned int i = 0; i < networkInst->getNumberOfQueries(); i++){
         output<<"query"<<std::endl;
-        output<<networkInst.getQuery(i).toStdString()<<std::endl;
+        output<<networkInst->getQuery(i).toStdString()<<std::endl;
         output<<"queryItems"<<std::endl;
-        for (QString& queryItem : networkInst.getQueryItems(i)){
+        for (QString& queryItem : networkInst->getQueryItems(i)){
             output<<queryItem.toStdString()<<std::endl;
         }
         output<<"conditionItems"<<std::endl;
-        for (QString& conditionItem : networkInst.getConditionItems(i)){
+        for (QString& conditionItem : networkInst->getConditionItems(i)){
             output<<conditionItem.toStdString()<<std::endl;
         }
         output<<"interventionItems"<<std::endl;
-        for (QString& interventionItem : networkInst.getInterventionItems(i)){
+        for (QString& interventionItem : networkInst->getInterventionItems(i)){
             output<<interventionItem.toStdString()<<std::endl;
         }
         output<<"edgeAddRemItems"<<std::endl;
-        for (QString& edgeAddRemItem : networkInst.getEdgeAddRemItems(i)){
+        for (QString& edgeAddRemItem : networkInst->getEdgeAddRemItems(i)){
             output<<edgeAddRemItem.toStdString()<<std::endl;
         }
      }

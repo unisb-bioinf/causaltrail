@@ -34,9 +34,9 @@ void NetworkVis::createLayout(QWidget *parent){
 }
 
 void NetworkVis::createScene(){
-    scence_ = new QGraphicsScene(this);
-    scence_->setItemIndexMethod(QGraphicsScene::NoIndex);
-    this->setScene(scence_);
+    QGraphicsScene* scence = new QGraphicsScene(this);
+    scence->setItemIndexMethod(QGraphicsScene::NoIndex);
+    this->setScene(scence);
     setCacheMode(CacheBackground);
     setRenderHint(QPainter::Antialiasing);
     setDragMode(QGraphicsView::ScrollHandDrag);
@@ -47,7 +47,7 @@ void NetworkVis::loadNodes() {
     for (const Node& node : net_.getNodes()) {
         NodeGui* newNode = new NodeGui(node.getID(), node.getName());
         pointerVec_[node.getID()]=newNode;
-        scence_->addItem(newNode);
+        scene()->addItem(newNode);
     }
 }
 
@@ -57,7 +57,7 @@ void NetworkVis::loadEdges() {
         for (auto& parent : node.getParents()){
             NodeGui* src = pointerVec_[parent];
             Edge *newEdge = new Edge(src,tar);
-            scence_->addItem(newEdge);
+            scene()->addItem(newEdge);
             pointerVecEdges_.push_back(newEdge);
         }
     }
@@ -67,6 +67,9 @@ void NetworkVis::layoutGraph() {
 	if(!dotLayout()) {
 		forceDirectedLayout();
 	}
+
+	shiftNodes();
+	centerOn(0,0);
 }
 
 void NetworkVis::forceDirectedLayout(){
@@ -81,8 +84,6 @@ void NetworkVis::forceDirectedLayout(){
             node->calculateForces();
         }
     }
-    shiftNodes();
-    centerOn(0,0);
 }
 
 bool NetworkVis::dotLayout() {
@@ -166,17 +167,6 @@ const std::vector<Edge *> &NetworkVis::getEdgeVec()
     return pointerVecEdges_;
 }
 
-QSize NetworkVis::sizeHint() const
-{
-    return QSize(width_,1080);
-
-}
-
-void NetworkVis::setWidth(unsigned int width)
-{
-    width_=width;
-}
-
 void NetworkVis::removeNodeHighlighting(){
     for (NodeGui* node : pointerVec_){
         node->removeSelection();
@@ -217,7 +207,7 @@ void NetworkVis::addEdge(unsigned int id1, unsigned int id2)
     Edge* newEdge = new Edge(getNode(id1), getNode(id2));
     newEdge->setAdditionalEdge();
     additionalEdges_.push_back(newEdge);
-    scence_->addItem(newEdge);
+    scene()->addItem(newEdge);
     newEdge->update();
 }
 
@@ -284,6 +274,42 @@ std::vector<std::pair<unsigned int, unsigned int> > NetworkVis::getRemovedEdgeID
     }
     return edgeList;
 }
+
+void NetworkVis::contextMenuEvent(QContextMenuEvent* event)
+{
+	QGraphicsItem* item = itemAt(event->pos());
+
+	if(!item) return;
+
+	while(item->parentItem()) {
+		item = item->parentItem();
+	}
+
+	switch(item->type()) {
+		case QGraphicsEllipseItem::Type:
+			emit context(static_cast<NodeGui*>(item), event);
+			break;
+		case Edge::Type:
+			emit context(static_cast<Edge*>(item), event);
+			break;
+	}
+}
+
+void NetworkVis::mouseDoubleClickEvent(QMouseEvent* event)
+{
+	QGraphicsItem* item = itemAt(event->pos());
+
+	if(!item) return;
+
+	while(item->parentItem()) {
+		item = item->parentItem();
+	}
+
+	if(item && item->type() == QGraphicsEllipseItem::Type) {
+		emit doubleClick(static_cast<NodeGui*>(item));
+	}
+}
+
 
 void NetworkVis::mousePressEvent(QMouseEvent *event)
 {

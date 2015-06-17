@@ -13,9 +13,7 @@ class Edge;
 
 class QGraphicsSceneMouseEvent;
 
-class NodeGui : public QObject, public QGraphicsEllipseItem {
-    Q_OBJECT
-
+class NodeGui : public QGraphicsEllipseItem {
 public:
     /**
      * @brief NodeGui
@@ -96,25 +94,6 @@ public:
      * Restores the original state of the node
      */
     void originalState();
-
-signals:
-
-    /**
-     * @brief doubleClick
-     * Emits if a node has been double clicked
-     * @param id Identifier of the current node
-     * @param name Name of the current node
-     */
-    void doubleClick(unsigned int id, QString name);
-
-    /**
-     * @brief context
-     * Emits if a node has been right clicked
-     * @param name Name of the current node
-     * @param id Identifier of the current node
-     * @param event QGraphicsSceneContextMenuEvent pointer
-     */
-    void context(QString name, unsigned int id,QGraphicsSceneContextMenuEvent* event);
 
 protected:
 

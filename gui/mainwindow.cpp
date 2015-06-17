@@ -15,8 +15,8 @@
 
 #include <QtCore/QDir>
 #include <QtGui/QDesktopServices>
+#include <QtGui/QContextMenuEvent>
 #include <QtWidgets/QFileDialog>
-#include <QtWidgets/QGraphicsSceneContextMenuEvent>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QMessageBox>
@@ -52,12 +52,12 @@ void MainWindow::checkQueriesLeft()
 		return;
 	}
 
-	auto& currentNetwork = networks[ui->tabWidget->currentIndex()];
-	ui->actionCreate_Batchfile->setEnabled(currentNetwork.getNumberOfQueries() > 0);
-	ui->loadPreviousQueryButton->setEnabled(!currentNetwork.isFirstQuery());
-	ui->loadPreviousQueryButton_2->setEnabled(!currentNetwork.isFirstQuery());
-	ui->loadSuccessorQueryButton->setEnabled(!currentNetwork.isLastQuery());
-	ui->loadSuccessorQueryButton_2->setEnabled(!currentNetwork.isLastQuery());
+	auto* currentNetwork = networks[ui->tabWidget->currentIndex()];
+	ui->actionCreate_Batchfile->setEnabled(currentNetwork->getNumberOfQueries() > 0);
+	ui->loadPreviousQueryButton->setEnabled(!currentNetwork->isFirstQuery());
+	ui->loadPreviousQueryButton_2->setEnabled(!currentNetwork->isFirstQuery());
+	ui->loadSuccessorQueryButton->setEnabled(!currentNetwork->isLastQuery());
+	ui->loadSuccessorQueryButton_2->setEnabled(!currentNetwork->isLastQuery());
 }
 
 void MainWindow::initaliseVisibility()
@@ -138,7 +138,7 @@ void MainWindow::writeListWidget(QListWidget* widget, QLabel* label,
 
 int MainWindow::generateNetworkInstance()
 {
-	networks.push_back(NetworkInstance());
+	networks.push_back(new NetworkInstance(this));
 	ui->tabWidget->addTab(new QWidget,
 	                      "New Tab " + QString::number(ui->tabWidget->count()));
 	int index = ui->tabWidget->count() - 1;
@@ -149,8 +149,8 @@ int MainWindow::generateNetworkInstance()
 void MainWindow::loadNAorTGF(QString filename, int index)
 {
 	ui->Output->addItem("File: " + filename + " opened");
-	networks[index].loadNetwork(filename);
-	networks[index].setNaOrTgf(filename);
+	networks[index]->loadNetwork(filename);
+	networks[index]->setNaOrTgf(filename);
 	QStringList list = filename.split("/");
 	auto name = list[list.size() - 1];
 	ui->tabWidget->setTabText(index, name);
@@ -159,44 +159,37 @@ void MainWindow::loadNAorTGF(QString filename, int index)
 void MainWindow::loadSif(QString filename, int index)
 {
 	ui->Output->addItem("File: " + filename + " opened");
-	networks[index].loadNetwork(filename);
-	networks[index].setSif(filename);
+	networks[index]->loadNetwork(filename);
+	networks[index]->setSif(filename);
 }
 
 void MainWindow::visualise(int index)
 {
-	networks[index].visualize(ui->tabWidget->widget(index));
+	networks[index]->visualize(ui->tabWidget->widget(index));
 	ui->actionLoad_Samples->setEnabled(true);
 	ui->actionLayout->setEnabled(true);
 	ui->tabWidget->widget(index)->setFocus();
-	for(const NodeGui* ng : networks[index].getNodeGuiVec()) {
-		connect(ng, SIGNAL(doubleClick(uint, QString)), this,
-		        SLOT(Node_double_clicked(uint, QString)));
-		connect(
-		    ng, SIGNAL(context(QString, uint, QGraphicsSceneContextMenuEvent*)),
-		    this,
-		    SLOT(Node_context(QString, uint, QGraphicsSceneContextMenuEvent*)));
-	}
-	for(Edge* edge : networks[index].getEdgeVec()) {
-		connect(
-		    edge, SIGNAL(context(Edge*, QGraphicsSceneContextMenuEvent*)),
-		    this,
-		    SLOT(Edge_context(Edge*, QGraphicsSceneContextMenuEvent*)));
-	}
+
+	connect(networks[index], SIGNAL(context(NodeGui*, QContextMenuEvent*)),
+	        this, SLOT(Node_context(NodeGui*, QContextMenuEvent*)));
+	connect(networks[index], SIGNAL(context(Edge*, QContextMenuEvent*)),
+	        this, SLOT(Edge_context(Edge*, QContextMenuEvent*)));
+	connect(networks[index], SIGNAL(doubleClick(NodeGui*)),
+	        this, SLOT(Node_double_clicked(NodeGui*)));
 }
 
 void MainWindow::loadSamples()
 {
 	try {
 		unsigned int index = discretisationSelection_->index();
-		networks[index].setDataFile(discretisationSelection_->samples());
-		networks[index].loadSamples(discretisationSelection_->getPropertyTree());
+		networks[index]->setDataFile(discretisationSelection_->samples());
+		networks[index]->loadSamples(discretisationSelection_->getPropertyTree());
 		adaptQueryEvaluationButtons(true);
 		on_newQuery_clicked();
 	} catch(std::invalid_argument& e) {
 		ui->Output->addItem(e.what());
 		adaptQueryEvaluationButtons(false);
-		networks[discretisationSelection_->index()].resetNetwork();
+		networks[discretisationSelection_->index()]->resetNetwork();
 	}
 	ui->Output->scrollToBottom();
 }
@@ -206,9 +199,9 @@ void MainWindow::loadSamples(const QString& samples,
 				unsigned int index)
 {
 	ui->Output->addItem("Reading samples: " + samples);
-	networks[index].setDataFile(samples);
-	networks[index].setDiscretisationControlFile(control);
-	networks[index].loadSamples();
+	networks[index]->setDataFile(samples);
+	networks[index]->setDiscretisationControlFile(control);
+	networks[index]->loadSamples();
 	adaptQueryEvaluationButtons(true);
 	on_newQuery_clicked();
 }
@@ -217,7 +210,7 @@ void MainWindow::discretiseSelection(const QString& samples,
                                      const std::vector<uint>& deselected)
 {
 	int index = ui->tabWidget->currentIndex();
-	networks[index].setDeselectedSamples(deselected);
+	networks[index]->setDeselectedSamples(deselected);
 	QMessageBox boxDisc;
 	boxDisc.setIcon(QMessageBox::Question);
 	boxDisc.setText("Please specify discretisation information source.");
@@ -249,7 +242,7 @@ void MainWindow::discretiseSelection(const QString& samples,
 	} catch(std::exception& e) {
 		ui->Output->addItem(e.what());
 		adaptQueryEvaluationButtons(false);
-		networks[index].resetNetwork();
+		networks[index]->resetNetwork();
 	}
 	ui->Output->scrollToBottom();
 }
@@ -259,7 +252,7 @@ void MainWindow::dataRejected()
 	ui->Output->addItem("No samples loaded");
 	adaptQueryEvaluationButtons(false);
 	int index = ui->tabWidget->currentIndex();
-	networks[index].resetNetwork();
+	networks[index]->resetNetwork();
 	ui->Output->scrollToBottom();
 }
 
@@ -297,7 +290,7 @@ void MainWindow::on_actionLoad_Samples_triggered()
 	} catch(std::exception& e) {
 		ui->Output->addItem(e.what());
 		adaptQueryEvaluationButtons(false);
-		networks[index].resetNetwork();
+		networks[index]->resetNetwork();
 	}
 	ui->Output->scrollToBottom();
 }
@@ -306,9 +299,16 @@ void MainWindow::on_actionAbout_triggered()
 {
 	QMessageBox box;
 	box.setIcon(QMessageBox::Information);
-	box.setText("CausalTrail");
-	box.setInformativeText("A statistical tool to performe inference in causal "
-	                       "bayesian networks using Do-Calculus.");
+	box.setWindowTitle(tr("About CausalTrail"));
+	// Hack around the line wrap for the copyright statement.
+	box.setText(tr("CausalTrail") + "                                                          ");
+	box.setInformativeText(tr(
+		"A statistical tool to perform inference in causal "
+		"bayesian networks using Do-Calculus.\n\n"
+		"Copyright 2014-2015, Florian Schmidt\n"
+		"Copyright 2014-2015, Daniel Stöckel"
+	));
+
 	box.exec();
 }
 
@@ -319,11 +319,11 @@ void MainWindow::on_executeQueryButton_clicked()
 		ui->Input->setText(query_);
 	}
 
-	NetworkInstance& currentNetwork = networks[ui->tabWidget->currentIndex()];
+	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
 
 	std::pair<float, std::vector<std::string>> result;
 	try {
-		result = currentNetwork.calculate(ui->Input->text().toStdString());
+		result = currentNetwork->calculate(ui->Input->text().toStdString());
 	} catch(std::invalid_argument& e) {
 		ui->Output->addItem(e.what());
 		ui->Output->scrollToBottom();
@@ -347,7 +347,7 @@ void MainWindow::on_executeQueryButton_clicked()
 		ui->valueMaxLabel->setText(temp);
 	}
 
-	currentNetwork.storeQuery(ui->Input->text(),
+	currentNetwork->storeQuery(ui->Input->text(),
 	                          getVector(ui->queryVariableList),
 	                          getVector(ui->conditionVariableList),
 	                          getVector(ui->interventionVariableList),
@@ -356,7 +356,7 @@ void MainWindow::on_executeQueryButton_clicked()
 	loadQueriesToHistoryWindow(currentNetwork);
 	checkQueriesLeft();
 	query_ = "";
-	currentNetwork.removeHighlighting();
+	currentNetwork->removeHighlighting();
 	ui->Output->scrollToBottom();
 }
 
@@ -414,18 +414,18 @@ void MainWindow::on_deleteQueryButton_clicked()
 void MainWindow::on_loadPreviousQueryButton_clicked()
 {
 	on_deleteQueryButton_clicked();
-	NetworkInstance& currentNetwork = networks[ui->tabWidget->currentIndex()];
-	currentNetwork.removeHighlighting();
-	currentNetwork.restoreOriginalNetworkRepresentation();
-	ui->Input->setText(currentNetwork.getPreviousQuery());
+	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
+	currentNetwork->removeHighlighting();
+	currentNetwork->restoreOriginalNetworkRepresentation();
+	ui->Input->setText(currentNetwork->getPreviousQuery());
 	writeListWidget(ui->queryVariableList, ui->queryLabel,
-	                currentNetwork.getPreviousQueryItems());
+	                currentNetwork->getPreviousQueryItems());
 	writeListWidget(ui->conditionVariableList, ui->conditionLabel,
-	                currentNetwork.getPreviousConditionItems());
+	                currentNetwork->getPreviousConditionItems());
 	writeListWidget(ui->interventionVariableList, ui->interventionLabel,
-	                currentNetwork.getPreviousInterventionItems());
+	                currentNetwork->getPreviousInterventionItems());
 	writeListWidget(ui->edgeAdditionsRemovalList, ui->edgeAdReLabel,
-	                currentNetwork.getPreviousEdgeChangeItems());
+	                currentNetwork->getPreviousEdgeChangeItems());
 	ui->queryLabel->setText("Calculating probability of");
 	checkQueriesLeft();
 }
@@ -433,31 +433,31 @@ void MainWindow::on_loadPreviousQueryButton_clicked()
 void MainWindow::on_loadSuccessorQueryButton_clicked()
 {
 	on_deleteQueryButton_clicked();
-	NetworkInstance& currentNetwork = networks[ui->tabWidget->currentIndex()];
-	currentNetwork.removeHighlighting();
-	currentNetwork.restoreOriginalNetworkRepresentation();
-	ui->Input->setText(currentNetwork.getSubsequentQuery());
+	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
+	currentNetwork->removeHighlighting();
+	currentNetwork->restoreOriginalNetworkRepresentation();
+	ui->Input->setText(currentNetwork->getSubsequentQuery());
 	writeListWidget(ui->queryVariableList, ui->queryLabel,
-	                currentNetwork.getSubsequentQueryItems());
+	                currentNetwork->getSubsequentQueryItems());
 	writeListWidget(ui->conditionVariableList, ui->conditionLabel,
-	                currentNetwork.getSubsequentConditionItems());
+	                currentNetwork->getSubsequentConditionItems());
 	writeListWidget(ui->interventionVariableList, ui->interventionLabel,
-	                currentNetwork.getSubsequentInterventionItems());
+	                currentNetwork->getSubsequentInterventionItems());
 	writeListWidget(ui->edgeAdditionsRemovalList, ui->edgeAdReLabel,
-	                currentNetwork.getSubsequentEdgeChangeItems());
+	                currentNetwork->getSubsequentEdgeChangeItems());
 	ui->queryLabel->setText("Calculating probability of");
 	checkQueriesLeft();
 }
 
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
-	NetworkInstance& currentNetwork = networks[index];
+	NetworkInstance* currentNetwork = networks[index];
 	checkQueriesLeft();
 
 	if(!networks.empty()) {
-		if(currentNetwork.isTrained()) {
+		if(currentNetwork->isTrained()) {
 			adaptQueryEvaluationButtons(true);
-			currentNetwork.restoreOriginalNetworkRepresentation();
+			currentNetwork->restoreOriginalNetworkRepresentation();
 			loadQueriesToHistoryWindow(currentNetwork);
 		} else {
 			adaptQueryEvaluationButtons(false);
@@ -477,25 +477,25 @@ void MainWindow::on_tabWidget_currentChanged(int index)
 void MainWindow::on_actionLayout_triggered()
 {
 	int index = ui->tabWidget->currentIndex();
-	networks[index].layout();
+	networks[index]->layout();
 }
 
-void MainWindow::Node_double_clicked(uint id, QString name)
+void MainWindow::Node_double_clicked(NodeGui* node)
 {
-	NetworkInstance& currentNetwork = networks[ui->tabWidget->currentIndex()];
+	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
 
-	currentNetwork.setSelectedNode(id, name);
-	if(!currentNetwork.EdgeAddition()) {
+	currentNetwork->setSelectedNode(node->getID());
+	if(!currentNetwork->EdgeAddition()) {
 		return;
 	}
 
-	if(currentNetwork.checkEdgeAddition(id)) {
+	if(currentNetwork->checkEdgeAddition(node->getID())) {
 		ui->edgeAdReLabel->setVisible(true);
 		ui->edgeAdditionsRemovalList->setVisible(true);
-		currentNetwork.NodeForEdgeAdditionSelected(id);
+		currentNetwork->NodeForEdgeAdditionSelected(node->getID());
 		ui->edgeAdditionsRemovalList->addItem(
-		    "+ " + currentNetwork.getSelectedNodeName() + " " + name);
-		if(!currentNetwork.EdgeAddition()) {
+		    "+ " + currentNetwork->getSelectedNodeName() + " " + node->getName());
+		if(!currentNetwork->EdgeAddition()) {
 			ui->Input->setFocus();
 		}
 	} else {
@@ -511,9 +511,9 @@ void MainWindow::on_newQuery_clicked()
 	clearLabelsAndValueList();
 	if(!networks.empty()) {
 		int index = ui->tabWidget->currentIndex();
-		networks[index].removeHighlighting();
-		networks[index].restoreOriginalNetworkRepresentation();
-		networks[index].setArgMax(false);
+		networks[index]->removeHighlighting();
+		networks[index]->restoreOriginalNetworkRepresentation();
+		networks[index]->setArgMax(false);
 	}
 
 	ui->queryLabel->setVisible(true);
@@ -528,17 +528,17 @@ void MainWindow::on_newQuery_clicked()
 	ui->Input->clear();
 }
 
-void MainWindow::Node_context(QString name, uint id,
-                              QGraphicsSceneContextMenuEvent* event)
+void MainWindow::Node_context(NodeGui* node,
+                              QContextMenuEvent* event)
 {
-	NetworkInstance& currentNetwork = networks[ui->tabWidget->currentIndex()];
+	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
 	QMenu* menu = new QMenu;
-	if(currentNetwork.isTrained()) {
-		const auto& values = currentNetwork.getValues(id);
-		currentNetwork.setSelectedNode(id, name);
+	if(currentNetwork->isTrained()) {
+		const auto& values = currentNetwork->getValues(node->getID());
+		currentNetwork->setSelectedNode(node->getID());
 		QMenu* submenu;
 		// Non-Intervention Query
-		if(ui->queryVariableList->count() == 0 || !currentNetwork.isArgMax()) {
+		if(ui->queryVariableList->count() == 0 || !currentNetwork->isArgMax()) {
 			submenu = menu->addMenu("Probability of");
 			for(auto& value : values) {
 				submenu->addAction(QString::fromStdString(value));
@@ -549,7 +549,7 @@ void MainWindow::Node_context(QString name, uint id,
 		}
 
 		// Arg-Max
-		if((ui->queryVariableList->count() == 0) || currentNetwork.isArgMax()) {
+		if((ui->queryVariableList->count() == 0) || currentNetwork->isArgMax()) {
 			connect(menu->addAction("Arg Max"), SIGNAL(triggered()), this,
 			        SLOT(context_Menu_ArgMax_Selected()), Qt::UniqueConnection);
 		}
@@ -586,22 +586,22 @@ void MainWindow::Node_context(QString name, uint id,
 	} else {
 		menu->addAction("The network is not trained");
 	}
-	menu->popup(event->screenPos());
+	menu->popup(event->globalPos());
 	ui->Input->setFocus();
 }
 
-void MainWindow::Edge_context(Edge* edge, QGraphicsSceneContextMenuEvent* event)
+void MainWindow::Edge_context(Edge* edge, QContextMenuEvent* event)
 {
-	NetworkInstance& currentNetwork = networks[ui->tabWidget->currentIndex()];
-	currentNetwork.EdgeRemoval(edge->sourceNode()->getID(), edge->destNode()->getID());
+	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
+	currentNetwork->EdgeRemoval(edge->sourceNode()->getID(), edge->destNode()->getID());
 	QMenu* menu = new QMenu;
-	if(currentNetwork.isTrained()) {
+	if(currentNetwork->isTrained()) {
 		connect(menu->addAction("Remove Edge"), SIGNAL(triggered()), this,
 		        SLOT(context_EdgeRemove_Selected()), Qt::UniqueConnection);
 	} else {
 		menu->addAction("The network is not trained");
 	}
-	menu->popup(event->screenPos());
+	menu->popup(event->globalPos());
 }
 
 void MainWindow::adaptQueryEvaluationButtons(bool show)
@@ -639,167 +639,167 @@ void MainWindow::clearLabelsAndValueList()
 
 void MainWindow::context_Menu_QueryValue_Selected(QAction* act)
 {
-	NetworkInstance& currentNetwork = networks[ui->tabWidget->currentIndex()];
+	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
 	ui->queryLabel->setText("Calculating probability of");
 	int duplicates = removeDuplicates(ui->interventionVariableList,
-	                                  currentNetwork.getSelectedNodeName(), 0);
+	                                  currentNetwork->getSelectedNodeName(), 0);
 	if(duplicates != -1) {
 		on_interventionVariableList_itemDoubleClicked(
 		    ui->interventionVariableList->item(duplicates));
 	}
 	duplicates = removeDuplicates(ui->queryVariableList,
-	                              currentNetwork.getSelectedNodeName(), 0);
+	                              currentNetwork->getSelectedNodeName(), 0);
 	if(duplicates != -1) {
 		on_queryVariableList_itemDoubleClicked(
 		    ui->queryVariableList->item(duplicates));
 	}
 	duplicates = removeDuplicates(ui->queryVariableList,
-	                              currentNetwork.getSelectedNodeName(), 1);
+	                              currentNetwork->getSelectedNodeName(), 1);
 	if(duplicates != -1) {
 		on_queryVariableList_itemDoubleClicked(
 		    ui->queryVariableList->item(duplicates));
 	}
-	ui->queryVariableList->addItem(currentNetwork.getSelectedNodeName() +
+	ui->queryVariableList->addItem(currentNetwork->getSelectedNodeName() +
 	                               " = " + act->text());
 	ui->queryVariableList->setVisible(true);
 	ui->queryLabel->setVisible(true);
 	QColor queryColor;
 	queryColor.setHsv(100, 30, 250);
-	currentNetwork.colorNode(currentNetwork.getSelectedNodeID(), queryColor);
-	currentNetwork.removeHighlighting();
+	currentNetwork->colorNode(currentNetwork->getSelectedNodeID(), queryColor);
+	currentNetwork->removeHighlighting();
 }
 
 void MainWindow::context_Menu_ArgMax_Selected()
 {
-	NetworkInstance& currentNetwork = networks[ui->tabWidget->currentIndex()];
-	currentNetwork.setArgMax(true);
+	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
+	currentNetwork->setArgMax(true);
 	ui->queryLabel->setText(
 	    "Calculating the most probable value assignment for");
 	int duplicates = removeDuplicates(ui->queryVariableList,
-	                                  currentNetwork.getSelectedNodeName(), 1);
+	                                  currentNetwork->getSelectedNodeName(), 1);
 	if(duplicates != -1) {
 		on_queryVariableList_itemDoubleClicked(
 		    ui->queryVariableList->item(duplicates));
 	}
 	duplicates = removeDuplicates(ui->interventionVariableList,
-	                              currentNetwork.getSelectedNodeName(), 0);
+	                              currentNetwork->getSelectedNodeName(), 0);
 	if(duplicates != -1) {
 		on_interventionVariableList_itemDoubleClicked(
 		    ui->interventionVariableList->item(duplicates));
 	}
 	duplicates = removeDuplicates(ui->conditionVariableList,
-	                              currentNetwork.getSelectedNodeName(), 0);
+	                              currentNetwork->getSelectedNodeName(), 0);
 	if(duplicates != -1) {
 		on_conditionVariableList_itemDoubleClicked(
 		    ui->conditionVariableList->item(duplicates));
 	}
 	ui->queryVariableList->addItem("argmax " +
-	                               currentNetwork.getSelectedNodeName());
+	                               currentNetwork->getSelectedNodeName());
 	ui->queryLabel->setVisible(true);
 	ui->queryVariableList->setVisible(true);
 	QColor queryColor;
 	queryColor.setHsv(100, 30, 250);
-	currentNetwork.colorNode(currentNetwork.getSelectedNodeID(), queryColor);
-	currentNetwork.removeHighlighting();
+	currentNetwork->colorNode(currentNetwork->getSelectedNodeID(), queryColor);
+	currentNetwork->removeHighlighting();
 }
 
 void MainWindow::context_Menu_ConditionValue_Selected(QAction* act)
 {
-	NetworkInstance& currentNetwork = networks[ui->tabWidget->currentIndex()];
+	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
 	ui->conditionLabel->setText("given that");
 	int duplicates = removeDuplicates(ui->conditionVariableList,
-	                                  currentNetwork.getSelectedNodeName(), 0);
+	                                  currentNetwork->getSelectedNodeName(), 0);
 	if(duplicates != -1) {
 		on_conditionVariableList_itemDoubleClicked(
 		    ui->conditionVariableList->item(duplicates));
 	}
-	ui->conditionVariableList->addItem(currentNetwork.getSelectedNodeName() +
+	ui->conditionVariableList->addItem(currentNetwork->getSelectedNodeName() +
 	                                   " = " + act->text());
 	ui->conditionLabel->setVisible(true);
 	ui->conditionVariableList->setVisible(true);
 	QColor queryColor;
 	queryColor.setHsv(20, 30, 250);
-	currentNetwork.colorNode(currentNetwork.getSelectedNodeID(), queryColor);
-	currentNetwork.removeHighlighting();
+	currentNetwork->colorNode(currentNetwork->getSelectedNodeID(), queryColor);
+	currentNetwork->removeHighlighting();
 }
 
 void MainWindow::context_Menu_InterventionValue_Selected(QAction* act)
 {
-	NetworkInstance& currentNetwork = networks[ui->tabWidget->currentIndex()];
+	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
 	ui->interventionLabel->setText("setting");
 	int duplicates = removeDuplicates(ui->interventionVariableList,
-	                                  currentNetwork.getSelectedNodeName(), 0);
+	                                  currentNetwork->getSelectedNodeName(), 0);
 	if(duplicates != -1) {
 		on_interventionVariableList_itemDoubleClicked(
 		    ui->interventionVariableList->item(duplicates));
 	}
 	duplicates = removeDuplicates(ui->queryVariableList,
-	                              currentNetwork.getSelectedNodeName(), 0);
+	                              currentNetwork->getSelectedNodeName(), 0);
 	if(duplicates != -1) {
 		on_queryVariableList_itemDoubleClicked(
 		    ui->queryVariableList->item(duplicates));
 	}
-	ui->interventionVariableList->addItem(currentNetwork.getSelectedNodeName() +
+	ui->interventionVariableList->addItem(currentNetwork->getSelectedNodeName() +
 	                                      " = " + act->text());
 	ui->interventionLabel->setVisible(true);
 	ui->interventionVariableList->setVisible(true);
-	currentNetwork.doIntervention();
-	currentNetwork.removeHighlighting();
+	currentNetwork->doIntervention();
+	currentNetwork->removeHighlighting();
 }
 
 void MainWindow::context_Menu_AddEdge_selected()
 {
-	NetworkInstance& currentNetwork = networks[ui->tabWidget->currentIndex()];
+	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
 	ui->edgeAdReLabel->setText("with respect to");
-	currentNetwork.initialiseEdgeAddition();
-	currentNetwork.NodeForEdgeAdditionSelected(
-	    currentNetwork.getSelectedNodeID());
-	currentNetwork.removeHighlighting();
+	currentNetwork->initialiseEdgeAddition();
+	currentNetwork->NodeForEdgeAdditionSelected(
+	    currentNetwork->getSelectedNodeID());
+	currentNetwork->removeHighlighting();
 }
 
 void MainWindow::context_EdgeRemove_Selected()
 {
-	NetworkInstance& currentNetwork = networks[ui->tabWidget->currentIndex()];
+	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
 	ui->edgeAdReLabel->setText("with respect to");
 	ui->edgeAdReLabel->setVisible(true);
 	ui->edgeAdditionsRemovalList->setVisible(true);
 	ui->edgeAdditionsRemovalList->addItem(QString("- %1 %2").arg(
-		QString::fromStdString(currentNetwork.removedEdgeSourceName()),
-		QString::fromStdString(currentNetwork.removedEdgeTargetName())
+		QString::fromStdString(currentNetwork->removedEdgeSourceName()),
+		QString::fromStdString(currentNetwork->removedEdgeTargetName())
 	));
-	currentNetwork.RemoveSelectedEdge();
-	currentNetwork.removeHighlighting();
+	currentNetwork->RemoveSelectedEdge();
+	currentNetwork->removeHighlighting();
 }
 
 void MainWindow::context_Menu_ShowMatrix_selected()
 {
-	NetworkInstance& currentNetwork = networks[ui->tabWidget->currentIndex()];
+	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
 
 	matrixPopup* mp = new matrixPopup();
-	mp->setWindowTitle("CPT of " + currentNetwork.getSelectedNodeName());
+	mp->setWindowTitle("CPT of " + currentNetwork->getSelectedNodeName());
 
 	const unsigned int rowCount =
-	    currentNetwork.getRowCountOfCurrentProbMatrix();
+	    currentNetwork->getRowCountOfCurrentProbMatrix();
 	const unsigned int colCount =
-	    currentNetwork.getColCountOfCurrentProbMatrix();
+	    currentNetwork->getColCountOfCurrentProbMatrix();
 	const unsigned int parentCount =
-	    currentNetwork.getNumberOfParentsOfSelectedNode();
+	    currentNetwork->getNumberOfParentsOfSelectedNode();
 	mp->initaliseTable(rowCount + 1, colCount + parentCount);
 
-	mp->setRowNames(currentNetwork.getRowNamesOfProbabilityMatrix());
-	mp->setColNames(currentNetwork.getColNamesOfProbabilityMatrix(),
+	mp->setRowNames(currentNetwork->getRowNamesOfProbabilityMatrix());
+	mp->setColNames(currentNetwork->getColNamesOfProbabilityMatrix(),
 	                parentCount);
-	mp->setParentNames(currentNetwork.getParentsOfSelectedNode());
+	mp->setParentNames(currentNetwork->getParentsOfSelectedNode());
 
 	for(unsigned int row = 0; row < rowCount; row++) {
 		for(unsigned int col = 0; col < colCount; col++) {
 			mp->addData(row + 1, col + parentCount,
-			            currentNetwork.getProbabilityAt(row, col));
+			            currentNetwork->getProbabilityAt(row, col));
 		}
 	}
 	mp->adjust();
 	mp->show();
-	currentNetwork.removeHighlighting();
+	currentNetwork->removeHighlighting();
 }
 
 void MainWindow::on_Input_textChanged(const QString& arg1)
@@ -813,7 +813,7 @@ void MainWindow::on_Input_textChanged(const QString& arg1)
 QString MainWindow::buildQuery()
 {
 	QString query = "?";
-	if(networks[ui->tabWidget->currentIndex()].isArgMax()) {
+	if(networks[ui->tabWidget->currentIndex()]->isArgMax()) {
 		query += +" argmax (";
 		for(int i = 0; i < ui->queryVariableList->count(); i++) {
 			query += " " + ui->queryVariableList->item(i)->text().split(" ")[1];
@@ -846,9 +846,9 @@ void MainWindow::on_queryVariableList_itemDoubleClicked(QListWidgetItem* item)
 	queryColor.setHsv(100, 30, 250);
 	QStringList list = item->text().split(" ");
 	if(list[0] == "argmax") {
-		networks[index].removeNodeColor(list[1], queryColor);
+		networks[index]->removeNodeColor(list[1], queryColor);
 	} else {
-		networks[index].removeNodeColor(list[0], queryColor);
+		networks[index]->removeNodeColor(list[0], queryColor);
 	}
 	delete item;
 	checkEmptyList(ui->queryVariableList, ui->queryLabel);
@@ -861,7 +861,7 @@ MainWindow::on_conditionVariableList_itemDoubleClicked(QListWidgetItem* item)
 	int index = ui->tabWidget->currentIndex();
 	QColor queryColor;
 	queryColor.setHsv(20, 30, 250);
-	networks[index].removeNodeColor(item->text().split(" ")[0], queryColor);
+	networks[index]->removeNodeColor(item->text().split(" ")[0], queryColor);
 	delete item;
 	checkEmptyList(ui->conditionVariableList, ui->conditionLabel);
 	checkAllEmpty();
@@ -871,7 +871,7 @@ void
 MainWindow::on_interventionVariableList_itemDoubleClicked(QListWidgetItem* item)
 {
 	int index = ui->tabWidget->currentIndex();
-	networks[index].removeDoIntervention(item->text().split(" ")[0]);
+	networks[index]->removeDoIntervention(item->text().split(" ")[0]);
 	delete item;
 	checkEmptyList(ui->interventionVariableList, ui->interventionLabel);
 	checkAllEmpty();
@@ -883,9 +883,9 @@ MainWindow::on_edgeAdditionsRemovalList_itemDoubleClicked(QListWidgetItem* item)
 	int index = ui->tabWidget->currentIndex();
 	QStringList splitList = item->text().split(" ");
 	if(splitList[0] == "-") {
-		networks[index].reverseEdgeRemoval(splitList[1], splitList[2]);
+		networks[index]->reverseEdgeRemoval(splitList[1], splitList[2]);
 	} else {
-		networks[index].reverseEdgeAddition(splitList[1], splitList[2]);
+		networks[index]->reverseEdgeAddition(splitList[1], splitList[2]);
 	}
 	delete item;
 	checkEmptyList(ui->edgeAdditionsRemovalList, ui->edgeAdReLabel);
@@ -924,16 +924,16 @@ void MainWindow::on_actionLoad_Session_triggered()
 				loadSif(dataStore.getSif(i), index);
 			}
 			visualise(index);
-			networks[index].setDeselectedSamples(
+			networks[index]->setDeselectedSamples(
 			    dataStore.getDeSelectedData(index));
 			loadSamples(dataStore.getData(i),
 			            dataStore.getDiscretiseControl(i),
 			            index);
-			networks[index].setQMA(dataStore.getQma(i));
+			networks[index]->setQMA(dataStore.getQma(i));
 		}
 		ui->Output->addItem("Session loaded");
 		ui->Output->scrollToBottom();
-		if(networks.back().getNumberOfQueries() > 0) {
+		if(networks.back()->getNumberOfQueries() > 0) {
 			ui->actionCreate_Batchfile->setEnabled(true);
 			ui->loadPreviousQueryButton->setEnabled(true);
 			ui->loadPreviousQueryButton_2->setEnabled(true);
@@ -960,7 +960,7 @@ void MainWindow::on_actionCreate_Batchfile_triggered()
 	QString filename = dialog.selectedFiles()[0];
 	int index = ui->tabWidget->currentIndex();
 	dataStorage dataStore;
-	dataStore.createQueryBatchFile(networks[index], filename);
+	dataStore.createQueryBatchFile(*networks[index], filename);
 	ui->Output->addItem("Batch file created");
 	ui->Output->scrollToBottom();
 }
@@ -986,7 +986,7 @@ void MainWindow::on_actionExecute_Batchfile_triggered()
 
 		std::pair<float, std::vector<std::string>> result;
 		try {
-			result = networks[ui->tabWidget->currentIndex()].calculate(line);
+			result = networks[ui->tabWidget->currentIndex()]->calculate(line);
 		} catch(std::exception& e) {
 			ui->Output->addItem(e.what());
 			break;
@@ -1009,18 +1009,18 @@ void MainWindow::on_actionExecute_Batchfile_triggered()
 void MainWindow::on_queryHistory_doubleClicked(const QModelIndex& index)
 {
 	ui->Input->clear();
-	NetworkInstance& currentNetwork = networks[ui->tabWidget->currentIndex()];
-	currentNetwork.removeHighlighting();
-	currentNetwork.restoreOriginalNetworkRepresentation();
-	ui->Input->setText(currentNetwork.getQuery(index.row()));
+	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
+	currentNetwork->removeHighlighting();
+	currentNetwork->restoreOriginalNetworkRepresentation();
+	ui->Input->setText(currentNetwork->getQuery(index.row()));
 	writeListWidget(ui->queryVariableList, ui->queryLabel,
-	                currentNetwork.getQueryItems(index.row()));
+	                currentNetwork->getQueryItems(index.row()));
 	writeListWidget(ui->conditionVariableList, ui->conditionLabel,
-	                currentNetwork.getConditionItems(index.row()));
+	                currentNetwork->getConditionItems(index.row()));
 	writeListWidget(ui->interventionVariableList, ui->interventionLabel,
-	                currentNetwork.getInterventionItems(index.row()));
+	                currentNetwork->getInterventionItems(index.row()));
 	writeListWidget(ui->edgeAdditionsRemovalList, ui->edgeAdReLabel,
-	                currentNetwork.getEdgeAddRemItems(index.row()));
+	                currentNetwork->getEdgeAddRemItems(index.row()));
 	ui->Input->setFocus();
 }
 
@@ -1029,6 +1029,6 @@ void MainWindow::on_actionExportSvg_triggered()
 	QString filename = QFileDialog::getSaveFileName(this, tr("Select SVG file."), config_->dataDir(), "*.svg");
 
 	if(filename != "") {
-		networks[ui->tabWidget->currentIndex()].exportSvg(filename);
+		networks[ui->tabWidget->currentIndex()]->exportSvg(filename);
 	}
 }

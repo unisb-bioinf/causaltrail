@@ -53,20 +53,6 @@ public:
     NodeGui* getNode(unsigned int id);
 
     /**
-     * @brief sizeHint
-     * Reimplementation of the sizeHint() function from QGraphicsScene()
-     * @return QSize object
-     */
-    QSize sizeHint() const;
-
-    /**
-     * @brief setWidth
-     * Set width of the network visualization
-     * @param width New width of the network visualization
-     */
-    void setWidth(unsigned int width);
-
-    /**
      * @brief doIntervention
      * @param id Identifier of the node upon which a do intervention should be performed / reversed
      * @param flag Bool indicating whether a do intervention should be performed or reversed
@@ -157,21 +143,28 @@ public:
 	 */
 	void exportSVG(const QString& filename);
 
+    signals:
+	/**
+	 * Signal that fires when a context menu for an edge was requested.
+	 */
+	void context(Edge*, QContextMenuEvent*);
+
+	/**
+	 * Signal that fires when a context menu for a node was requested.
+	 */
+	void context(NodeGui*, QContextMenuEvent*);
+
+	/**
+	 * Signal that fires when an node was double clicked.
+	 */
+	void doubleClick(NodeGui*);
+
 protected:
-    /**
-     * @brief mousePressEvent
-     * Handles the mouse press event. Removes the highlighting from all nodes and edges
-     * @param event QMouseEvent pointer
-     */
-    void mousePressEvent(QMouseEvent* event);
+	void contextMenuEvent(QContextMenuEvent* event) override;
+	void mouseDoubleClickEvent(QMouseEvent* event) override;
+	void mousePressEvent(QMouseEvent* event) override;
 
 private:
-    /**
-     * @brief scence_
-     * Pointer to a QGraphicsScence object
-     */
-    QGraphicsScene *scence_;
-
 	/**
 	 * The network that is represented by this NetworkVis.
 	 */
@@ -200,12 +193,6 @@ private:
      * Vector holding pointers to all removed Edge objects
      */
     std::vector<Edge*> removedEdges_;
-
-    /**
-     * @brief width_
-     * Width of the network visualization
-     */
-    unsigned int width_;
 
     /**
      * @brief createLayout
@@ -280,7 +267,16 @@ private:
      */
     bool dotLayout();
 
+    /**
+     * Helper function that writes the current network
+     * in DOT format to a QIODevice.
+     */
     void writeDot_(QIODevice& dev, const Network& network) const;
+
+    /**
+     * Helper function that reads a graph in DOT format
+     * and sets the node positions to the foudn positions.
+     */
     bool readDot_(const QByteArray& data);
 };
 
