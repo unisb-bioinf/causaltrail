@@ -1,0 +1,48 @@
+{
+	"Floor":
+	{
+        "method": "Floor"
+	},     
+	"Ceil":
+	{
+        "method": "Ceil"
+	},
+	"Round":
+	{
+        "method": "Round"
+	},
+	"AMean":
+	{
+        "method": "ArithmeticMean"
+	},
+	"HMean":
+	{
+        "method": "HarmonicMean"
+	},
+	"Median":
+	{
+        "method": "Median"
+	}, 
+	"Manually":
+	{
+	"method": "Threshold",
+	"threshold":"3.0"
+	},
+	"BrackedMedian":
+	{
+        "method": "BracketMedians",
+	"buckets": "2"
+	},
+	"PersonTukey":
+	{
+        "method": "PearsonTukey"
+	},
+	"mapNamesToInt":	
+	{
+        "method": "None"
+	},   
+	"Z":
+	{
+        "method": "Z-Score"
+	}
+}
