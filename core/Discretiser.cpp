@@ -31,6 +31,9 @@ Discretiser::Discretiser(const Matrix<std::string>& originalObservations,
 	discretise(filename);
 }
 
+void Discretiser::setJsonTree(SerializeDeserializeJson& jsonTree){
+	jsonTree_ = jsonTree;
+}
 
 void Discretiser::discretise(const std::string& controlFile)
 {
@@ -43,7 +46,7 @@ void Discretiser::discretise(const std::string& controlFile)
                         network_.getObservationsMapR());
 
 	//Create Discretisations Objects
-	for (int i = 0; i < observations_.getRowCount(); i++){
+	for (unsigned int i = 0; i < observations_.getRowCount(); i++){
 		discretisations_.push_back(dF.create(observations_.getRowNames()[i],i));	
 	}
  
@@ -54,10 +57,22 @@ void Discretiser::discretise(const std::string& controlFile)
 }
 
 void Discretiser::discretise(){
+
+	DiscretisationFactory dF(jsonTree_,
+			originalObservations_,
+                        observations_,
+                        network_.getObservationsMap(),
+                        network_.getObservationsMapR());
+
+	//Create Discretisations Objects
+	for (unsigned int i = 0; i < observations_.getRowCount(); i++){
+		discretisations_.push_back(dF.create(observations_.getRowNames()[i],i));	
+	}
+
 	//Apply Discretisation;
-//	for (std::unique_ptr<Discretisations>& ptr : discretisations_){
-//		ptr->apply();
-//	}
+	for (std::unique_ptr<Discretisations>& ptr : discretisations_){
+		ptr->apply();
+	}
 }
 
 void Discretiser::adaptFormat()

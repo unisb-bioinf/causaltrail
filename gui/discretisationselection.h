@@ -4,8 +4,8 @@
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QLineEdit>
 
-#include "../core/Discretiser.h"
 #include "../core/Matrix.h"
+#include "../core/SerializeDeserializeJson.h"
 
 #include "methodcombobox.h"
 
@@ -30,25 +30,35 @@ public:
      */
     discretisationSelection(QWidget* parent);
 
-	/**
-	 * Show and reconfigure the dialog
-	 */
-	void show(const QString& path, const QString& samples, int index);
+    /**
+     * Show and reconfigure the dialog
+     */
+    void show(const QString& path, const QString& samples, int index);
 
-	/**
-	 * Get the sample file.
-	 */
-	const QString& samples() const;
+    /**
+     * Get the sample file.
+     */
+    const QString& samples() const;
 
-	/**
-	 * Get the chosen discretisation settings.
-	 */
-//	Discretiser::Discretisations control() const;
+    /**
+     * Get the chosen discretisation settings.
+     */
+    SerializeDeserializeJson& getPropertyTree();
 
-	/**
-	 * Get the configured index.
-	 */
-	int index() const;
+    /**
+     * Get the chosen discretisation settings.
+     */
+    void generatePropertyTree();
+
+    /**
+     * Get the parameter name corresponding to the selected methodIndex.
+     */
+    const std::string getParameterNames(unsigned int index);
+
+    /**
+     * Get the configured index.
+     */
+    int index() const;
 
     /**
      * @brief adaptGUIToData
@@ -66,6 +76,10 @@ public:
      * Saves the selected discretisation methods in a user specified file
      */
     void saveDiscretisations();
+
+
+    const std::string getControlFileName() const;
+
 
 private slots:
 	/**
@@ -93,6 +107,12 @@ private:
      * Name of the file containing samples_
      */
     QString samples_;
+
+    /**
+     * @brief controlFileName_
+     * Name of the file containing discretisation information
+     */
+    QString controlFileName_;
 
     /**
      * @brief index_
@@ -129,6 +149,13 @@ private:
      */
     QLineEdit* newOptionalValue();
 
+
+    /**
+     * @brief featuresNames_
+     * vector holding pointers to all QLineEdit Objects for the feature names
+     */
+    std::vector<QLineEdit*> featureNames_;
+
     /**
      * @brief boxes_
      * vector holding pointers to all MethodComboBox Objects
@@ -141,7 +168,23 @@ private:
      */
     std::vector<QLineEdit*> optionalValues_;
 
+    /**
+     * @brief propertyTree_
+     * SerializeDeserializeJson object
+     */
+    SerializeDeserializeJson propertyTree_;
 
+    std::vector<std::string> methodNames_ {"Ceil",
+						"Floor",
+						"Round",
+						"ArithmeticMean",
+						"HarmonicMean",
+						"Median",
+						"Threshold",
+						"BracketMedians",
+						"PearsonTukey",
+						"None",
+						"Z-Score"};
 };
 
 #endif // DISCRETISATIONSELECTION_H

@@ -32,10 +32,28 @@ void NetworkController::loadObservations(
 	Discretiser d(originalObservations,controlFile,observations_,network_);
 }
 
-void NetworkController::loadObservations(Discretiser& d)
+void NetworkController::loadObservations(
+	const std::string& datafile, 
+	SerializeDeserializeJson& propertyTree)
 {
+	Matrix<std::string> originalObservations(datafile, false, true);
+	Discretiser d(originalObservations,observations_,network_);
+	d.setJsonTree(propertyTree);
 	d.discretise();
 }
+
+void NetworkController::loadObservations(
+	const std::string& datafile, 
+	SerializeDeserializeJson& propertyTree, 
+	const std::vector<unsigned int>& samplesToDelete)
+{
+	Matrix<std::string> originalObservations(datafile, false, true,samplesToDelete);
+	Discretiser d(originalObservations,observations_,network_);
+	d.setJsonTree(propertyTree);
+	d.discretise();
+}
+
+
 
 void NetworkController::trainNetwork(){
 	DataDistribution datadu(network_, observations_);

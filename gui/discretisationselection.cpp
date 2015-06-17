@@ -15,6 +15,7 @@ void discretisationSelection::show(const QString& path, const QString& samples,
 	path_ = path;
 	samples_ = samples;
 	index_ = index;
+	controlFileName_="";
 
 	adaptGUIToData();
 	QDialog::show();
@@ -22,22 +23,42 @@ void discretisationSelection::show(const QString& path, const QString& samples,
 
 const QString& discretisationSelection::samples() const { return samples_; }
 
-/*
-//ToDo Update!
-Discretiser::Discretisations discretisationSelection::control() const
-{
-	Discretiser::Discretisations disc;
-	disc.reserve(ui->gridLayout->rowCount() - 1);
-
-	for (int i = 1; i < ui->gridLayout->rowCount(); i++){
-		disc.emplace_back(i - 1, boxes_[i - 1]->currentIndex(),
-		                  optionalValues_[i - 1]->text().toFloat());
+const std::string discretisationSelection::getParameterNames(unsigned int index){
+	switch(index){
+		case 6 : {
+			return "threshold";
+		}
+		case 7: {
+			return "buckets";
+		}
 	}
-
-	return disc;
+	throw std::invalid_argument("Index unknown");
 }
-*/
+
+void discretisationSelection::generatePropertyTree() 
+{
+	propertyTree_ = SerializeDeserializeJson ();
+	for (int i = 1; i < ui->gridLayout->rowCount(); i++){
+		const std::string featureName = featureNames_[i-1]->text().toStdString();	
+		unsigned int methodIndex = boxes_[i-1]->currentIndex();	
+		const std::string method = methodNames_[methodIndex];
+		if ((methodIndex == 6) or (methodIndex == 7)){
+			const std::string parameter = optionalValues_[i-1]->text().toStdString();
+			propertyTree_.addToTree(featureName,method,getParameterNames(methodIndex),parameter);
+		}
+		else {
+			propertyTree_.addToTree(featureName,method);
+		}
+	}
+}
+
+SerializeDeserializeJson& discretisationSelection::getPropertyTree(){
+	return propertyTree_;
+}
+
 int discretisationSelection::index() const { return index_; }
+
+const std::string discretisationSelection::getControlFileName() const { return controlFileName_.toStdString(); }
 
 void discretisationSelection::adaptGUIToData(){
     QLineEdit* featureName;
@@ -46,6 +67,7 @@ void discretisationSelection::adaptGUIToData(){
     Matrix<std::string> originalData(samples_.toStdString(),false,true);
     for (unsigned int i = 1; i < originalData.getRowCount()+1; i++){
         featureName = newFeatureName(QString::fromStdString(originalData.getRowNames()[i-1]));
+	featureNames_.push_back(featureName);
         methodSelection = newMethodSelection((i-1));
         optionalValue = newOptionalValue();
         ui->gridLayout->addWidget(featureName,i,0,0);
@@ -88,28 +110,18 @@ QLineEdit *discretisationSelection::newOptionalValue()
 void discretisationSelection::saveDiscretisations()
 {
     QFileDialog dialog;
-    dialog.setDefaultSuffix(".txt");
+    dialog.setDefaultSuffix(".json");
     if(!dialog.exec()) {
 		return;
 	}
 
-    QString filename = dialog.selectedFiles()[0];
-	if(filename.isNull()) {
+    QString fileName = dialog.selectedFiles()[0];
+	if(fileName.isNull()) {
 		throw std::invalid_argument("No proper filename specified");
-	}
-
-    std::ofstream output;
-    output.open(filename.toStdString());
-    for (int i = 1; i < ui->gridLayout->rowCount(); i++){
-        if (optionalValues_[i-1]->text() != ""){
-            output<<i-1<<"\t"<<boxes_[i-1]->currentIndex()<<"\t"<<optionalValues_[i-1]->text().toStdString()<<std::endl;
-        }
-        else{
-            output<<i-1<<"\t"<<boxes_[i-1]->currentIndex()<<std::endl;
-        }
-    }
-
-    output.close();
+	}	
+    controlFileName_=fileName;
+    generatePropertyTree();
+    propertyTree_.exportToFile(controlFileName_.toStdString());
 }
 
 void discretisationSelection::clicked(QAbstractButton* btn)

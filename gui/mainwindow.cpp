@@ -187,25 +187,28 @@ void MainWindow::visualise(int index)
 
 void MainWindow::loadSamples()
 {
-/*	try {
-		loadSamples(discretisationSelection_->samples(),
-		            discretisationSelection_->control(),
-		            discretisationSelection_->index());
+	try {
+		unsigned int index = discretisationSelection_->index();
+		networks[index].setDataFile(discretisationSelection_->samples());
+		networks[index].loadSamples(discretisationSelection_->getPropertyTree());
+		adaptQueryEvaluationButtons(true);
+		on_newQuery_clicked();
 	} catch(std::invalid_argument& e) {
 		ui->Output->addItem(e.what());
 		adaptQueryEvaluationButtons(false);
 		networks[discretisationSelection_->index()].resetNetwork();
 	}
-	ui->Output->scrollToBottom();*/
+	ui->Output->scrollToBottom();
 }
 
 void MainWindow::loadSamples(const QString& samples,
-                             Discretiser& control,
-                             int index)
+				const QString& control,
+				unsigned int index)
 {
 	ui->Output->addItem("Reading samples: " + samples);
-	//networks[index].loadSamples(control);
 	networks[index].setDataFile(samples);
+	networks[index].setDiscretisationControlFile(control);
+	networks[index].loadSamples();
 	adaptQueryEvaluationButtons(true);
 	on_newQuery_clicked();
 }
@@ -223,15 +226,13 @@ void MainWindow::discretiseSelection(const QString& samples,
 	QPushButton* choose =
 	    boxDisc.addButton("Choose Methods", QMessageBox::ActionRole);
 	boxDisc.exec();
-	/*try {
+	try {
 		if(boxDisc.clickedButton() == file) {
 			QString control = QFileDialog::getOpenFileName(
 			    this, tr("Open txt file containing discretisation information"),
-			    config_->dataDir(), "*.txt");
+			    config_->dataDir(), "*.json");
 			if(!control.isNull()) {
-				loadSamples(samples,
-				            Discretiser::loadControlFile(control.toStdString()),
-				            index);
+				loadSamples(samples,control,index);
 			} else {
 				throw std::invalid_argument(
 				    "Discretisation information is not specified");
@@ -250,7 +251,7 @@ void MainWindow::discretiseSelection(const QString& samples,
 		adaptQueryEvaluationButtons(false);
 		networks[index].resetNetwork();
 	}
-	ui->Output->scrollToBottom();*/
+	ui->Output->scrollToBottom();
 }
 
 void MainWindow::dataRejected()
@@ -925,10 +926,9 @@ void MainWindow::on_actionLoad_Session_triggered()
 			visualise(index);
 			networks[index].setDeselectedSamples(
 			    dataStore.getDeSelectedData(index));
-/*			loadSamples(dataStore.getData(i),
-			            Discretiser::loadControlFile(
-			                dataStore.getDiscretiseControl(i).toStdString()),
-			            index);*/
+			loadSamples(dataStore.getData(i),
+			            dataStore.getDiscretiseControl(i),
+			            index);
 			networks[index].setQMA(dataStore.getQma(i));
 		}
 		ui->Output->addItem("Session loaded");

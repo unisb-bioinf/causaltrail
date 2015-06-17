@@ -39,7 +39,15 @@ class NetworkInstance{
      * @param filename Name of the file containing samples
      * @param controlfile Name of the file containing discretisation control information
      */
-    void loadSamples(const QString& filename,Discretiser& d);
+    void loadSamples();
+
+    /**
+     * @brief loadSamples
+     * Load and discretise the specified samples according to the specified controlfile
+     * @param filename Name of the file containing samples
+     * @param controlfile Name of the file containing discretisation control information
+     */
+    void loadSamples(SerializeDeserializeJson& propertyTree_);
 
     /**
      * @brief calculate

@@ -22,15 +22,25 @@ void NetworkInstance::visualize(QWidget* tabwidget){
     nv_ = new NetworkVis(tabwidget, nc_.getNetwork());
 }
 
-void NetworkInstance::loadSamples(const QString& filename, Discretiser& d){
+void NetworkInstance::loadSamples(){
     if (deselectedSamples_.empty()){
-		nc_.loadObservations(d);
+		nc_.loadObservations(dataFile_.toStdString(),discretisationControl_.toStdString());
 	} else {
-//TODO Add deselectedSamples
-		nc_.loadObservations(d);
+		nc_.loadObservations(dataFile_.toStdString(),discretisationControl_.toStdString(),deselectedSamples_);
 	}
     nc_.trainNetwork();
     trained_=true;
+}
+
+void NetworkInstance::loadSamples(SerializeDeserializeJson& propertyTree_){
+    if (deselectedSamples_.empty()){
+                nc_.loadObservations(dataFile_.toStdString(),propertyTree_);
+        } else {
+                nc_.loadObservations(dataFile_.toStdString(),propertyTree_,deselectedSamples_);
+        }
+    nc_.trainNetwork();
+    trained_=true;
+	
 }
 
 std::pair<float, std::vector<std::string>>

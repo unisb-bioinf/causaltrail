@@ -40,6 +40,8 @@ class Discretiser{
 		Matrix<int>& obsMatrix, 
 		Network& network);
 
+	void setJsonTree(SerializeDeserializeJson&);
+
 	Discretiser& operator=(const Discretiser&) = delete;
 	
 	Discretiser& operator=(Discretiser&&) = delete;
