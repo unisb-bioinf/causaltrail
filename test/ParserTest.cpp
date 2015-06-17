@@ -424,3 +424,10 @@ TEST_F(ParserTest,ParserCheck62){
 	Parser p (query,c);
 	ASSERT_THROW(p.parseQuery().execute(),std::invalid_argument);
 }
+
+TEST_F(ParserTest, Parser_BUG_373) {
+	NetworkController nc;
+	std::string query("? Difficulty");
+	Parser p(query, c);
+	ASSERT_THROW(p.parseQuery(), std::invalid_argument);
+}
