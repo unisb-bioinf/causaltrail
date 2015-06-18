@@ -5,7 +5,7 @@
 #include <QtWidgets/QLineEdit>
 
 #include "../core/Matrix.h"
-#include "../core/SerializeDeserializeJson.h"
+#include "../core/DiscretisationSettings.h"
 
 #include "methodcombobox.h"
 
@@ -43,7 +43,7 @@ public:
     /**
      * Get the chosen discretisation settings.
      */
-    SerializeDeserializeJson& getPropertyTree();
+    DiscretisationSettings& getPropertyTree();
 
     /**
      * Get the chosen discretisation settings.
@@ -170,9 +170,9 @@ private:
 
     /**
      * @brief propertyTree_
-     * SerializeDeserializeJson object
+     * DiscretisationSettings object
      */
-    SerializeDeserializeJson propertyTree_;
+    DiscretisationSettings propertyTree_;
 
     std::vector<std::string> methodNames_ {"Ceil",
 						"Floor",

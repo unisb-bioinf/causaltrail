@@ -1,7 +1,7 @@
 #ifndef DISCRETISATIONFACTORY_H
 #define DISCRETISATIONFACTORY_H
 
-#include "SerializeDeserializeJson.h"
+#include "DiscretisationSettings.h"
 #include "Discretisations.h"
 
 #include <memory>
@@ -10,7 +10,7 @@
 class DiscretisationFactory
 {
 	public:
-	DiscretisationFactory(const SerializeDeserializeJson& jsonTree);
+	DiscretisationFactory(const DiscretisationSettings& jsonTree);
 
 	std::unique_ptr<Discretisations> create(const std::string& nodeName);
 
@@ -19,8 +19,7 @@ class DiscretisationFactory
 	{
 		public:
 		virtual std::unique_ptr<Discretisations>
-		operator()(const std::string&,
-		           const SerializeDeserializeJson&) const = 0;
+		operator()(const DiscretiserParameters&) const = 0;
 		virtual ~Generator() = default;
 	};
 
@@ -30,10 +29,9 @@ class DiscretisationFactory
 		GeneratorModel(const T& generator) : generator_(generator) {}
 
 		std::unique_ptr<Discretisations>
-		operator()(const std::string& name,
-		           const SerializeDeserializeJson& properties) const override
+		operator()(const DiscretiserParameters& params) const override
 		{
-			return generator_(name, properties);
+			return generator_(params);
 		}
 
 		private:
@@ -47,7 +45,7 @@ class DiscretisationFactory
 
 	std::unordered_map<std::string, std::unique_ptr<Generator>> generators_;
 
-	const SerializeDeserializeJson& jsonTree_;
+	const DiscretisationSettings& jsonTree_;
 };
 
 #endif

@@ -10,58 +10,52 @@
 #include <algorithm>
 #include <locale>
 
-DiscretisationFactory::DiscretisationFactory(
-    const SerializeDeserializeJson& jsonTree)
+DiscretisationFactory::DiscretisationFactory(const DiscretisationSettings& jsonTree)
     : jsonTree_(jsonTree)
 {
-	insert("ceil", [](const std::string&, const SerializeDeserializeJson&) {
+	insert("ceil", [](const DiscretiserParameters&) {
 		return std::make_unique<DiscretiseCeil>();
 	});
 
-	insert("floor", [](const std::string&, const SerializeDeserializeJson&) {
+	insert("floor", [](const DiscretiserParameters&) {
 		return std::make_unique<DiscretiseFloor>();
 	});
 
-	insert("round", [](const std::string&, const SerializeDeserializeJson&) {
+	insert("round", [](const DiscretiserParameters&) {
 		return std::make_unique<DiscretiseRound>();
 	});
 
-	insert("arithmeticmean",
-	       [](const std::string&, const SerializeDeserializeJson&) {
+	insert("arithmeticmean", [](const DiscretiserParameters&) {
 		return std::make_unique<DiscretiseArithmeticMean>();
 	});
 
-	insert("harmonicmean",
-	       [](const std::string&, const SerializeDeserializeJson&) {
+	insert("harmonicmean", [](const DiscretiserParameters&) {
 		return std::make_unique<DiscretiseHarmonicMean>();
 	});
 
-	insert("median", [](const std::string&, const SerializeDeserializeJson&) {
+	insert("median", [](const DiscretiserParameters&) {
 		return std::make_unique<DiscretiseMedian>();
 	});
 
-	insert("threshold", [](const std::string& name,
-	                       const SerializeDeserializeJson& properties) {
+	insert("threshold", [](const DiscretiserParameters& params) {
 		return std::make_unique<DiscretiseThreshold>(
-		    properties.getParameter<float>(name, "threshold"));
+		    params.getParameter<float>("threshold"));
 	});
 
-	insert("bracketmedians", [](const std::string& name,
-	                            const SerializeDeserializeJson& properties) {
+	insert("bracketmedians", [](const DiscretiserParameters& params) {
 		return std::make_unique<DiscretiseBracketMedians>(
-		    properties.getParameter<unsigned int>(name, "buckets"));
+		    params.getParameter<unsigned int>("buckets"));
 	});
 
-	insert("pearsontukey",
-	       [](const std::string&, const SerializeDeserializeJson&) {
+	insert("pearsontukey", [](const DiscretiserParameters&) {
 		return std::make_unique<DiscretisePT>();
 	});
 
-	insert("none", [](const std::string&, const SerializeDeserializeJson&) {
+	insert("none", [](const DiscretiserParameters&) {
 		return std::make_unique<DiscretiseMapping>();
 	});
 
-	insert("z-score", [](const std::string&, const SerializeDeserializeJson&) {
+	insert("z-score", [](const DiscretiserParameters&) {
 		return std::make_unique<DiscretiseZScore>();
 	});
 }
@@ -85,5 +79,5 @@ DiscretisationFactory::create(const std::string& nodeName)
 		                            "'.");
 	}
 
-	return it->second->operator()(nodeName, jsonTree_);
+	return it->second->operator()(jsonTree_.getParameters(nodeName));
 }

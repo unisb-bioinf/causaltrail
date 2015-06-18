@@ -48,7 +48,7 @@ class NetworkInstance : public QObject {
      * @param filename Name of the file containing samples
      * @param controlfile Name of the file containing discretisation control information
      */
-    void loadSamples(SerializeDeserializeJson& propertyTree_);
+    void loadSamples(DiscretisationSettings& propertyTree_);
 
     /**
      * @brief calculate

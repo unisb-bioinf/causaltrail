@@ -31,14 +31,14 @@ Discretiser::Discretiser(const Matrix<std::string>& originalObservations,
 	discretise(filename);
 }
 
-void Discretiser::setJsonTree(SerializeDeserializeJson& jsonTree)
+void Discretiser::setJsonTree(DiscretisationSettings& jsonTree)
 {
 	jsonTree_ = jsonTree;
 }
 
 void Discretiser::discretise(const std::string& controlFile)
 {
-	jsonTree_ = SerializeDeserializeJson(controlFile);
+	jsonTree_ = DiscretisationSettings(controlFile);
 
 	discretise();
 }

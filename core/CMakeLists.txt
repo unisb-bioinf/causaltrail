@@ -45,8 +45,8 @@ add_library(CausalTrailLib
 	Parser.cpp
 	Factor.h
 	Factor.cpp
-	SerializeDeserializeJson.h
-	SerializeDeserializeJson.cpp
+	DiscretisationSettings.h
+	DiscretisationSettings.cpp
 )
 target_link_libraries(CausalTrailLib ${Boost_LIBRARIES})
 

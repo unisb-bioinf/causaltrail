@@ -44,7 +44,7 @@ void NetworkInstance::loadSamples(){
     trained_=true;
 }
 
-void NetworkInstance::loadSamples(SerializeDeserializeJson& propertyTree_){
+void NetworkInstance::loadSamples(DiscretisationSettings& propertyTree_){
     if (deselectedSamples_.empty()){
                 nc_.loadObservations(dataFile_.toStdString(),propertyTree_);
         } else {

@@ -1,29 +1,29 @@
 #include "gtest/gtest.h"
-#include "../core/SerializeDeserializeJson.h"
+#include "../core/DiscretisationSettings.h"
 #include "config.h"
 
-class SerializeDeserializeJsonTest : public ::testing::Test{
+class DiscretisationSettingsTest : public ::testing::Test{
 	protected:
-	SerializeDeserializeJsonTest()
+	DiscretisationSettingsTest()
 	{
 	}
 	public:
-	SerializeDeserializeJson jp;
+	DiscretisationSettings jp;
 
 };
 
-TEST_F(SerializeDeserializeJsonTest,Constructor){
+TEST_F(DiscretisationSettingsTest,Constructor){
 }
 
-TEST_F(SerializeDeserializeJsonTest,importFile){
+TEST_F(DiscretisationSettingsTest,importFile){
 	ASSERT_NO_THROW(jp.importFile(TEST_DATA_PATH("jsonTest.json")));
 }
 
-TEST_F(SerializeDeserializeJsonTest,invalidFile){
+TEST_F(DiscretisationSettingsTest,invalidFile){
 	ASSERT_ANY_THROW(jp.importFile(TEST_DATA_PATH("jsonTestInvalid.json")));
 	}
 
-TEST_F(SerializeDeserializeJsonTest,containsNode){
+TEST_F(DiscretisationSettingsTest,containsNode){
 	jp.importFile(TEST_DATA_PATH("jsonTest.json"));
 	ASSERT_TRUE(jp.containsNode("Grade"));
 	ASSERT_TRUE(jp.containsNode("Difficulty"));
@@ -33,7 +33,7 @@ TEST_F(SerializeDeserializeJsonTest,containsNode){
 	ASSERT_FALSE(jp.containsNode("None"));
 }
 
-TEST_F(SerializeDeserializeJsonTest,DiscretisationDetails){
+TEST_F(DiscretisationSettingsTest,DiscretisationDetails){
 	jp.importFile(TEST_DATA_PATH("jsonTest.json"));
 	ASSERT_TRUE(jp.getMethod("Grade")=="Threshold");
 	ASSERT_TRUE(jp.getParameter<float>("Grade","threshold")==4.5);
@@ -45,9 +45,9 @@ TEST_F(SerializeDeserializeJsonTest,DiscretisationDetails){
 }
 
 
-TEST_F(SerializeDeserializeJsonTest,addNode){
+TEST_F(DiscretisationSettingsTest,addNode){
 	jp.importFile(TEST_DATA_PATH("jsonTest.json"));
-	SerializeDeserializeJson jp2;
+	DiscretisationSettings jp2;
 	jp2.addToTree("Difficulty","BracketMedians","buckets","3");
 	jp2.addToTree("Grade","Threshold","threshold","4.5");
 	jp2.addToTree("Intelligence","none");
@@ -69,11 +69,11 @@ TEST_F(SerializeDeserializeJsonTest,addNode){
 	
 }
 
-TEST_F(SerializeDeserializeJsonTest,exportFile){
+TEST_F(DiscretisationSettingsTest,exportFile){
 	jp.importFile(TEST_DATA_PATH("jsonTest.json"));
 	jp.exportToFile(TEST_DATA_PATH("outputTest.json"));
 
-	SerializeDeserializeJson jp2;
+	DiscretisationSettings jp2;
 	jp2.importFile(TEST_DATA_PATH("outputTest.json"));
 	ASSERT_TRUE(jp.containsNode("Grade"));
 	ASSERT_TRUE(jp.containsNode("Difficulty"));

@@ -37,7 +37,7 @@ const std::string discretisationSelection::getParameterNames(unsigned int index)
 
 void discretisationSelection::generatePropertyTree() 
 {
-	propertyTree_ = SerializeDeserializeJson ();
+	propertyTree_ = DiscretisationSettings ();
 	for (int i = 1; i < ui->gridLayout->rowCount(); i++){
 		const std::string featureName = featureNames_[i-1]->text().toStdString();	
 		unsigned int methodIndex = boxes_[i-1]->currentIndex();	
@@ -52,7 +52,7 @@ void discretisationSelection::generatePropertyTree()
 	}
 }
 
-SerializeDeserializeJson& discretisationSelection::getPropertyTree(){
+DiscretisationSettings& discretisationSelection::getPropertyTree(){
 	return propertyTree_;
 }
 

@@ -2,7 +2,7 @@
 #define DISCRETISER_H
 
 #include "Discretisations.h"
-#include "SerializeDeserializeJson.h"
+#include "DiscretisationSettings.h"
 #include "Network.h"
 #include "float.h"
 #include <map>
@@ -43,7 +43,7 @@ class Discretiser
 	            const std::string& filename, Matrix<int>& obsMatrix,
 	            Network& network);
 
-	void setJsonTree(SerializeDeserializeJson&);
+	void setJsonTree(DiscretisationSettings&);
 
 	Discretiser& operator=(const Discretiser&) = delete;
 
@@ -71,7 +71,7 @@ class Discretiser
 	 */
 	void adaptFormat();
 	// Json Tree
-	SerializeDeserializeJson jsonTree_;
+	DiscretisationSettings jsonTree_;
 	// Matrix containing the original raw sample data
 	Matrix<std::string> originalObservations_;
 	// Matrix containing the discretised data

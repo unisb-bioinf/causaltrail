@@ -34,7 +34,7 @@ void NetworkController::loadObservations(
 
 void NetworkController::loadObservations(
 	const std::string& datafile, 
-	SerializeDeserializeJson& propertyTree)
+	DiscretisationSettings& propertyTree)
 {
 	Matrix<std::string> originalObservations(datafile, false, true);
 	Discretiser d(originalObservations,observations_,network_);
@@ -44,7 +44,7 @@ void NetworkController::loadObservations(
 
 void NetworkController::loadObservations(
 	const std::string& datafile, 
-	SerializeDeserializeJson& propertyTree, 
+	DiscretisationSettings& propertyTree,
 	const std::vector<unsigned int>& samplesToDelete)
 {
 	Matrix<std::string> originalObservations(datafile, false, true,samplesToDelete);
