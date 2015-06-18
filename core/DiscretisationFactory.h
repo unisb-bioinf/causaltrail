@@ -3,27 +3,51 @@
 
 #include "SerializeDeserializeJson.h"
 #include "Discretisations.h"
+
 #include <memory>
-#include "Matrix.h"
-#include <map>
+#include <unordered_map>
 
-class DiscretisationFactory{
+class DiscretisationFactory
+{
 	public:
-	DiscretisationFactory(SerializeDeserializeJson& jsonTree,
-			        const Matrix<std::string>& originalObservations,
-        			Matrix<int>& discretisedObservation,
-				std::unordered_map<std::string,int>& observationsMap,
-        			std::map<std::pair<int,int>, std::string>& observationsMapR);
+	DiscretisationFactory(const SerializeDeserializeJson& jsonTree);
 
-	std::unique_ptr<Discretisations> create(const std::string& nodeName, unsigned int row);
+	std::unique_ptr<Discretisations> create(const std::string& nodeName);
 
-	unsigned int getMethodIndex(const std::string& methodS);
-	SerializeDeserializeJson& jsonTree_;	
-        const Matrix<std::string>& originalObservations_;
-        Matrix<int>& discretisedObservations_;
-        std::unordered_map<std::string,int>& observationsMap_;
-        std::map<std::pair<int,int>, std::string>& observationsMapR_;
-	std::unordered_map<std::string, unsigned int> methodIndex_;
+	private:
+	class Generator
+	{
+		public:
+		virtual std::unique_ptr<Discretisations>
+		operator()(const std::string&,
+		           const SerializeDeserializeJson&) const = 0;
+		virtual ~Generator() = default;
+	};
+
+	template <typename T> class GeneratorModel : public Generator
+	{
+		public:
+		GeneratorModel(const T& generator) : generator_(generator) {}
+
+		std::unique_ptr<Discretisations>
+		operator()(const std::string& name,
+		           const SerializeDeserializeJson& properties) const override
+		{
+			return generator_(name, properties);
+		}
+
+		private:
+		T generator_;
+	};
+
+	template <typename T> void insert(const std::string& id, const T& generator)
+	{
+		generators_.emplace(id, std::make_unique<GeneratorModel<T>>(generator));
+	}
+
+	std::unordered_map<std::string, std::unique_ptr<Generator>> generators_;
+
+	const SerializeDeserializeJson& jsonTree_;
 };
 
 #endif

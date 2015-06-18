@@ -1,64 +1,75 @@
 #include "Discretisations.h"
 
-Discretisations::Discretisations(unsigned int row, 
-				const Matrix<std::string>& originalObservations, 
-				Matrix<int>& discretisedObservations,
-			        std::unordered_map<std::string,int>& observationsMap,
-        			std::map<std::pair<int,int>, std::string>& observationsMapR)
-	:row_(row),
-	originalObservations_(originalObservations),
-	discretisedObservations_(discretisedObservations),
-	observationsMap_(observationsMap),
-	observationsMapR_(observationsMapR)
-{
+const int Discretisations::NA = -1;
 
+boost::optional<float> Discretisations::getNumber(const Observations& obs,
+                                                  unsigned int col,
+                                                  unsigned int row)
+{
+	const auto& temp = obs(col, row);
+
+	if(temp == "NA") {
+		return boost::none;
+	}
+
+	return std::stof(temp);
 }
 
-float Discretisations::getNumber(unsigned int col, unsigned int row)
+void Discretisations::createNameEntry(ObservationMap& obs,
+                                      RevObservationMap& obsR, int value,
+                                      unsigned int row)
 {
-	std::stringstream ss;
-	std::string temp;
-	float value;
-	temp = originalObservations_(col, row);
-	if(temp == "NA")
-		return -1;
-	ss << temp;
-	ss >> value;
-	return value;
+	std::string svalue = std::to_string(value);
+	obs[svalue] = value;
+	obsR[std::make_pair(value, row)] = svalue;
 }
 
-void Discretisations::createNameEntry(int value, unsigned int row)
-{
-	std::stringstream ss;
-	std::string ssvalue;
-	ss << value;
-	ss >> ssvalue;
-	observationsMap_[ssvalue] = value;
-	observationsMapR_[std::make_pair(value, row)] = ssvalue;
-}
-
-std::vector<float> Discretisations::createSortedVector(unsigned int row)
+std::vector<float> Discretisations::createSortedVector(const Observations& obs,
+                                                       unsigned int row)
 {
 	std::vector<float> templist;
-	for(unsigned int col = 0; col < originalObservations_.getColCount();
-	    col++) {
-		templist.push_back(getNumber(col, row));
+	templist.reserve(obs.getColCount());
+	for(unsigned int col = 0; col < obs.getColCount(); col++) {
+		auto value = getNumber(obs, col, row);
+
+		if(value) {
+			templist.push_back(value.get());
+		}
 	}
 	std::sort(templist.begin(), templist.end());
 	return templist;
 }
 
-void Discretisations::convertToDenseNumbers(unsigned int row)
+void Discretisations::convertToDenseNumbers(
+    const std::vector<boost::optional<int>>& discretized, Data& data,
+    unsigned int row)
 {
-	const std::vector<int>& obs = discretisedObservations_.getUniqueRowValues(row);
-	for(unsigned int key = 0; key < obs.size(); key++) {
-		for(unsigned int col = 0; col < discretisedObservations_.getColCount(); col++) {
-			if(obs[key] == discretisedObservations_(col, row)) {
-				discretisedObservations_.setData(key, col, row);
-				createNameEntry(key, row);
+	std::vector<boost::optional<int>> tmp(discretized);
+	std::sort(tmp.begin(), tmp.end(), [](auto a, auto b) {
+		if(a && b) {
+			return a.get() < b.get();
+		}
+
+		return bool(a);
+	});
+
+	tmp.erase(std::unique(tmp.begin(), tmp.end()), tmp.end());
+	if(tmp.back() == boost::none) {
+		tmp.pop_back();
+	}
+
+	for(unsigned int col = 0; col < data.input.getColCount(); ++col) {
+		int result = NA;
+		if(discretized[col]) {
+			for(size_t i = 0; i < tmp.size(); ++i) {
+				if(discretized[col] == tmp[i]) {
+					result = i;
+					break;
+				}
 			}
 		}
+
+		data.output.setData(result, col, row);
+		createNameEntry(data.map, data.revMap, result, row);
 	}
 }
-
-

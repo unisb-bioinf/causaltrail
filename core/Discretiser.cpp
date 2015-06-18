@@ -31,47 +31,37 @@ Discretiser::Discretiser(const Matrix<std::string>& originalObservations,
 	discretise(filename);
 }
 
-void Discretiser::setJsonTree(SerializeDeserializeJson& jsonTree){
+void Discretiser::setJsonTree(SerializeDeserializeJson& jsonTree)
+{
 	jsonTree_ = jsonTree;
 }
 
 void Discretiser::discretise(const std::string& controlFile)
 {
-	jsonTree_= SerializeDeserializeJson(controlFile);
-	//Create Factory
-	DiscretisationFactory dF(jsonTree_,
-			originalObservations_,
-                        observations_,
-                        network_.getObservationsMap(),
-                        network_.getObservationsMapR());
+	jsonTree_ = SerializeDeserializeJson(controlFile);
 
-	//Create Discretisations Objects
-	for (unsigned int i = 0; i < observations_.getRowCount(); i++){
-		discretisations_.push_back(dF.create(observations_.getRowNames()[i],i));	
-	}
- 
-	//Apply Discretisation;
-	for (std::unique_ptr<Discretisations>& ptr : discretisations_){
-		ptr->apply();
-	}
+	discretise();
 }
 
-void Discretiser::discretise(){
+void Discretiser::discretise()
+{
 
-	DiscretisationFactory dF(jsonTree_,
-			originalObservations_,
-                        observations_,
-                        network_.getObservationsMap(),
-                        network_.getObservationsMapR());
+	DiscretisationFactory dF(jsonTree_);
 
-	//Create Discretisations Objects
-	for (unsigned int i = 0; i < observations_.getRowCount(); i++){
-		discretisations_.push_back(dF.create(observations_.getRowNames()[i],i));	
+	// Create Discretisations Objects
+	for(unsigned int i = 0; i < observations_.getRowCount(); i++) {
+		discretisations_.push_back(dF.create(observations_.getRowNames()[i]));
 	}
 
-	//Apply Discretisation;
-	for (std::unique_ptr<Discretisations>& ptr : discretisations_){
-		ptr->apply();
+	Discretisations::Data data(originalObservations_, observations_,
+	                           network_.getObservationsMap(),
+	                           network_.getObservationsMapR());
+
+	// Apply Discretisation;
+	unsigned int row = 0;
+	for(auto& ptr : discretisations_) {
+		ptr->apply(row, data);
+		++row;
 	}
 }
 

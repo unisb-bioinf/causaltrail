@@ -1,167 +1,89 @@
 #include "DiscretisationFactory.h"
 #include "Discretisations.h"
-#include "DiscretiseFloor.h"
-#include "DiscretiseArithmeticMean.h"
-#include "DiscretiseMedian.h"
-#include "DiscretiseRound.h"
+#include "DiscretiseRoundingBased.h"
 #include "DiscretiseBracketMedians.h"
-#include "DiscretiseHarmonicMean.h"  
-#include "DiscretisePT.h"      
-#include "DiscretiseThreshold.h"
-#include "DiscretiseCeil.h"            
-#include "DiscretiseMapping.h"       
+#include "DiscretisePT.h"
+#include "DiscretiseThresholdBased.h"
+#include "DiscretiseMapping.h"
 #include "DiscretiseZScore.h"
 
-DiscretisationFactory::DiscretisationFactory(SerializeDeserializeJson& jsonTree,
-					const Matrix<std::string>& originalObservations, 
-					Matrix<int>& discretisedObservations,
-				        std::unordered_map<std::string,int>& observationsMap,
-        				std::map<std::pair<int,int>, std::string>& observationsMapR)
-	:jsonTree_(jsonTree),
-	originalObservations_(originalObservations),
-	discretisedObservations_(discretisedObservations),
-        observationsMap_(observationsMap),
-        observationsMapR_(observationsMapR)
+#include <algorithm>
+#include <locale>
+
+DiscretisationFactory::DiscretisationFactory(
+    const SerializeDeserializeJson& jsonTree)
+    : jsonTree_(jsonTree)
 {
-	methodIndex_["Ceil"]=0;
-	methodIndex_["Floor"]=1;
-	methodIndex_["Round"]=2;
-	methodIndex_["ArithmeticMean"]=3;
-	methodIndex_["HarmonicMean"]=4;
-	methodIndex_["Median"]=5;
-	methodIndex_["Threshold"]=6;
-	methodIndex_["BracketMedians"]=7;
-	methodIndex_["PearsonTukey"]=8;
-	methodIndex_["None"]=9;
-	methodIndex_["Z-Score"]=10;
+	insert("ceil", [](const std::string&, const SerializeDeserializeJson&) {
+		return std::make_unique<DiscretiseCeil>();
+	});
+
+	insert("floor", [](const std::string&, const SerializeDeserializeJson&) {
+		return std::make_unique<DiscretiseFloor>();
+	});
+
+	insert("round", [](const std::string&, const SerializeDeserializeJson&) {
+		return std::make_unique<DiscretiseRound>();
+	});
+
+	insert("arithmeticmean",
+	       [](const std::string&, const SerializeDeserializeJson&) {
+		return std::make_unique<DiscretiseArithmeticMean>();
+	});
+
+	insert("harmonicmean",
+	       [](const std::string&, const SerializeDeserializeJson&) {
+		return std::make_unique<DiscretiseHarmonicMean>();
+	});
+
+	insert("median", [](const std::string&, const SerializeDeserializeJson&) {
+		return std::make_unique<DiscretiseMedian>();
+	});
+
+	insert("threshold", [](const std::string& name,
+	                       const SerializeDeserializeJson& properties) {
+		return std::make_unique<DiscretiseThreshold>(
+		    properties.getParameter<float>(name, "threshold"));
+	});
+
+	insert("bracketmedians", [](const std::string& name,
+	                            const SerializeDeserializeJson& properties) {
+		return std::make_unique<DiscretiseBracketMedians>(
+		    properties.getParameter<unsigned int>(name, "buckets"));
+	});
+
+	insert("pearsontukey",
+	       [](const std::string&, const SerializeDeserializeJson&) {
+		return std::make_unique<DiscretisePT>();
+	});
+
+	insert("none", [](const std::string&, const SerializeDeserializeJson&) {
+		return std::make_unique<DiscretiseMapping>();
+	});
+
+	insert("z-score", [](const std::string&, const SerializeDeserializeJson&) {
+		return std::make_unique<DiscretiseZScore>();
+	});
 }
 
+std::unique_ptr<Discretisations>
+DiscretisationFactory::create(const std::string& nodeName)
+{
+	if(!jsonTree_.containsNode(nodeName)) {
+		throw std::invalid_argument("Unknown node '" + nodeName + "'");
+	}
 
-unsigned int DiscretisationFactory::getMethodIndex(const std::string& methodS){
-	auto it = methodIndex_.find(methodS);
-	if (it != methodIndex_.end()){
-		return it->second;
+	std::string method = jsonTree_.getMethod(nodeName);
+
+	std::transform(method.begin(), method.end(), method.begin(),
+	               [](char c) { return std::tolower(c); });
+
+	auto it = generators_.find(method);
+
+	if(it == generators_.end()) {
+		throw std::invalid_argument("Unknown discretisation method '" + method +
+		                            "'.");
 	}
-	else {
-		throw std::invalid_argument("Method: "+methodS+" not known.");
-	}
+
+	return it->second->operator()(nodeName, jsonTree_);
 }
-
-std::unique_ptr<Discretisations> DiscretisationFactory::create(const std::string& nodeName, unsigned int row){
-	
-	if(jsonTree_.containsNode(nodeName)){
-		const std::string& methodS = jsonTree_.getMethod(nodeName);
-		unsigned int method = getMethodIndex(methodS);
-		switch(method) {
-			case 0:
-			{	
-				std::unique_ptr<Discretisations> ptr (new DiscretiseCeil(row,
-					originalObservations_,
-					discretisedObservations_,
-					observationsMap_,
-					observationsMapR_));
-				return ptr;
-			}
-			case 1:
-			{	
-				std::unique_ptr<Discretisations> ptr(new DiscretiseFloor(row,
-					originalObservations_, 
-					discretisedObservations_,
-					observationsMap_,
-					observationsMapR_));
-				return ptr;
-			}
-			case 2:
-			{		
-				std::unique_ptr<Discretisations> ptr(new DiscretiseRound(row,
-					originalObservations_, 
-					discretisedObservations_,
-					observationsMap_,
-					observationsMapR_));
-				return ptr;
-			}
-			case 3:
-			{
-				std::unique_ptr<Discretisations> ptr (new DiscretiseArithmeticMean(row,
-					originalObservations_, 
-					discretisedObservations_,
-					observationsMap_,
-					observationsMapR_));
-				return ptr;
-			}
-			case 4:
-			{
-				std::unique_ptr<Discretisations> ptr (new DiscretiseHarmonicMean(row,
-					originalObservations_, 
-					discretisedObservations_,
-					observationsMap_,
-					observationsMapR_));
-				return ptr;
-			}
-			case 5:
-			{
-				std::unique_ptr<Discretisations> ptr (new DiscretiseMedian(row,
-					originalObservations_, 
-					discretisedObservations_,
-					observationsMap_,
-					observationsMapR_));
-				return ptr;
-			}
-			case 6:
-			{	
-				float threshold = jsonTree_. getParameter<float>(nodeName,"threshold");
-				std::unique_ptr<Discretisations> ptr (new DiscretiseThreshold(row,
-					originalObservations_, 
-					discretisedObservations_,
-					observationsMap_,
-					observationsMapR_,
-					threshold));
-				return ptr;	
-			}
-			case 7:
-			{
-				int buckets = jsonTree_.getParameter<int>(nodeName,"buckets");
-				std::unique_ptr<Discretisations> ptr (new DiscretiseBracketMedians(row,
-					originalObservations_, 
-					discretisedObservations_,
-					observationsMap_,
-					observationsMapR_,
-					buckets));
-				return ptr;
-			}
-			case 8:
-			{		
-				std::unique_ptr<Discretisations> ptr (new DiscretisePT(row,
-					originalObservations_, 
-					discretisedObservations_,
-					observationsMap_,
-					observationsMapR_));
-				return ptr;
-			}
-			case 9:
-			{		
-				std::unique_ptr<Discretisations> ptr (new DiscretiseMapping(row,
-					originalObservations_, 
-					discretisedObservations_,
-					observationsMap_,
-					observationsMapR_));
-				return ptr;
-			}
-			case 10:
-			{	
-				std::unique_ptr<Discretisations> ptr (new DiscretiseZScore(row,
-					originalObservations_, 
-					discretisedObservations_,
-					observationsMap_,
-					observationsMapR_));
-				return ptr;
-			}
-		}
-	
-		throw std::runtime_error("Method Index not found!");	
-	}
-	else {
-		throw std::invalid_argument("Node "+nodeName+" not found");
-	}
-}
-

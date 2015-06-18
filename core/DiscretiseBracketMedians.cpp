@@ -1,40 +1,40 @@
 #include "DiscretiseBracketMedians.h"
 
-DiscretiseBracketMedians::DiscretiseBracketMedians(unsigned int row,
-                                const Matrix<std::string>& originalObservations,
-                                Matrix<int>& discretisedObservations,
-			        std::unordered_map<std::string,int>& observationsMap,
-        			std::map<std::pair<int,int>, std::string>& observationsMapR,
-				int buckets)
-	:Discretisations(row,
-			originalObservations,
-			discretisedObservations,
-			observationsMap,
-			observationsMapR),
-	buckets_(buckets)
+DiscretiseBracketMedians::DiscretiseBracketMedians(unsigned int buckets)
+    : buckets_(buckets)
 {
 }
 
-void DiscretiseBracketMedians::apply(){
-	const std::vector<float>& templist = createSortedVector(row_);
+void DiscretiseBracketMedians::apply(unsigned int row, Data& data)
+{
+	const auto& templist = createSortedVector(data.input, row);
 	std::vector<float> borderValues;
 	borderValues.reserve(buckets_ + 1);
+
+	// Calculate borders
 	borderValues.push_back(templist[0]);
-	// Calculat Borders
 	for(unsigned int i = 1; i < buckets_; i++) {
 		borderValues.push_back(templist[templist.size() / buckets_ * i]);
 	}
-	borderValues.push_back(FLT_MAX);
+	borderValues.push_back(std::numeric_limits<float>::max());
+
 	// Fill intervals
 	for(unsigned int col = 0; col < templist.size(); col++) {
-		float value = getNumber(col,row_);
-		for(unsigned int i = 1; i <= buckets_; i++) {
-			if((value >= borderValues[i - 1]) && (value <
-			                                              borderValues[i])) {
-				discretisedObservations_.setData(i - 1, col, row_);
-				createNameEntry(i - 1, row_);
-				break;
+		auto value = getNumber(data.input, col, row);
+
+		int result = NA;
+
+		if(value) {
+			for(unsigned int i = 1; i <= buckets_; i++) {
+				if(value.get() >= borderValues[i - 1] &&
+				   value.get() < borderValues[i]) {
+					result = i - 1;
+					break;
+				}
 			}
 		}
+
+		data.output.setData(result, col, row);
+		createNameEntry(data.map, data.revMap, result, row);
 	}
 }

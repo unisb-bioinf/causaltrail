@@ -3,18 +3,13 @@
 
 #include "Discretisations.h"
 
-class DiscretiseBracketMedians : public Discretisations 
+class DiscretiseBracketMedians : public Discretisations
 {
 	public:
-	DiscretiseBracketMedians(unsigned int row, 
-			const Matrix<std::string>& originalObservations, 
-			Matrix<int>& discretisedObservations,
-        		std::unordered_map<std::string,int>& observationsMap,
-        		std::map<std::pair<int,int>, std::string>& observationsMapR,
-			int buckets);
-	void apply() override;	
+	DiscretiseBracketMedians(unsigned int buckets);
+	void apply(unsigned int row, Data& data) override;
 
 	private:
-	int buckets_;
+	unsigned int buckets_;
 };
 #endif

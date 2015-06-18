@@ -19,18 +19,8 @@ add_library(CausalTrailLib
 	NetworkController.cpp
 	Discretisations.h
 	Discretisations.cpp
-	DiscretiseCeil.h
-	DiscretiseCeil.cpp
-	DiscretiseFloor.h
-	DiscretiseFloor.cpp
-	DiscretiseRound.h
-	DiscretiseRound.cpp
-	DiscretiseMedian.h
-	DiscretiseMedian.cpp
-	DiscretiseArithmeticMean.h
-	DiscretiseArithmeticMean.cpp
-	DiscretiseHarmonicMean.h
-	DiscretiseHarmonicMean.cpp
+	DiscretiseRoundingBased.h
+	DiscretiseRoundingBased.cpp
 	DiscretiseBracketMedians.h
 	DiscretiseBracketMedians.cpp
 	DiscretisePT.h
@@ -39,8 +29,8 @@ add_library(CausalTrailLib
 	DiscretiseZScore.cpp
 	DiscretiseMapping.h
 	DiscretiseMapping.cpp
-	DiscretiseThreshold.h
-	DiscretiseThreshold.cpp
+	DiscretiseThresholdBased.h
+	DiscretiseThresholdBased.cpp
 	DiscretisationFactory.h
 	DiscretisationFactory.cpp
 	Discretiser.h

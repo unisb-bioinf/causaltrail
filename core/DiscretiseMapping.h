@@ -3,14 +3,9 @@
 
 #include "Discretisations.h"
 
-class DiscretiseMapping : public Discretisations 
+class DiscretiseMapping : public Discretisations
 {
 	public:
-	DiscretiseMapping(unsigned int row, 
-			const Matrix<std::string>& originalObservations, 
-			Matrix<int>& discretisedObservations,
-        		std::unordered_map<std::string,int>& observationsMap,
-        		std::map<std::pair<int,int>, std::string>& observationsMapR);
-	void apply() override;	
+	void apply(unsigned int row, Data& data) override;
 };
 #endif
