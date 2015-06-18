@@ -131,6 +131,7 @@ void discretisationSelection::clicked(QAbstractButton* btn)
 			saveDiscretisations();
 			break;
 		case QDialogButtonBox::Ok:
+			generatePropertyTree();
 			accept();
 			break;
 		case QDialogButtonBox::Cancel:
