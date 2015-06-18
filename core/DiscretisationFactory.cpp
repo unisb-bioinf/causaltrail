@@ -1,11 +1,14 @@
 #include "DiscretisationFactory.h"
-#include "Discretisations.h"
+
 #include "DiscretiseRoundingBased.h"
 #include "DiscretiseBracketMedians.h"
 #include "DiscretisePT.h"
 #include "DiscretiseThresholdBased.h"
 #include "DiscretiseMapping.h"
 #include "DiscretiseZScore.h"
+
+#include "DiscretisationSettings.h"
+#include "Discretisations.h"
 
 #include <algorithm>
 #include <locale>

@@ -1,11 +1,12 @@
 #ifndef DISCRETISATIONFACTORY_H
 #define DISCRETISATIONFACTORY_H
 
-#include "DiscretisationSettings.h"
-#include "Discretisations.h"
-
 #include <memory>
 #include <unordered_map>
+
+class Discretisations;
+class DiscretisationSettings;
+class DiscretiserParameters;
 
 /**
  * A factory class that creates Discretisations as requested by the user.
