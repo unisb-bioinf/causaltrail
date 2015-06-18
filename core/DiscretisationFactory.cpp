@@ -10,7 +10,8 @@
 #include <algorithm>
 #include <locale>
 
-DiscretisationFactory::DiscretisationFactory(const DiscretisationSettings& jsonTree)
+DiscretisationFactory::DiscretisationFactory(
+    const DiscretisationSettings& jsonTree)
     : jsonTree_(jsonTree)
 {
 	insert("ceil", [](const DiscretiserParameters&) {
