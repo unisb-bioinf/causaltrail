@@ -153,39 +153,7 @@ void MainWindow::discretiseSelection(const QString& samples,
 {
 	int index = ui->tabWidget->currentIndex();
 	networks[index]->setDeselectedSamples(deselected);
-	QMessageBox boxDisc;
-	boxDisc.setIcon(QMessageBox::Question);
-	boxDisc.setText("Please specify discretisation information source.");
-	QPushButton* file =
-	    boxDisc.addButton("Load from File", QMessageBox::ActionRole);
-	QPushButton* choose =
-	    boxDisc.addButton("Choose Methods", QMessageBox::ActionRole);
-	boxDisc.exec();
-	try {
-		if(boxDisc.clickedButton() == file) {
-			QString control = QFileDialog::getOpenFileName(
-			    this, tr("Open txt file containing discretisation information"),
-			    config_->dataDir(), "*.json");
-			if(!control.isNull()) {
-				loadSamples(samples,control,index);
-			} else {
-				throw std::invalid_argument(
-					"Discretisation information is not specified");
-			}
-		} else {
-			if(boxDisc.clickedButton() == choose) {
-				discretisationSelection_->show(config_->dataDir(), samples,
-				                               index);
-			} else {
-				throw std::invalid_argument(
-					"Discretisation information is not specified");
-			}
-		}
-	} catch(std::exception& e) {
-		addLogMessage(e.what());
-		adaptQueryEvaluationButtons(false);
-		networks[index]->resetNetwork();
-	}
+	discretisationSelection_->show(config_->dataDir(), samples, index);
 }
 
 void MainWindow::dataRejected()
@@ -606,3 +574,4 @@ void MainWindow::interventionValueSelected(QAction* action)
 {
 	ui->queryView->interventionOn(currentNetwork_()->getSelectedNodeID(), action->text());
 }
+
