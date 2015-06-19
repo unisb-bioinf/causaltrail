@@ -198,39 +198,25 @@ void MainWindow::dataRejected()
 
 void MainWindow::on_actionLoad_Samples_triggered()
 {
-	int index = ui->tabWidget->currentIndex();
 	try {
 		QString samples = QFileDialog::getOpenFileName(
 		    this, tr("Open txt file containing samples"), config_->dataDir(),
 		    "*.txt");
+
 		if(samples.isNull()) {
 			throw std::invalid_argument(
 			    "No file containing samples specified!");
 		}
-		QMessageBox boxSamples;
-		boxSamples.setIcon(QMessageBox::Question);
-		boxSamples.setText("Do you want to view the data?");
-		QPushButton* yes = boxSamples.addButton("Yes", QMessageBox::ActionRole);
-		boxSamples.addButton("No", QMessageBox::ActionRole);
-		boxSamples.exec();
-		if(boxSamples.clickedButton() == yes) {
-			// View -> Call a new window
-			DataView* dView = new DataView(0, samples);
-			dView->setWindowTitle("Data contained in " + samples);
-			connect(
-			    dView, SIGNAL(dataAccepted(const QString&, std::vector<uint>)),
-			    this,
-			    SLOT(discretiseSelection(const QString&, std::vector<uint>)));
-			connect(dView, SIGNAL(rejected()), this, SLOT(dataRejected()));
-			dView->show();
-		} else {
-			std::vector<unsigned int> temp;
-			discretiseSelection(samples, temp);
-		}
+
+		DataView* dView = new DataView(this, samples);
+		connect(dView, &DataView::dataAccepted, this,
+		        &MainWindow::discretiseSelection);
+		connect(dView, &DataView::rejected, this, &MainWindow::dataRejected);
+		dView->show();
 	} catch(std::exception& e) {
 		addLogMessage(e.what());
 		adaptQueryEvaluationButtons(false);
-		networks[index]->resetNetwork();
+		currentNetwork_()->resetNetwork();
 	}
 }
 

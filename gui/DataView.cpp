@@ -11,6 +11,8 @@ DataView::DataView(QWidget *parent, const QString& samples)
     ui->setupUi(this);
     ui->matrixView->showGrid();
 
+	setWindowTitle("Data contained in " + samples);
+
 	model_ = new DataMatrixModel(samples, this);
 	ui->matrixView->setModel(model_);
 
