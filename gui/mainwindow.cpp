@@ -4,7 +4,7 @@
 
 #include "Config.h"
 #include "datastorage.h"
-#include "dataview.h"
+#include "DataView.h"
 #include "discretisationselection.h"
 #include "edge.h"
 #include "listwidgetmulticopy.h"
@@ -215,7 +215,7 @@ void MainWindow::on_actionLoad_Samples_triggered()
 		boxSamples.exec();
 		if(boxSamples.clickedButton() == yes) {
 			// View -> Call a new window
-			dataview* dView = new dataview(0, samples);
+			DataView* dView = new DataView(0, samples);
 			dView->setWindowTitle("Data contained in " + samples);
 			connect(
 			    dView, SIGNAL(dataAccepted(const QString&, std::vector<uint>)),

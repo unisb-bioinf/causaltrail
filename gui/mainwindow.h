@@ -259,7 +259,7 @@ private slots:
 
 	/**
 	 * @brief dataRejected
-	 * Resets the network if the user did not select data in the dataview
+	 * Resets the network if the user did not select data in the DataView
 	 */
     void dataRejected();
 

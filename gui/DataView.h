@@ -11,25 +11,25 @@ namespace Ui {
 class DataMatrixModel;
 class QPushButton;
 
-class dataview : public QDialog
+class DataView : public QDialog
 {
     Q_OBJECT
 
 public:
 	/**
-	 * @brief dataview
-	 * Constructs a dataview object
+	 * @brief DataView
+	 * Constructs a DataView object
 	 * @param parent, the parent widget
 	 * @param samples, name of the file containing samples
-	 * @return a dataview object
+	 * @return a DataView object
 	 */
-    explicit dataview(QWidget *parent = 0, const QString& samples = "");
+    explicit DataView(QWidget *parent = 0, const QString& samples = "");
 
 	/**
-	 * @brief ~dataview
-	 * Destructor of the dataview object
+	 * @brief ~DataView
+	 * Destructor of the DataView object
 	 */
-    ~dataview();
+    ~DataView();
 
 public slots:
 	void accept() override;

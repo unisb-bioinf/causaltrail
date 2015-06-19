@@ -1,10 +1,10 @@
-#include "dataview.h"
+#include "DataView.h"
 #include "ui_DataView.h"
 
 #include "DataMatrixModel.h"
 #include <qpushbutton.h>
 
-dataview::dataview(QWidget *parent, const QString& samples)
+DataView::DataView(QWidget *parent, const QString& samples)
 	: QDialog(parent),
       ui(new Ui::DataView)
 {
@@ -29,32 +29,32 @@ dataview::dataview(QWidget *parent, const QString& samples)
 	ui->buttons->addButton(deselectAll_, QDialogButtonBox::ActionRole);
 }
 
-void dataview::selectAllColumns_()
+void DataView::selectAllColumns_()
 {
 	const int columnCount = model_->columnCount(QModelIndex());
 	QItemSelection selection(model_->index(0,0), model_->index(0, columnCount - 1));
 	ui->matrixView->selectionModel()->select(selection, QItemSelectionModel::Select | QItemSelectionModel::Columns);
 }
 
-void dataview::deselectAllColumns_()
+void DataView::deselectAllColumns_()
 {
 	const int columnCount = model_->columnCount(QModelIndex());
 	QItemSelection selection(model_->index(0,0), model_->index(0, columnCount - 1));
 	ui->matrixView->selectionModel()->select(selection, QItemSelectionModel::Deselect | QItemSelectionModel::Columns);
 }
 
-dataview::~dataview()
+DataView::~DataView()
 {
 	delete ui;
 }
 
-void dataview::accept()
+void DataView::accept()
 {
 	emit dataAccepted(model_->getSampleFile(), getDeselectedSamples());
 	QDialog::accept();
 }
 
-const std::vector<unsigned int> dataview::getDeselectedSamples() const {
+const std::vector<unsigned int> DataView::getDeselectedSamples() const {
 	std::vector<unsigned int> deselected;
 
 	const int columnCount = model_->columnCount(QModelIndex());

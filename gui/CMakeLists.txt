@@ -19,14 +19,15 @@ QT5_WRAP_UI(ui_Headers
     mainwindow.ui
     matrixpopup.ui
     discretisationselection.ui
-    dataView.ui
+    DataView.ui
     QueryView.ui
 )
 
 add_executable(CausalTrailGui
 	Config.cpp
 	datastorage.cpp
-	dataview.cpp
+	DataView.h
+	DataView.cpp
 	DataMatrixView.h
 	DataMatrixView.cpp
 	DataMatrixModel.h
