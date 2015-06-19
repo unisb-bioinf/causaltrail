@@ -2,7 +2,6 @@
 #define DISCRETISATIONSELECTION_H
 
 #include <QtWidgets/QDialog>
-#include <QtWidgets/QLineEdit>
 
 #include "../core/Matrix.h"
 #include "../core/DiscretisationSettings.h"
@@ -13,6 +12,8 @@ namespace Ui {
 class DiscretisationSelection;
 }
 
+class QLabel;
+class QLineEdit;
 class QAbstractButton;
 
 class discretisationSelection : public QDialog
@@ -51,11 +52,6 @@ public:
     void generatePropertyTree();
 
     /**
-     * Get the parameter name corresponding to the selected methodIndex.
-     */
-    const std::string getParameterNames(unsigned int index);
-
-    /**
      * Get the configured index.
      */
     int index() const;
@@ -80,6 +76,8 @@ public:
 
     const std::string getControlFileName() const;
 
+	void loadControlFile();
+
 
 private slots:
 	/**
@@ -93,7 +91,7 @@ private slots:
      * @param position Index of the ComboBox that was changed
      * @param index New itemIndex of the ComboBox
      */
-    void box_Index_Changed(uint position, int index);
+    void box_Index_Changed(uint position, const QString& method);
 
 private:
     /**
@@ -127,14 +125,6 @@ private:
     Ui::DiscretisationSelection* ui;
 
     /**
-     * @brief newFeatureName
-     * Creates a new QLineEdit object representing the feature with the given name
-     * @param name Name of the Feature
-     * @return Pointer to a QLineEdit Object
-     */
-    QLineEdit* newFeatureName(QString name);
-
-    /**
      * @brief newMethodSelection
      * Creates a new MethodComboBox object representing all available discretisation methods
      * @param i Index of the methodComboBox
@@ -149,12 +139,15 @@ private:
      */
     QLineEdit* newOptionalValue();
 
+	QValidator* intValidator_;
+	QValidator* doubleValidator_;
+
 
     /**
      * @brief featuresNames_
      * vector holding pointers to all QLineEdit Objects for the feature names
      */
-    std::vector<QLineEdit*> featureNames_;
+    std::vector<QLabel*> featureNames_;
 
     /**
      * @brief boxes_
@@ -174,17 +167,10 @@ private:
      */
     DiscretisationSettings propertyTree_;
 
-    std::vector<std::string> methodNames_ {"Ceil",
-						"Floor",
-						"Round",
-						"ArithmeticMean",
-						"HarmonicMean",
-						"Median",
-						"Threshold",
-						"BracketMedians",
-						"PearsonTukey",
-						"None",
-						"Z-Score"};
+    /**
+     * Get the parameter name corresponding to the selected methodIndex.
+     */
+    std::string getParameterName_(const std::string& method) const;
 };
 
 #endif // DISCRETISATIONSELECTION_H

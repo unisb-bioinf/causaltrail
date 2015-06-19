@@ -1,24 +1,32 @@
 #include "methodcombobox.h"
 
-methodComboBox::methodComboBox(unsigned int id):
-    id_(id)
+methodComboBox::methodComboBox(unsigned int id) : id_(id)
 {
-    addItem("Ceil");
-    addItem("Floor");
-    addItem("Round to nearest");
-    addItem("Arithmetic Mean");
-    addItem("Harmonic Mean");
-    addItem("Median");
-    addItem("Manual Threshold");
-    addItem("BracketMedians");
-    addItem("PearsonTukey");
-    addItem("Is Discrete");
-    addItem("Z-Score");
+    addItem("Ceil", "ceil");
+    addItem("Floor", "floor");
+    addItem("Round to nearest", "round");
+    addItem("Arithmetic Mean", "arithmeticMean");
+    addItem("Harmonic Mean", "harmonicMean");
+    addItem("Median", "median");
+    addItem("Manual Threshold", "threshold");
+    addItem("BracketMedians", "bracketMedians");
+    addItem("PearsonTukey", "pearsonTukey");
+    addItem("Is Discrete", "none");
+    addItem("Z-Score", "zScore");
     setCurrentIndex(9);
     connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(box_Index_Changed(int)));
 }
 
+void methodComboBox::setCurrentMethod(const std::string& methodName) {
+	int index = findData(QString::fromStdString(methodName), Qt::UserRole,
+	                     Qt::MatchFixedString);
+
+	if(index != -1) {
+		setCurrentIndex(index);
+	}
+}
+
 void methodComboBox::box_Index_Changed(int index)
 {
-    emit(newMethodSelected(id_,index));
+    emit(newMethodSelected(id_, qvariant_cast<QString>(currentData())));
 }

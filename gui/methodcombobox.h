@@ -15,6 +15,8 @@ public:
     */
     methodComboBox(unsigned int id);
 
+    void setCurrentMethod(const std::string& methodName);
+
 signals:
     /**
      * @brief newMethodSelected
@@ -22,7 +24,7 @@ signals:
      * @param Index of the comboBox
      * @param New item index
      */
-    void newMethodSelected(unsigned int, int);
+    void newMethodSelected(unsigned int, const QString&);
 
 public slots:
     /**
