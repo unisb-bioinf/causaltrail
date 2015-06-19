@@ -5,7 +5,7 @@
 #include "Config.h"
 #include "datastorage.h"
 #include "DataView.h"
-#include "discretisationselection.h"
+#include "DiscretisationSelection.h"
 #include "edge.h"
 #include "listwidgetmulticopy.h"
 #include "matrixpopup.h"
@@ -23,8 +23,8 @@
 MainWindow::MainWindow(Config* config, QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), config_(config)
 {
-	discretisationSelection_ = new discretisationSelection(this);
-	connect(discretisationSelection_, SIGNAL(accepted()), this,
+	DiscretisationSelection_ = new DiscretisationSelection(this);
+	connect(DiscretisationSelection_, SIGNAL(accepted()), this,
 	        SLOT(loadSamples()));
 
 	ui->setupUi(this);
@@ -113,15 +113,15 @@ void MainWindow::visualise(int index)
 void MainWindow::loadSamples()
 {
 	try {
-		unsigned int index = discretisationSelection_->index();
-		networks[index]->setDataFile(discretisationSelection_->samples());
-		networks[index]->loadSamples(discretisationSelection_->getPropertyTree());
+		unsigned int index = DiscretisationSelection_->index();
+		networks[index]->setDataFile(DiscretisationSelection_->samples());
+		networks[index]->loadSamples(DiscretisationSelection_->getPropertyTree());
 		adaptQueryEvaluationButtons(true);
 		ui->queryView->setNetworkInstance(networks[index]);
 	} catch(std::invalid_argument& e) {
 		addLogMessage(e.what());
 		adaptQueryEvaluationButtons(false);
-		networks[discretisationSelection_->index()]->resetNetwork();
+		networks[DiscretisationSelection_->index()]->resetNetwork();
 	}
 }
 
@@ -153,7 +153,7 @@ void MainWindow::discretiseSelection(const QString& samples,
 {
 	int index = ui->tabWidget->currentIndex();
 	networks[index]->setDeselectedSamples(deselected);
-	discretisationSelection_->show(config_->dataDir(), samples, index);
+	DiscretisationSelection_->show(config_->dataDir(), samples, index);
 }
 
 void MainWindow::dataRejected()

@@ -18,7 +18,7 @@ set(CMAKE_AUTOMOC ON)
 QT5_WRAP_UI(ui_Headers
     mainwindow.ui
     matrixpopup.ui
-    discretisationselection.ui
+    DiscretisationSelection.ui
     DataView.ui
     QueryView.ui
 )
@@ -32,7 +32,8 @@ add_executable(CausalTrailGui
 	DataMatrixView.cpp
 	DataMatrixModel.h
 	DataMatrixModel.cpp
-	discretisationselection.cpp
+	DiscretisationSelection.h
+	DiscretisationSelection.cpp
 	edge.cpp
 	listwidgetmulticopy.cpp
 	main.cpp

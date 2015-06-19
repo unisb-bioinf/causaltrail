@@ -1,12 +1,12 @@
-#include "discretisationselection.h"
-#include "ui_discretisationselection.h"
+#include "DiscretisationSelection.h"
+#include "ui_DiscretisationSelection.h"
 
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 
-discretisationSelection::discretisationSelection(QWidget* parent)
+DiscretisationSelection::DiscretisationSelection(QWidget* parent)
     : QDialog(parent), index_(-1), ui(new Ui::DiscretisationSelection)
 {
 	ui->setupUi(this);
@@ -17,10 +17,10 @@ discretisationSelection::discretisationSelection(QWidget* parent)
 	QPushButton* button =
 	    ui->dialogButtons->addButton(tr("Load"), QDialogButtonBox::ActionRole);
 
-	connect(button, &QPushButton::clicked, this, &discretisationSelection::loadControlFile);
+	connect(button, &QPushButton::clicked, this, &DiscretisationSelection::loadControlFile);
 }
 
-void discretisationSelection::show(const QString& path, const QString& samples,
+void DiscretisationSelection::show(const QString& path, const QString& samples,
                               int index)
 {
 	path_ = path;
@@ -32,10 +32,10 @@ void discretisationSelection::show(const QString& path, const QString& samples,
 	QDialog::show();
 }
 
-const QString& discretisationSelection::samples() const { return samples_; }
+const QString& DiscretisationSelection::samples() const { return samples_; }
 
 std::string
-discretisationSelection::getParameterName_(const std::string& method) const
+DiscretisationSelection::getParameterName_(const std::string& method) const
 {
 	if(method == "threshold") {
 		return "threshold";
@@ -46,7 +46,7 @@ discretisationSelection::getParameterName_(const std::string& method) const
 	return "";
 }
 
-void discretisationSelection::generatePropertyTree() 
+void DiscretisationSelection::generatePropertyTree() 
 {
 	propertyTree_ = DiscretisationSettings();
 	for(int i = 1; i < ui->gridLayout->rowCount(); i++) {
@@ -65,15 +65,15 @@ void discretisationSelection::generatePropertyTree()
 	}
 }
 
-DiscretisationSettings& discretisationSelection::getPropertyTree(){
+DiscretisationSettings& DiscretisationSelection::getPropertyTree(){
 	return propertyTree_;
 }
 
-int discretisationSelection::index() const { return index_; }
+int DiscretisationSelection::index() const { return index_; }
 
-const std::string discretisationSelection::getControlFileName() const { return controlFileName_.toStdString(); }
+const std::string DiscretisationSelection::getControlFileName() const { return controlFileName_.toStdString(); }
 
-void discretisationSelection::adaptGUIToData() {
+void DiscretisationSelection::adaptGUIToData() {
 	featureNames_.clear();
 	optionalValues_.clear();
 
@@ -103,27 +103,27 @@ void discretisationSelection::adaptGUIToData() {
     adjustSize();
 }
 
-discretisationSelection::~discretisationSelection()
+DiscretisationSelection::~DiscretisationSelection()
 {
     delete ui;
 }
 
-methodComboBox* discretisationSelection::newMethodSelection(unsigned int i)
+methodComboBox* DiscretisationSelection::newMethodSelection(unsigned int i)
 {
     methodComboBox* methodSelection = new methodComboBox(i);
     connect(methodSelection, &methodComboBox::newMethodSelected, this,
-            &discretisationSelection::box_Index_Changed);
+            &DiscretisationSelection::box_Index_Changed);
     return methodSelection;
 }
 
-QLineEdit *discretisationSelection::newOptionalValue()
+QLineEdit *DiscretisationSelection::newOptionalValue()
 {
     QLineEdit* optionalValue = new QLineEdit();
     optionalValue->setVisible(false);
     return optionalValue;
 }
 
-void discretisationSelection::saveDiscretisations()
+void DiscretisationSelection::saveDiscretisations()
 {
     QFileDialog dialog;
     dialog.setDefaultSuffix(".json");
@@ -140,7 +140,7 @@ void discretisationSelection::saveDiscretisations()
     propertyTree_.exportToFile(controlFileName_.toStdString());
 }
 
-void discretisationSelection::loadControlFile() {
+void DiscretisationSelection::loadControlFile() {
 	QString fileName = QFileDialog::getOpenFileName(
 	    this, "Select a discretisation control file", "", "*.json");
 
@@ -158,7 +158,7 @@ void discretisationSelection::loadControlFile() {
 	}
 }
 
-void discretisationSelection::clicked(QAbstractButton* btn)
+void DiscretisationSelection::clicked(QAbstractButton* btn)
 {
 	switch(ui->dialogButtons->standardButton(btn)) {
 		case QDialogButtonBox::Save:
@@ -176,7 +176,7 @@ void discretisationSelection::clicked(QAbstractButton* btn)
 	}
 }
 
-void discretisationSelection::box_Index_Changed(uint position, const QString& method)
+void DiscretisationSelection::box_Index_Changed(uint position, const QString& method)
 {
 	QLineEdit* box = optionalValues_[position];
 

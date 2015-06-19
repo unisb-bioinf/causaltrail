@@ -16,20 +16,20 @@ class QLabel;
 class QLineEdit;
 class QAbstractButton;
 
-class discretisationSelection : public QDialog
+class DiscretisationSelection : public QDialog
 {
     Q_OBJECT
 
 public:
     /**
-     * @brief discretisationSelection
-     * Constructor of class discretisationSelection
+     * @brief DiscretisationSelection
+     * Constructor of class DiscretisationSelection
      * @param parent The parent Widget
      * @param path The standard path to save files in CausalTrail
      * @param samples The filename of the samples file
      * @param index The index of the current Session
      */
-    discretisationSelection(QWidget* parent);
+    DiscretisationSelection(QWidget* parent);
 
     /**
      * Show and reconfigure the dialog
@@ -63,10 +63,10 @@ public:
     void adaptGUIToData();
 
     /**
-     * @brief ~discretisationSelection()
+     * @brief ~DiscretisationSelection()
      * Destructor of this class
      */
-    ~discretisationSelection();
+    ~DiscretisationSelection();
 
     /**
      * Saves the selected discretisation methods in a user specified file
