@@ -36,7 +36,7 @@ NodeGui::NodeGui(unsigned int id, std::string name)
     }
 
 	QGraphicsSimpleTextItem* child = new QGraphicsSimpleTextItem(this);
-	QFont f("Monospace", 7);
+	QFont f("Monospace", 6);
 	child->setFont(f);
 	child->setText(abbrev_);
 	child->setPos(getStart(abbrev_), - QFontMetrics(f).height() / 2.f);
@@ -58,7 +58,7 @@ int NodeGui::getStart(const QString& name){
         return -(ceil((size+1)/2)*5);
         }
     else{
-    return -(ceil((size)/2)*5)-1;
+    return -(ceil((size)/2)*5)-3;
     }
 }
 
