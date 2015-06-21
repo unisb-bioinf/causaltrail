@@ -415,7 +415,6 @@ TEST_F(ParserTest, ParserCheck60){
 TEST_F(ParserTest, ParserCheck61){
 	std::string query("? Letter = l1 ! do Intelligence = i1 | Intelligence = i0");
 	Parser p (query, c);
-	QueryExecuter qe = p.parseQuery();
 	ASSERT_THROW(p.parseQuery().execute(),std::invalid_argument);
 }
 
@@ -426,8 +425,19 @@ TEST_F(ParserTest,ParserCheck62){
 }
 
 TEST_F(ParserTest, Parser_BUG_373) {
-	NetworkController nc;
 	std::string query("? Difficulty");
+	Parser p(query, c);
+	ASSERT_THROW(p.parseQuery(), std::invalid_argument);
+}
+
+TEST_F(ParserTest, Parser_BUG_373V2) {
+	std::string query("? Difficulty = ");
+	Parser p(query, c);
+	ASSERT_THROW(p.parseQuery(), std::invalid_argument);
+}
+
+TEST_F(ParserTest, Parser_BUG_373V3) {
+	std::string query("? Difficulty = d1 | Grade =  ");
 	Parser p(query, c);
 	ASSERT_THROW(p.parseQuery(), std::invalid_argument);
 }
