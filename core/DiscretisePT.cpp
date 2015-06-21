@@ -9,12 +9,6 @@ void DiscretisePT::apply(unsigned int row, Data& data)
 	    templist[ceil(0.185 * templist.size())-1],
 	    templist[ceil(0.815 * templist.size())-1],
 	    std::numeric_limits<float>::max()};
-	std::cout<<"Border values start"<<std::endl;
-	std::cout<<borderValues[0]<<std::endl;
-	std::cout<<borderValues[1]<<std::endl;
-	std::cout<<borderValues[2]<<std::endl;
-	std::cout<<borderValues[3]<<std::endl;
-	std::cout<<"Border values end"<<std::endl;
 	// Fill intervals
 	for(unsigned int col = 0; col < data.input.getColCount(); col++) {
 		auto value = getNumber(data.input, col, row);
