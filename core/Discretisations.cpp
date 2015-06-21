@@ -28,7 +28,7 @@ std::vector<float> Discretisations::createSortedVector(const Observations& obs,
                                                        unsigned int row)
 {
 	std::vector<float> templist;
-	templist.reserve(obs.getColCount());
+	templist.reserve(obs.getColCount()-obs.countElement(1,row,"NA"));
 	for(unsigned int col = 0; col < obs.getColCount(); col++) {
 		auto value = getNumber(obs, col, row);
 
