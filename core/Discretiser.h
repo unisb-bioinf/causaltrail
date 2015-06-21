@@ -43,25 +43,41 @@ class Discretiser
 	            const std::string& filename, Matrix<int>& obsMatrix,
 	            Network& network);
 
+	/**setJsonTree
+	 *
+	 * @param A reference to a DiscretisationSettings Object
+	 * 
+	 * Sets DiscretisationSettings constructed in DiscretisationSelection
+	 */
 	void setJsonTree(DiscretisationSettings&);
 
 	Discretiser& operator=(const Discretiser&) = delete;
 
 	Discretiser& operator=(Discretiser&&) = delete;
 
-	/**
+	/**discretise
 	 *
+	 * @param const std::string& controlFile name of the json file 
+	 * containing the discretisation information
+	 *
+	 * Extracts the discretisation information from the controlFile
+	 * and calls discretise() subsequently 
 	 */
 	void discretise(const std::string& controlFile);
 
-	/**
-	 *
+	/**discretise
+	 * 
+	 * Calls the apply function of all Discretisations objects stored in 
+	 * discretisations_
 	 */
 	void discretise();
 
 	private:
-	/**
+	/**createDiscretisaionClasses
 	 *
+	 * @param controlFile
+	 * 
+	 * Generates Discretisations objects according to the specified controlFile
 	 */
 	void createDiscretisationClasses(const std::string& controlFile);
 
