@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "../core/DiscretisationSettings.h"
 #include "config.h"
+#include <stdio.h>
 
 class DiscretisationSettingsTest : public ::testing::Test{
 	protected:
@@ -88,4 +89,6 @@ TEST_F(DiscretisationSettingsTest,exportFile){
 	ASSERT_TRUE(jp.getParameter<int>("Difficulty","buckets")==3);
 	ASSERT_TRUE(jp.getMethod("Intelligence")=="none");
 	ASSERT_TRUE(jp.getMethod("Letter")=="none");
+	
+	remove(TEST_DATA_PATH("outputTest.json"));
 }
