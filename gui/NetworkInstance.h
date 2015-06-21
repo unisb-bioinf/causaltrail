@@ -10,6 +10,7 @@
 #include "../core/Discretiser.h"
 #include "../core/NetworkController.h"
 
+class DiscretisationSelection;
 
 class NetworkInstance : public QObject {
 	Q_OBJECT
@@ -361,6 +362,12 @@ class NetworkInstance : public QObject {
      */
     std::vector<unsigned int>& getDeselectedSamples();
 
+    /**
+     * @brief getDiscretisationSelection
+     * @return a pointer to the DiscretisationSelectionObject of this class
+     */
+    DiscretisationSelection* getDiscretisationSelection();
+
 	/**
 	 * Exports the network to an SVG file that can be used in
 	 * publications. A recent version of Qt5 is needed, as older
@@ -441,6 +448,13 @@ private:
      * QueryManager object
      */
     QueryManager qma_;
+
+
+    /**
+     *@brief discretisationSelection_
+     * DiscretisationSelection object	 
+     */
+    DiscretisationSelection* discretisationSelection_;
 
     /**
      * @brief trained_

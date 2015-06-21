@@ -1,4 +1,5 @@
 #include "NetworkInstance.h"
+#include "DiscretisationSelection.h"
 #include "../core/Parser.h"
 #include "NodeGui.h"
 NetworkInstance::NetworkInstance(QObject* parent)
@@ -14,6 +15,11 @@ NetworkInstance::NetworkInstance(QObject* parent)
       dataFile_("%"),
       discretisationControl_("%")
 {
+	discretisationSelection_ = new DiscretisationSelection((QWidget*) parent);
+	connect(discretisationSelection_, SIGNAL(accepted()), parent,
+		SLOT(loadSamples()));
+
+
 }
 
 void NetworkInstance::loadNetwork(QString filename){
@@ -347,4 +353,9 @@ std::vector<unsigned int> &NetworkInstance::getDeselectedSamples()
 void NetworkInstance::exportSvg(const QString& filename)
 {
 	nv_->exportSVG(filename);
+}
+
+DiscretisationSelection* NetworkInstance::getDiscretisationSelection()
+{
+	return discretisationSelection_;	
 }

@@ -12,7 +12,6 @@ class MainWindow;
 class QLabel;
 
 class Config;
-class DiscretisationSelection;
 
 class MainWindow : public QMainWindow
 {
@@ -110,8 +109,7 @@ private:
      */
     std::vector<NetworkInstance*> networks;
 
-	Config* config_;
-	DiscretisationSelection* DiscretisationSelection_;
+    Config* config_;
 
 private slots:
 	void addLogMessage(const QString&);

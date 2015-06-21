@@ -23,9 +23,6 @@
 MainWindow::MainWindow(Config* config, QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), config_(config)
 {
-	DiscretisationSelection_ = new DiscretisationSelection(this);
-	connect(DiscretisationSelection_, SIGNAL(accepted()), this,
-	        SLOT(loadSamples()));
 
 	ui->setupUi(this);
 	showMaximized();
@@ -112,16 +109,17 @@ void MainWindow::visualise(int index)
 
 void MainWindow::loadSamples()
 {
+	unsigned int index =ui->tabWidget->currentIndex(); 
 	try {
-		unsigned int index = DiscretisationSelection_->index();
-		networks[index]->setDataFile(DiscretisationSelection_->samples());
-		networks[index]->loadSamples(DiscretisationSelection_->getPropertyTree());
+		networks[index]->setDataFile(networks[index]->getDiscretisationSelection()->samples());
+		networks[index]->loadSamples(networks[index]->getDiscretisationSelection()->getPropertyTree());
 		adaptQueryEvaluationButtons(true);
 		ui->queryView->setNetworkInstance(networks[index]);
+		ui->queryView->newQuery();
 	} catch(std::invalid_argument& e) {
 		addLogMessage(e.what());
 		adaptQueryEvaluationButtons(false);
-		networks[DiscretisationSelection_->index()]->resetNetwork();
+		networks[index]->resetNetwork();
 	}
 }
 
@@ -153,7 +151,7 @@ void MainWindow::discretiseSelection(const QString& samples,
 {
 	int index = ui->tabWidget->currentIndex();
 	networks[index]->setDeselectedSamples(deselected);
-	DiscretisationSelection_->show(config_->dataDir(), samples, index);
+	networks[index]->getDiscretisationSelection()->show(config_->dataDir(), samples, index);
 }
 
 void MainWindow::dataRejected()
