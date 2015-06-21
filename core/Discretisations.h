@@ -8,6 +8,9 @@
 
 #include <boost/optional/optional.hpp>
 
+/**
+ * Base class for Discretisations objects
+ **/
 class Discretisations
 {
 	public:
@@ -33,6 +36,16 @@ class Discretisations
 	};
 
 	virtual ~Discretisations() = default;
+	/**apply
+	 *
+	 * @param unsigned int row, index of the row in the matrix
+	 * containing original data that should be discretised 
+	 *
+	 * @param Data& Struct holding necessary data structures to conduct
+	 * the discretisation
+	 *
+	 * This method needs to be implemented by the child classes of this class.
+	 **/
 	virtual void apply(unsigned int row, Data& data) = 0;
 
 	protected:
