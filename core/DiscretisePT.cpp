@@ -6,11 +6,17 @@ void DiscretisePT::apply(unsigned int row, Data& data)
 	const std::vector<float> borderValues = {
 	    // Calculate borders: Constants are defined by the method
 	    std::numeric_limits<float>::min(),
-	    templist[ceil(0.185 * templist.size())],
-	    templist[ceil(0.815 * templist.size())],
+	    templist[ceil(0.185 * templist.size())-1],
+	    templist[ceil(0.815 * templist.size())-1],
 	    std::numeric_limits<float>::max()};
+	std::cout<<"Border values start"<<std::endl;
+	std::cout<<borderValues[0]<<std::endl;
+	std::cout<<borderValues[1]<<std::endl;
+	std::cout<<borderValues[2]<<std::endl;
+	std::cout<<borderValues[3]<<std::endl;
+	std::cout<<"Border values end"<<std::endl;
 	// Fill intervals
-	for(unsigned int col = 0; col < templist.size(); col++) {
+	for(unsigned int col = 0; col < data.input.getColCount(); col++) {
 		auto value = getNumber(data.input, col, row);
 
 		if(!value) {
