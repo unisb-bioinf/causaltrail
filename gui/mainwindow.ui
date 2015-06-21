@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1379</width>
-    <height>896</height>
+    <width>1024</width>
+    <height>822</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -77,8 +77,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1379</width>
-     <height>23</height>
+     <width>1024</width>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp">
@@ -157,8 +157,8 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>42</width>
-     <height>20</height>
+     <width>50</width>
+     <height>25</height>
     </size>
    </property>
    <property name="maximumSize">
@@ -255,7 +255,7 @@
   </widget>
   <widget class="QDockWidget" name="queryViewDock">
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -263,7 +263,7 @@
    <property name="minimumSize">
     <size>
      <width>358</width>
-     <height>631</height>
+     <height>0</height>
     </size>
    </property>
    <property name="font">
@@ -285,7 +285,7 @@
    </attribute>
    <widget class="QueryView" name="queryView">
     <property name="sizePolicy">
-     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
       <horstretch>0</horstretch>
       <verstretch>0</verstretch>
      </sizepolicy>
@@ -301,8 +301,8 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>70</width>
-     <height>90</height>
+     <width>78</width>
+     <height>103</height>
     </size>
    </property>
    <property name="font">

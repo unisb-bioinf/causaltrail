@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>390</width>
-    <height>775</height>
+    <width>278</width>
+    <height>765</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -46,9 +52,7 @@
         <string>...</string>
        </property>
        <property name="icon">
-        <iconset theme="dialog-ok-apply">
-         <normaloff/>
-        </iconset>
+        <iconset theme="dialog-ok"/>
        </property>
       </widget>
      </item>
@@ -155,6 +159,12 @@
    </item>
    <item>
     <widget class="QListWidget" name="queryVariableList">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="font">
       <font>
        <pointsize>10</pointsize>
@@ -180,6 +190,12 @@
    </item>
    <item>
     <widget class="QListWidget" name="conditionVariableList">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="font">
       <font>
        <pointsize>10</pointsize>
@@ -202,6 +218,12 @@
    </item>
    <item>
     <widget class="QListWidget" name="interventionVariableList">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="font">
       <font>
        <pointsize>10</pointsize>
@@ -224,6 +246,12 @@
    </item>
    <item>
     <widget class="QListWidget" name="edgeAdditionsRemovalList">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="font">
       <font>
        <pointsize>10</pointsize>
@@ -310,5 +338,22 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>Input</sender>
+   <signal>returnPressed()</signal>
+   <receiver>executeQuery</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>99</x>
+     <y>29</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>173</x>
+     <y>24</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
