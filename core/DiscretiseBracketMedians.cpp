@@ -19,7 +19,7 @@ void DiscretiseBracketMedians::apply(unsigned int row, Data& data)
 	borderValues.push_back(std::numeric_limits<float>::max());
 
 	// Fill intervals
-	for(unsigned int col = 0; col < templist.size(); col++) {
+	for(unsigned int col = 0; col < data.input.getColCount(); col++) {
 		auto value = getNumber(data.input, col, row);
 
 		int result = NA;
