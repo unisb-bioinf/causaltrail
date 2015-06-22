@@ -181,7 +181,7 @@ void NetworkInstance::initialiseEdgeAddition(){
     id2_=-1;
 }
 
-bool NetworkInstance::EdgeAddition(){
+bool NetworkInstance::edgeAddition(){
     return (remainingNodesForEdgeAddition_ > 0);
 }
 
@@ -194,7 +194,7 @@ bool NetworkInstance::checkEdgeAddition(unsigned int id){
     return false;
 }
 
-void NetworkInstance::NodeForEdgeAdditionSelected(unsigned int id){
+void NetworkInstance::nodeForEdgeAdditionSelected(unsigned int id){
     if (id1_==-1){
         id1_=id;
     }
@@ -208,7 +208,7 @@ void NetworkInstance::NodeForEdgeAdditionSelected(unsigned int id){
     remainingNodesForEdgeAddition_--;
 }
 
-void NetworkInstance::EdgeRemoval(unsigned int srcId, unsigned int tarId) {
+void NetworkInstance::addEdgeRemoval(unsigned int srcId, unsigned int tarId) {
    id1_ = srcId;
    id2_ = tarId;
 }
@@ -221,7 +221,7 @@ const std::string& NetworkInstance::removedEdgeTargetName() const {
     return nc_.getNetwork().getNode(id2_).getName();
 }
 
-void NetworkInstance::RemoveSelectedEdge(){
+void NetworkInstance::removeSelectedEdge(){
     nv_->removeEdge(id1_,id2_);
     emit edgeRemoved(id1_, id2_);
     id1_=-1;

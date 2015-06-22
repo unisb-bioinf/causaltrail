@@ -113,30 +113,29 @@ class NetworkInstance : public QObject {
      * @brief EdgeAddition
      * @return True if the network instance waits for an edge addition, false otherwise
      */
-    bool EdgeAddition();
+    bool edgeAddition();
 
     /**
      * @brief NodeForEdgeAdditionSelected
      * Adds the given identifier as a node in the edge addition process
      * @param id Identifier of the selected node
      */
-    void NodeForEdgeAdditionSelected(unsigned int id);
+    void nodeForEdgeAdditionSelected(unsigned int id);
 
     /**
-     * @brief EdgeRemoval
      * Assigns the given values to the member variables of this class to execute an edge removal
      * @param srcId Identifier of the source node
      * @param tarId Identifier of the target node
      * @param name1 Name of the source node
      * @param name2 Name of the target node
      */
-    void EdgeRemoval(unsigned int srcId, unsigned int tarId);
+    void addEdgeRemoval(unsigned int srcId, unsigned int tarId);
 
     /**
      * @brief RemoveSelectedEdge
      * Removes the selected edge
      */
-    void RemoveSelectedEdge();
+    void removeSelectedEdge();
 
     /**
      * @brief setSelectedNode

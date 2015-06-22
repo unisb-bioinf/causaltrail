@@ -279,12 +279,12 @@ void MainWindow::Node_double_clicked(NodeGui* node)
 	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
 
 	currentNetwork->setSelectedNode(node->getID());
-	if(!currentNetwork->EdgeAddition()) {
+	if(!currentNetwork->edgeAddition()) {
 		return;
 	}
 
 	if(currentNetwork->checkEdgeAddition(node->getID())) {
-		currentNetwork->NodeForEdgeAdditionSelected(node->getID());
+		currentNetwork->nodeForEdgeAdditionSelected(node->getID());
 	} else {
 		addLogMessage("This edge would induce a cycle. Therefore, it "
 		              "can not be added!");
@@ -355,7 +355,7 @@ void MainWindow::Node_context(NodeGui* node,
 void MainWindow::Edge_context(Edge* edge, QContextMenuEvent* event)
 {
 	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
-	currentNetwork->EdgeRemoval(edge->sourceNode()->getID(), edge->destNode()->getID());
+	currentNetwork->addEdgeRemoval(edge->sourceNode()->getID(), edge->destNode()->getID());
 	QMenu* menu = new QMenu;
 	if(currentNetwork->isTrained()) {
 		connect(menu->addAction("Remove Edge"), SIGNAL(triggered()), this,
@@ -555,12 +555,12 @@ void MainWindow::addEdgeSelected()
 {
 	NetworkInstance* currentNetwork = currentNetwork_();
 	currentNetwork->initialiseEdgeAddition();
-	currentNetwork->NodeForEdgeAdditionSelected(currentNetwork->getSelectedNodeID());
+	currentNetwork->nodeForEdgeAdditionSelected(currentNetwork->getSelectedNodeID());
 	currentNetwork->removeHighlighting();
 }
 
 void MainWindow::removeEdgeSelected() {
-	currentNetwork_()->RemoveSelectedEdge();
+	currentNetwork_()->removeSelectedEdge();
 }
 
 void MainWindow::conditionValueSelected(QAction* action)

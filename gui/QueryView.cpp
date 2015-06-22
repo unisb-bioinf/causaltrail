@@ -168,7 +168,7 @@ void QueryView::edgeRemoved(int source, int target)
 void QueryView::edgeAdded(int source, int target) {
 	addRemovalAddition_("+", source, target);
 
-	if(!net_->EdgeAddition()) {
+	if(!net_->edgeAddition()) {
 		ui->Input->setFocus();
 	}
 }
