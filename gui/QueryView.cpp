@@ -2,8 +2,11 @@
 #include "NetworkInstance.h"
 #include "NodeGui.h"
 
+#include "../core/Parser.h"
+
 #include "ui_QueryView.h"
 
+#include <QtCore/QDebug>
 #include <QtCore/QMessageLogger>
 
 QueryView::QueryView(QWidget* parent)
@@ -404,7 +407,35 @@ void QueryView::on_Input_textChanged(const QString& arg1)
 {
 	if(net_ && arg1 == "") {
 		clear();
+		ui->Input->setStyleSheet("");
+		return;
 	}
+		Parser parser(arg1.toStdString(), net_->getController());
+
+		try {
+			auto qe = parser.parseQuery();
+
+		    writeListWidget(ui->queryVariableList, ui->queryLabel,
+		                    qe.getNonInterventionIds(),
+		                    qe.getNonInterventionValues());
+		    writeListWidget(ui->interventionVariableList, ui->interventionLabel,
+		                    qe.getInterventionIds(),
+		                    qe.getInterventionValues());
+		    writeListWidget(ui->conditionVariableList, ui->conditionLabel,
+		                    qe.getConditionIds(), qe.getConditionValues());
+
+		    for(auto&& addition : qe.getEdgeAdditionIds()) {
+			    addRemovalAddition_("+", addition.first, addition.second);
+		    }
+
+			for(auto&& addition : qe.getEdgeRemovalIds()) {
+				addRemovalAddition_("-", addition.first, addition.second);
+			}
+
+		    ui->Input->setStyleSheet("QLineEdit{background:#33aa33;}");
+	    } catch(const std::invalid_argument&) {
+		    ui->Input->setStyleSheet("QLineEdit{background:#aa3333;}");
+	    }
 }
 
 void QueryView::checkAllEmpty()
@@ -467,6 +498,29 @@ void QueryView::writeListWidget(QListWidget* widget, QLabel* label,
 
 	for(auto&& item : vec) {
 		widget->addItem(item);
+	}
+}
+
+void QueryView::writeListWidget(QListWidget* widget, QLabel* label,
+                                const std::vector<unsigned int>& ids,
+                                const std::vector<int>& values) const
+{
+	widget->clear();
+
+	widget->setVisible(!ids.empty());
+	label->setVisible(!ids.empty());
+
+	for(auto nodeId : ids) {
+		const auto& node = net_->getController().getNetwork().getNode(nodeId);
+		if(values[nodeId] != -1 &&
+		   static_cast<size_t>(values[nodeId]) < node.getValueNames().size()) {
+			widget->addItem(
+			    QString::fromStdString(node.getName()) + " = " +
+			    QString::fromStdString(node.getValueNames()[values[nodeId]]));
+		} else {
+			qCritical() << "Invalid value" << values[nodeId]
+			            << "supplied for node" << node.getName().c_str();
+		}
 	}
 }
 

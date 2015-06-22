@@ -73,12 +73,29 @@ class QueryView : public QWidget
 
 	/**
 	 * @brief writeListWidget
-	 * Adds the elements of vector vec to the given QListWidget and adapts the visiblity of both the QListWidget and the related QLabel
+	 * Adds the elements of vector vec to the given QListWidget and adapts the
+	 * visiblity of both the QListWidget and the related QLabel
 	 * @param widget Pointer to a QListWidget
 	 * @param label Pointer to a QLabel
 	 * @param vec Reference to a vector containing QStrings
 	 */
-	void writeListWidget(QListWidget* widget, QLabel* label, const std::vector<QString>& vec) const;
+	void writeListWidget(QListWidget* widget, QLabel* label,
+	                     const std::vector<QString>& vec) const;
+
+	/**
+	 * Adds a set of node name = value assignments to the specified
+	 * QListWidget. Node names and value names are constructed from the
+	 * associated network instance.
+	 *
+	 * @param widget The list widget that should be filled
+	 * @param label The associated label
+	 * @param ids a vector of node ids
+	 * @param values a vector of the node values associated with the nodes in
+	 *        ids. Node values must be accessible via values[ids[i]].
+	 */
+	void writeListWidget(QListWidget* widget, QLabel* label,
+	                     const std::vector<unsigned int>& ids,
+	                     const std::vector<int>& values) const;
 
 	/**
 	 * @brief removeDuplicates
