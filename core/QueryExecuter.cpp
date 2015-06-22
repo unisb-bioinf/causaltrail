@@ -279,6 +279,51 @@ void QueryExecuter::setArgMax(const unsigned int nodeID)
 	argmaxNodeIDs_.push_back(nodeID);
 }
 
+const std::vector< unsigned int >& QueryExecuter::getNonInterventionIds() const
+{
+	return nonInterventionNodeID_;
+}
+
+const std::vector< int >& QueryExecuter::getNonInterventionValues() const
+{
+	return nonInterventionValues_;
+}
+
+const std::vector< unsigned int >& QueryExecuter::getInterventionIds() const
+{
+	return doInterventionNodeID_;
+}
+
+const std::vector< int >& QueryExecuter::getInterventionValues() const
+{
+	return doInterventionValues_;
+}
+
+const std::vector< unsigned int >& QueryExecuter::getConditionIds() const
+{
+	return conditionNodeID_;
+}
+
+const std::vector< int >& QueryExecuter::getConditionValues() const
+{
+	return conditionValues_;
+}
+
+const std::vector< std::pair< unsigned int, unsigned int > >& QueryExecuter::getEdgeAdditionIds() const
+{
+	return addEdgeNodeIDs_;
+}
+
+const std::vector< std::pair< unsigned int, unsigned int > >& QueryExecuter::getEdgeRemovalIds() const
+{
+	return removeEdgeNodeIDs_;
+}
+
+const std::vector< unsigned int >& QueryExecuter::getArgMaxIds() const
+{
+	return argmaxNodeIDs_;
+}
+
 std::ostream& operator<<(std::ostream& os, const QueryExecuter& qe)
 {
 	os << "NonIntervention: " << qe.nonInterventionNodeID_.size() << " "

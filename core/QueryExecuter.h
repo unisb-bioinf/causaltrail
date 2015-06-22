@@ -85,6 +85,19 @@ class QueryExecuter{
 	 */
 	void setArgMax(const unsigned int nodeID);
 
+	const std::vector<unsigned int>& getNonInterventionIds() const;
+	const std::vector<int>& getNonInterventionValues() const;
+
+	const std::vector<unsigned int>& getInterventionIds() const;
+	const std::vector<int>& getInterventionValues() const;
+
+	const std::vector<unsigned int>& getConditionIds() const;
+	const std::vector<int>& getConditionValues() const;
+
+	const std::vector<std::pair<unsigned int, unsigned int>>& getEdgeRemovalIds() const;
+	const std::vector<std::pair<unsigned int, unsigned int>>& getEdgeAdditionIds() const;
+	const std::vector<unsigned int>& getArgMaxIds() const;
+
 	/**operator<<
 	 * 
 	 * @param os, reference to an ostream object
