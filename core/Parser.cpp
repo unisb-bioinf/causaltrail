@@ -8,6 +8,11 @@ QueryExecuter Parser::parseQuery()
 	if(query_[index] != "?") {
 		throw std::invalid_argument("In parseQuery, query should start with ?");
 	}
+
+	if(query_.size() < 2) {
+		throw std::invalid_argument("Expected query variable, but empty query found.");
+	}
+
 	if(query_[1] == "argmax") {
 		index = 2;
 		if (index < query_.size())
