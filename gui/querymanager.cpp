@@ -3,10 +3,6 @@
 QueryManager::QueryManager()
     :index_(0)
 {
-    queryItems_.resize(0);
-    conditionItems_.resize(0);
-    interventionItems_.resize(0);
-    edgeAddRemItems_.resize(0);
 }
 
 bool QueryManager::isBeginning() const{
