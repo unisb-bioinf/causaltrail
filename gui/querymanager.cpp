@@ -10,12 +10,7 @@ bool QueryManager::isBeginning() const{
 }
 
 bool QueryManager::isFinal() const{
-    if (queryItems_.empty()){
-        return true;
-    }
-    else{
-          return (index_>=queryItems_.size()-1);
-    }
+	return queryItems_.empty() || index_ + 1 >= queryItems_.size();
 }
 
 const QString& QueryManager::getPreviousQuery(){
