@@ -328,7 +328,7 @@ class Network{
 		 *
 		 * @return the hypothetical node identifier
 		 */
-		unsigned int getHypoID(unsigned int originalID);
+		unsigned int getHypoID(unsigned int originalID) const;
 		/**reset
 		 *
 		 * Calls the reset function of all nodes in the NodeList_

@@ -480,7 +480,7 @@ unsigned int Network::getHypoStart(){
 	return hypostart_;
 }
 
-unsigned int Network::getHypoID(unsigned int originalID){
+unsigned int Network::getHypoID(unsigned int originalID) const{
 	return IDMap_[originalID];
 }
 
