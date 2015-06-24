@@ -53,7 +53,7 @@ template <typename T> class Matrix
 	 * using the number of entries in the name vectors.
 	 */
 	Matrix(const std::vector<std::string>& colNames,
-	       const std::vector<std::string>& rowNames = {"NA"}, T initialValue = NULL);
+	       const std::vector<std::string>& rowNames = {"NA"}, T initialValue = T());
 
 	/**Detailed Constructor
 	 *
@@ -66,7 +66,7 @@ template <typename T> class Matrix
 	 *
 	 * Creates a Matrix with the specified number of columns and rows
 	 */
-	Matrix(int colCount = 0, int rowCount = 0, T initialValue = NULL,
+	Matrix(int colCount = 0, int rowCount = 0, T initialValue = T(),
 	       const std::vector<std::string>& colNames = {"NA"},
 	       const std::vector<std::string>& rowNames = {"NA"});
 
