@@ -30,6 +30,7 @@ void EM::performEM()
 			}
 			float prob = calculateLikelihoodOfTheData();
 			if(prob > maxprob) {
+				maxprob = prob;
 				maxmethod = method;
 			}
 		}
