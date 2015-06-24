@@ -74,7 +74,7 @@ public:
     void saveDiscretisations();
 
 
-    const std::string getControlFileName() const;
+	const QString& getControlFileName() const;
 
 	void loadControlFile();
 

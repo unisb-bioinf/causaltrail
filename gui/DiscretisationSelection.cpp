@@ -66,7 +66,7 @@ DiscretisationSettings& DiscretisationSelection::getPropertyTree(){
 	return propertyTree_;
 }
 
-const std::string DiscretisationSelection::getControlFileName() const { return controlFileName_.toStdString(); }
+const QString& DiscretisationSelection::getControlFileName() const { return controlFileName_; }
 
 void DiscretisationSelection::adaptGUIToData() {
 	featureNames_.clear();
