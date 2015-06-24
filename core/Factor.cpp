@@ -80,9 +80,11 @@ Factor::Factor(const Node& n, const std::vector<int>& values)
 }
 
 Factor::Factor(unsigned int length, std::vector<unsigned int> ids)
-	: val_(length*ids.size()), probabilities_(length), length_(length)
+    : nodeIDs_(ids),
+      val_(length * ids.size()),
+      probabilities_(length),
+      length_(length)
 {
-	nodeIDs_ = ids;
 }
 
 std::vector<unsigned int> Factor::getCommonIDs(const Factor& factor) const
