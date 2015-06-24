@@ -1,8 +1,12 @@
 #include "NetworkController.h"
 
 NetworkController::NetworkController()
-	:network_(Network()),observations_(Matrix<int>(0,0,-1))
-	{
+    : observations_(0, 0, -1),
+      eMRuns_(0),
+      finalDifference_(0),
+      likelihoodOfTheData_(0.0f),
+      timeInMicroSeconds_(0)
+{
 }
 
 void NetworkController::loadNetwork(const std::string& networkfile){
