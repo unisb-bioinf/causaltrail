@@ -6,8 +6,7 @@
 #include <iostream>
 
 Network::Network()
-    : AdjacencyMatrix_(Matrix<unsigned int>(0, 0, 0)),
-      AdjacencyMatrixBackup_(Matrix<unsigned int>(0, 0, 0))
+    : hypostart_(0)
 {
 	ExtensionToIndex_[".tgf"] = 1;
 	ExtensionToIndex_[".na"] = 2;
