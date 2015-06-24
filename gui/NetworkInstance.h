@@ -12,14 +12,14 @@
 
 class DiscretisationSelection;
 
-class NetworkInstance : public QObject {
+class NetworkInstance : public QWidget {
 	Q_OBJECT
  public:
     /**
      * @brief NetworkInstance
      * Constructor of the NetworkInstance class
      */
-    NetworkInstance(QObject* parent = nullptr);
+    NetworkInstance(QWidget* parent = nullptr);
 
     /**
      * @brief loadNetwork
@@ -33,7 +33,7 @@ class NetworkInstance : public QObject {
      * Visualises the network represented by this class
      * @param tabwidget Pointer to the tabwidget containing the visualization
      */
-    void visualize(QWidget* tabwidget);
+    void visualize();
 
     /**
      * @brief loadSamples

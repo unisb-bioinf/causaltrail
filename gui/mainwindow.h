@@ -103,12 +103,6 @@ private:
      */
     Ui::MainWindow *ui;
 
-    /**
-     * @brief networks
-	 * Vector holding all active NetworkInstances
-     */
-    std::vector<NetworkInstance*> networks;
-
     Config* config_;
 
 private slots:
@@ -263,6 +257,7 @@ private slots:
 
 	private:
 	NetworkInstance* currentNetwork_();
+	NetworkInstance* getNetwork_(int index);
 };
 
 #endif // MAINWINDOW_H

@@ -49,11 +49,12 @@ void MainWindow::on_actionHelp_triggered()
 
 void MainWindow::checkQueriesLeft()
 {
-	if(networks.empty()) {
+	if(!ui->tabWidget->currentWidget()) {
 		return;
 	}
 
-	ui->actionCreate_Batchfile->setEnabled(currentNetwork_()->getQMA().getNumberOfQueries() > 0);
+	ui->actionCreate_Batchfile->setEnabled(
+	    currentNetwork_()->getQMA().getNumberOfQueries() > 0);
 }
 
 void MainWindow::initaliseVisibility()
@@ -66,10 +67,9 @@ void MainWindow::initaliseVisibility()
 
 int MainWindow::generateNetworkInstance()
 {
-	networks.push_back(new NetworkInstance(this));
-	ui->tabWidget->addTab(new QWidget,
-	                      "New Tab " + QString::number(ui->tabWidget->count()));
-	int index = ui->tabWidget->count() - 1;
+	int index = ui->tabWidget->addTab(
+	    new NetworkInstance(this),
+	    "New Tab " + QString::number(ui->tabWidget->count()));
 	ui->tabWidget->setCurrentIndex(index);
 	return index;
 }
@@ -77,8 +77,8 @@ int MainWindow::generateNetworkInstance()
 void MainWindow::loadNAorTGF(QString filename, int index)
 {
 	addLogMessage("File: " + filename + " opened");
-	networks[index]->loadNetwork(filename);
-	networks[index]->setNaOrTgf(filename);
+	getNetwork_(index)->loadNetwork(filename);
+	getNetwork_(index)->setNaOrTgf(filename);
 	QStringList list = filename.split("/");
 	auto name = list[list.size() - 1];
 	ui->tabWidget->setTabText(index, name);
@@ -87,50 +87,51 @@ void MainWindow::loadNAorTGF(QString filename, int index)
 void MainWindow::loadSif(QString filename, int index)
 {
 	addLogMessage("File: " + filename + " opened");
-	networks[index]->loadNetwork(filename);
-	networks[index]->setSif(filename);
+	getNetwork_(index)->loadNetwork(filename);
+	getNetwork_(index)->setSif(filename);
 }
 
 void MainWindow::visualise(int index)
 {
-	networks[index]->visualize(ui->tabWidget->widget(index));
+	getNetwork_(index)->visualize();
 	ui->actionLoad_Samples->setEnabled(true);
 	ui->actionLayout->setEnabled(true);
 	ui->tabWidget->widget(index)->setFocus();
-	ui->queryView->setNetworkInstance(networks[index]);
+	ui->queryView->setNetworkInstance(getNetwork_(index));
 
-	connect(networks[index], SIGNAL(context(NodeGui*, QContextMenuEvent*)),
+	connect(getNetwork_(index), SIGNAL(context(NodeGui*, QContextMenuEvent*)),
 	        this, SLOT(Node_context(NodeGui*, QContextMenuEvent*)));
-	connect(networks[index], SIGNAL(context(Edge*, QContextMenuEvent*)),
+	connect(getNetwork_(index), SIGNAL(context(Edge*, QContextMenuEvent*)),
 	        this, SLOT(Edge_context(Edge*, QContextMenuEvent*)));
-	connect(networks[index], SIGNAL(doubleClick(NodeGui*)),
-	        this, SLOT(Node_double_clicked(NodeGui*)));
+	connect(getNetwork_(index), SIGNAL(doubleClick(NodeGui*)), this,
+	        SLOT(Node_double_clicked(NodeGui*)));
 }
 
 void MainWindow::loadSamples()
 {
-	unsigned int index =ui->tabWidget->currentIndex(); 
+	NetworkInstance* network = currentNetwork_();
 	try {
-		networks[index]->setDataFile(networks[index]->getDiscretisationSelection()->samples());
-		networks[index]->loadSamples(networks[index]->getDiscretisationSelection()->getPropertyTree());
+		network->setDataFile(network->getDiscretisationSelection()->samples());
+		network->loadSamples(
+		    network->getDiscretisationSelection()->getPropertyTree());
 		adaptQueryEvaluationButtons(true);
-		ui->queryView->setNetworkInstance(networks[index]);
+		ui->queryView->setNetworkInstance(network);
 		ui->queryView->newQuery();
 	} catch(std::invalid_argument& e) {
 		addLogMessage(e.what());
 		adaptQueryEvaluationButtons(false);
-		networks[index]->resetNetwork();
+		network->resetNetwork();
 	}
 }
 
-void MainWindow::loadSamples(const QString& samples,
-				const QString& control,
-				unsigned int index)
+void MainWindow::loadSamples(const QString& samples, const QString& control,
+                             unsigned int index)
 {
+	NetworkInstance* network = getNetwork_(index);
 	addLogMessage("Reading samples: " + samples);
-	networks[index]->setDataFile(samples);
-	networks[index]->setDiscretisationControlFile(control);
-	networks[index]->loadSamples();
+	network->setDataFile(samples);
+	network->setDiscretisationControlFile(control);
+	network->loadSamples();
 	adaptQueryEvaluationButtons(true);
 
 	ui->queryView->newQuery();
@@ -149,17 +150,17 @@ void MainWindow::queryExecuted(unsigned int query)
 void MainWindow::discretiseSelection(const QString& samples,
                                      const std::vector<uint>& deselected)
 {
-	int index = ui->tabWidget->currentIndex();
-	networks[index]->setDeselectedSamples(deselected);
-	networks[index]->getDiscretisationSelection()->show(config_->dataDir(), samples, index);
+	NetworkInstance* network = currentNetwork_();
+	network->setDeselectedSamples(deselected);
+	network->getDiscretisationSelection()->show(config_->dataDir(), samples,
+	                                            ui->tabWidget->currentIndex());
 }
 
 void MainWindow::dataRejected()
 {
 	addLogMessage("No samples loaded");
 	adaptQueryEvaluationButtons(false);
-	int index = ui->tabWidget->currentIndex();
-	networks[index]->resetNetwork();
+	currentNetwork_()->resetNetwork();
 }
 
 void MainWindow::on_actionLoad_Samples_triggered()
@@ -206,17 +207,12 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)
 {
-	networks.erase(networks.begin() + index);
 	ui->tabWidget->removeTab(index);
 }
 
 void MainWindow::on_actionDeleteNetwork_triggered()
 {
-	if(!networks.empty()) {
-		int index = ui->tabWidget->currentIndex();
-		networks.erase(networks.begin() + index);
-		ui->tabWidget->removeTab(index);
-	}
+	ui->tabWidget->removeTab(ui->tabWidget->currentIndex());
 }
 
 void MainWindow::on_actionLoadNetwork_triggered()
@@ -247,8 +243,8 @@ void MainWindow::on_tabWidget_currentChanged(int index)
 {
 	checkQueriesLeft();
 
-	if(!networks.empty()) {
-		NetworkInstance* currentNetwork = networks[index];
+	if(index != -1) {
+		NetworkInstance* currentNetwork = getNetwork_(index);
 		if(currentNetwork->isTrained()) {
 			adaptQueryEvaluationButtons(true);
 			currentNetwork->restoreOriginalNetworkRepresentation();
@@ -276,7 +272,7 @@ void MainWindow::on_actionLayout_triggered()
 
 void MainWindow::Node_double_clicked(NodeGui* node)
 {
-	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
+	NetworkInstance* currentNetwork = currentNetwork_();
 
 	currentNetwork->setSelectedNode(node->getID());
 	if(!currentNetwork->edgeAddition()) {
@@ -294,7 +290,7 @@ void MainWindow::Node_double_clicked(NodeGui* node)
 void MainWindow::Node_context(NodeGui* node,
                               QContextMenuEvent* event)
 {
-	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
+	NetworkInstance* currentNetwork = currentNetwork_();
 	QMenu* menu = new QMenu;
 	if(currentNetwork->isTrained()) {
 		const auto& values = currentNetwork->getValues(node->getID());
@@ -354,7 +350,7 @@ void MainWindow::Node_context(NodeGui* node,
 
 void MainWindow::Edge_context(Edge* edge, QContextMenuEvent* event)
 {
-	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
+	NetworkInstance* currentNetwork = currentNetwork_();
 	currentNetwork->addEdgeRemoval(edge->sourceNode()->getID(), edge->destNode()->getID());
 	QMenu* menu = new QMenu;
 	if(currentNetwork->isTrained()) {
@@ -376,17 +372,17 @@ void MainWindow::adaptQueryEvaluationButtons(bool show)
 
 void MainWindow::context_Menu_ArgMax_Selected()
 {
-	ui->queryView->computeArgMax(networks[ui->tabWidget->currentIndex()]->getSelectedNodeID());
+	ui->queryView->computeArgMax(currentNetwork_()->getSelectedNodeID());
 }
 
 void MainWindow::context_Menu_QueryValue_Selected(QAction* act)
 {
-	ui->queryView->computeProbability(networks[ui->tabWidget->currentIndex()]->getSelectedNodeID(), act->text());
+	ui->queryView->computeProbability(currentNetwork_()->getSelectedNodeID(), act->text());
 }
 
 void MainWindow::context_Menu_ShowMatrix_selected()
 {
-	NetworkInstance* currentNetwork = networks[ui->tabWidget->currentIndex()];
+	NetworkInstance* currentNetwork = currentNetwork_();
 
 	matrixPopup* mp = new matrixPopup();
 	mp->setWindowTitle("CPT of " + currentNetwork->getSelectedNodeName());
@@ -425,6 +421,10 @@ void MainWindow::on_actionSave_Session_triggered()
 	dialog.exec();
 	QString filename = dialog.selectedFiles()[0];
 	if(!filename.isNull()) {
+		std::vector<NetworkInstance*> networks(ui->tabWidget->count());
+		for(int i = 0; i < ui->tabWidget->count(); ++i) {
+			networks[i] = getNetwork_(i);
+		}
 		dataStore.saveSession(networks, filename);
 		addLogMessage("Session saved");
 	} else {
@@ -448,17 +448,17 @@ void MainWindow::on_actionLoad_Session_triggered()
 				loadSif(dataStore.getSif(i), index);
 			}
 			visualise(index);
-			networks[index]->setDeselectedSamples(
+			getNetwork_(index)->setDeselectedSamples(
 			    dataStore.getDeSelectedData(index));
 			loadSamples(dataStore.getData(i),
 			            dataStore.getDiscretiseControl(i),
 			            index);
-			networks[index]->setQMA(dataStore.getQma(i));
+			getNetwork_(index)->setQMA(dataStore.getQma(i));
 		}
 		addLogMessage("Session loaded");
-		if(networks.back()->getQMA().getNumberOfQueries() > 0) {
+		if(getNetwork_(index)->getQMA().getNumberOfQueries() > 0) {
 			ui->actionCreate_Batchfile->setEnabled(true);
-			loadQueriesToHistoryWindow(networks[index]);
+			loadQueriesToHistoryWindow(getNetwork_(index));
 		}
 	} else {
 		addLogMessage("No file specified. No session loaded");
@@ -480,9 +480,8 @@ void MainWindow::on_actionCreate_Batchfile_triggered()
 	dialog.setDefaultSuffix("txt");
 	dialog.exec();
 	QString filename = dialog.selectedFiles()[0];
-	int index = ui->tabWidget->currentIndex();
 	dataStorage dataStore;
-	dataStore.createQueryBatchFile(*networks[index], filename);
+	dataStore.createQueryBatchFile(*currentNetwork_(), filename);
 	addLogMessage("Batch file created");
 }
 
@@ -506,7 +505,7 @@ void MainWindow::on_actionExecute_Batchfile_triggered()
 
 		std::pair<float, std::vector<std::string>> result;
 		try {
-			result = networks[ui->tabWidget->currentIndex()]->calculate(line);
+			result = currentNetwork_()->calculate(line);
 		} catch(std::exception& e) {
 			addLogMessage(e.what());
 			break;
@@ -531,7 +530,7 @@ void MainWindow::on_actionExportSvg_triggered()
 	QString filename = QFileDialog::getSaveFileName(this, tr("Select SVG file."), config_->dataDir(), "*.svg");
 
 	if(filename != "") {
-		networks[ui->tabWidget->currentIndex()]->exportSvg(filename);
+		currentNetwork_()->exportSvg(filename);
 	}
 }
 
@@ -544,11 +543,12 @@ void MainWindow::on_queryHistory_doubleClicked(const QModelIndex& index) {
 
 NetworkInstance* MainWindow::currentNetwork_()
 {
-	if(ui->tabWidget->currentIndex() == -1) {
-		return nullptr;
-	}
+	return static_cast<NetworkInstance*>(ui->tabWidget->currentWidget());
+}
 
-	return networks[ui->tabWidget->currentIndex()];
+NetworkInstance* MainWindow::getNetwork_(int index)
+{
+	return static_cast<NetworkInstance*>(ui->tabWidget->widget(index));
 }
 
 void MainWindow::addEdgeSelected()

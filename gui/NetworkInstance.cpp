@@ -2,8 +2,8 @@
 #include "DiscretisationSelection.h"
 #include "../core/Parser.h"
 #include "NodeGui.h"
-NetworkInstance::NetworkInstance(QObject* parent)
-    : QObject(parent),
+NetworkInstance::NetworkInstance(QWidget* parent)
+    : QWidget(parent),
       nv_(nullptr),
       trained_(false),
       argmax_(false),
@@ -26,12 +26,10 @@ void NetworkInstance::loadNetwork(QString filename){
     nc_.loadNetwork(filename.toStdString());
 }
 
-void NetworkInstance::visualize(QWidget* tabwidget){
-	if(nv_) {
-		nv_->disconnect(this);
-	}
+void NetworkInstance::visualize() {
+	delete nv_;
 
-    nv_ = new NetworkVis(tabwidget, nc_.getNetwork());
+    nv_ = new NetworkVis(this, nc_.getNetwork());
 
 	connect(nv_,  SIGNAL(context(Edge*, QContextMenuEvent*)),
 	        this, SIGNAL(context(Edge*, QContextMenuEvent*)));
