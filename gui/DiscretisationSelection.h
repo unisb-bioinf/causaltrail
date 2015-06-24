@@ -34,7 +34,7 @@ public:
     /**
      * Show and reconfigure the dialog
      */
-    void show(const QString& path, const QString& samples, int index);
+    void show(const QString& samples);
 
     /**
      * Get the sample file.
@@ -94,12 +94,6 @@ private slots:
     void box_Index_Changed(uint position, const QString& method);
 
 private:
-    /**
-     * @brief path_
-     * Standard file save path of causalTrail
-     */
-    QString path_;
-
     /**
      * @brief samples_
      * Name of the file containing samples_

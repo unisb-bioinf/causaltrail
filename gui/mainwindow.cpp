@@ -148,10 +148,7 @@ void MainWindow::queryExecuted(unsigned int query)
 void MainWindow::discretiseSelection(const QString& samples,
                                      const std::vector<uint>& deselected)
 {
-	NetworkInstance* network = currentNetwork_();
-	network->setDeselectedSamples(deselected);
-	network->getDiscretisationSelection()->show(config_->dataDir(), samples,
-	                                            ui->tabWidget->currentIndex());
+	currentNetwork_()->discretise(samples, deselected);
 }
 
 void MainWindow::dataRejected()

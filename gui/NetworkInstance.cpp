@@ -357,3 +357,10 @@ DiscretisationSelection* NetworkInstance::getDiscretisationSelection()
 {
 	return discretisationSelection_;	
 }
+
+void NetworkInstance::discretise(const QString& samples,
+                                 const std::vector<uint>& deselected)
+{
+	setDeselectedSamples(deselected);
+	discretisationSelection_->show(samples);
+}

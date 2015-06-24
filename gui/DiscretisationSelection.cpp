@@ -7,7 +7,7 @@
 #include <QtWidgets/QPushButton>
 
 DiscretisationSelection::DiscretisationSelection(QWidget* parent)
-    : QDialog(parent), index_(-1), ui(new Ui::DiscretisationSelection)
+    : QDialog(parent), ui(new Ui::DiscretisationSelection)
 {
 	ui->setupUi(this);
 
@@ -20,12 +20,9 @@ DiscretisationSelection::DiscretisationSelection(QWidget* parent)
 	connect(button, &QPushButton::clicked, this, &DiscretisationSelection::loadControlFile);
 }
 
-void DiscretisationSelection::show(const QString& path, const QString& samples,
-                              int index)
+void DiscretisationSelection::show(const QString& samples)
 {
-	path_ = path;
 	samples_ = samples;
-	index_ = index;
 	controlFileName_="";
 
 	adaptGUIToData();
@@ -68,8 +65,6 @@ void DiscretisationSelection::generatePropertyTree()
 DiscretisationSettings& DiscretisationSelection::getPropertyTree(){
 	return propertyTree_;
 }
-
-int DiscretisationSelection::index() const { return index_; }
 
 const std::string DiscretisationSelection::getControlFileName() const { return controlFileName_.toStdString(); }
 

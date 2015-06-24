@@ -366,6 +366,7 @@ class NetworkInstance : public QWidget {
      * @return a pointer to the DiscretisationSelectionObject of this class
      */
     DiscretisationSelection* getDiscretisationSelection();
+    void discretise(const QString& samples, const std::vector<uint>& deselected);
 
 	/**
 	 * Exports the network to an SVG file that can be used in
