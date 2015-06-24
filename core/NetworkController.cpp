@@ -71,19 +71,19 @@ void NetworkController::trainNetwork(){
 	network_.clearDynProgMatrices();
 }
 
-const float& NetworkController::getLikelihoodOfTheData() const {
+float NetworkController::getLikelihoodOfTheData() const {
 	return likelihoodOfTheData_;
 }
 
-const int& NetworkController::getNumberOfEMRuns() const{
+int NetworkController::getNumberOfEMRuns() const {
 	return eMRuns_;
 }
 
-const float& NetworkController::getParameterDifference() const{
+float NetworkController::getParameterDifference() const {
 	return finalDifference_;
 }
 
-const int& NetworkController::getTimeInMicroSeconds() const{
+int NetworkController::getTimeInMicroSeconds() const {
 	return timeInMicroSeconds_;
 }
 

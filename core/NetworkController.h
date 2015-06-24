@@ -87,7 +87,7 @@ class NetworkController{
 	 *
 	 * @return the Log Likelyhood of the data
 	 */
-	const float& getLikelihoodOfTheData() const;
+	float getLikelihoodOfTheData() const;
 
 	/**getNetwork
 	 *
@@ -105,19 +105,19 @@ class NetworkController{
 	 *
 	 * @return the number of executed EM iterations
 	 */
-	const int& getNumberOfEMRuns() const;
+	int getNumberOfEMRuns() const;
 
 	/**getParameterDifference
 	 *
 	 * @return the final Parameter difference in EM
 	 */ 
-	const float& getParameterDifference() const;
+	float getParameterDifference() const;
 
 	/**getTimeInMicroSeconds
 	 *
 	 * @return time in microseconds used to perform EM
 	 */
-	const int& getTimeInMicroSeconds() const;
+	int getTimeInMicroSeconds() const;
 
 	/**saveParameters
 	 *
