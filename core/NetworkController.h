@@ -66,7 +66,7 @@ class NetworkController{
      *
      * Reads the raw sample data and performs the discretisation
      */
-    void loadObservations(const std::string& datafile, DiscretisationSettings& propertyTree);
+    void loadObservations(const std::string& datafile, const DiscretisationSettings& propertyTree);
 
     /**loadObservations
      *
@@ -76,7 +76,7 @@ class NetworkController{
      *
      * Reads the raw sample data and performs the discretisation
      */
-    void loadObservations(const std::string& datafile, DiscretisationSettings& propertyTree, const std::vector<unsigned int>& samplesToDelete);
+    void loadObservations(const std::string& datafile, const DiscretisationSettings& propertyTree, const std::vector<unsigned int>& samplesToDelete);
 
 	/**trainNetwork
 	 *

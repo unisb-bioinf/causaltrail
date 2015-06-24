@@ -31,7 +31,7 @@ Discretiser::Discretiser(const Matrix<std::string>& originalObservations,
 	discretise(filename);
 }
 
-void Discretiser::setJsonTree(DiscretisationSettings& jsonTree)
+void Discretiser::setJsonTree(const DiscretisationSettings& jsonTree)
 {
 	jsonTree_ = jsonTree;
 }

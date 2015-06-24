@@ -43,7 +43,7 @@ void NetworkController::loadObservations(
 
 void NetworkController::loadObservations(
 	const std::string& datafile, 
-	DiscretisationSettings& propertyTree)
+	const DiscretisationSettings& propertyTree)
 {
 	Matrix<std::string> originalObservations(datafile, false, true);
 	Discretiser d(originalObservations,observations_,network_);
@@ -53,7 +53,7 @@ void NetworkController::loadObservations(
 
 void NetworkController::loadObservations(
 	const std::string& datafile, 
-	DiscretisationSettings& propertyTree,
+	const DiscretisationSettings& propertyTree,
 	const std::vector<unsigned int>& samplesToDelete)
 {
 	Matrix<std::string> originalObservations(datafile, false, true,samplesToDelete);

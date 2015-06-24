@@ -49,7 +49,7 @@ class Discretiser
 	 * 
 	 * Sets DiscretisationSettings constructed in DiscretisationSelection
 	 */
-	void setJsonTree(DiscretisationSettings&);
+	void setJsonTree(const DiscretisationSettings&);
 
 	Discretiser& operator=(const Discretiser&) = delete;
 
