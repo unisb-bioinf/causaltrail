@@ -23,11 +23,8 @@ void DiscretisationSettings::exportToFile(const std::string& filename)
 
 bool DiscretisationSettings::containsNode(const std::string& nodeName) const
 {
-	static std::string neg = "-1";
-	if(pt_.get<std::string>(nodeName, neg) == neg)
-		return false;
-	else
-		return true;
+	const static std::string neg = "-1";
+	return pt_.get<std::string>(nodeName, neg) != neg;
 }
 
 const std::string
