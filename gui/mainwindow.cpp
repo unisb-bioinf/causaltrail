@@ -79,9 +79,7 @@ void MainWindow::loadNAorTGF(QString filename, int index)
 	addLogMessage("File: " + filename + " opened");
 	getNetwork_(index)->loadNetwork(filename);
 	getNetwork_(index)->setNaOrTgf(filename);
-	QStringList list = filename.split("/");
-	auto name = list[list.size() - 1];
-	ui->tabWidget->setTabText(index, name);
+	ui->tabWidget->setTabText(index, filename.split("/").back());
 }
 
 void MainWindow::loadSif(QString filename, int index)
