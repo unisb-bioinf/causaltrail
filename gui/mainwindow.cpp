@@ -67,10 +67,16 @@ void MainWindow::initaliseVisibility()
 
 int MainWindow::generateNetworkInstance()
 {
+	NetworkInstance* network = new NetworkInstance(this);
+
 	int index = ui->tabWidget->addTab(
-	    new NetworkInstance(this),
+		network,
 	    "New Tab " + QString::number(ui->tabWidget->count()));
 	ui->tabWidget->setCurrentIndex(index);
+
+	connect(network, &NetworkInstance::newLogMessage, this, &MainWindow::addLogMessage);
+	connect(network, &NetworkInstance::samplesLoaded, this, &MainWindow::samplesLoaded);
+
 	return index;
 }
 
@@ -105,31 +111,18 @@ void MainWindow::visualise(int index)
 	        SLOT(Node_double_clicked(NodeGui*)));
 }
 
-void MainWindow::loadSamples()
+void MainWindow::samplesLoaded(NetworkInstance* network)
 {
-	NetworkInstance* network = currentNetwork_();
-	try {
-		network->setDataFile(network->getDiscretisationSelection()->samples());
-		network->loadSamples(
-		    network->getDiscretisationSelection()->getPropertyTree());
-		adaptQueryEvaluationButtons(true);
-		ui->queryView->setNetworkInstance(network);
-		ui->queryView->newQuery();
-	} catch(std::invalid_argument& e) {
-		addLogMessage(e.what());
-		adaptQueryEvaluationButtons(false);
-		network->resetNetwork();
-	}
+	adaptQueryEvaluationButtons(true);
+	ui->queryView->setNetworkInstance(network);
+	ui->queryView->newQuery();
 }
 
 void MainWindow::loadSamples(const QString& samples, const QString& control,
                              unsigned int index)
 {
-	NetworkInstance* network = getNetwork_(index);
 	addLogMessage("Reading samples: " + samples);
-	network->setDataFile(samples);
-	network->setDiscretisationControlFile(control);
-	network->loadSamples();
+	getNetwork_(index)->loadSamples(samples, control);
 	adaptQueryEvaluationButtons(true);
 
 	ui->queryView->newQuery();

@@ -97,6 +97,15 @@ private:
      */
     int generateNetworkInstance();
 
+	/**
+	 * This method adapts the various GUI elements after samples
+	 * have been loaded for a network.
+	 *
+	 * @param network The NetworkInstance for which the samples have
+	 * been loaded.
+	 */
+	void samplesLoaded(NetworkInstance* network);
+
     /**
      * @brief ui
 	 * The Graphical User Interface
@@ -120,12 +129,6 @@ private slots:
 	 * @param deselected
      */
     void discretiseSelection(const QString& samples, const std::vector<uint>& deselected);
-
-	/**
-	 * Discretises the data currently configured
-	 * in DiscretisationSelection_.
-	 */
-    void loadSamples();
 
     /**
      * @brief on_actionLoad_Samples_triggered

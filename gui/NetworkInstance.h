@@ -38,18 +38,18 @@ class NetworkInstance : public QWidget {
     /**
      * @brief loadSamples
      * Load and discretise the specified samples according to the specified controlfile
-     * @param filename Name of the file containing samples
-     * @param controlfile Name of the file containing discretisation control information
+     * @param samples Name of the file containing samples
+     * @param controlFile Name of the file containing discretisation control information
      */
-    void loadSamples();
+    void loadSamples(const QString& samples, const QString& controlFile);
 
     /**
      * @brief loadSamples
      * Load and discretise the specified samples according to the specified controlfile
-     * @param filename Name of the file containing samples
-     * @param controlfile Name of the file containing discretisation control information
+     * @param samples Name of the file containing samples.
+     * @param settings Settings controling the discretisation of the loaded samples.
      */
-    void loadSamples(DiscretisationSettings& propertyTree_);
+    void loadSamples(const QString& samples, const DiscretisationSettings& settings);
 
     /**
      * @brief calculate
@@ -375,6 +375,15 @@ class NetworkInstance : public QWidget {
 	 */
 	void exportSvg(const QString& filename);
 
+	public slots:
+	/**
+	* @brief loadSamples
+	* Load and discretise the specified samples according to the specified controlfile
+	* @param filename Name of the file containing samples
+	* @param controlfile Name of the file containing discretisation control information
+	*/
+	void loadSamples();
+
 	signals:
 	/**
 	 * Signal that fires when a context menu for a node was requested.
@@ -400,6 +409,10 @@ class NetworkInstance : public QWidget {
 	 * An edge has been added to the underlying network.
 	 */
 	void edgeAdded(int id1_, int id2_);
+
+	void samplesLoaded(NetworkInstance* instance);
+
+	void newLogMessage(const QString&);
 
 private:
 

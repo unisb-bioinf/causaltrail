@@ -15,11 +15,8 @@ NetworkInstance::NetworkInstance(QWidget* parent)
       dataFile_("%"),
       discretisationControl_("%")
 {
-	discretisationSelection_ = new DiscretisationSelection((QWidget*) parent);
-	connect(discretisationSelection_, SIGNAL(accepted()), parent,
-		SLOT(loadSamples()));
-
-
+	discretisationSelection_ = new DiscretisationSelection(this);
+	connect(discretisationSelection_, SIGNAL(accepted()), this, SLOT(loadSamples()));
 }
 
 void NetworkInstance::loadNetwork(QString filename){
@@ -38,25 +35,42 @@ void NetworkInstance::visualize() {
 	connect(nv_, SIGNAL(doubleClick(NodeGui*)), this, SIGNAL(doubleClick(NodeGui*)));
 }
 
-void NetworkInstance::loadSamples(){
-    if (deselectedSamples_.empty()){
-		nc_.loadObservations(dataFile_.toStdString(),discretisationControl_.toStdString());
-	} else {
-		nc_.loadObservations(dataFile_.toStdString(),discretisationControl_.toStdString(),deselectedSamples_);
-	}
-    nc_.trainNetwork();
-    trained_=true;
+void NetworkInstance::loadSamples()
+{
+	discretisationControl_ = discretisationSelection_->getControlFileName();
+	loadSamples(discretisationSelection_->samples(), discretisationSelection_->getPropertyTree());
 }
 
-void NetworkInstance::loadSamples(DiscretisationSettings& propertyTree_){
-    if (deselectedSamples_.empty()){
-                nc_.loadObservations(dataFile_.toStdString(),propertyTree_);
-        } else {
-                nc_.loadObservations(dataFile_.toStdString(),propertyTree_,deselectedSamples_);
-        }
-    nc_.trainNetwork();
-    trained_=true;
-	
+void NetworkInstance::loadSamples(const QString& samples, const QString& controlFile)
+{
+	discretisationControl_ = controlFile;
+	loadSamples(samples, DiscretisationSettings(controlFile.toStdString()));
+}
+
+void NetworkInstance::loadSamples(const QString& samples, const DiscretisationSettings& settings)
+{
+	dataFile_ = samples;
+
+	try {
+		nc_.loadObservations(dataFile_.toStdString(), settings, deselectedSamples_);
+	} catch(const boost::property_tree::ptree_bad_data& e) {
+		emit newLogMessage("Error in discretisation control. Could not convert parameter to required type.");
+		return;
+	} catch(const boost::property_tree::ptree_bad_path& e) {
+		emit newLogMessage("Error in discretisation control. Required parameter not present.");
+		return;
+	} catch(const std::invalid_argument& e) {
+		emit newLogMessage(QString("Error while loading samples: ") + e.what());
+		return;
+	}
+
+	try {
+		nc_.trainNetwork();
+		trained_ = true;
+		emit samplesLoaded(this);
+	} catch(const std::invalid_argument& e) {
+		emit newLogMessage(QString("Error while training the network: ") + e.what());
+	}
 }
 
 std::pair<float, std::vector<std::string>>
