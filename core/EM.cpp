@@ -12,12 +12,13 @@ EM::EM(Network& network, Matrix<int>& observations, float difference,
 }
 void EM::performEM()
 {
-	unsigned int runs = 0;
-	float difference = 1.0f;
-	float maxprob = 0.0f;
-	unsigned int maxmethod = 0;
 	// Check completness of the data
 	if(observations_.contains(-1)) {
+		unsigned int runs = 0;
+		float difference = 1.0f;
+		float maxprob = 0.0f;
+		unsigned int maxmethod = 0;
+
 		start = std::chrono::system_clock::now();
 		for(unsigned int method = 0; method < 2; method++) {
 			// Initialize and iterate E/M-Phase
