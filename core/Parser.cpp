@@ -69,28 +69,21 @@ bool Parser::terminationSymbolArgMax(unsigned int index) const
 
 void Parser::parseInterventions(unsigned int& index)
 {
-	bool ato=false;
 	while(terminationSymbol(index)) {
-		ato = false;
 		if(query_[index] == "do") {
 			index++;
 			parseDoIntervention(index); 
-			ato=true;
-		}
-		if(query_[index] == "+") {
+		} else if(query_[index] == "+") {
 			index++;
 			parseAddEdge(index);
-			ato=true;
-		}
-		if(query_[index] == "-") {
+		} else if(query_[index] == "-") {
 			index++;
 			parseRemoveEdge(index);
-			ato=true;
-		}
-		index++;
-		if (!ato) {
+		} else {
 			throw std::invalid_argument("In parseInterventions, no inverventions found");
 		}
+
+		index++;
 	}
 }
 
