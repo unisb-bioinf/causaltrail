@@ -1,5 +1,9 @@
 #include "gtest/gtest.h"
+
+#include "../core/DataDistribution.h"
+#include "../core/Discretiser.h"
 #include "../core/NetworkController.h"
+
 #include "config.h"
 
 class DataDistributionTest : public ::testing::Test{

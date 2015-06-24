@@ -1,13 +1,14 @@
 #ifndef NETWORKCONTROLLER_H
 #define NETWORKCONTROLLER_H
+
+#include "Matrix.h"
 #include "Network.h"
-#include "EM.h"
-#include "Discretiser.h"
-#include "DataDistribution.h"
-#include <cmath>
-#include <algorithm>
-#include <utility>
-#include <map>
+
+#include <string>
+#include <vector>
+
+class Discretiser;
+class DiscretisationSettings;
 
 class NetworkController{
 	public:

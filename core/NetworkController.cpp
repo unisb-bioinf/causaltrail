@@ -1,5 +1,10 @@
 #include "NetworkController.h"
 
+#include "DataDistribution.h"
+#include "Discretiser.h"
+#include "DiscretisationSettings.h"
+#include "EM.h"
+
 NetworkController::NetworkController()
     : observations_(0, 0, -1),
       eMRuns_(0),
