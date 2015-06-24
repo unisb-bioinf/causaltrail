@@ -160,7 +160,7 @@ void EM::initalise()
 void EM::initalise1()
 {
 	for(auto& n : network_.getNodes()) {
-		Matrix<float>& probMatrix = n.getProbabilityMatrix();
+		const Matrix<float>& probMatrix = n.getProbabilityMatrix();
 		for(unsigned int row = 0; row < probMatrix.getRowCount(); row++) {
 			for(unsigned int col = 0; col < probMatrix.getColCount(); col++) {
 				n.setProbability(1.0f / n.getNumberOfUniqueValuesExcludingNA(),
@@ -174,7 +174,7 @@ void EM::initalise2()
 {
 	for(auto& n : network_.getNodes()) {
 		const Matrix<int>& obMatrix = n.getObservationMatrix();
-		Matrix<float>& probMatrix = n.getProbabilityMatrix();
+		const Matrix<float>& probMatrix = n.getProbabilityMatrix();
 		for(unsigned int row = 0; row < probMatrix.getRowCount(); row++) {
 			float rowsum = obMatrix.calculateRowSum(row);
 			for(unsigned int col = 0; col < probMatrix.getColCount(); col++) {
