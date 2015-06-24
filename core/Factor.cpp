@@ -246,21 +246,22 @@ float Factor::getProbability(unsigned int index) const
 float Factor::getProbability(const std::vector<int>& values) const
 {
 	for(int i = 0; i< length_; i++){
-		bool flag = true;
 		if (nodeIDs_.size() > 0){
+			bool flag = true;
 			for (unsigned int j = 0; j < nodeIDs_.size(); j++){
 				if (val_[j+i*nodeIDs_.size()] != values[nodeIDs_[j]]){
 					flag = false;
+					break;
 				}
 			}
 			if (flag){
 				return probabilities_[i];
-				}
 			}
 		}
+	}
+
 	return 1.0f;
 }
-	
 
 std::ostream& operator<<(std::ostream& os, const Factor& f)
 {
