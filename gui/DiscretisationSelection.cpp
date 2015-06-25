@@ -62,7 +62,7 @@ void DiscretisationSelection::generatePropertyTree()
 	}
 }
 
-DiscretisationSettings& DiscretisationSelection::getPropertyTree(){
+const DiscretisationSettings& DiscretisationSelection::getPropertyTree() const {
 	return propertyTree_;
 }
 

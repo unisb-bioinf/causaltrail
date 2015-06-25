@@ -44,7 +44,7 @@ public:
     /**
      * Get the chosen discretisation settings.
      */
-    DiscretisationSettings& getPropertyTree();
+    const DiscretisationSettings& getPropertyTree() const;
 
     /**
      * Get the chosen discretisation settings.
