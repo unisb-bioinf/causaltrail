@@ -97,6 +97,8 @@ private:
      */
     int generateNetworkInstance();
 
+	int addNetwork(NetworkInstance* network);
+
 	/**
 	 * This method adapts the various GUI elements after samples
 	 * have been loaded for a network.

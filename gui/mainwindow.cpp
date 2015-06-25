@@ -65,19 +65,23 @@ void MainWindow::initaliseVisibility()
 	ui->actionSave_Session->setEnabled(false);
 }
 
-int MainWindow::generateNetworkInstance()
+int MainWindow::addNetwork(NetworkInstance* network)
 {
-	NetworkInstance* network = new NetworkInstance(this);
-
 	int index = ui->tabWidget->addTab(
-		network,
-	    "New Tab " + QString::number(ui->tabWidget->count()));
+	    network, "New Tab " + QString::number(ui->tabWidget->count()));
 	ui->tabWidget->setCurrentIndex(index);
 
-	connect(network, &NetworkInstance::newLogMessage, this, &MainWindow::addLogMessage);
-	connect(network, &NetworkInstance::samplesLoaded, this, &MainWindow::samplesLoaded);
+	connect(network, &NetworkInstance::newLogMessage, this,
+	        &MainWindow::addLogMessage);
+	connect(network, &NetworkInstance::samplesLoaded, this,
+	        &MainWindow::samplesLoaded);
 
 	return index;
+}
+
+int MainWindow::generateNetworkInstance()
+{
+	return addNetwork(new NetworkInstance(this));
 }
 
 void MainWindow::loadNAorTGF(QString filename, int index)
@@ -399,25 +403,23 @@ void MainWindow::context_Menu_ShowMatrix_selected()
 	currentNetwork->removeHighlighting();
 }
 
-
-
 void MainWindow::on_actionSave_Session_triggered()
 {
-	dataStorage dataStore;
-	QFileDialog dialog;
-	dialog.setDefaultSuffix("cts");
-	dialog.exec();
-	QString filename = dialog.selectedFiles()[0];
-	if(!filename.isNull()) {
-		std::vector<NetworkInstance*> networks(ui->tabWidget->count());
-		for(int i = 0; i < ui->tabWidget->count(); ++i) {
-			networks[i] = getNetwork_(i);
-		}
-		dataStore.saveSession(networks, filename);
-		addLogMessage("Session saved");
-	} else {
+	QString filename =
+	    QFileDialog::getSaveFileName(this, tr("Save session"), "", "cts");
+	if(filename.isNull()) {
 		addLogMessage("No file specified. The Session was not stored!");
+		return;
 	}
+
+	std::vector<NetworkInstance*> networks(ui->tabWidget->count());
+	for(int i = 0; i < ui->tabWidget->count(); ++i) {
+		networks[i] = getNetwork_(i);
+	}
+
+	dataStorage dataStore;
+	dataStore.saveSession(networks, filename);
+	addLogMessage("Session saved");
 }
 
 void MainWindow::on_actionLoad_Session_triggered()
@@ -425,32 +427,19 @@ void MainWindow::on_actionLoad_Session_triggered()
 	dataStorage dataStore;
 	QString filename = QFileDialog::getOpenFileName(
 	    this, tr("Load session file"), config_->dataDir(), "*.cts");
-	int index = 0;
-	if(filename != "") {
-		dataStore.loadSession(filename);
-		for(unsigned int i = 0; i < dataStore.getNumberOfLoadedNetworks();
-		    i++) {
-			index = generateNetworkInstance();
-			loadNAorTGF(dataStore.getNAorTGf(i), index);
-			if(dataStore.getNAorTGf(i).endsWith(".na")) {
-				loadSif(dataStore.getSif(i), index);
-			}
-			visualise(index);
-			getNetwork_(index)->setDeselectedSamples(
-			    dataStore.getDeSelectedData(index));
-			loadSamples(dataStore.getData(i),
-			            dataStore.getDiscretiseControl(i),
-			            index);
-			getNetwork_(index)->setQMA(dataStore.getQma(i));
-		}
-		addLogMessage("Session loaded");
-		if(getNetwork_(index)->getQMA().getNumberOfQueries() > 0) {
-			ui->actionCreate_Batchfile->setEnabled(true);
-			loadQueriesToHistoryWindow(getNetwork_(index));
-		}
-	} else {
+	if(filename == "") {
 		addLogMessage("No file specified. No session loaded");
+		return;
 	}
+
+	for(auto* net : dataStore.loadSession(filename)) {
+		net->loadNetwork();
+		net->loadSamples(net->getDataFile(), net->getDiscretisationSettings());
+		int index = addNetwork(net);
+		visualise(index);
+	}
+
+	addLogMessage("Session loaded");
 }
 
 void MainWindow::loadQueriesToHistoryWindow(const NetworkInstance* net)
