@@ -4,6 +4,12 @@
 
 DiscretisationSettings::DiscretisationSettings() {}
 
+DiscretisationSettings::DiscretisationSettings(
+    const boost::property_tree::ptree& pt)
+	: pt_(pt)
+{
+}
+
 DiscretisationSettings::DiscretisationSettings(const std::string& filename)
 {
 	importFile(filename);
@@ -52,6 +58,12 @@ DiscretiserParameters
 DiscretisationSettings::getParameters(const std::string& nodeName) const
 {
 	return DiscretiserParameters(pt_.get_child(nodeName));
+}
+
+const boost::property_tree::ptree&
+DiscretisationSettings::getPropertyTree() const
+{
+	return pt_;
 }
 
 DiscretiserParameters::DiscretiserParameters(

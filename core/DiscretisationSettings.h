@@ -30,6 +30,8 @@ class DiscretisationSettings
 	*/
 	DiscretisationSettings();
 
+	explicit DiscretisationSettings(const boost::property_tree::ptree& pt);
+
 	/**Detailed Constructor
 	*
 	* @param filename name of the json file that should be loaded
@@ -37,7 +39,7 @@ class DiscretisationSettings
 	* Constructs a SerailzeDeserializeJson object representing the specified
 	*json file
 	*/
-	DiscretisationSettings(const std::string& filename);
+	explicit DiscretisationSettings(const std::string& filename);
 
 	/**Deconstructor
 	*
@@ -122,6 +124,8 @@ class DiscretisationSettings
 	*/
 	void addToTree(const std::string& nodeName, const std::string& method,
 	               const std::string& parameterID, const std::string& value);
+
+	const boost::property_tree::ptree& getPropertyTree() const;
 
 	private:
 	// A boost property tree holding the json file

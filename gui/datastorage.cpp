@@ -1,51 +1,73 @@
 #include "datastorage.h"
 
-dataStorage::dataStorage()
-{
+#include "DiscretisationSelection.h"
+#include "NetworkInstance.h"
 
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+
+namespace pt = boost::property_tree;
+
+void dataStorage::saveSession(const std::vector<NetworkInstance*>& currentNetworks, const QString& filename)
+{
+	unsigned int i = 1;
+	pt::ptree output;
+	for (NetworkInstance* networkInst : currentNetworks) {
+		pt::ptree& networkOutput = output.add_child("network" + std::to_string(i), pt::ptree());
+		storeNetwork_(networkOutput, networkInst);
+		++i;
+	}
+
+	pt::write_json(filename.toStdString(), output);
 }
 
-void dataStorage::saveSession(std::vector<NetworkInstance*>& currentNetworks, QString filename)
+void dataStorage::storeNetwork_(pt::ptree& output, const NetworkInstance* networkInst) const
 {
- std::ofstream output;
- output.open(filename.toStdString());
- for (NetworkInstance* networkInst : currentNetworks){
-     output<<"network"<<std::endl;
-     output<<networkInst->getNaOrTgf().toStdString()<<std::endl;
-     output<<networkInst->getSif().toStdString()<<std::endl;
-     output<<networkInst->getDataFile().toStdString()<<std::endl;
-     output<<networkInst->getDiscretisationControlFile().toStdString()<<std::endl;
-     for (unsigned int i = 0; i < networkInst->getDeselectedSamples().size(); i++){
-		output<<networkInst->getDeselectedSamples()[i]<<"\t";
-     }
-	 output<<std::endl;
+	output.put("nodes", networkInst->getNaOrTgf().toStdString());
+	if(!networkInst->getSif().isEmpty()) {
+		output.put("topology", networkInst->getSif().toStdString());
+	}
+	output.put("data", networkInst->getDataFile().toStdString());
+	output.add_child("discretisation", networkInst->getDiscretisationSettings().getPropertyTree());
 
-	 const auto& queryManager = networkInst->getQMA();
-     for (unsigned int i = 0; i < queryManager.getNumberOfQueries(); i++){
-        output<<"query"<<std::endl;
-        output<<queryManager.getQuery(i).toStdString()<<std::endl;
-        output<<"queryItems"<<std::endl;
-        for (const QString& queryItem : queryManager.getQueryItems(i)){
-            output<<queryItem.toStdString()<<std::endl;
-        }
-        output<<"conditionItems"<<std::endl;
-        for (const QString& conditionItem : queryManager.getConditionItems(i)){
-            output<<conditionItem.toStdString()<<std::endl;
-        }
-        output<<"interventionItems"<<std::endl;
-        for (const QString& interventionItem : queryManager.getInterventionItems(i)){
-            output<<interventionItem.toStdString()<<std::endl;
-        }
-        output<<"edgeAddRemItems"<<std::endl;
-        for (const QString& edgeAddRemItem : queryManager.getEdgeAddRemItems(i)){
-            output<<edgeAddRemItem.toStdString()<<std::endl;
-        }
-     }
- }
- output.close();
+	storeDeselectedSamples_(output, networkInst->getDeselectedSamples());
+	storeQueries_(output, networkInst->getQMA().getQueries());
 }
 
-void dataStorage::createQueryBatchFile(NetworkInstance &currentNetwork, QString filename)
+void dataStorage::storeDeselectedSamples_(
+    pt::ptree& networkOutput,
+    const std::vector<unsigned int>& samples) const
+{
+	if(samples.empty()) {
+		return;
+	}
+
+	std::string tmp;
+	for(unsigned int i : samples) {
+		tmp += std::to_string(i) + ",";
+	}
+	tmp.resize(tmp.size() - 1);
+
+	networkOutput.put("deselectedSamples", tmp);
+}
+
+void dataStorage::storeQueries_(pt::ptree& networkOutput,
+                                const std::vector<QString>& queries) const
+{
+	if(queries.empty()) {
+		return;
+	}
+
+	std::string tmp;
+	for(const auto& query : queries) {
+		tmp += query.toStdString() + ";";
+	}
+	tmp.resize(tmp.size() - 1);
+
+	networkOutput.put("queries", tmp);
+}
+
+void dataStorage::createQueryBatchFile(NetworkInstance &currentNetwork, const QString& filename)
 {
     std::ofstream output;
     output.open(filename.toStdString());
@@ -55,112 +77,67 @@ void dataStorage::createQueryBatchFile(NetworkInstance &currentNetwork, QString 
     output.close();
 }
 
-const std::vector<unsigned int> fromString(const std::string& line){
-	std::vector<unsigned int> temp;
-
-	return temp;
-}
-
-void dataStorage::loadSession(QString filename)
+std::vector<NetworkInstance*> dataStorage::loadSession(const QString& filename) const
 {
-    QString naOrTgf;
-    QString sif;
-    QString sample;
-    QString controlSample;
-    std::ifstream input;
-	std::stringstream deletedSamplesString;
-    std::string line;
-	std::vector<unsigned int> deletedSamples;
-    input.open(filename.toStdString());
-    std::getline(input,line);
-    while(!input.eof()){
-         if (line == "network"){
-            qmaVec_.push_back(QueryManager());
-            input >> line;
-            naOrTgf = QString::fromStdString(line);
-            input >> line;
-            sif = QString::fromStdString(line);
-            input >> line;
-            sample = QString::fromStdString(line);
-            input >> line;
-            controlSample = QString::fromStdString(line);
-			input >> line;
-			deletedSamplesString << line;
-			int i;
-			while (deletedSamplesString >> i)
-				deletedSamples.push_back(i);
-            std::getline(input,line);
-            networkInformation_.push_back(std::make_tuple(naOrTgf,sif,sample,controlSample,deletedSamples));
-            std::getline(input,line);
-        }
-        if (line == "query"){
-            std::getline(input,line);
-            while (! isTerminal(QString::fromStdString(line),input)){
-                qmaVec_.back().storeQuery(QString::fromStdString(line));
-                std::getline(input,line);
-                }
-       }
-       if (line == "queryItems"){
-           std::getline(input,line);
-           while (! isTerminal(QString::fromStdString(line),input)){
-               qmaVec_.back().storeQueryItem(QString::fromStdString(line));
-               std::getline(input,line);
-               }
-        }
-        if (line == "conditionItems"){
-            std::getline(input,line);
-            while (! isTerminal(QString::fromStdString(line),input)){
-                qmaVec_.back().storeConditionItem(QString::fromStdString(line));
-                std::getline(input,line);
-            }
-        }
-        if (line == "interventionItems"){
-            std::getline(input,line);
-            while (! isTerminal(QString::fromStdString(line),input)){
-                qmaVec_.back().storeInterventionItem(QString::fromStdString(line));
-                std::getline(input,line);
-            }
-        }
-       if (line == "edgeAddRemItems"){
-            std::getline(input,line);
-            while (! isTerminal(QString::fromStdString(line),input)){
-                qmaVec_.back().storeAddRemEdgeItem(QString::fromStdString(line));
-                std::getline(input,line);
-            }
-        }
-    }
-    input.close();
+	pt::ptree input;
+	pt::read_json(filename.toStdString(), input);
+
+	std::vector<NetworkInstance*> results;
+
+	for(const auto& networks : input) {
+		results.push_back(loadNetwork_(networks.second));
+	}
+
+	return results;
 }
 
-unsigned int dataStorage::getNumberOfLoadedNetworks(){
-    return networkInformation_.size();
-}
-
-const QString& dataStorage::getNAorTGf(unsigned int index){
-    return std::get<0>(networkInformation_[index]);
-}
-
-const QString& dataStorage::getSif(unsigned int index){
-   return std::get<1>(networkInformation_[index]);
-}
-
-const QString& dataStorage::getData(unsigned int index){
-   return std::get<2>(networkInformation_[index]);
-}
-
-const QString& dataStorage::getDiscretiseControl(unsigned int index){
-    return std::get<3>(networkInformation_[index]);
-}
-
-const std::vector<unsigned int>& dataStorage::getDeSelectedData(unsigned int index){
-    return std::get<4>(networkInformation_[index]);
-}
-
-bool dataStorage::isTerminal(QString line, std::ifstream& input)
+NetworkInstance*
+dataStorage::loadNetwork_(const boost::property_tree::ptree& networkOutput) const
 {
-    return ((input.eof()) || (line == "query") || (line =="queryItems") || (line =="conditionItems") || (line == "interventionItems") || (line == "edgeAddRemItems") || (line == "network"));
+	NetworkInstance* instance = new NetworkInstance;
+
+	instance->setNaOrTgf(QString::fromStdString(networkOutput.get<std::string>("nodes")));
+	instance->setSif(QString::fromStdString(networkOutput.get("topology", "")));
+
+	QString dataFile = QString::fromStdString(networkOutput.get("data", ""));
+
+	// When there is no data it is not necessary/sensible
+	// to look at any of the other fields.
+	if(dataFile != "") {
+		instance->setDataFile(dataFile);
+
+		DiscretisationSettings settings(networkOutput.get_child("discretisation"));
+		instance->setDiscretisationSettings(settings);
+		instance->setDeselectedSamples(loadDeselectedSamples_(networkOutput));
+		loadQueries_(networkOutput, instance);
+	}
+
+	return instance;
 }
 
-QueryManager& dataStorage::getQma(unsigned int index){
-    return qmaVec_[index];
+std::vector<unsigned int> dataStorage::loadDeselectedSamples_(
+    const pt::ptree& input) const
+{
+	using namespace boost::algorithm;
+	std::vector<unsigned int> samples;
+
+	std::string tmp = input.get("deselectedSamples", "");
+	auto begin = make_split_iterator(tmp, first_finder(";", boost::is_equal()));
+	for(; begin != split_iterator<std::string::iterator>(); ++begin) {
+		samples.push_back(std::stoi(boost::copy_range<std::string>(*begin)));
+	}
+
+	return samples;
+}
+
+void
+dataStorage::loadQueries_(const pt::ptree& input, NetworkInstance* net) const
+{
+	using namespace boost::algorithm;
+
+	std::string tmp = input.get("queries", "");
+	auto begin = make_split_iterator(tmp, first_finder(";", boost::is_equal()));
+	for(; begin != split_iterator<std::string::iterator>(); ++begin) {
+		net->getQMA().storeQuery(QString::fromStdString(boost::copy_range<std::string>(*begin)));
+	}
 }

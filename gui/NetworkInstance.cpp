@@ -9,10 +9,7 @@ NetworkInstance::NetworkInstance(QWidget* parent)
       argmax_(false),
       remainingNodesForEdgeAddition_(0),
       id1_(-1),
-      id2_(-1),
-      naOrTgf_("%"),
-      sif_("%"),
-      dataFile_("%")
+      id2_(-1)
 {
 	discretisationSelection_ = new DiscretisationSelection(this);
 	connect(discretisationSelection_, SIGNAL(accepted()), this, SLOT(loadSamples()));
