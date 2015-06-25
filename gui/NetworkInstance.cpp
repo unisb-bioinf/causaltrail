@@ -12,8 +12,7 @@ NetworkInstance::NetworkInstance(QWidget* parent)
       id2_(-1),
       naOrTgf_("%"),
       sif_("%"),
-      dataFile_("%"),
-      discretisationControl_("%")
+      dataFile_("%")
 {
 	discretisationSelection_ = new DiscretisationSelection(this);
 	connect(discretisationSelection_, SIGNAL(accepted()), this, SLOT(loadSamples()));
@@ -21,6 +20,13 @@ NetworkInstance::NetworkInstance(QWidget* parent)
 
 void NetworkInstance::loadNetwork(QString filename){
     nc_.loadNetwork(filename.toStdString());
+}
+
+void NetworkInstance::loadNetwork() {
+	nc_.loadNetwork(naOrTgf_.toStdString());
+	if(sif_ != "") {
+		nc_.loadNetwork(sif_.toStdString());
+	}
 }
 
 void NetworkInstance::visualize() {
@@ -37,19 +43,18 @@ void NetworkInstance::visualize() {
 
 void NetworkInstance::loadSamples()
 {
-	discretisationControl_ = discretisationSelection_->getControlFileName();
 	loadSamples(discretisationSelection_->samples(), discretisationSelection_->getPropertyTree());
 }
 
 void NetworkInstance::loadSamples(const QString& samples, const QString& controlFile)
 {
-	discretisationControl_ = controlFile;
 	loadSamples(samples, DiscretisationSettings(controlFile.toStdString()));
 }
 
 void NetworkInstance::loadSamples(const QString& samples, const DiscretisationSettings& settings)
 {
 	dataFile_ = samples;
+	discretisationSettings_ = settings;
 
 	try {
 		nc_.loadObservations(dataFile_.toStdString(), settings, deselectedSamples_);
@@ -295,20 +300,16 @@ void NetworkInstance::removeNodeColor(QString name,QColor color){
     nv_->getNode(nc_.getNetwork().getNode(name.toStdString()).getID())->removeColor(color);
 }
 
-QString NetworkInstance::getNaOrTgf(){
+const QString& NetworkInstance::getNaOrTgf() const {
     return naOrTgf_;
 }
 
-QString NetworkInstance::getSif(){
+const QString& NetworkInstance::getSif() const {
     return sif_;
 }
 
-QString NetworkInstance::getDataFile(){
+const QString& NetworkInstance::getDataFile() const {
     return dataFile_;
-}
-
-QString NetworkInstance::getDiscretisationControlFile(){
-    return discretisationControl_;
 }
 
 void NetworkInstance::setNaOrTgf(const QString& filename){
@@ -321,10 +322,6 @@ void NetworkInstance::setSif(const QString& filename){
 
 void NetworkInstance::setDataFile(const QString& filename){
     dataFile_= filename;
-}
-
-void NetworkInstance::setDiscretisationControlFile(const QString& filename){
-    discretisationControl_ = filename;
 }
 
 void NetworkInstance::setQMA(QueryManager& qma){
@@ -357,7 +354,7 @@ void NetworkInstance::setDeselectedSamples(const std::vector<unsigned int> &ids)
     deselectedSamples_=ids;
 }
 
-std::vector<unsigned int> &NetworkInstance::getDeselectedSamples()
+const std::vector<unsigned int>& NetworkInstance::getDeselectedSamples() const
 {
     return deselectedSamples_;
 }
@@ -367,9 +364,19 @@ void NetworkInstance::exportSvg(const QString& filename)
 	nv_->exportSVG(filename);
 }
 
-DiscretisationSelection* NetworkInstance::getDiscretisationSelection()
+const DiscretisationSelection* NetworkInstance::getDiscretisationSelection() const
 {
 	return discretisationSelection_;	
+}
+
+const DiscretisationSettings& NetworkInstance::getDiscretisationSettings() const
+{
+	return discretisationSettings_;
+}
+
+void NetworkInstance::setDiscretisationSettings(const DiscretisationSettings& settings)
+{
+	discretisationSettings_ = settings;
 }
 
 void NetworkInstance::discretise(const QString& samples,

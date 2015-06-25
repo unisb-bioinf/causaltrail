@@ -28,6 +28,8 @@ class NetworkInstance : public QWidget {
      */
     void loadNetwork(QString filename);
 
+	void loadNetwork();
+
     /**
      * @brief visualize
      * Visualises the network represented by this class
@@ -242,18 +244,6 @@ class NetworkInstance : public QWidget {
     std::vector<std::string> getParentsOfSelectedNode();
 
     /**
-     * @brief getPreviousQuery
-     * @return Reference to the previously asked query
-     */
-    QString &getPreviousQuery();
-
-    /**
-     * @brief getSubsequentQuery
-     * @return Reference to the subsequent query
-     */
-    QString &getSubsequentQuery();
-
-    /**
      * @brief getNumberOfParentsOfSelectedNode
      * @return Number of parents of the currently selected node
      */
@@ -286,25 +276,19 @@ class NetworkInstance : public QWidget {
      * @brief getNaOrTgf
      * @return The Name of the .NA or .TGF file
      */
-    QString getNaOrTgf();
+    const QString& getNaOrTgf() const;
 
     /**
      * @brief getSif
      * @return The name of the .SIF file
      */
-    QString getSif();
+    const QString& getSif() const;
 
     /**
      * @brief getDataFile
      * @return Name of the file containing the samples
      */
-    QString getDataFile();
-
-    /**
-     * @brief getDiscretisationControlFile
-     * @return Name of the file containing discretisation control information
-     */
-    QString getDiscretisationControlFile();
+    const QString& getDataFile() const;
 
     /**
      * @brief setNaOrTgf
@@ -324,11 +308,9 @@ class NetworkInstance : public QWidget {
      */
     void setDataFile(const QString& filename);
 
-    /**
-     * @brief setDiscretisationControlFile
-     * @param filename Name of the file containing discretisation control information
-     */
-    void setDiscretisationControlFile(const QString& filename);
+    const DiscretisationSettings& getDiscretisationSettings() const;
+
+    void setDiscretisationSettings(const DiscretisationSettings& settings);
 
     /**
      * @brief setQMA
@@ -359,13 +341,13 @@ class NetworkInstance : public QWidget {
      * @brief getDeselectedSamples
      * @return a vector containing the column indexes of deselected samples
      */
-    std::vector<unsigned int>& getDeselectedSamples();
+    const std::vector<unsigned int>& getDeselectedSamples() const;
 
     /**
      * @brief getDiscretisationSelection
      * @return a pointer to the DiscretisationSelectionObject of this class
      */
-    DiscretisationSelection* getDiscretisationSelection();
+    const DiscretisationSelection* getDiscretisationSelection() const;
     void discretise(const QString& samples, const std::vector<uint>& deselected);
 
 	/**
@@ -523,11 +505,7 @@ private:
      */
     QString dataFile_;
 
-    /**
-     * @brief discretisationControl_
-     * Name of the file containing discretisation informaiton
-     */
-    QString discretisationControl_;
+	DiscretisationSettings discretisationSettings_;
 
     /**
      * @brief deselectedSamples_
