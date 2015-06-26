@@ -129,6 +129,9 @@ class EM{
 	 */
 	void initalise2();
 
+	std::pair<float, unsigned int> runEMIterations_();
+	unsigned int getMaxMethod_();
+
 	//A reference to the network
 	Network& network_;
 	//The initilisation method

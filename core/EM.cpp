@@ -10,49 +10,56 @@ EM::EM(Network& network, Matrix<int>& observations, float difference,
 {
 	performEM();
 }
+
 void EM::performEM()
 {
+	start = std::chrono::system_clock::now();
 	// Check completness of the data
 	if(observations_.contains(-1)) {
-		unsigned int runs = 0;
-		float difference = 1.0f;
-		float maxprob = 0.0f;
-		unsigned int maxmethod = 0;
-
-		start = std::chrono::system_clock::now();
-		for(unsigned int method = 0; method < 2; method++) {
-			// Initialize and iterate E/M-Phase
-			method_ = method;
-			initalise();
-			while(difference > differenceThreshold_ && runs < maxRuns_) {
-				ePhase();
-				difference = mPhase();
-				runs++;
-			}
-			float prob = calculateLikelihoodOfTheData();
-			if(prob > maxprob) {
-				maxprob = prob;
-				maxmethod = method;
-			}
-		}
-		method_ = maxmethod;
-		initalise();
-		difference = 1.0f;
-		runs = 0;
-		while(difference > differenceThreshold_ && runs < maxRuns_) {
-			ePhase();
-			difference = mPhase();
-			runs++;
-		}
-		finalDifference_=difference;
-		neededRuns_=runs;
+		// Determine the best initialization method
+		method_ = getMaxMethod_();
+		// Perform another EM run with the best method.
+		std::tie(finalDifference_, neededRuns_) = runEMIterations_();
 	} else {
-		// Calculat parameters directly
-		start = std::chrono::system_clock::now();
-		finalDifference_=mPhase();
-		neededRuns_=1;
+		// Calculate parameters directly
+		finalDifference_ = mPhase();
+		neededRuns_ = 1;
 	}
 	end = std::chrono::system_clock::now();
+}
+
+unsigned int EM::getMaxMethod_()
+{
+	float maxprob = 0.0f;
+	unsigned int maxmethod = 0;
+
+	for(unsigned int method = 0; method < 2; method++) {
+		// Initialize and iterate E/M-Phase
+		method_ = method;
+		runEMIterations_();
+		float prob = calculateLikelihoodOfTheData();
+		if(prob > maxprob) {
+			maxprob = prob;
+			maxmethod = method;
+		}
+	}
+
+	return maxmethod;
+}
+
+std::pair<float, unsigned int> EM::runEMIterations_()
+{
+	unsigned int runs = 0;
+	float difference = std::numeric_limits<float>::infinity();
+
+	initalise();
+	while(difference > differenceThreshold_ && runs < maxRuns_) {
+		ePhase();
+		difference = mPhase();
+		runs++;
+	}
+
+	return std::make_pair(difference, runs);
 }
 
 float EM::calculateProbabilityEM(Node& n, unsigned int col, unsigned int row)
