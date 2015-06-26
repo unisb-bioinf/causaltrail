@@ -5,7 +5,7 @@ project (Causal-Analysis-gui)
 find_package(Qt5Widgets)
 find_package(Qt5Gui)
 find_package(Qt5Core)
-find_package(Qt5Svg)
+find_package(Qt5Svg QUIET)
 
 if(NOT Qt5Core_FOUND OR NOT Qt5Widgets_FOUND)
 	message(STATUS "Could not find a Qt5 installation. The GUI will not be built.")
@@ -14,6 +14,8 @@ endif()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
+
+configure_file("../cmake/gui_config.h.cmake" "${PROJECT_BINARY_DIR}/config.h")
 
 QT5_WRAP_UI(ui_Headers
     mainwindow.ui
@@ -54,6 +56,9 @@ target_link_libraries(CausalTrailGui
 	${Boost_LIBRARIES}
 	Qt5::Widgets
 	Qt5::Core
-	Qt5::Svg
 	Qt5::Gui
 )
+
+if(Qt5Svg_FOUND)
+	target_link_libraries(CausalTrailGui Qt5::Svg)
+endif()

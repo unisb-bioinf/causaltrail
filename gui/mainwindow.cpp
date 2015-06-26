@@ -2,6 +2,7 @@
 
 #include "ui_mainwindow.h"
 
+#include "config.h"
 #include "Config.h"
 #include "datastorage.h"
 #include "DataView.h"
@@ -504,11 +505,18 @@ void MainWindow::on_actionExecute_Batchfile_triggered()
 
 void MainWindow::on_actionExportSvg_triggered()
 {
+#ifdef CT_HAS_QT5_SVG
 	QString filename = QFileDialog::getSaveFileName(this, tr("Select SVG file."), config_->dataDir(), "*.svg");
 
 	if(filename != "") {
 		currentNetwork_()->exportSvg(filename);
 	}
+#else
+	QMessageBox::critical(
+	    this, tr("No SVG support available"),
+	    tr("This version of CausalTrail has not been compiled with SVG "
+	       "support. This means that no export to SVG is possible."));
+#endif
 }
 
 void MainWindow::on_queryHistory_doubleClicked(const QModelIndex& index) {

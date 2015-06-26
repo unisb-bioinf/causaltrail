@@ -1,4 +1,7 @@
 #include "networkvis.h"
+
+#include "config.h"
+
 #include "NodeGui.h"
 #include "edge.h"
 #include "../core/DotReader.h"
@@ -8,7 +11,10 @@
 #include <QtGui/QWheelEvent>
 #include <QtGui/QKeyEvent>
 #include <QtWidgets/QGridLayout>
+
+#ifdef CT_HAS_QT5_SVG
 #include <QtSvg/QSvgGenerator>
+#endif
 
 NetworkVis::NetworkVis(QWidget *parent, const Network& net)
     : QGraphicsView(parent),
@@ -315,6 +321,7 @@ void NetworkVis::originalNodeState(){
 }
 
 void NetworkVis::exportSVG(const QString& filename) {
+#ifdef CT_HAS_QT5_SVG
 	QSvgGenerator generator;
 	QFile output(filename);
 	generator.setOutputDevice(&output);
@@ -324,6 +331,7 @@ void NetworkVis::exportSVG(const QString& filename) {
 	render(&painter);
 	painter.end();
 	output.close();
+#endif
 }
 
 bool NetworkVis::readDot_(const QByteArray& data)
