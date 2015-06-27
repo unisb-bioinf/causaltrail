@@ -17,6 +17,9 @@ QueryExecuter Parser::parseQuery()
 		index = 2;
 		if (index < query_.size())
 			parseArgMax(index);
+			if (index == 4) {
+				throw std::invalid_argument("No arguments specified in argmax");
+			}
 		else {
 			throw std::invalid_argument("In parseQuery, index out of bound");
 			}
@@ -29,27 +32,29 @@ QueryExecuter Parser::parseQuery()
 			throw std::invalid_argument("In parseQuery, index out of bound");
 		}
 	}
-
-	while(index < query_.size()) {
-		if(query_[index] == "!") {
-			index++;
-			if (index < query_.size()){
-				parseInterventions(index);
+	if (index > 2){
+		while(index < query_.size()) {
+			if(query_[index] == "!") {
+				index++;
+				if (index < query_.size()){
+					parseInterventions(index);
+				}
+				else {
+					throw std::invalid_argument("In parseQuery, no Intervention specified");
+				}
+			} else if (query_[index] == "|") {
+				index++;
+				if (index < query_.size()){
+					parseCondition(index); 
+				}
+				else {
+					throw std::invalid_argument("In parseQuery, no Condition specified");
+					}
 			}
-			else {
-				throw std::invalid_argument("In parseQuery, no Intervention specified");
-			}
-		} else if (query_[index] == "|") {
-			index++;
-			if (index < query_.size()){
-				parseCondition(index); 
-			}
-			else {
-				throw std::invalid_argument("In parseQuery, no Condition specified");
+			else throw std::invalid_argument("In parseQuery, unvalid sign "+query_[index]);
 			}
 		}
-		else throw std::invalid_argument("In parseQuery, unvalid sign "+query_[index]);
-	}
+		else throw std::invalid_argument("In parseQuery, no Non Intervention specified");
 	return qe_;
 }
 
