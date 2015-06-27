@@ -89,8 +89,8 @@ void Parser::parseInterventions(unsigned int& index)
 
 void Parser::parseNonIntervention(unsigned int& index)
 {
-	if ((index+3)<=query_.size()){
-		while(terminationSymbol(index)) {
+	while(terminationSymbol(index)) {
+		if (index+3<=query_.size()){
 			if(!getNode(query_[index])) {
 				throw std::invalid_argument("In parseNonIntervention, invalid node name "+query_[index]);
 			}
@@ -107,6 +107,7 @@ void Parser::parseNonIntervention(unsigned int& index)
 			}
 			index++;
 			}
+		}
 	}
 	else{
 		throw std::invalid_argument("Non intervention is not specified completly.");
@@ -115,8 +116,8 @@ void Parser::parseNonIntervention(unsigned int& index)
 
 void Parser::parseCondition(unsigned int& index)
 {
-	if (index+3<=query_.size()){
-		while(terminationSymbol(index)) {
+	while(terminationSymbol(index)) {
+		if (index+3<=query_.size()){
 			if(!getNode(query_[index])){
 				throw std::invalid_argument("In parseCondition, invalid node name "+query_[index]);
 			}
