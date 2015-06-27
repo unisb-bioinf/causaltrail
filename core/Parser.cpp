@@ -15,10 +15,11 @@ QueryExecuter Parser::parseQuery()
 
 	if(query_[1] == "argmax") {
 		index = 2;
-		if (index < query_.size())
+		if (index < query_.size()){
 			parseArgMax(index);
 			if (index == 4) {
 				throw std::invalid_argument("No arguments specified in argmax");
+				}
 			}
 		else {
 			throw std::invalid_argument("In parseQuery, index out of bound");
