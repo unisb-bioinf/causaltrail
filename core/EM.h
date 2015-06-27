@@ -120,14 +120,14 @@ class EM{
 	 *
  	 * Initialises all parameters assuming an equal distribution
 	 */
-	void initalise1();
+	void initaliseAssumingUniformDistribution();
 
 	/**EM
 	 *
 	 *
  	 * Initialises all parameters using MLE for the observed values
 	 */
-	void initalise2();
+	void initaliseAccordingToInitialDistribution();
 
 	std::pair<float, unsigned int> runEMIterations_();
 	unsigned int getMaxMethod_();

@@ -156,15 +156,15 @@ void EM::initalise()
 {
 	switch(method_) {
 		case 0:
-			initalise1();
+			initaliseAssumingUniformDistribution();
 			break;
 		case 1:
-			initalise2();
+			initaliseAccordingToInitialDistribution();
 			break;
 	}
 }
 
-void EM::initalise1()
+void EM::initaliseAssumingUniformDistribution()
 {
 	for(auto& n : network_.getNodes()) {
 		const Matrix<float>& probMatrix = n.getProbabilityMatrix();
@@ -177,7 +177,7 @@ void EM::initalise1()
 	}
 }
 
-void EM::initalise2()
+void EM::initaliseAccordingToInitialDistribution()
 {
 	for(auto& n : network_.getNodes()) {
 		const Matrix<int>& obMatrix = n.getObservationMatrix();
