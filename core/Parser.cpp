@@ -106,11 +106,10 @@ void Parser::parseNonIntervention(unsigned int& index)
 				qe_.setNonIntervention(getNodeID(query_[index-2]),getValueID(query_[index-2],query_[index]));
 			}
 			index++;
-			}
 		}
-	}
-	else{
-		throw std::invalid_argument("Non intervention is not specified completly.");
+		else{
+			throw std::invalid_argument("Non intervention is not specified completly.");
+		}
 	}
 }
 
@@ -136,9 +135,9 @@ void Parser::parseCondition(unsigned int& index)
 			}
 			index++;
 		}
-	}
-	else {	
-		throw std::invalid_argument("Condition is not specified completly.");
+		else {	
+			throw std::invalid_argument("Condition is not specified completly.");
+		}
 	}	
 }
 
