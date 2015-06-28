@@ -43,14 +43,16 @@ signals:
 
 private:
 	//UserInterface
-    Ui::DataView *ui;
+	Ui::DataView *ui;
 	QPushButton* selectAll_;
 	QPushButton* deselectAll_;
 
 	// Underlying model for the Matrix
 	DataMatrixModel* model_;
 
-    const std::vector<unsigned int> getDeselectedSamples() const;
+	const std::vector<unsigned int> getDeselectedSamples() const;
+
+	QSize sizeHint() const;
 };
 
 #endif // DATAVIEW_H

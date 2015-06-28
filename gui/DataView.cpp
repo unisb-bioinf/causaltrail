@@ -29,6 +29,8 @@ DataView::DataView(QWidget *parent, const QString& samples)
 	deselectAll_->setText(tr("Deselect all"));
 	connect(deselectAll_, SIGNAL(clicked()), this, SLOT(deselectAllColumns_()));
 	ui->buttons->addButton(deselectAll_, QDialogButtonBox::ActionRole);
+    ui->matrixView->adjustSize();
+    adjustSize();
 }
 
 void DataView::selectAllColumns_()
@@ -70,3 +72,6 @@ const std::vector<unsigned int> DataView::getDeselectedSamples() const {
 	return deselected;
 }
 
+QSize DataView::sizeHint() const{
+    return QSize(500,model_->rowCount(QModelIndex())*50);
+}
