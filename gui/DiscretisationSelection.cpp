@@ -27,6 +27,7 @@ void DiscretisationSelection::show(const QString& samples)
 
 	adaptGUIToData();
 	QDialog::show();
+	adjustSize();
 }
 
 const QString& DiscretisationSelection::samples() const { return samples_; }
@@ -77,7 +78,7 @@ void DiscretisationSelection::adaptGUIToData() {
 	}
 
 	ui->gridLayout->addWidget(new QLabel(tr("Variable name")), 0, 0, 0);
-	ui->gridLayout->addWidget(new QLabel(tr("Discretisation method")), 0, 1, 0);
+    ui->gridLayout->addWidget(new QLabel(tr("Discretisation method ")), 0, 1, 0);
 	ui->gridLayout->addWidget(new QLabel(tr("Threshold/Number of bins")), 0, 2, 0);
 
     methodComboBox* methodSelection;
@@ -94,7 +95,6 @@ void DiscretisationSelection::adaptGUIToData() {
         ui->gridLayout->addWidget(optionalValue,i,2,0);
         optionalValues_.push_back(optionalValue);
     }
-
     adjustSize();
 }
 
@@ -186,4 +186,8 @@ void DiscretisationSelection::box_Index_Changed(uint position, const QString& me
 	} else {
 		box->hide();
 	}
+}
+
+QSize DiscretisationSelection::sizeHint() const {
+    return QSize(440,ui->gridLayout->rowCount()*32);
 }

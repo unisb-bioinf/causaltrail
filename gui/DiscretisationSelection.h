@@ -165,6 +165,12 @@ private:
      * Get the parameter name corresponding to the selected methodIndex.
      */
     std::string getParameterName_(const std::string& method) const;
+
+    /**
+     * @brief sizeHint
+     * @return A QSize object
+     */
+    QSize sizeHint() const;
 };
 
 #endif // DISCRETISATIONSELECTION_H
