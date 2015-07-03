@@ -82,268 +82,270 @@ int MainWindow::addNetwork(NetworkInstance* network)
 
 int MainWindow::generateNetworkInstance()
 {
-	return addNetwork(new NetworkInstance(this));
+return addNetwork(new NetworkInstance(this));
 }
 
 void MainWindow::loadNAorTGF(QString filename, int index)
 {
-	addLogMessage("File: " + filename + " opened");
-	getNetwork_(index)->loadNetwork(filename);
-	getNetwork_(index)->setNaOrTgf(filename);
-	ui->tabWidget->setTabText(index, filename.split("/").back());
+addLogMessage("File: " + filename + " opened");
+getNetwork_(index)->loadNetwork(filename);
+getNetwork_(index)->setNaOrTgf(filename);
+ui->tabWidget->setTabText(index, filename.split("/").back());
 }
 
 void MainWindow::loadSif(QString filename, int index)
 {
-	addLogMessage("File: " + filename + " opened");
-	getNetwork_(index)->loadNetwork(filename);
-	getNetwork_(index)->setSif(filename);
+addLogMessage("File: " + filename + " opened");
+getNetwork_(index)->loadNetwork(filename);
+getNetwork_(index)->setSif(filename);
 }
 
 void MainWindow::visualise(int index)
 {
-	getNetwork_(index)->visualize();
-	ui->actionLoad_Samples->setEnabled(true);
-	ui->actionLayout->setEnabled(true);
-	ui->tabWidget->widget(index)->setFocus();
-	ui->queryView->setNetworkInstance(getNetwork_(index));
+getNetwork_(index)->visualize();
+ui->actionLoad_Samples->setEnabled(true);
+ui->actionLayout->setEnabled(true);
+ui->tabWidget->widget(index)->setFocus();
+ui->queryView->setNetworkInstance(getNetwork_(index));
 
-	connect(getNetwork_(index), SIGNAL(context(NodeGui*, QContextMenuEvent*)),
-	        this, SLOT(Node_context(NodeGui*, QContextMenuEvent*)));
-	connect(getNetwork_(index), SIGNAL(context(Edge*, QContextMenuEvent*)),
-	        this, SLOT(Edge_context(Edge*, QContextMenuEvent*)));
-	connect(getNetwork_(index), SIGNAL(doubleClick(NodeGui*)), this,
-	        SLOT(Node_double_clicked(NodeGui*)));
+connect(getNetwork_(index), SIGNAL(context(NodeGui*, QContextMenuEvent*)),
+	this, SLOT(Node_context(NodeGui*, QContextMenuEvent*)));
+connect(getNetwork_(index), SIGNAL(context(Edge*, QContextMenuEvent*)),
+	this, SLOT(Edge_context(Edge*, QContextMenuEvent*)));
+connect(getNetwork_(index), SIGNAL(doubleClick(NodeGui*)), this,
+	SLOT(Node_double_clicked(NodeGui*)));
 }
 
 void MainWindow::samplesLoaded(NetworkInstance* network)
 {
-	adaptQueryEvaluationButtons(true);
-	ui->queryView->setNetworkInstance(network);
-	ui->queryView->newQuery();
+adaptQueryEvaluationButtons(true);
+ui->queryView->setNetworkInstance(network);
+ui->queryView->newQuery();
 }
 
 void MainWindow::loadSamples(const QString& samples, const QString& control,
-                             unsigned int index)
+		     unsigned int index)
 {
-	addLogMessage("Reading samples: " + samples);
-	getNetwork_(index)->loadSamples(samples, control);
-	adaptQueryEvaluationButtons(true);
+addLogMessage("Reading samples: " + samples);
+getNetwork_(index)->loadSamples(samples, control);
+adaptQueryEvaluationButtons(true);
 
-	ui->queryView->newQuery();
+ui->queryView->newQuery();
 }
 
 void MainWindow::addLogMessage(const QString& msg) {
-	ui->Output->addItem(msg);
-	ui->Output->scrollToBottom();
+ui->Output->addItem(msg);
+ui->Output->scrollToBottom();
 }
 
 void MainWindow::queryExecuted(unsigned int query)
 {
-	loadQueriesToHistoryWindow(currentNetwork_());
+loadQueriesToHistoryWindow(currentNetwork_());
 }
 
 void MainWindow::discretiseSelection(const QString& samples,
-                                     const std::vector<uint>& deselected)
+			     const std::vector<uint>& deselected)
 {
-	currentNetwork_()->discretise(samples, deselected);
+currentNetwork_()->discretise(samples, deselected);
 }
 
 void MainWindow::dataRejected()
 {
-	addLogMessage("No samples loaded");
-	adaptQueryEvaluationButtons(false);
-	currentNetwork_()->resetNetwork();
+addLogMessage("No samples loaded");
+adaptQueryEvaluationButtons(false);
+currentNetwork_()->resetNetwork();
 }
 
 void MainWindow::on_actionLoad_Samples_triggered()
 {
-	try {
-		QString samples = QFileDialog::getOpenFileName(
-		    this, tr("Open txt file containing samples"), config_->dataDir(),
-		    "*.txt");
+try {
+	QString samples = QFileDialog::getOpenFileName(
+	    this, tr("Open txt file containing samples"), config_->dataDir(),
+	    "*.txt");
 
-		if(samples.isNull()) {
-			throw std::invalid_argument(
-			    "No file containing samples specified!");
-		}
-
-		DataView* dView = new DataView(this, samples);
-		connect(dView, &DataView::dataAccepted, this,
-		        &MainWindow::discretiseSelection);
-		connect(dView, &DataView::rejected, this, &MainWindow::dataRejected);
-		dView->show();
-	} catch(std::exception& e) {
-		addLogMessage(e.what());
-		adaptQueryEvaluationButtons(false);
-		currentNetwork_()->resetNetwork();
+	if(samples.isNull()) {
+		throw std::invalid_argument(
+		    "No file containing samples specified!");
 	}
+
+	DataView* dView = new DataView(this, samples);
+	connect(dView, &DataView::dataAccepted, this,
+		&MainWindow::discretiseSelection);
+	connect(dView, &DataView::rejected, this, &MainWindow::dataRejected);
+	dView->show();
+} catch(std::exception& e) {
+	addLogMessage(e.what());
+	adaptQueryEvaluationButtons(false);
+	currentNetwork_()->resetNetwork();
+}
 }
 
 void MainWindow::on_actionAbout_triggered()
 {
-	QMessageBox box;
-	box.setIcon(QMessageBox::Information);
-	box.setWindowTitle(tr("About CausalTrail"));
-	// Hack around the line wrap for the copyright statement.
-	box.setText(tr("CausalTrail") + "                                                          ");
-	box.setInformativeText(tr(
-		"A statistical tool to perform inference in causal "
-		"bayesian networks using Do-Calculus.\n\n"
-		"Copyright 2014-2015, Florian Schmidt\n"
-		"Copyright 2014-2015, Daniel Stöckel"
-	));
+QMessageBox box;
+box.setIcon(QMessageBox::Information);
+box.setWindowTitle(tr("About CausalTrail"));
+// Hack around the line wrap for the copyright statement.
+box.setText(tr("CausalTrail") + "                                                          ");
+box.setInformativeText(tr(
+	"A statistical tool to perform inference in causal "
+	"bayesian networks using Do-Calculus.\n\n"
+	"Copyright 2014-2015, Florian Schmidt\n"
+	"Copyright 2014-2015, Daniel Stöckel"
+));
 
-	box.exec();
+box.exec();
 }
 
 
 void MainWindow::on_tabWidget_tabCloseRequested(int index)
 {
-	ui->tabWidget->removeTab(index);
+ui->tabWidget->removeTab(index);
 }
 
 void MainWindow::on_actionDeleteNetwork_triggered()
 {
-	ui->tabWidget->removeTab(ui->tabWidget->currentIndex());
+ui->tabWidget->removeTab(ui->tabWidget->currentIndex());
 }
 
 void MainWindow::on_actionLoadNetwork_triggered()
 {
-	QString filename = QFileDialog::getOpenFileName(
-	    this, tr("Load network file"), config_->dataDir(), "*.tgf *.na");
-	if(filename != "") {
-		try {
-			int index = generateNetworkInstance();
-			loadNAorTGF(filename, index);
-			if(filename.endsWith(".na")) {
-				filename = QFileDialog::getOpenFileName(
-				    this, tr("Load sif file"),
-				    QFileInfo(filename).absolutePath(), "*.sif");
-				loadSif(filename, index);
-			}
-			visualise(index);
-
-		} catch(std::exception& e) {
-			addLogMessage(e.what());
+QString filename = QFileDialog::getOpenFileName(
+    this, tr("Load network file"), config_->dataDir(), "*.tgf *.na");
+	int index;
+if(filename != "") {
+	try {
+		index = generateNetworkInstance();
+		loadNAorTGF(filename, index);
+		if(filename.endsWith(".na")) {
+			filename = QFileDialog::getOpenFileName(
+			    this, tr("Load sif file"),
+			    QFileInfo(filename).absolutePath(), "*.sif");
+			loadSif(filename, index);
 		}
-	} else {
-		addLogMessage("No file containing network data specified.");
+		visualise(index);
+
+	} catch(std::exception& e) {
+		addLogMessage(e.what());
+		ui->tabWidget->removeTab(index);	
 	}
+} else {
+	addLogMessage("No file containing network data specified.");
+}
 }
 
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
-	checkQueriesLeft();
+checkQueriesLeft();
 
-	if(index != -1) {
-		NetworkInstance* currentNetwork = getNetwork_(index);
-		if(currentNetwork->isTrained()) {
-			adaptQueryEvaluationButtons(true);
-			currentNetwork->restoreOriginalNetworkRepresentation();
-			loadQueriesToHistoryWindow(currentNetwork);
-		} else {
-			adaptQueryEvaluationButtons(false);
-		}
-
-		ui->queryView->setNetworkInstance(currentNetwork);
+if(index != -1) {
+	NetworkInstance* currentNetwork = getNetwork_(index);
+	if(currentNetwork->isTrained()) {
+		adaptQueryEvaluationButtons(true);
+		currentNetwork->restoreOriginalNetworkRepresentation();
+		loadQueriesToHistoryWindow(currentNetwork);
 	} else {
-		ui->actionLoad_Samples->setEnabled(false);
-		ui->actionLayout->setEnabled(false);
-		ui->actionSave_Session->setEnabled(false);
-		ui->actionLoad_Session->setEnabled(true);
-		ui->actionExecute_Batchfile->setEnabled(false);
-		ui->actionCreate_Batchfile->setEnabled(false);
-		ui->queryView->setNetworkInstance(nullptr);
+		adaptQueryEvaluationButtons(false);
 	}
+
+	ui->queryView->setNetworkInstance(currentNetwork);
+} else {
+	ui->actionLoad_Samples->setEnabled(false);
+	ui->actionLayout->setEnabled(false);
+	ui->actionSave_Session->setEnabled(false);
+	ui->actionLoad_Session->setEnabled(true);
+	ui->actionExecute_Batchfile->setEnabled(false);
+	ui->actionCreate_Batchfile->setEnabled(false);
+	ui->queryView->setNetworkInstance(nullptr);
+}
 }
 
 void MainWindow::on_actionLayout_triggered()
 {
-	currentNetwork_()->layout();
+currentNetwork_()->layout();
 }
 
 void MainWindow::Node_double_clicked(NodeGui* node)
 {
-	NetworkInstance* currentNetwork = currentNetwork_();
+NetworkInstance* currentNetwork = currentNetwork_();
 
-	currentNetwork->setSelectedNode(node->getID());
-	if(!currentNetwork->edgeAddition()) {
-		return;
-	}
+currentNetwork->setSelectedNode(node->getID());
+if(!currentNetwork->edgeAddition()) {
+	return;
+}
 
-	if(currentNetwork->checkEdgeAddition(node->getID())) {
-		currentNetwork->nodeForEdgeAdditionSelected(node->getID());
-	} else {
-		addLogMessage("This edge would induce a cycle. Therefore, it "
-		              "can not be added!");
-	}
+if(currentNetwork->checkEdgeAddition(node->getID())) {
+	currentNetwork->nodeForEdgeAdditionSelected(node->getID());
+} else {
+	addLogMessage("This edge would induce a cycle. Therefore, it "
+		      "can not be added!");
+}
 }
 
 void MainWindow::Node_context(NodeGui* node,
-                              QContextMenuEvent* event)
+		      QContextMenuEvent* event)
 {
-	NetworkInstance* currentNetwork = currentNetwork_();
-	QMenu* menu = new QMenu;
-	if(currentNetwork->isTrained()) {
-		const auto& values = currentNetwork->getValues(node->getID());
-		currentNetwork->setSelectedNode(node->getID());
-		QMenu* submenu;
-		// Non-Intervention Query
-		if(ui->queryView->numQueryVariables() == 0 || !currentNetwork->isArgMax()) {
-			submenu = menu->addMenu("Probability of");
-			for(auto& value : values) {
-				submenu->addAction(QString::fromStdString(value));
-				connect(submenu, SIGNAL(triggered(QAction*)), this,
-				        SLOT(context_Menu_QueryValue_Selected(QAction*)),
-				        Qt::UniqueConnection);
-			}
-		}
-
-		// Arg-Max
-		if((ui->queryView->numQueryVariables() == 0) || currentNetwork->isArgMax()) {
-			connect(menu->addAction("Arg Max"), SIGNAL(triggered()), this,
-			        SLOT(context_Menu_ArgMax_Selected()), Qt::UniqueConnection);
-		}
-
-		// Condition
-		submenu = menu->addMenu("Condition on");
+NetworkInstance* currentNetwork = currentNetwork_();
+QMenu* menu = new QMenu;
+if(currentNetwork->isTrained()) {
+	const auto& values = currentNetwork->getValues(node->getID());
+	currentNetwork->setSelectedNode(node->getID());
+	QMenu* submenu;
+	// Non-Intervention Query
+	if(ui->queryView->numQueryVariables() == 0 || !currentNetwork->isArgMax()) {
+		submenu = menu->addMenu("Probability of");
 		for(auto& value : values) {
 			submenu->addAction(QString::fromStdString(value));
 			connect(submenu, SIGNAL(triggered(QAction*)), this,
-			        SLOT(conditionValueSelected(QAction*)),
-			        Qt::UniqueConnection);
+				SLOT(context_Menu_QueryValue_Selected(QAction*)),
+				Qt::UniqueConnection);
 		}
-
-		menu->addSeparator();
-
-		// Do-Int
-		submenu = menu->addMenu("Set value to");
-		for(auto& value : values) {
-			submenu->addAction(QString::fromStdString(value));
-			connect(submenu, SIGNAL(triggered(QAction*)), this,
-			        SLOT(interventionValueSelected(QAction*)),
-			        Qt::UniqueConnection);
-		}
-		// Add Edge To
-		connect(menu->addAction("Add Edge to ..."), SIGNAL(triggered()), this,
-		        SLOT(addEdgeSelected()), Qt::UniqueConnection);
-
-		menu->addSeparator();
-
-		// Show Probability Matrix
-		connect(menu->addAction("Show CPT"), SIGNAL(triggered()), this,
-		        SLOT(context_Menu_ShowMatrix_selected()), Qt::UniqueConnection);
-
-	} else {
-		menu->addAction("The network is not trained");
 	}
-	menu->popup(event->globalPos());
+
+	// Arg-Max
+	if((ui->queryView->numQueryVariables() == 0) || currentNetwork->isArgMax()) {
+		connect(menu->addAction("Arg Max"), SIGNAL(triggered()), this,
+			SLOT(context_Menu_ArgMax_Selected()), Qt::UniqueConnection);
+	}
+
+	// Condition
+	submenu = menu->addMenu("Condition on");
+	for(auto& value : values) {
+		submenu->addAction(QString::fromStdString(value));
+		connect(submenu, SIGNAL(triggered(QAction*)), this,
+			SLOT(conditionValueSelected(QAction*)),
+			Qt::UniqueConnection);
+	}
+
+	menu->addSeparator();
+
+	// Do-Int
+	submenu = menu->addMenu("Set value to");
+	for(auto& value : values) {
+		submenu->addAction(QString::fromStdString(value));
+		connect(submenu, SIGNAL(triggered(QAction*)), this,
+			SLOT(interventionValueSelected(QAction*)),
+			Qt::UniqueConnection);
+	}
+	// Add Edge To
+	connect(menu->addAction("Add Edge to ..."), SIGNAL(triggered()), this,
+		SLOT(addEdgeSelected()), Qt::UniqueConnection);
+
+	menu->addSeparator();
+
+	// Show Probability Matrix
+	connect(menu->addAction("Show CPT"), SIGNAL(triggered()), this,
+		SLOT(context_Menu_ShowMatrix_selected()), Qt::UniqueConnection);
+
+} else {
+	menu->addAction("The network is not trained");
+}
+menu->popup(event->globalPos());
 }
 
 void MainWindow::Edge_context(Edge* edge, QContextMenuEvent* event)
 {
-	NetworkInstance* currentNetwork = currentNetwork_();
+NetworkInstance* currentNetwork = currentNetwork_();
 	currentNetwork->addEdgeRemoval(edge->sourceNode()->getID(), edge->destNode()->getID());
 	QMenu* menu = new QMenu;
 	if(currentNetwork->isTrained()) {
