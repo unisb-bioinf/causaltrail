@@ -21,6 +21,11 @@ TEST_F(NetworkTest, readNetworkNASIF){
 	ASSERT_THROW(n_.getNode("Test"),std::invalid_argument);
 }
 
+TEST_F(NetworkTest, readCyclicNetwork){
+	ASSERT_THROW(n_.readNetwork(TEST_DATA_PATH("cylicNetwork1.tgf")),std::invalid_argument);
+	ASSERT_THROW(n_.readNetwork(TEST_DATA_PATH("cylicNetwork2.tgf")),std::invalid_argument);
+}
+
 TEST_F(NetworkTest, readNetworkTGF){
 	n_.readNetwork(TEST_DATA_PATH("test.tgf"));
 	ASSERT_TRUE(n_.getNodes().size()==3);

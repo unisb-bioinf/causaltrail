@@ -104,12 +104,20 @@ class Network{
 
 		/**checkCycleExistence
 		 *
-		 * @param id Identifier of the cycle start node
+		 * @param id Identifier of the "cycle start" node
 		 * @return true if there is a cycle, false otherwise
 		 *
 		 * Checks if there is a cycle so that this node can be reached from itself.
 		 */
 		bool checkCycleExistence(unsigned int id);
+
+		/**checkCycleExistence
+		 *
+		 * @return true if there is a cycle, false otherwise
+		 *
+		 * Checks if there is a cycle in this network.
+		 */
+		bool checkCycleExistence();
 
 		/**getNode 
 		 *

@@ -140,6 +140,9 @@ void Network::readNetwork(const std::string& filename)
 			throw std::invalid_argument("Unsupported file type");
 	}
 	assignParents();
+	if (checkCycleExistence()){
+		throw std::invalid_argument("The specified network contains a cycle. Thus, it can not be used.");
+	}
 }
 
 void Network::readTGF(const std::string& filename)
@@ -325,6 +328,18 @@ bool Network::checkCycleExistence(unsigned int id){
 	}
 	return result;
 }
+
+bool Network::checkCycleExistence(){
+	bool result = false;
+	for (auto& node : NodeList_){
+		result=checkCycleExistence(node.getID());
+		if (result){
+			return true;
+		}
+	}
+	return result;
+}
+
 
 void Network::createBackup() { AdjacencyMatrixBackup_ = AdjacencyMatrix_; }
 
