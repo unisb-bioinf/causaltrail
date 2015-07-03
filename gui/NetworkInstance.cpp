@@ -382,3 +382,7 @@ void NetworkInstance::discretise(const QString& samples,
 	setDeselectedSamples(deselected);
 	discretisationSelection_->show(samples);
 }
+
+const std::string& NetworkInstance::getNodeName(unsigned int i) const {
+	return getController().getNetwork().getNode(i).getName();
+}

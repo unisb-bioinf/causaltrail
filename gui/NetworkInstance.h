@@ -357,6 +357,12 @@ class NetworkInstance : public QWidget {
 	 */
 	void exportSvg(const QString& filename);
 
+	/**
+	 * Convenience function for retrieving the name of a node
+	 * in the network.
+	 */
+	const std::string& getNodeName(unsigned int i) const;
+
 	public slots:
 	/**
 	* @brief loadSamples
