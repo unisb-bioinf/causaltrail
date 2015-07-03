@@ -410,32 +410,45 @@ void QueryView::on_Input_textChanged(const QString& arg1)
 		ui->Input->setStyleSheet("");
 		return;
 	}
-		Parser parser(arg1.toStdString(), net_->getController());
+	Parser parser(arg1.toStdString(), net_->getController());
 
-		try {
-			auto qe = parser.parseQuery();
+	try {
+		auto qe = parser.parseQuery();
 
-		    writeListWidget(ui->queryVariableList, ui->queryLabel,
-		                    qe.getNonInterventionIds(),
-		                    qe.getNonInterventionValues());
-		    writeListWidget(ui->interventionVariableList, ui->interventionLabel,
-		                    qe.getInterventionIds(),
-		                    qe.getInterventionValues());
-		    writeListWidget(ui->conditionVariableList, ui->conditionLabel,
-		                    qe.getConditionIds(), qe.getConditionValues());
-
-		    for(auto&& addition : qe.getEdgeAdditionIds()) {
-			    addRemovalAddition_("+", addition.first, addition.second);
-		    }
-
-			for(auto&& addition : qe.getEdgeRemovalIds()) {
-				addRemovalAddition_("-", addition.first, addition.second);
+		if(qe.getArgMaxIds().empty()) {
+			writeListWidget(ui->queryVariableList, ui->queryLabel,
+			                qe.getNonInterventionIds(),
+			                qe.getNonInterventionValues());
+			net_->setArgMax(false);
+		} else {
+			ui->queryVariableList->clear();
+			ui->queryVariableList->show();
+			ui->queryLabel->show();
+			for(const auto& id : qe.getArgMaxIds()) {
+				ui->queryVariableList->addItem(
+				    QStringLiteral("argmax ") +
+				    QString::fromStdString(net_->getNodeName(id)));
 			}
+			net_->setArgMax(true);
+		}
 
-		    ui->Input->setStyleSheet("QLineEdit{background:#33aa33;}");
-	    } catch(const std::invalid_argument&) {
-		    ui->Input->setStyleSheet("QLineEdit{background:#aa3333;}");
-	    }
+		writeListWidget(ui->interventionVariableList, ui->interventionLabel,
+		                qe.getInterventionIds(), qe.getInterventionValues());
+		writeListWidget(ui->conditionVariableList, ui->conditionLabel,
+		                qe.getConditionIds(), qe.getConditionValues());
+
+		for(auto&& addition : qe.getEdgeAdditionIds()) {
+			addRemovalAddition_("+", addition.first, addition.second);
+		}
+
+		for(auto&& addition : qe.getEdgeRemovalIds()) {
+			addRemovalAddition_("-", addition.first, addition.second);
+		}
+
+		ui->Input->setStyleSheet("QLineEdit{background:#33aa33;}");
+	} catch(const std::invalid_argument&) {
+		ui->Input->setStyleSheet("QLineEdit{background:#aa3333;}");
+	}
 }
 
 void QueryView::checkAllEmpty()
