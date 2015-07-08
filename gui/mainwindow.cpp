@@ -237,28 +237,32 @@ void MainWindow::on_actionLoadNetwork_triggered()
 
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
-checkQueriesLeft();
+	checkQueriesLeft();
 
-if(index != -1) {
-	NetworkInstance* currentNetwork = getNetwork_(index);
-	if(currentNetwork->isTrained()) {
-		adaptQueryEvaluationButtons(true);
-		currentNetwork->restoreOriginalNetworkRepresentation();
-		loadQueriesToHistoryWindow(currentNetwork);
+	bool validInstance = index != -1;
+
+	ui->actionExportSvg->setEnabled(validInstance);
+	ui->actionLoad_Samples->setEnabled(validInstance);
+	ui->actionLayout->setEnabled(validInstance);
+	ui->actionSave_Session->setEnabled(validInstance);
+	ui->actionDeleteNetwork->setEnabled(validInstance);
+
+	if(validInstance) {
+		NetworkInstance* currentNetwork = getNetwork_(index);
+		if(currentNetwork->isTrained()) {
+			adaptQueryEvaluationButtons(true);
+			currentNetwork->restoreOriginalNetworkRepresentation();
+			loadQueriesToHistoryWindow(currentNetwork);
+		} else {
+			adaptQueryEvaluationButtons(false);
+		}
+
+		ui->queryView->setNetworkInstance(currentNetwork);
 	} else {
-		adaptQueryEvaluationButtons(false);
+		ui->actionExecute_Batchfile->setEnabled(false);
+		ui->actionCreate_Batchfile->setEnabled(false);
+		ui->queryView->setNetworkInstance(nullptr);
 	}
-
-	ui->queryView->setNetworkInstance(currentNetwork);
-} else {
-	ui->actionLoad_Samples->setEnabled(false);
-	ui->actionLayout->setEnabled(false);
-	ui->actionSave_Session->setEnabled(false);
-	ui->actionLoad_Session->setEnabled(true);
-	ui->actionExecute_Batchfile->setEnabled(false);
-	ui->actionCreate_Batchfile->setEnabled(false);
-	ui->queryView->setNetworkInstance(nullptr);
-}
 }
 
 void MainWindow::on_actionLayout_triggered()
