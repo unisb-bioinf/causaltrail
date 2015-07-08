@@ -210,28 +210,29 @@ ui->tabWidget->removeTab(ui->tabWidget->currentIndex());
 
 void MainWindow::on_actionLoadNetwork_triggered()
 {
-QString filename = QFileDialog::getOpenFileName(
-    this, tr("Load network file"), config_->dataDir(), "*.tgf *.na");
-	int index;
-if(filename != "") {
+	QString filename = QFileDialog::getOpenFileName(
+	    this, tr("Load network file"), config_->dataDir(), "*.tgf *.na");
+
+	if(filename == "") {
+		addLogMessage("No file containing network data specified.");
+		return;
+	}
+
+	int index = generateNetworkInstance();
 	try {
-		index = generateNetworkInstance();
 		loadNAorTGF(filename, index);
 		if(filename.endsWith(".na")) {
 			filename = QFileDialog::getOpenFileName(
-			    this, tr("Load sif file"),
-			    QFileInfo(filename).absolutePath(), "*.sif");
+			    this, tr("Load sif file"), QFileInfo(filename).absolutePath(),
+			    "*.sif");
 			loadSif(filename, index);
 		}
-		visualise(index);
 
+		visualise(index);
 	} catch(std::exception& e) {
 		addLogMessage(e.what());
-		ui->tabWidget->removeTab(index);	
+		ui->tabWidget->removeTab(index);
 	}
-} else {
-	addLogMessage("No file containing network data specified.");
-}
 }
 
 void MainWindow::on_tabWidget_currentChanged(int index)
