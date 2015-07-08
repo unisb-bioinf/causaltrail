@@ -9,7 +9,10 @@
 #include <QtCore/QDebug>
 #include <QtCore/QMessageLogger>
 
-QueryView::QueryView(QWidget* parent) : QWidget(parent), ui(new Ui::QueryView)
+QueryView::QueryView(QWidget* parent)
+	: QWidget(parent),
+	  ui(new Ui::QueryView),
+	  net_(nullptr)
 {
 	ui->setupUi(this);
 
