@@ -73,8 +73,9 @@ DiscretisationFactory::create(const std::string& nodeName)
 
 	std::string method = jsonTree_.getMethod(nodeName);
 
+	std::locale loc;
 	std::transform(method.begin(), method.end(), method.begin(),
-	               [](char c) { return std::tolower(c); });
+	               [&loc](char c) { return std::tolower(c, loc); });
 
 	auto it = generators_.find(method);
 

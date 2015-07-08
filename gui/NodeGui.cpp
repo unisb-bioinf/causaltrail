@@ -6,7 +6,7 @@
 #include <QFontMetrics>
 #include <QtWidgets/QGraphicsScene>
 
-constexpr qreal ADJUST = 2;
+const qreal ADJUST = 2;
 
 NodeGui::NodeGui(unsigned int id, std::string name)
     : QGraphicsEllipseItem(-35 - ADJUST, -10 - ADJUST, 70 + ADJUST, 20 + ADJUST),

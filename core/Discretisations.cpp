@@ -45,7 +45,7 @@ void Discretisations::convertToDenseNumbers(
     unsigned int row)
 {
 	std::vector<boost::optional<int>> tmp(discretized);
-	std::sort(tmp.begin(), tmp.end(), [](auto a, auto b) {
+	std::sort(tmp.begin(), tmp.end(), [](const boost::optional<int>& a, const boost::optional<int>& b) {
 		if(a && b) {
 			return a.get() < b.get();
 		}
