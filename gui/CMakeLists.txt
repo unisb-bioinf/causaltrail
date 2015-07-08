@@ -12,6 +12,13 @@ if(NOT Qt5Core_FOUND OR NOT Qt5Widgets_FOUND)
 	return()
 endif()
 
+if(Qt5Svg_FOUND)
+	set(CT_HAS_QT5_SVG true)
+	if(Qt5Svg_VERSION_STRING VERSION_LESS "5.5.0")
+		message(STATUS "QtSvg version below 5.5.0 detected. SVG export will still work, but will be of poor quality.")
+	endif()
+endif()
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
