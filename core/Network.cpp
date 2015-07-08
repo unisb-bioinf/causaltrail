@@ -154,8 +154,7 @@ void Network::readTGF(const std::string& filename)
 	if (! input.good()){
 		throw std::invalid_argument("File not found");
 		}
-	unsigned int id1;
-	unsigned int id2;
+
 	std::string name;
 	unsigned int index = 0;
 	std::vector<std::string> names;
@@ -164,6 +163,8 @@ void Network::readTGF(const std::string& filename)
 			break;
 		std::stringstream buffer;
 		buffer << line;
+
+		size_t id1;
 		buffer >> id1 >> name;
 		id1=getDenseNodeIdentifier(id1);
 		NodeList_.push_back(Node(0, id1, name));
@@ -185,6 +186,7 @@ void Network::readTGF(const std::string& filename)
 		edges=true;
 		std::stringstream buffer;
 		buffer << line;
+		size_t id1, id2;
 		buffer >> id1 >> id2;
 		addEdge(getNewID(id2),getNewID(id1));
 	}
