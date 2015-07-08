@@ -9,19 +9,14 @@
 #include <QtCore/QDebug>
 #include <QtCore/QMessageLogger>
 
-QueryView::QueryView(QWidget* parent)
-	: QWidget(parent),
-	  ui(new Ui::QueryView)
+QueryView::QueryView(QWidget* parent) : QWidget(parent), ui(new Ui::QueryView)
 {
 	ui->setupUi(this);
 
 	clear();
 }
 
-QueryView::~QueryView()
-{
-	delete ui;
-}
+QueryView::~QueryView() { delete ui; }
 
 void QueryView::clear()
 {
@@ -105,8 +100,10 @@ void QueryView::setNetworkInstance(NetworkInstance* net)
 	net_ = net;
 
 	if(net_ != nullptr) {
-		connect(net_, SIGNAL(edgeAdded(int,int)), this, SLOT(edgeAdded(int,int)));
-		connect(net_, SIGNAL(edgeRemoved(int,int)), this, SLOT(edgeRemoved(int,int)));
+		connect(net_, SIGNAL(edgeAdded(int, int)), this,
+		        SLOT(edgeAdded(int, int)));
+		connect(net_, SIGNAL(edgeRemoved(int, int)), this,
+		        SLOT(edgeRemoved(int, int)));
 
 		updateQuery_();
 	} else {
@@ -123,8 +120,8 @@ void QueryView::conditionOn(unsigned int nodeId, const QString& value)
 		on_conditionVariableList_itemDoubleClicked(
 		    ui->conditionVariableList->item(duplicates));
 	}
-	ui->conditionVariableList->addItem(net_->getSelectedNodeName() +
-	                                   " = " + value);
+	ui->conditionVariableList->addItem(net_->getSelectedNodeName() + " = " +
+	                                   value);
 	ui->conditionLabel->show();
 	ui->conditionVariableList->show();
 	net_->colorNode(nodeId, QColor::fromHsv(20, 30, 250));
@@ -139,14 +136,13 @@ void QueryView::interventionOn(unsigned int nodeId, const QString& value)
 
 	const QString& nodeName = net_->getSelectedNodeName();
 
-	int duplicates = removeDuplicates(ui->interventionVariableList,
-	                                  nodeName, 0);
+	int duplicates =
+	    removeDuplicates(ui->interventionVariableList, nodeName, 0);
 	if(duplicates != -1) {
 		on_interventionVariableList_itemDoubleClicked(
 		    ui->interventionVariableList->item(duplicates));
 	}
-	duplicates = removeDuplicates(ui->queryVariableList,
-	                              nodeName, 0);
+	duplicates = removeDuplicates(ui->queryVariableList, nodeName, 0);
 	if(duplicates != -1) {
 		on_queryVariableList_itemDoubleClicked(
 		    ui->queryVariableList->item(duplicates));
@@ -165,7 +161,8 @@ void QueryView::edgeRemoved(int source, int target)
 	addRemovalAddition_("-", source, target);
 }
 
-void QueryView::edgeAdded(int source, int target) {
+void QueryView::edgeAdded(int source, int target)
+{
 	addRemovalAddition_("+", source, target);
 
 	if(!net_->edgeAddition()) {
@@ -173,15 +170,18 @@ void QueryView::edgeAdded(int source, int target) {
 	}
 }
 
-void QueryView::addRemovalAddition_(const char* prefix, unsigned int source, unsigned int target) {
+void QueryView::addRemovalAddition_(const char* prefix, unsigned int source,
+                                    unsigned int target)
+{
 	ui->edgeAdReLabel->setText("with respect to");
 	ui->edgeAdReLabel->show();
 	ui->edgeAdditionsRemovalList->show();
 	ui->edgeAdditionsRemovalList->addItem(QString("%1 %2 %3").arg(
-		prefix,
-		QString::fromStdString(net_->getController().getNetwork().getNode(source).getName()),
-		QString::fromStdString(net_->getController().getNetwork().getNode(target).getName())
-	));
+	    prefix,
+	    QString::fromStdString(
+	        net_->getController().getNetwork().getNode(source).getName()),
+	    QString::fromStdString(
+	        net_->getController().getNetwork().getNode(target).getName())));
 	net_->removeHighlighting();
 	updateQueryText_();
 }
@@ -191,23 +191,19 @@ void QueryView::computeArgMax(unsigned int nodeId)
 	const QString& nodeName = net_->getSelectedNodeName();
 
 	net_->setArgMax(true);
-	ui->queryLabel->setText(tr(
-		"Calculating the most probable value assignment for"
-	));
-	int duplicates = removeDuplicates(ui->queryVariableList,
-	                                  nodeName, 1);
+	ui->queryLabel->setText(
+	    tr("Calculating the most probable value assignment for"));
+	int duplicates = removeDuplicates(ui->queryVariableList, nodeName, 1);
 	if(duplicates != -1) {
 		on_queryVariableList_itemDoubleClicked(
 		    ui->queryVariableList->item(duplicates));
 	}
-	duplicates = removeDuplicates(ui->interventionVariableList,
-	                              nodeName, 0);
+	duplicates = removeDuplicates(ui->interventionVariableList, nodeName, 0);
 	if(duplicates != -1) {
 		on_interventionVariableList_itemDoubleClicked(
 		    ui->interventionVariableList->item(duplicates));
 	}
-	duplicates = removeDuplicates(ui->conditionVariableList,
-	                              nodeName, 0);
+	duplicates = removeDuplicates(ui->conditionVariableList, nodeName, 0);
 	if(duplicates != -1) {
 		on_conditionVariableList_itemDoubleClicked(
 		    ui->conditionVariableList->item(duplicates));
@@ -224,20 +220,18 @@ void QueryView::computeProbability(unsigned int nodeId, const QString& value)
 {
 	QString nodeName = net_->getSelectedNodeName();
 	ui->queryLabel->setText(tr("Calculating probability of"));
-	int duplicates = removeDuplicates(ui->interventionVariableList,
-	                                  nodeName, 0);
+	int duplicates =
+	    removeDuplicates(ui->interventionVariableList, nodeName, 0);
 	if(duplicates != -1) {
 		on_interventionVariableList_itemDoubleClicked(
 		    ui->interventionVariableList->item(duplicates));
 	}
-	duplicates = removeDuplicates(ui->queryVariableList,
-	                              nodeName, 0);
+	duplicates = removeDuplicates(ui->queryVariableList, nodeName, 0);
 	if(duplicates != -1) {
 		on_queryVariableList_itemDoubleClicked(
 		    ui->queryVariableList->item(duplicates));
 	}
-	duplicates = removeDuplicates(ui->queryVariableList,
-	                              nodeName, 1);
+	duplicates = removeDuplicates(ui->queryVariableList, nodeName, 1);
 	if(duplicates != -1) {
 		on_queryVariableList_itemDoubleClicked(
 		    ui->queryVariableList->item(duplicates));
@@ -279,10 +273,7 @@ QString QueryView::buildQuery() const
 	return query;
 }
 
-void QueryView::on_deleteQuery_clicked()
-{
-	emit queryDeleted(queryIndex());
-}
+void QueryView::on_deleteQuery_clicked() { emit queryDeleted(queryIndex()); }
 
 void QueryView::on_loadNextQuery_clicked()
 {
@@ -304,10 +295,7 @@ void QueryView::on_loadPreviousQuery_clicked()
 	emit queryChanged(queryIndex());
 }
 
-void QueryView::on_newQuery_clicked()
-{
-	newQuery();
-}
+void QueryView::on_newQuery_clicked() { newQuery(); }
 
 void QueryView::on_executeQuery_clicked()
 {
@@ -325,7 +313,8 @@ void QueryView::on_executeQuery_clicked()
 		return;
 	}
 
-	emit newLogMessage(ui->Input->text() + ": " + QString::number(result.first));
+	emit newLogMessage(ui->Input->text() + ": " +
+	                   QString::number(result.first));
 	showResult_(QString::number(result.first));
 
 	QString temp = "";
@@ -340,10 +329,10 @@ void QueryView::on_executeQuery_clicked()
 	}
 
 	net_->getQMA().storeQuery(ui->Input->text(),
-		getVector(ui->queryVariableList),
-		getVector(ui->conditionVariableList),
-		getVector(ui->interventionVariableList),
-		getVector(ui->edgeAdditionsRemovalList));
+	                          getVector(ui->queryVariableList),
+	                          getVector(ui->conditionVariableList),
+	                          getVector(ui->interventionVariableList),
+	                          getVector(ui->edgeAdditionsRemovalList));
 
 	checkQueriesLeft();
 	net_->removeHighlighting();
@@ -368,7 +357,8 @@ void QueryView::on_queryVariableList_itemDoubleClicked(QListWidgetItem* item)
 void
 QueryView::on_conditionVariableList_itemDoubleClicked(QListWidgetItem* item)
 {
-	net_->removeNodeColor(item->text().split(" ")[0], QColor::fromHsv(20, 30, 250));
+	net_->removeNodeColor(item->text().split(" ")[0],
+	                      QColor::fromHsv(20, 30, 250));
 	delete item;
 	checkEmptyList(ui->conditionVariableList, ui->conditionLabel);
 	checkAllEmpty();
@@ -456,8 +446,7 @@ void QueryView::checkAllEmpty()
 	if(ui->queryVariableList->count() == 0 &&
 	   ui->conditionVariableList->count() == 0 &&
 	   ui->interventionVariableList->count() == 0 &&
-	   ui->edgeAdditionsRemovalList->count() == 0)
-	{
+	   ui->edgeAdditionsRemovalList->count() == 0) {
 		newQuery();
 	}
 
@@ -538,7 +527,7 @@ void QueryView::writeListWidget(QListWidget* widget, QLabel* label,
 }
 
 int QueryView::removeDuplicates(QListWidget* widget, const QString& nodeName,
-                                 unsigned int index) const
+                                unsigned int index) const
 {
 	for(int i = 0; i < widget->count(); i++) {
 		if(nodeName == widget->item(i)->text().split(" ")[index]) {
@@ -549,10 +538,7 @@ int QueryView::removeDuplicates(QListWidget* widget, const QString& nodeName,
 	return -1;
 }
 
-void QueryView::updateQueryText_()
-{
-	ui->Input->setText(buildQuery());
-}
+void QueryView::updateQueryText_() { ui->Input->setText(buildQuery()); }
 
 void QueryView::showResult_(const QString& text)
 {
