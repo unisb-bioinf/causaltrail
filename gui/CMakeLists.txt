@@ -22,7 +22,7 @@ endif()
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
-configure_file("../cmake/gui_config.h.cmake" "${PROJECT_BINARY_DIR}/config.h")
+configure_file("../cmake/gui_config.h.cmake" "${PROJECT_BINARY_DIR}/gui_config.h")
 
 QT5_WRAP_UI(ui_Headers
     mainwindow.ui

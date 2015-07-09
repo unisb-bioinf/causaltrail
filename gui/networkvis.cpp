@@ -1,6 +1,6 @@
 #include "networkvis.h"
 
-#include "config.h"
+#include "gui_config.h"
 
 #include "NodeGui.h"
 #include "edge.h"

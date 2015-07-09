@@ -2,7 +2,7 @@
 
 #include "ui_mainwindow.h"
 
-#include "config.h"
+#include "gui_config.h"
 #include "Config.h"
 #include "datastorage.h"
 #include "DataView.h"
