@@ -122,6 +122,11 @@ std::vector<unsigned int> dataStorage::loadDeselectedSamples_(
 	std::vector<unsigned int> samples;
 
 	std::string tmp = input.get("deselectedSamples", "");
+
+	if (tmp == "") {
+		return samples;
+	}
+
 	auto begin = make_split_iterator(tmp, first_finder(";", boost::is_equal()));
 	for(; begin != split_iterator<std::string::iterator>(); ++begin) {
 		samples.push_back(std::stoi(boost::copy_range<std::string>(*begin)));
@@ -136,6 +141,11 @@ dataStorage::loadQueries_(const pt::ptree& input, NetworkInstance* net) const
 	using namespace boost::algorithm;
 
 	std::string tmp = input.get("queries", "");
+
+	if (tmp == "") {
+		return;
+	}
+
 	auto begin = make_split_iterator(tmp, first_finder(";", boost::is_equal()));
 	for(; begin != split_iterator<std::string::iterator>(); ++begin) {
 		net->getQMA().storeQuery(QString::fromStdString(boost::copy_range<std::string>(*begin)));
