@@ -398,7 +398,7 @@ QueryView::on_edgeAdditionsRemovalList_itemDoubleClicked(QListWidgetItem* item)
 
 void QueryView::on_Input_textChanged(const QString& arg1)
 {
-	if(net_ && arg1 == "") {
+	if(!net_ || arg1 == "") {
 		clear();
 		ui->Input->setStyleSheet("");
 		return;
