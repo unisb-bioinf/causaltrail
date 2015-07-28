@@ -147,18 +147,34 @@ void DiscretisationSelection::loadControlFile() {
 	for(size_t i = 0; i < featureNames_.size(); ++i) {
 		std::string nodeName = featureNames_[i]->text().toStdString();
 		if(propertyTree_.containsNode(nodeName)) {
-			auto& method = propertyTree_.getMethod(nodeName);
-			boxes_[i]->setCurrentMethod(method);
-			if (method == "threshold"){
-			float value = propertyTree_.getParameters(nodeName).getParameter<float>("threshold");
-			optionalValues_[i]->setText(QString::number(value));
-			}
-			else if (method == "bracketMedians"){
-			unsigned int value = propertyTree_.getParameters(nodeName).getParameter<unsigned int>("buckets");
-			optionalValues_[i]->setText(QString::number(value));
-			}
+			boxes_[i]->setCurrentMethod(propertyTree_.getMethod(nodeName));
+
+			setOptionalValue_(i, propertyTree_, nodeName);
 		}
 	}
+}
+
+void DiscretisationSelection::setOptionalValue_(
+    size_t i, const DiscretisationSettings& propertyTree_,
+    const std::string& nodeName)
+{
+	auto param = getParameterName_(propertyTree_.getMethod(nodeName));
+
+	if(param == "") {
+		return;
+	}
+
+	QLayoutItem* item = ui->gridLayout->itemAtPosition(i, 2);
+
+	auto edit = dynamic_cast<QLineEdit*>(item->widget());
+
+	if(edit == nullptr) {
+		return;
+	}
+
+	edit->setText(QString::fromStdString(
+	    propertyTree_.getParameter<std::string>(nodeName, param)));
+	edit->show();
 }
 
 void DiscretisationSelection::clicked(QAbstractButton* btn)

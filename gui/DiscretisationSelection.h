@@ -171,6 +171,11 @@ private:
      * @return A QSize object
      */
     QSize sizeHint() const;
+
+	/**
+	 * Sets the parameter field of the specified node.
+	 */
+	void setOptionalValue_ (size_t i, const DiscretisationSettings& propertyTree_, const std::string& nodeName );
 };
 
 #endif // DISCRETISATIONSELECTION_H
