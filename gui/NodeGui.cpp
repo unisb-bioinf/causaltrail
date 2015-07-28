@@ -19,7 +19,6 @@ NodeGui::NodeGui(unsigned int id, std::string name)
 {
     setFlag(ItemIsMovable);
     setFlag(ItemSendsGeometryChanges);
-    setCacheMode(DeviceCoordinateCache);
     setCursor(Qt::ArrowCursor);
     setAcceptHoverEvents(true);
     setZValue(-1);
