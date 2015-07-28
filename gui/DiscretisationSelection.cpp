@@ -72,8 +72,20 @@ void DiscretisationSelection::adaptGUIToData() {
 	featureNames_.clear();
 	optionalValues_.clear();
 
-	for(QObject* o : ui->gridLayout->children()) {
-		o->deleteLater();
+	int items = ui->gridLayout->count();
+
+	for(int i = items - 1; i >= 0; --i) {
+		auto item = ui->gridLayout->itemAt(i);
+
+		if(item == nullptr) {
+			continue;
+		}
+
+		if(item->widget()) {
+			item->widget()->deleteLater();
+		}
+
+		ui->gridLayout->removeItem(item);
 	}
 
 	ui->gridLayout->addWidget(new QLabel(tr("Variable name")), 0, 0, 0);
