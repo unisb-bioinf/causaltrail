@@ -323,14 +323,12 @@ void NetworkVis::originalNodeState(){
 void NetworkVis::exportSVG(const QString& filename) {
 #ifdef CT_HAS_QT5_SVG
 	QSvgGenerator generator;
-	QFile output(filename);
-	generator.setOutputDevice(&output);
+	generator.setFileName(filename);
 	generator.setSize(QSize(width(), height()));
 	QPainter painter;
 	painter.begin(&generator);
 	render(&painter);
 	painter.end();
-	output.close();
 #endif
 }
 
