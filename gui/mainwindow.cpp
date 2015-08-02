@@ -118,6 +118,7 @@ connect(getNetwork_(index), SIGNAL(doubleClick(NodeGui*)), this,
 
 void MainWindow::samplesLoaded(NetworkInstance* network)
 {
+addLogMessage("Network trained");
 adaptQueryEvaluationButtons(true);
 ui->queryView->setNetworkInstance(network);
 ui->queryView->newQuery();
@@ -446,6 +447,7 @@ void MainWindow::on_actionLoad_Session_triggered()
 		net->loadSamples(net->getDataFile(), net->getDiscretisationSettings());
 		int index = addNetwork(net);
 		visualise(index);
+		ui->tabWidget->setTabText(index, filename.split("/").back());
 	}
 
 	addLogMessage("Session loaded");
