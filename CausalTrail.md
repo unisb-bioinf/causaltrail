@@ -149,7 +149,7 @@ For every node in the network, the *method* field specfies the discretisation me
 ## GUI Usage ##
 The initial layout of **CausalTrails** gui is shown below. At the bottom of the window, there is a dock widget containing general information on the current session, labelled *Log*. As we see later, the middle area is used for network visualisation and query managment. At the top, there is a toolbar allowing direct access to the most important actions. Buttons are enabled according to the current status of a session. Thus errors caused by wrong user input can be avoided. In addition to the toolbar, there is a menubar allowing access to all functions of **CausalTrail**. 
 
-ToDo: Insert picture!
+![](Pictures/CausalTrailGuiInitial.png)
 
 In the following we provide step by step guidlines on how to use our tool. For illustration purposes, we use the *Student Network* presented in *Probabilistc Graphical Models* by *Koller and Friedman*.
 
@@ -169,7 +169,7 @@ A click on *Delete Network* deletes the network that is currently shown. This ca
 
 An example of the visualisation of the *Student Network* is depicted below. 
 
-ToDo: Insert picture!
+![](Pictures/CausalTrailVisualisationStudentNetwork.png)
 
 To load the *Student Network*, use the files:
 	
@@ -180,11 +180,11 @@ To load the *Student Network*, use the files:
 To load samples, click on *Load Samples* in the toolbar or in the menu. Once a suitable file is choosen, the data is loaded into a table allowing manual inspection of the data as well as (de)selection of individual samples. This allows the exclusion of distinct samples from the analysis. 
 An example for the student network is shown below.
 
-ToDo: Add picture!
+![](Pictures/DataSelectionStudentNetwork.png)
 
 Upon confirming the data by a click on *OK*, a window for selection of discretisation methods is shown. 
 
-ToDo: Add picture!
+![](Pictures/DiscretisationMethodSelectionStudentNetwork.png)
 
 Here, the user has two options: Either the discretisation information is loaded from a existing *json* file, or it is specified using the interface.
 A *json* file can be loaded by clicking on *Load*. 
@@ -194,11 +194,11 @@ As soon as the discretisation information is specified, the user can continue wi
 
 During parameter learning the *conditional probability tables (cpt)* for all nodes are computed. It is possible to look at the individual cpts of each node by right clicking on a node and selecting *Show CPT* in the popmenu. 
 
-ToDo: Add picture!
+![](Pictures/CPTGradeStudentNetwork.png)
 
 Once the learning is completed, two new dock widgets are shown, the *Query History* and the *Query Control Panel*.
 
-ToDo: Add picture!
+![](Pictures/StudentNetworkTrained.png)
 
 The *Query History* lists all submitted queries for the individual networks. The *Query Control Panel* is used in formulating queries. We provide several examples for query managment in the next section.
 
@@ -250,22 +250,21 @@ To illustrate the usage of **CausalTrail** further, we present a few example que
 #####Predictions######
 In this example, we compute the probability that *Intelligence* obtains the value *i1*.
 
-ToDo: Add picture!
+![](Pictures/Example1.png)
 
 In the second example, we compute the probability that *Intelligence* obtains the value *i1* if *Grade* has value *g1* and *SAT* has value *s1*.
 
-ToDo: Add picture! 
+![](Pictures/Example2.png)
 
 #####Interventions#####
 Here, we comopute the probability that *Intelligence* obtains the value *i1*, if we perform a *do-intervention* on *Grade*, setting its value to *g1* and given that *SAT* has value *s1*.
 
-ToDo: Add picture!
+![](Pictures/Example3.png)
 
 #####Counterfactuals#####
 In the last example, we compute the probability to get a letter, if we have not reveived a letter before. 
 
-
-ToDo: Add picture!
+![](Pictures/Example4.png)
 
 ###Sessions###
 To avoid repeating the process of network and sample loading, **CausalTrail** supports seesions. A session in **CausalTrail** contains all currently trained networks and submitted queries. To save a session, click on *Save Session* in the toolbar or click *File -> Save Session* in the menu. A session can be restored by a click on *Load Session* in the toolbar or by clicking *File -> Load Session* in the menu. 
