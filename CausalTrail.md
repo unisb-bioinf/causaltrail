@@ -264,6 +264,8 @@ ToDo: Add picture!
 #####Counterfactuals#####
 In the last example, we compute the probability to get a letter, if we have not reveived a letter before. 
 
+
+ToDo: Add picture!
+
 ###Sessions###
 To avoid repeating the process of network and sample loading, **CausalTrail** supports seesions. A session in **CausalTrail** contains all currently trained networks and submitted queries. To save a session, click on *Save Session* in the toolbar or click *File -> Save Session* in the menu. A session can be restored by a click on *Load Session* in the toolbar or by clicking *File -> Load Session* in the menu. 
-
