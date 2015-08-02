@@ -368,6 +368,7 @@ void MainWindow::adaptQueryEvaluationButtons(bool show)
 	ui->queryHistoryDock->setVisible(show);
 	ui->actionSave_Session->setEnabled(show);
 	ui->actionExecute_Batchfile->setEnabled(show);
+	ui->actionCreate_Batchfile->setEnabled(show);
 }
 
 void MainWindow::context_Menu_ArgMax_Selected()
