@@ -28,7 +28,7 @@
 	"method": "Threshold",
 	"threshold":"3.0"
 	},
-	"BrackedMedian":
+	"BracketMedians":
 	{
         "method": "BracketMedians",
 	"buckets": "2"
