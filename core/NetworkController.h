@@ -140,7 +140,7 @@ class NetworkController{
 	 *
 	 * @param filename, Name of the file to write the discretised data to
 	 */
-	void storeDiscretisedData(const std::string& filename);	
+	void storeDiscretisedData(const std::string& filename) const;	
 	private:
 
 	//Network object

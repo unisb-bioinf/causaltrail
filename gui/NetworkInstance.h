@@ -363,6 +363,9 @@ class NetworkInstance : public QWidget {
 	 */
 	const std::string& getNodeName(unsigned int i) const;
 
+	void saveDiscretisedData(const QString&) const;
+
+
 	public slots:
 	/**
 	* @brief loadSamples
@@ -401,6 +404,7 @@ class NetworkInstance : public QWidget {
 	void samplesLoaded(NetworkInstance* instance);
 
 	void newLogMessage(const QString&);
+
 
 private:
 
@@ -511,7 +515,7 @@ private:
      */
     QString dataFile_;
 
-	DiscretisationSettings discretisationSettings_;
+    DiscretisationSettings discretisationSettings_;
 
     /**
      * @brief deselectedSamples_

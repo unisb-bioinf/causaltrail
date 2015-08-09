@@ -260,7 +260,13 @@ private slots:
 	 */
     void dataRejected();
 
-	private:
+    /**
+     * @brief on_actionSave_discretised_data_triggered
+     * Writes the discretised data in a user specified txt file
+     */
+    void on_actionSave_discretised_data_triggered();
+
+private:
 	NetworkInstance* currentNetwork_();
 	NetworkInstance* getNetwork_(int index);
 };

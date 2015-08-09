@@ -107,6 +107,7 @@
     <addaction name="actionLoadNetwork"/>
     <addaction name="actionDeleteNetwork"/>
     <addaction name="actionLoad_Samples"/>
+    <addaction name="actionSave_discretised_data"/>
     <addaction name="actionLayout"/>
     <addaction name="actionExportSvg"/>
    </widget>
@@ -261,7 +262,7 @@
    <property name="minimumSize">
     <size>
      <width>358</width>
-     <height>0</height>
+     <height>41</height>
     </size>
    </property>
    <property name="font">
@@ -505,6 +506,17 @@
    </property>
    <property name="text">
     <string>&amp;Export SVG</string>
+   </property>
+  </action>
+  <action name="actionSave_discretised_data">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="document-save"/>
+   </property>
+   <property name="text">
+    <string>Save discretised data</string>
    </property>
   </action>
  </widget>

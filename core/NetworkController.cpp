@@ -115,7 +115,7 @@ bool NetworkController::isEdgePossible(unsigned int sourceID, unsigned int targe
 	return edgePossible;
 }
 
-void NetworkController::storeDiscretisedData(const std::string& filename){
+void NetworkController::storeDiscretisedData(const std::string& filename) const{
 	std::fstream f;
 	f.open(filename, std::ios::out);
 	f << observations_<<std::endl;

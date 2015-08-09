@@ -369,6 +369,7 @@ void MainWindow::adaptQueryEvaluationButtons(bool show)
 	ui->queryHistoryDock->setVisible(show);
 	ui->actionSave_Session->setEnabled(show);
 	ui->actionExecute_Batchfile->setEnabled(show);
+    ui->actionSave_discretised_data->setEnabled(show);
 	ui->actionCreate_Batchfile->setEnabled(show);
 }
 
@@ -568,3 +569,17 @@ void MainWindow::interventionValueSelected(QAction* action)
 	ui->queryView->interventionOn(currentNetwork_()->getSelectedNodeID(), action->text());
 }
 
+
+void MainWindow::on_actionSave_discretised_data_triggered()
+{
+    NetworkInstance* currentNetwork = currentNetwork_();
+    QString filename = QFileDialog::getSaveFileName(this, tr("Select txt file."), config_->dataDir(), "*.txt");
+    if(filename != "") {
+        currentNetwork->saveDiscretisedData(filename);
+        addLogMessage("Discretised data written to "+filename);
+    }
+    else
+    {
+       addLogMessage("No file specified, discretised data could not be stored.");
+    }
+}
