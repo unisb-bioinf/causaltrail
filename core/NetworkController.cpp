@@ -4,7 +4,7 @@
 #include "Discretiser.h"
 #include "DiscretisationSettings.h"
 #include "EM.h"
-
+#include <fstream>
 NetworkController::NetworkController()
     : observations_(0, 0, -1),
       eMRuns_(0),
@@ -113,4 +113,11 @@ bool NetworkController::isEdgePossible(unsigned int sourceID, unsigned int targe
 		network_.removeEdge(pair.second,pair.first);
 	}
 	return edgePossible;
+}
+
+void NetworkController::storeDiscretisedData(const std::string& filename){
+	std::fstream f;
+	f.open(filename, std::ios::out);
+	f << observations_<<std::endl;
+	f.close();
 }

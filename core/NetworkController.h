@@ -49,34 +49,34 @@ class NetworkController{
 	 */
 	void loadObservations(const std::string& datafile, const std::string& controlFile);
 
-    /**loadObservations
-     *
-     * @param datafile, file containing the raw sample data
-     * @param controlFile, controlFile for discretisation
-     * @param samplesToDelete, vector containing the column index of samples that should not be read
-     *
-     * Reads the raw sample data and performs the discretisation
-     */
-    void loadObservations(const std::string& datafile, const std::string& controlFile, const std::vector<unsigned int>& samplesToDelete);
+	/**loadObservations
+	*
+	* @param datafile, file containing the raw sample data
+	* @param controlFile, controlFile for discretisation
+	* @param samplesToDelete, vector containing the column index of samples that should not be read
+	*
+	* Reads the raw sample data and performs the discretisation
+	*/
+	void loadObservations(const std::string& datafile, const std::string& controlFile, const std::vector<unsigned int>& samplesToDelete);
 
-    /**loadObservations
-     *
-     * @param datafile, file containing the raw sample data
-     * @param controlFile, controlFile for discretisation
-     *
-     * Reads the raw sample data and performs the discretisation
-     */
-    void loadObservations(const std::string& datafile, const DiscretisationSettings& propertyTree);
+	/**loadObservations
+	*
+	* @param datafile, file containing the raw sample data
+	* @param controlFile, controlFile for discretisation
+	*
+	* Reads the raw sample data and performs the discretisation
+	*/
+	void loadObservations(const std::string& datafile, const DiscretisationSettings& propertyTree);
 
-    /**loadObservations
-     *
-     * @param datafile, file containing the raw sample data
-     * @param controlFile, controlFile for discretisation
-     * @param samplesToDelete, vector containing the column index of samples that should not be read
-     *
-     * Reads the raw sample data and performs the discretisation
-     */
-    void loadObservations(const std::string& datafile, const DiscretisationSettings& propertyTree, const std::vector<unsigned int>& samplesToDelete);
+	/**loadObservations
+	*
+	* @param datafile, file containing the raw sample data
+	* @param controlFile, controlFile for discretisation
+	* @param samplesToDelete, vector containing the column index of samples that should not be read
+	*
+	* Reads the raw sample data and performs the discretisation
+	 */
+	void loadObservations(const std::string& datafile, const DiscretisationSettings& propertyTree, const std::vector<unsigned int>& samplesToDelete);
 
 	/**trainNetwork
 	 *
@@ -134,7 +134,13 @@ class NetworkController{
 	 * @return true, if the edge does not induce a cycle, false otherwise
 	 */
 	bool isEdgePossible(unsigned int sourceID, unsigned int targetID, std::vector<std::pair<unsigned int, unsigned int>>& addedEdges, std::vector<std::pair<unsigned int, unsigned int>>& removedEdges);
-	
+
+
+	/**storeDiscretisedData
+	 *
+	 * @param filename, Name of the file to write the discretised data to
+	 */
+	void storeDiscretisedData(const std::string& filename);	
 	private:
 
 	//Network object
