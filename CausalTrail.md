@@ -4,13 +4,13 @@
 **CausalTrail** can be executed either from the console or via a graphical user interface.
 
 ## Build ##
-**CausalTrail** is can be build using `cmake`.
+**CausalTrail** can be build using `cmake`.
 
 ###Mandatory Dependencies###
 The *Boost* library as well as a *C++* compiler supporting *C++14* have to be available to build the console version of **CausalTrail**.
 
 ###Optional Dependencies###
-To build **CausalTrails** tests *gtest* is required. To build the gui, *Qt* version *5.4* or higher must be installed.
+To build **CausalTrails** tests *gtest* is required. To build the gui, *Qt* version *5.4* or higher has be installed.
 
 ###Step By Step Build Commands###
 Enter **CausalTrails** directory and execute the following:
@@ -85,7 +85,7 @@ The upper part of a *tgf* file contains the mapping between node identifiers and
 	NodeID =	NodeAttribute
 	...
 
-Different node attribute classes can be referenced via the *AttributeName*. Type states the data type of the node attributes. The mapping of *NodeID* to *NodeAttribute* has to be unique withon one class of attributes.  
+Different node attribute classes can be referenced via the *AttributeName*. *Type* states the data type of the node attributes. The mapping of *NodeID* to *NodeAttribute* has to be unique within one class of attributes.  
 
 
 ####Simple Interaction Format####
@@ -95,7 +95,7 @@ The *simple interaction format* is structured as follows:
 	NodeID EdgeType NodeID
 	...
 
-Nodes in the network are identified via the *NodeID*. Therefore, the *NodeIDs* have to be unique. The left *NodeID* represents the source of an edge, the right on represents the target. It is possible to assign more than one target node to a distinct source node, so multiple edges can be stored in one line. The *EdgeType* encodes the type of an edge, e.g. whether an edge between two ndoes is directed or not. It is also common to encode biological meaning in the *EdgeType*. For example, *pd* represents Protein-DNA interactions, whereas *pp* represents Protein-Protein interactions. The *EdgeType* can also be a longer string, allowing the encoding of more complex descriptions, e.g. *activates*, *inactivates*, or *phosphorylates*. If it is not necessary to encode any specific meaning for an edge *xx* or *yy* can be used as an *EdgeType*.
+Nodes in the network are identified via the *NodeID*. Therefore, the *NodeIDs* have to be unique. The left *NodeID* represents the source of an edge, the right on represents the target. It is possible to assign more than one target node to a distinct source node, so multiple edges can be stored in one line. The *EdgeType* encodes the type of an edge, e.g. whether an edge between two nodes is directed or not. It is also common to encode biological meaning in the *EdgeType*. For example, *pd* represents Protein-DNA interactions, whereas *pp* represents Protein-Protein interactions. The *EdgeType* can also be a longer string, allowing the encoding of more complex descriptions, e.g. *activates*, *inactivates*, or *phosphorylates*. If it is not necessary to encode any specific meaning for an edge *xx* or *yy* can be used as an *EdgeType*.
 
 ----------
 
@@ -147,7 +147,7 @@ For every node in the network, the *method* field specfies the discretisation me
 - *None*: The data is already discret.
  
 ## GUI Usage ##
-The initial layout of **CausalTrails** gui is shown below. At the bottom of the window, there is a dock widget containing general information on the current session, labelled *Log*. As we see later, the middle area is used for network visualisation and query managment. At the top, there is a toolbar allowing direct access to the most important actions. Buttons are enabled according to the current status of a session. Thus errors caused by wrong user input can be avoided. In addition to the toolbar, there is a menubar allowing access to all functions of **CausalTrail**. 
+The initial layout of **CausalTrails** gui is shown below. At the bottom of the window, there is a dock widget containing general information on the current session, labelled *Log*. As we see later, the middle area is used for network visualisation and query managment. At the top, there is a toolbar allowing direct access to the most important actions. Buttons are enabled according to the current status of a session. Thus, errors caused by wrong user input can be avoided. In addition to the toolbar, there is a menubar allowing access to all functions of **CausalTrail**. 
 
 ![](Pictures/CausalTrailGuiInitial.png)
 
@@ -158,12 +158,12 @@ In the following we provide step by step guidlines on how to use our tool. For i
 ###Network Managment###
 Networks can be loaded by a click on *Load Network* in the toolbar or by clicking on *Network -> Load Network* in the menu. A dialog will be shown to select networks represented in the formats introduced above. The dialog can also be opened by pressing *Strg + O*.
 
-Upon loading, the networks are visualized using *graphviz*. If *graphviz* is not available, the layout is generated by a force directed layouting algorithm included in **CausalTrail**. 
+Upon loading, the network layout is computed using *graphviz*. If *graphviz* is not available, the layout is generated by a force directed layouting algorithm included in **CausalTrail**. 
 
 The network view is interactive, e.g. it is possible to move nodes or to zoom in or out the network visualisation. 
 By clicking on *Layout* in the toolbar, the menubar or by pressing *Strg + L*, the network is layouted again. 
 
-Networks are visualised in a *tab* window. In case that the user loads multiple networks, each network is shown in its own tab. Using **CausalTrails** *svg* export function, the network visualisations can be exported to a *svg* file. To do so, click *Network -> Export SVG*.
+Networks are visualised in a *tab* window. In case that the user loads multiple networks, each network is shown in its own tab. Using **CausalTrails** *svg* export function, a network visualisation can be exported to a *svg* file. To do so, click *Network -> Export SVG*.
 
 A click on *Delete Network* deletes the network that is currently shown. This can also be done with *Strg + D*.
 
@@ -177,7 +177,7 @@ To load the *Student Network*, use the files:
 	test/data/Student.sif
 
 ###Loading Samples and Training the Network
-To load samples, click on *Load Samples* in the toolbar or in the menu. Once a suitable file is choosen, the data is loaded into a table allowing manual inspection of the data as well as (de)selection of individual samples. This allows the exclusion of distinct samples from the analysis. 
+To load samples, click on *Load Samples* in the toolbar or in the menu. Once a suitable file is choosen, the data is shown in a table allowing manual inspection of the data as well as (de)selection of individual samples. This allows the exclusion of distinct samples from the analysis. 
 An example for the student network is shown below.
 
 ![](Pictures/DataSelectionStudentNetwork.png)
@@ -200,9 +200,10 @@ Once the learning is completed, two new dock widgets are shown, the *Query Histo
 
 ![](Pictures/StudentNetworkTrained.png)
 
-The *Query History* lists all submitted queries for the individual networks. The *Query Control Panel* is used in formulating queries. We provide several examples for query managment in the next section.
+The *Query History* lists all submitted and valid queries for individual networks. The *Query Control Panel* is used in formulating queries. We provide several examples for query managment in the next section.
 
 To train the *Student Network* use the files:
+
 	test/data/StudentData.txt
 	test/data/controlStudent.json
 
@@ -230,9 +231,9 @@ To facilitate the formulation of queries, **CausalTrail** supports interactive q
 4.	*Set value to*: Perform a *do-intervention* on the current node. The edges to the nodes parents are deleted and its own value is fixed to the selected value. 
 5.	*Add Edge to*: Adds an edge to another node. To add a new edge double click on the desired target node. The added edge will appear in red. If the new edge would induce a cycle, an error will be shon in the *Log*. Adding an edge causes retraining of the entire network. 
 
-Once an item is selected, it is shown in one of the boxes in the *Query Control Panel*. A colour code and a natural language wrapper around the query item boxes help to understand the query. Double clicking on an item removes it from the current query. 
+Once an item is selected, it is shown in one of the boxes in the *Query Control Panel*. A colour code and a natural language wrapper around the query item boxes help to understand the query. Double clicking on an item in the *Query Control Panel* removes it from the current query. 
 
-In addition to the operations on nodes, there is an operation on edges. A right click on an edge open a context menu allowing to remove the selected egde. As for adding an edge, removing one causes retraining of the network too. 
+In addition to the operations on nodes, there is an operation on edges. A right click on an edge opens a context menu allowing to remove the selected egde. Removed edges are shown in grey.  As for adding an edge, removing one causes retraining of the network too. 
 
 ####Query History####
 The query history enables the user to reload a previously submitted query. There are two ways to do this:
@@ -257,7 +258,7 @@ In the second example, we compute the probability that *Intelligence* obtains th
 ![](Pictures/Example2.png)
 
 #####Interventions#####
-Here, we comopute the probability that *Intelligence* obtains the value *i1*, if we perform a *do-intervention* on *Grade*, setting its value to *g1* and given that *SAT* has value *s1*.
+Here, we compute the probability that *Intelligence* obtains the value *i1*, if we perform a *do-intervention* on *Grade*, setting its value to *g1* and given that *SAT* has value *s1*.
 
 ![](Pictures/Example3.png)
 
@@ -267,4 +268,4 @@ In the last example, we compute the probability to get a letter, if we have not 
 ![](Pictures/Example4.png)
 
 ###Sessions###
-To avoid repeating the process of network and sample loading, **CausalTrail** supports seesions. A session in **CausalTrail** contains all currently trained networks and submitted queries. To save a session, click on *Save Session* in the toolbar or click *File -> Save Session* in the menu. A session can be restored by a click on *Load Session* in the toolbar or by clicking *File -> Load Session* in the menu. 
+To avoid repeating the process of network and sample loading, **CausalTrail** supports sessions. A session in **CausalTrail** contains all currently trained networks and submitted queries. To save a session, click on *Save Session* in the toolbar or click *File -> Save Session* in the menu. A session can be restored by a click on *Load Session* in the toolbar or by clicking *File -> Load Session* in the menu. 
