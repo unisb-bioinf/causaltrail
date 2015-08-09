@@ -342,6 +342,11 @@ const QueryManager& NetworkInstance::getQMA() const
 	return qma_;
 }
 
+bool NetworkInstance::queryHistoryIsEmpty() const
+{
+    return (qma_.getNumberOfQueries()==0);
+}
+
 void NetworkInstance::resetNetwork(){
     nc_.getNetwork().reset();
 }

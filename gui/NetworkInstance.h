@@ -363,8 +363,17 @@ class NetworkInstance : public QWidget {
 	 */
 	const std::string& getNodeName(unsigned int i) const;
 
+	/**
+	* @brief saveDiscretisedData
+	* writes the discretised data object into a specified file.
+	*/
 	void saveDiscretisedData(const QString&) const;
 
+	/**
+	* @brief queryHistoryIsEmpty
+	* @return true if the Query Manager objects does not hold any query, false otherwise
+	*/
+	bool queryHistoryIsEmpty() const;
 
 	public slots:
 	/**

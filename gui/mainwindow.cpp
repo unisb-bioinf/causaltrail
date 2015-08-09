@@ -50,12 +50,8 @@ void MainWindow::on_actionHelp_triggered()
 
 void MainWindow::checkQueriesLeft()
 {
-	if(!ui->tabWidget->currentWidget()) {
-		return;
-	}
-
 	ui->actionCreate_Batchfile->setEnabled(
-	    currentNetwork_()->getQMA().getNumberOfQueries() > 0);
+	    !currentNetwork_()->queryHistoryIsEmpty());
 }
 
 void MainWindow::initaliseVisibility()
@@ -141,7 +137,8 @@ ui->Output->scrollToBottom();
 
 void MainWindow::queryExecuted(unsigned int query)
 {
-loadQueriesToHistoryWindow(currentNetwork_());
+	loadQueriesToHistoryWindow(currentNetwork_());
+	checkQueriesLeft();
 }
 
 void MainWindow::discretiseSelection(const QString& samples,
@@ -254,10 +251,13 @@ void MainWindow::on_tabWidget_currentChanged(int index)
 			adaptQueryEvaluationButtons(true);
 			currentNetwork->restoreOriginalNetworkRepresentation();
 			loadQueriesToHistoryWindow(currentNetwork);
+	            if (!currentNetwork->queryHistoryIsEmpty()){
+        	        ui->actionCreate_Batchfile->setEnabled(true);
+           		}
 		} else {
 			adaptQueryEvaluationButtons(false);
-		}
-
+           		 ui->actionCreate_Batchfile->setEnabled(false);
+			}
 		ui->queryView->setNetworkInstance(currentNetwork);
 	} else {
 		ui->actionExecute_Batchfile->setEnabled(false);
@@ -370,7 +370,6 @@ void MainWindow::adaptQueryEvaluationButtons(bool show)
 	ui->actionSave_Session->setEnabled(show);
 	ui->actionExecute_Batchfile->setEnabled(show);
     ui->actionSave_discretised_data->setEnabled(show);
-	ui->actionCreate_Batchfile->setEnabled(show);
 }
 
 void MainWindow::context_Menu_ArgMax_Selected()
@@ -532,7 +531,6 @@ void MainWindow::on_actionExportSvg_triggered()
 
 void MainWindow::on_queryHistory_doubleClicked(const QModelIndex& index) {
 	if(index.isValid()) {
-		//TODO: update the visualization
 		ui->queryView->updateQuery(index.row());
 	}
 }
