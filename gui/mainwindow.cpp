@@ -235,8 +235,6 @@ void MainWindow::on_actionLoadNetwork_triggered()
 
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
-	checkQueriesLeft();
-
 	bool validInstance = index != -1;
 
 	ui->actionExportSvg->setEnabled(validInstance);
@@ -246,6 +244,8 @@ void MainWindow::on_tabWidget_currentChanged(int index)
 	ui->actionDeleteNetwork->setEnabled(validInstance);
 
 	if(validInstance) {
+
+		checkQueriesLeft();
 		NetworkInstance* currentNetwork = getNetwork_(index);
 		if(currentNetwork->isTrained()) {
 			adaptQueryEvaluationButtons(true);
