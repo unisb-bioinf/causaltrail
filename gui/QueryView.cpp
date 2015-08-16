@@ -243,8 +243,8 @@ void QueryView::computeProbability(unsigned int nodeId, const QString& value)
 	ui->queryVariableList->setVisible(true);
 	net_->colorNode(nodeId, QColor::fromHsv(100, 30, 250));
 	net_->removeHighlighting();
-
 	updateQueryText_();
+	
 }
 
 QString QueryView::buildQuery() const
@@ -521,7 +521,7 @@ void QueryView::writeListWidget(QListWidget* widget, QLabel* label,
 		   static_cast<size_t>(values[nodeId]) < node.getValueNames().size()) {
 			widget->addItem(
 			    QString::fromStdString(node.getName()) + " = " +
-			    QString::fromStdString(node.getValueNames()[values[nodeId]]));
+			    QString::fromStdString(node.getValueNamesProb()[values[nodeId]]));
 		} else {
 			qCritical() << "Invalid value" << values[nodeId]
 			            << "supplied for node" << node.getName().c_str();
