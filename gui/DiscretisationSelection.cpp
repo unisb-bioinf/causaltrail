@@ -51,7 +51,6 @@ void DiscretisationSelection::generatePropertyTree()
 		auto featureName = featureNames_[i - 1]->text().toStdString();
 		auto method =
 		    qvariant_cast<QString>(boxes_[i - 1]->currentData()).toStdString();
-
 		std::string parameterName = getParameterName_(method);
 
 		if(parameterName != "") {
@@ -148,7 +147,16 @@ void DiscretisationSelection::loadControlFile() {
 	for(size_t i = 0; i < featureNames_.size(); ++i) {
 		std::string nodeName = featureNames_[i]->text().toStdString();
 		if(propertyTree_.containsNode(nodeName)) {
-			boxes_[i]->setCurrentMethod(propertyTree_.getMethod(nodeName));
+			auto& method = propertyTree_.getMethod(nodeName);
+			boxes_[i]->setCurrentMethod(method);
+			if (method == "threshold"){
+			float value = propertyTree_.getParameters(nodeName).getParameter<float>("threshold");
+			optionalValues_[i]->setText(QString::number(value));
+			}
+			else if (method == "bracketMedians"){
+			unsigned int value = propertyTree_.getParameters(nodeName).getParameter<unsigned int>("buckets");
+			optionalValues_[i]->setText(QString::number(value));
+			}
 		}
 	}
 }
