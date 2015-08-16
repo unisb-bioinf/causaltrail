@@ -561,7 +561,7 @@ Matrix<T>::Matrix(const std::string& filename, bool colNames, bool rowNames, con
 {
     colCount_ = 0;
     rowCount_ = 0;
-    readMatrixDeletion(filename, colNames, rowNames, samplesToDelete);
+    readMatrix(filename, colNames, rowNames);
 }
 
 template <typename T>

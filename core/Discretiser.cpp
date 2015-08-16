@@ -47,12 +47,11 @@ void Discretiser::discretise()
 {
 
 	DiscretisationFactory dF(jsonTree_);
-
 	// Create Discretisations Objects
 	for(unsigned int i = 0; i < observations_.getRowCount(); i++) {
 		discretisations_.push_back(dF.create(observations_.getRowNames()[i]));
 	}
-
+	
 	Discretisations::Data data(originalObservations_, observations_,
 	                           network_.getObservationsMap(),
 	                           network_.getObservationsMapR());

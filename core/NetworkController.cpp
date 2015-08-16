@@ -31,6 +31,8 @@ void NetworkController::loadObservations(const std::string& datafile,
 {
 	Matrix<std::string> originalObservations(datafile, false, true);
 	Discretiser d(originalObservations,controlFile,observations_,network_);
+	std::fstream f;
+
 }
 
 void NetworkController::loadObservations(
@@ -66,6 +68,7 @@ void NetworkController::loadObservations(
 
 void NetworkController::trainNetwork(){
 	DataDistribution datadu(network_, observations_);
+	storeDiscretisedData("discretisedData.txt");
 	datadu.assignObservationsToNodes();
 	datadu.distributeObservations();
 	EM em(network_, observations_, 0.001f, 100000);

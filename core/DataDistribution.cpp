@@ -156,10 +156,8 @@ void DataDistribution::distributeObservations()
 		    Matrix<int>(n.getValueNames(), n.getParentValueNames(), 0);
 		Matrix<float> probMatrix =
 		    Matrix<float>(n.getValueNamesProb(), n.getParentValueNames(), 0.0f);
-
 		// Count observations
 		countObservations(obsMatrix, n);
-
 		// Store matrices
 		n.setObservations(obsMatrix);
 		n.setObservationBackup(obsMatrix);

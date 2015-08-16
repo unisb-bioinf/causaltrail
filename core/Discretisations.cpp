@@ -1,4 +1,5 @@
 #include "Discretisations.h"
+#include "sstream"
 
 const int Discretisations::NA = -1;
 
@@ -7,12 +8,14 @@ boost::optional<float> Discretisations::getNumber(const Observations& obs,
                                                   unsigned int row)
 {
 	const auto& temp = obs(col, row);
-
 	if(temp == "NA") {
 		return boost::none;
 	}
-
-	return std::stof(temp);
+	std::stringstream ss(temp);
+	float f;
+	ss >> f;
+	return f;
+	//return std::stof(temp);
 }
 
 void Discretisations::createNameEntry(ObservationMap& obs,
@@ -31,7 +34,6 @@ std::vector<float> Discretisations::createSortedVector(const Observations& obs,
 	templist.reserve(obs.getColCount()-obs.countElement(1,row,"NA"));
 	for(unsigned int col = 0; col < obs.getColCount(); col++) {
 		auto value = getNumber(obs, col, row);
-
 		if(value) {
 			templist.push_back(value.get());
 		}
