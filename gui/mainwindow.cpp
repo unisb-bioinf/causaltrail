@@ -39,13 +39,7 @@ MainWindow::~MainWindow() { delete ui; }
 
 void MainWindow::on_actionHelp_triggered()
 {
-	QString pathToDoku = QDir::currentPath();
-	pathToDoku.replace("/build/gui",
-	                   "/Gui-Documentation-HTML/CausalTrailGuiDoku.html");
-	pathToDoku.replace("/build",
-	                   "/Gui-Documentation-HTML/CausalTrailGuiDoku.html");
-
-	QDesktopServices::openUrl(QUrl(pathToDoku));
+	QDesktopServices::openUrl(QUrl("https://github.com/dstoeckel/causaltrail"));
 }
 
 void MainWindow::checkQueriesLeft()
