@@ -6,6 +6,8 @@
 #include <QFontMetrics>
 #include <QtWidgets/QGraphicsScene>
 
+#include <cmath>
+
 const qreal ADJUST = 2;
 
 NodeGui::NodeGui(unsigned int id, std::string name)
