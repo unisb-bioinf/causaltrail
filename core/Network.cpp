@@ -111,9 +111,9 @@ const Node& Network::getNode(const std::string& name) const
 
 std::ostream& operator<<(std::ostream& os, const Network& n)
 {
-	os << n.AdjacencyMatrix_ << "\n";
+	os << "Adjacency matrix:\n" << n.AdjacencyMatrix_ << "\n\n";
 	for(const Node& node : n.NodeList_) {
-		os << node;
+		os << node << "\n";
 	}
 	return os;
 }

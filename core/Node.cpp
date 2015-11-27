@@ -88,8 +88,10 @@ Matrix<int>& Node::getObservationMatrix() { return ObservationMatrix_; }
 
 std::ostream& operator<<(std::ostream& os, const Node& n)
 {
-	os << n.name_ << " " << n.id_ << "\n" << n.ObservationMatrix_ << "\n"
-	   << n.ProbabilityMatrix_ << std::endl;
+	os << "Node name: " << n.name_ << "\nNode id: " << n.id_
+	   << "\nObservation matrix:\n" << n.ObservationMatrix_
+	   << "\n\nProbability matrix:\n" << n.ProbabilityMatrix_ << std::endl;
+
 	return os;
 }
 
