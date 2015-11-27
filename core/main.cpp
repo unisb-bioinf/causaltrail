@@ -5,12 +5,14 @@
 
 int main(int argc, char *argv[]){
 	NetworkController c;
-	if (argc < 4){
-		std::cout<<"Insufficient number of parameters"<<std::endl;
-		std::cout<<"Specify the following files:"<<std::endl;
-		std::cout<<"Observations.txt"<<" "<<"Discretisation-ControlFile.txt"<<" "<<"Network.tgf"<<std::endl;
-		std::cout<<"Alternatively:"<<std::endl;
-		std::cout<<"Observations.txt"<<" "<<"Discretisation-ControlFile.txt"<<" "<<"Network.sif"<<" "<<"Network.na"<<std::endl;
+	if (argc < 4) {
+		std::cout
+		    << "Insufficient number of parameters\n\n"
+		    << "Usage:\n\t" << argv[0]
+		    << " observations.txt discretisation_control.json network.tgf\n\n"
+		    << "or:\n\t" << argv[0]
+		    << " observations.txt discretisation_control.json network.sif "
+		       "network.na\n";
 	}
 	else{
 		std::string datafile=argv[1];
