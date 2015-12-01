@@ -381,22 +381,15 @@ int Network::reverseFactor(Node& n, unsigned int i, int row)
 
 bool Network::hasNode(const std::string& name) const
 {
-	auto res = NameToIndex_.find(name);
-	if(res == NameToIndex_.end()) {
-		return false;
-	}
-	return true;
+	return NameToIndex_.find(name) != NameToIndex_.end();
 }
 
 bool Network::hasValue(const std::string& nodeName,
-                             const std::string& valueName) const
+                       const std::string& valueName) const
 {
-	const std::vector<std::string>& valueNames =
-	    getNode(nodeName).getValueNamesProb();
-	auto it = std::find(valueNames.begin(), valueNames.end(), valueName);
-	if(it == valueNames.end())
-		return false;
-	return true;
+	const auto& names = getNode(nodeName).getValueNamesProb();
+
+	return std::find(names.begin(), names.end(), valueName) != names.end();
 }
 
 size_t Network::getDenseNodeIdentifier(unsigned int originialIdentifier)
