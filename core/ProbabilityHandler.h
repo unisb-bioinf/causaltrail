@@ -23,11 +23,12 @@ class ProbabilityHandler
 	 *
 	 * This objects performs various kinds of probability calculations
 	 */
-	ProbabilityHandler(Network& network);
+	explicit ProbabilityHandler(Network& network);
 
-#if defined __GNUC__ || defined __clang__
-	ProbabilityHandler(const ProbabilityHandler&) = default;
-#endif
+	ProbabilityHandler(const ProbabilityHandler& o)
+		: network_(o.network_)
+	{
+	}
 
 	ProbabilityHandler& operator=(const ProbabilityHandler&) = delete;
 	ProbabilityHandler& operator=(ProbabilityHandler&&) = delete;

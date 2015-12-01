@@ -14,11 +14,23 @@ class QueryExecuter{
 	 * @return
 	 *
 	 */
-	QueryExecuter(NetworkController& c);
+	explicit QueryExecuter(NetworkController& c);
 
-#if defined __GNUC__ || defined __clang__
-	QueryExecuter(const QueryExecuter&) = default;
-#endif
+	QueryExecuter(const QueryExecuter& o)
+		: networkController_(o.networkController_),
+		  probHandler_(o.probHandler_),
+		  interventions_(o.interventions_),
+		  nonInterventionNodeID_(o.nonInterventionNodeID_),
+		  nonInterventionValues_(o.nonInterventionValues_),
+		  conditionNodeID_(o.conditionNodeID_),
+		  conditionValues_(o.conditionValues_),
+		  doInterventionNodeID_(o.doInterventionNodeID_),
+		  doInterventionValues_(o.doInterventionValues_),
+		  addEdgeNodeIDs_(o.addEdgeNodeIDs_),
+		  removeEdgeNodeIDs_(o.removeEdgeNodeIDs_),
+		  argmaxNodeIDs_(o.argmaxNodeIDs_)
+	{
+	}
 
 	QueryExecuter& operator=(const QueryExecuter&) = delete;
 	QueryExecuter& operator=(QueryExecuter&&) = delete;

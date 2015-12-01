@@ -29,11 +29,12 @@ class Interventions{
 	 * retrained. Due to efficiency reasons, training is not called in this class.
 	 * Retraining the network is called in the QueryExecuter class.
 	 */
-	Interventions(NetworkController& c);
+	explicit Interventions(NetworkController& c);
 
-#if defined __GNUC__ || defined __clang__
-	Interventions(const Interventions&) = default;
-#endif
+	Interventions(const Interventions& o)
+		: controller_(o.controller_)
+	{
+	}
 
 	Interventions& operator=(const Interventions&) = delete;
 	Interventions& operator=(Interventions&&) = delete;
