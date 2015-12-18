@@ -55,10 +55,10 @@ void NetworkInstance::loadSamples(const QString& samples, const DiscretisationSe
 
 	try {
 		nc_.loadObservations(dataFile_.toStdString(), settings, deselectedSamples_);
-	} catch(const boost::property_tree::ptree_bad_data& e) {
+	} catch(const boost::property_tree::ptree_bad_data&) {
 		emit newLogMessage("Error in discretisation control. Could not convert parameter to required type.");
 		return;
-	} catch(const boost::property_tree::ptree_bad_path& e) {
+	} catch(const boost::property_tree::ptree_bad_path&) {
 		emit newLogMessage("Error in discretisation control. Required parameter not present.");
 		return;
 	} catch(const std::invalid_argument& e) {

@@ -341,7 +341,7 @@ bool NetworkVis::readDot_(const QByteArray& data)
 		size_t index;
 		try {
 			index = std::stoi(n.name.name);
-		} catch(std::exception& e) {
+		} catch(std::exception&) {
 			return false;
 		}
 

@@ -8,12 +8,12 @@ DataMatrixModel::DataMatrixModel(const QString& sampleFile, QObject* parent)
 	matrix_ = std::make_shared<SMatrix>(sampleFile_.toStdString(), false, true);
 }
 
-int DataMatrixModel::rowCount(const QModelIndex& index) const
+int DataMatrixModel::rowCount(const QModelIndex&) const
 {
 	return matrix_->getRowCount();
 }
 
-int DataMatrixModel::columnCount(const QModelIndex& index) const
+int DataMatrixModel::columnCount(const QModelIndex&) const
 {
 	return matrix_->getColCount();
 }
