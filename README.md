@@ -31,7 +31,7 @@ Supported compilers are:
 
 ###Optional Dependencies###
 To build **CausalTrails** unit test suite, *gtest* &gt;= 1.7.0 is required.
-To build the gui, *Qt* version *5.4* or higher has be installed.
+To build the GUI, *Qt* version *5.4* or higher has be installed.
 
 ###Step By Step Build Commands###
 Enter **CausalTrails** directory and execute the following:
@@ -56,8 +56,8 @@ To use multiple cores (e.g. 4) for building use the `-j` option:
 
 	make -j 4
 
-The executable file for the consol version is located in the folder `build/core`,
-the gui version is located in the folder `build/gui`, and the tests can be found
+The executable file for the console version is located in the folder `build/core`,
+the GUI version is located in the folder `build/gui`, and the tests can be found
 in the folder `build/test`.
 
 Execution
@@ -161,7 +161,7 @@ For more information on the SIF format see
 ----------
 
 ###Data Files###
-The samples from which we learn the causal bayesian network parameters should be provided in a *tab-delimited*
+The samples from which we learn the causal Bayesian network parameters should be provided in a *tab-delimited*
 text file where the columns represent the samples and the rows represent the features. An example is shown below.
 
 	SNV1		Yes	No	Yes	No
@@ -170,7 +170,7 @@ text file where the columns represent the samples and the rows represent the fea
 
 ###Discretisation Information###
 **CausalTrail** uses discretised input data for training the node parameters.
-As measurements often come as continous values, they have to be discretised
+As measurements often come as continuous values, they have to be discretised
 before the actual parameter learning can take place. For this reason,
 we provide several discretisation methods within **CausalTrail**.
 
@@ -192,10 +192,10 @@ Using a simple *json* file, the user can control the discretisation process. For
 		}
 	}
 
-For every node in the network, the *method* field specfies the discretisation method.
+For every node in the network, the *method* field specifies the discretisation method.
 If necessary, additional fields can be used to provide specific information that is
 needed for the discretisation, e.g. a manually determined threshold as shown in the
-example above.  A list of all keywords and discretisation methods is shown below.
+example above. A list of all keywords and discretisation methods is shown below.
 
 - *Floor*: Round the data to the next smaller integer value.
 - *Ceil*: Round the data to the next larger integer value.
@@ -211,25 +211,25 @@ example above.  A list of all keywords and discretisation methods is shown below
 	- The number of buckets is specified in the field *buckets*.
 - *PearsonTukey*: Discretise the data according to the Pearson Tukey method.
 - *Z-Score*: Divide the data into two groups according to the Z-Score.
-- *None*: The data is already discret.
+- *None*: The data is already discrete.
 
 GUI Usage
 ---------
-The initial layout of **CausalTrails** gui is shown below. At the bottom of the window,
+The initial layout of **CausalTrails** GUI is shown below. At the bottom of the window,
 there is a dock widget containing general information on the current session, labelled
 *Log*. As we see later, the middle area is used for network visualisation and query
-managment. At the top, there is a toolbar allowing direct access to the most important
+management. At the top, there is a toolbar allowing direct access to the most important
 actions. Buttons are enabled according to the current status of a session. Thus, errors
 caused by wrong user input can be avoided. In addition to the toolbar, there is a menubar
 allowing access to all functions of **CausalTrail**.
 
 ![](Pictures/CausalTrailGuiInitial.png)
 
-In the following we provide step by step guidlines on how to use our tool.
+In the following we provide step by step guidelines on how to use our tool.
 For illustration purposes, we use the *Student Network* presented in
 *Probabilistc Graphical Models* by *Koller and Friedman*.
 
-###Network Managment###
+###Network Management###
 Networks can be loaded by a click on *Load Network* in the toolbar or by clicking
 on *Network -> Load Network* in the menu. A dialog will be shown to select networks
 represented in the formats introduced above. The dialog can also be opened by pressing *Strg + O*.
@@ -260,7 +260,7 @@ To load the *Student Network*, use the files:
 
 ###Loading Samples and Training the Network
 To load samples, click on *Load Samples* in the toolbar or in the menu. Once a suitable
-file is choosen, the data is shown in a table allowing manual inspection of the data as
+file is chosen, the data is shown in a table allowing manual inspection of the data as
 well as (de)selection of individual samples. This allows the exclusion of distinct samples
 from the analysis. An example for the student network is shown below.
 
@@ -277,9 +277,9 @@ discretisation information can be stored in a *json* file by clicking on *Save*.
 As soon as the discretisation information is specified, the user can continue with parameter
 learning by clicking *OK*.
 
-During parameter learning the *conditional probability tables (cpt)* for all nodes are computed.
-It is possible to look at the individual cpts of each node by right clicking on a node and
-selecting *Show CPT* in the popmenu.
+During parameter learning the *conditional probability tables (CPT)* for all nodes are computed.
+It is possible to look at the individual CPTs of each node by right clicking on a node and
+selecting *Show CPT* in the popup-menu.
 
 ![](Pictures/CPTGradeStudentNetwork.png)
 
@@ -290,7 +290,7 @@ the *Query Control Panel*.
 
 The *Query History* lists all submitted and valid queries for individual networks.
 The *Query Control Panel* is used in formulating queries. We provide several examples for
-query managment in the next section.
+query management in the next section.
 
 To train the *Student Network* use the files:
 
@@ -298,7 +298,7 @@ To train the *Student Network* use the files:
 	test/data/controlStudent.json
 
 
-###Query Managment###
+###Query Management###
 ####Overview####
 **CausalTrail** offers four ways to submit a query:
 
@@ -309,7 +309,7 @@ To train the *Student Network* use the files:
 
 ####Direct Query Formulation####
 Queries can be entered directly into the Edit field at the top of the *Query Control Panel*.
-Correctness of queries is checked while typing. The background color of the Edit field switches
+Correctness of queries is checked while typing. The background colour of the Edit field switches
 to green if the query is correct and to red otherwise. Queries can be submitted by a click on
 the green tick next to the Edit field or by pressing *Enter*.
 
@@ -326,7 +326,10 @@ on it. A context menu allowing the following operations is shown:
 2.	*Arg Max*: Calculates the most likely value assignment for this node. Note that it is not possible to combine (1) and (2) in one query.
 3.	*Condition on*: Calculates the conditional probability of other nodes given the specified value of the currently selected node.
 4.	*Set value to*: Perform a *do-intervention* on the current node. The edges to the nodes parents are deleted and its own value is fixed to the selected value.
-5.	*Add Edge to*: Adds an edge to another node. To add a new edge double click on the desired target node. The added edge will appear in red. If the new edge would induce a cycle, an error will be shon in the *Log*. Adding an edge causes retraining of the entire network. 
+5.	*Add Edge to*: Adds an edge to another node. To add a new edge double click
+	on the desired target node. The added edge will appear in red. If the new
+	edge would induce a cycle, an error will be shown in the *Log*. Adding an
+	edge causes retraining of the entire network.
 
 Once an item is selected, it is shown in one of the boxes in the *Query Control Panel*. A
 colour code and a natural language wrapper around the query item boxes help to understand
@@ -334,7 +337,7 @@ the query. Double clicking on an item in the *Query Control Panel* removes it fr
 current query.
 
 In addition to the operations on nodes, there is an operation on edges. A right click on
-an edge opens a context menu allowing to remove the selected egde. Removed edges are shown in
+an edge opens a context menu allowing to remove the selected edge. Removed edges are shown in
 grey.  As for adding an edge, removing one causes retraining of the network too.
 
 ####Query History####
@@ -374,7 +377,7 @@ perform a *do-intervention* on *Grade*, setting its value to *g1* and given that
 
 #####Counterfactuals#####
 In the last example, we compute the probability to get a letter, if we have not
-reveived a letter before.
+received a letter before.
 
 ![](Pictures/Example4.png)
 
