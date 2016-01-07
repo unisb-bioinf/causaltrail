@@ -20,8 +20,9 @@ Building
 **CausalTrail** can be build using `cmake`.
 
 ###Mandatory Dependencies###
-The *Boost* library as well as a *C++* compiler supporting *C++14* have
-to be available to build the console version of **CausalTrail**.
+The [Boost](http://www.boost.org/) library as well as a *C++* compiler
+supporting *C++14* have to be available to build the console version of
+**CausalTrail**.
 
 Supported compilers are:
 
