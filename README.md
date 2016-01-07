@@ -5,6 +5,16 @@ CausalTrail
 **CausalTrail** provides a console application and a graphical
 user interface.
 
+Citation
+--------
+> Stöckel D, Schmidt F, Trampert P and Lenhof HP.
+> CausalTrail: Testing hypothesis using causal Bayesian networks
+> [version 1; referees: awaiting peer review]
+> F1000Research 2015, 4(ISCB Comm J):1520
+> [doi: 10.12688/f1000research.7647.1](http://dx.doi.org/10.12688/f1000research.7647.1)
+
+The current version of the paper is available [here](http://f1000research.com/articles/4-1520/).
+
 Building
 --------
 **CausalTrail** can be build using `cmake`.
