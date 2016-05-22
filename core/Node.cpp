@@ -72,9 +72,7 @@ const unsigned int& Node::getID() const { return id_; }
 
 bool Node::hasValue(const std::string& v) const
 {
-	if(ObservationMatrix_.findCol(v) > -1)
-		return true;
-	return false;
+	return ObservationMatrix_.findCol(v) > -1;
 }
 
 Matrix<float>& Node::getProbabilityMatrix() { return ProbabilityMatrix_; }
