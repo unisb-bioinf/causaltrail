@@ -31,8 +31,6 @@ void NetworkController::loadObservations(const std::string& datafile,
 {
 	Matrix<std::string> originalObservations(datafile, false, true);
 	Discretiser d(originalObservations,controlFile,observations_,network_);
-	std::fstream f;
-
 }
 
 void NetworkController::loadObservations(
