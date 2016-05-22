@@ -17,8 +17,8 @@ class DiscretiseBracketMedians : public Discretisations
 	 *
 	 * @return A DiscretiseBracketMediansObject
 	 */
-	DiscretiseBracketMedians(unsigned int buckets);
-	
+	explicit DiscretiseBracketMedians(unsigned int buckets);
+
 	/**apply
 	 *
 	 * @param row, index of the row that should be

@@ -98,7 +98,8 @@ class DiscretiseHarmonicMean : public DiscretiseThresholdBased
 class DiscretiseThreshold : public DiscretiseThresholdBased
 {
 	public:
-	DiscretiseThreshold(float threshold);
+	explicit DiscretiseThreshold(float threshold);
+
 	/**apply
 	 *
 	 * @param row, index of the row that should be

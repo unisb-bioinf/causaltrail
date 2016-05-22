@@ -52,7 +52,7 @@ class DiscretisationFactory
 	template <typename T> class GeneratorModel : public Generator
 	{
 		public:
-		GeneratorModel(const T& generator) : generator_(generator) {}
+		explicit GeneratorModel(const T& generator) : generator_(generator) {}
 
 		std::unique_ptr<Discretisations>
 		operator()(const DiscretiserParameters& params) const override
