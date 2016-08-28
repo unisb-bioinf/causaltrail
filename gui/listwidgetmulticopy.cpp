@@ -6,8 +6,8 @@
 #include <QtGui/QKeySequence>
 
 ListWidgetMultiCopy::ListWidgetMultiCopy(QWidget *parent)
+	: QListWidget(parent)
 {
-
 }
 
 void ListWidgetMultiCopy::keyPressEvent(QKeyEvent *event)
