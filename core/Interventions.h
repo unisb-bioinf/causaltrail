@@ -2,32 +2,25 @@
 #define INTERVENTIONS_H
 
 #include "NetworkController.h"
+/*
+ * This class allows the performance of Interventions in the network
+ * Supported are: Do-Interventions, Addition of Edges, Deletion of Edges
+ * Note that the addition or deletion of edges requires the network to be
+ * retrained. Due to efficiency reasons, training is not called in this class.
+ * Retraining the network is called in the QueryExecuter class.
+ */
 class Interventions{
 	public:
 
-	/**Interventions
-	 *
- 	 * @return Interventions Object
-	 *
-	 * This class allows the performance of Interventions in the network
-	 * Supported are: Do-Interventions, Addition of Edges, Deletion of Edges
-	 * Note that the addition or deletion of edges requires the network to be 
-	 * retrained. Due to efficiency reasons, training is not called in this class.
-	 * Retraining the network is called in the QueryExecuter class.
+	/**
+	 * Default constructor
 	 */
 	Interventions();
 
-	/**Interventions
+	/**
+	 * Detailed constructor
 	 *
-	 * @param c, NetworkController
-	 * 
-	 * @return Interventions Object
-	 *
-	 * This class allows the performance of Interventions in the network
-	 * Supported are: Do-Interventions, Addition of Edges, Deletion of Edges
- 	 * Note that the addition or deletion of edges requires the network to be 
-	 * retrained. Due to efficiency reasons, training is not called in this class.
-	 * Retraining the network is called in the QueryExecuter class.
+	 * @param c NetworkController
 	 */
 	explicit Interventions(NetworkController& c);
 
@@ -39,93 +32,84 @@ class Interventions{
 	Interventions& operator=(const Interventions&) = delete;
 	Interventions& operator=(Interventions&&) = delete;
 
-	/**createBackupOfNetworkStructure
-	 *
+	/**
 	 * Creates a backup of the network structure to be able
 	 * to restore the original structure after the performance of interventions
 	 */
 	void createBackupOfNetworkStructure();
 
-	/**loadBackupOfNetworkStructure
-	 *
+	/**
 	 * Loads the backup of the network structure
 	 */
 	void loadBackupOfNetworkStructure();
 
-	/**doIntervention
+	/**
+	 * Performs a Do Intervention of at the given node and the given value.
 	 *
-	 * @param NodeName, name of the node for whom the Do-Intervention should be performed
-	 * @param value, value for which the probability should be set to 1.0
-	 *
-	 * Performs a Do Intervention of at the given node and the given value
+	 * @param NodeName Name of the node for whom the Do-Intervention should be performed.
+	 * @param value Value for which the probability should be set to 1.0.
 	 */
 	void doIntervention(const std::string& NodeName, const std::string& value);
 
-	/**doIntervention
+	/**
+	 * Performs a Do Intervention of at the given node and the given value
 	 *
-	 * @param nodeID, identifier of the node for whom the Do-Intervention should be performed
-	 * @param value, value for which the probability should be set to 1.0
-	 *
-	 * Performs a Do Intervention of at the given node and the given value *
+	 * @param nodeID identifier of the node for whom the Do-Intervention should be performed
+	 * @param value value for which the probability should be set to 1.0
 	 */
 	void doIntervention(int nodeID, int value);
 
-	/**reverseDoIntervention
-	 *
-	 * @param NodeName, name of the node for whom the Do-Intervention should be reversed
-	 *
+	/**
 	 * Reverses a previous Do-Intervention at the given node
+	 *
+	 * @param NodeName name of the node for whom the Do-Intervention should be reversed
 	 */
 	void reverseDoIntervention(const std::string& NodeName);
 
-	/**reverseDoIntervention
+	/**
+	 * Reverses a previous Do-Intervention at the given node.
 	 *
-	 * @param nodeID, identifier of the node for whom the Do-Intervention should be reversed
-	 *
-	 * Reverses a previous Do-Intervention at the given node
+	 * @param nodeID identifier of the node for whom the Do-Intervention should be reversed,
 	 */
 	void reverseDoIntervention(int nodeID);
 
-	/**addEdge
-	 *
-	 * @param source, name of the source node 
- 	 * @param target, name of the target node
-	 *
+	/**
 	 * Adds an edge from the source to the target node
+	 *
+	 * @param source name of the source node
+	 * @param target name of the target node
 	 */
 	void addEdge(const std::string& source, const std::string& target);
 
-	/**addEdge
-	 *
-	 * @param source, identifier of the source node
-	 * @param target, identifier of the target node
-	 * 
+	/**
 	 * Adds an edge from the source to the target node
+	 *
+	 * @param source identifier of the source node
+	 * @param target identifier of the target node
 	 */
 	void addEdge(int source, int target);
 
-	/**removeEdge
+	/**
+	 * Removes the edge from the source to the target node
 	 *
-	 * @param source, identifier of the source node
-	 * @param target, identifier of the target node
-	 *
- 	 * Removes the edge from the source to the target node
+	 * @param source identifier of the source node
+	 * @param target identifier of the target node
 	 */
 	void removeEdge(const std::string& source, const std::string& target);
 
-	/**removeEdge
+	/**
+	 * Removes the edge from the the source to the target
 	 *
-	 * @param source, identifier of the source node 
-	 * @param target, identifier of the target node
-	 *
- 	 * Removes the edge from the the source to the target
+	 * @param source identifier of the source node
+	 * @param target identifier of the target node
 	 */
 	void removeEdge(int source, int target);
 
 	private:
 
-	//A reference to the NetworkController 
+	/// A reference to the NetworkController
 	NetworkController& controller_;
 
 };
+
 #endif
