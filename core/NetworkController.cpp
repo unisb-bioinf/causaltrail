@@ -97,7 +97,10 @@ void NetworkController::saveParameters() const{
 	network_.saveParameters();
 }
 
-bool NetworkController::isEdgePossible(unsigned int sourceID, unsigned int targetID, std::vector<std::pair<unsigned int, unsigned int>>& addedEdges,std::vector<std::pair<unsigned int, unsigned int>>& removedEdges){
+bool NetworkController::isEdgePossible(unsigned int sourceID, unsigned int targetID,
+                                       std::vector<std::pair<unsigned int, unsigned int>>& addedEdges,
+                                       std::vector<std::pair<unsigned int, unsigned int>>& removedEdges)
+{
 	for (auto& pair : addedEdges){
 		network_.addEdge(pair.second,pair.first);
 	}

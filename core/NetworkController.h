@@ -10,23 +10,24 @@
 class Discretiser;
 class DiscretisationSettings;
 
-class NetworkController{
+/**
+ * This class handles reading of the network structure
+ * and parameter learning.
+ */
+class NetworkController
+{
 	public:
 
-	/**NetworkController
-	 *
-	 * Default constructor Network Controller
-	 * This class handles reading of the network structure
-	 * and parameter learning.
+	/**
+	 * Default constructor for NetworkController
 	 */
 	NetworkController();
 
-	/**loadNetwork
+	/**
+	 * Generates a network representation based on the networkfile. Uses the
+	 * readNetwork method in the Network class.
 	 *
 	 * @param networkfile file containing network structure information
-	 * 
-	 * Generates a network representation based on the networkfile. Uses the
-	 * readNetwork method in the network Class
 	 */
 	void loadNetwork(const std::string& networkfile);
 
@@ -46,96 +47,90 @@ class NetworkController{
 	 */
 	void loadObservations(const std::string& datafile, const std::string& controlFile);
 
-	/**loadObservations
-	*
-	* @param datafile file containing the raw sample data
-	* @param controlFile controlFile for discretisation
-	* @param samplesToDelete vector containing the column index of samples that should not be read
-	*
-	* Reads the raw sample data and performs the discretisation
-	*/
+	/**
+	 * Reads the raw sample data and performs the discretisation
+	 *
+	 * @param datafile file containing the raw sample data
+	 * @param controlFile controlFile for discretisation
+	 * @param samplesToDelete vector containing the column index of samples that should not be read
+	 */
 	void loadObservations(const std::string& datafile, const std::string& controlFile, const std::vector<unsigned int>& samplesToDelete);
 
-	/**loadObservations
-	*
-	* @param datafile, file containing the raw sample data
-	* @param controlFile, controlFile for discretisation
-	*
-	* Reads the raw sample data and performs the discretisation
-	*/
-	void loadObservations(const std::string& datafile, const DiscretisationSettings& propertyTree);
-
-	/**loadObservations
-	*
-	* @param datafile, file containing the raw sample data
-	* @param controlFile, controlFile for discretisation
-	* @param samplesToDelete, vector containing the column index of samples that should not be read
-	*
-	* Reads the raw sample data and performs the discretisation
-	 */
-	void loadObservations(const std::string& datafile, const DiscretisationSettings& propertyTree, const std::vector<unsigned int>& samplesToDelete);
-
-	/**trainNetwork
+	/**
+	 * Reads the raw sample data and performs the discretisation.
 	 *
+	 * @param datafile File containing the raw sample data.
+	 * @param settings Parameters used for discretisation.
+	 */
+	void loadObservations(const std::string& datafile, const DiscretisationSettings& settings);
+
+	/**
+	 * Reads the raw sample data and performs the discretisation.
+	 *
+	 * @param datafile File containing the raw sample data.
+	 * @param settings Parameters used for discretisation.
+	 * @param samplesToDelete Vector containing the column index of samples that should not be read.
+	 */
+	void loadObservations(const std::string& datafile, const DiscretisationSettings& settings, const std::vector<unsigned int>& samplesToDelete);
+
+	/**
 	 * Trains the network using the EM algorithm
 	 */
 	void trainNetwork();
 
-	/**getLikelihoodOfTheData
-	 *
-	 * @return the Log Likelyhood of the data
+	/**
+	 * @return the log-likelihood of the data
 	 */
 	float getLikelihoodOfTheData() const;
 
-	/**getNetwork
-	 *
+	/**
 	 * @return a reference to the network
-	 */	 
+	 */
 	Network& getNetwork();
 
-	/**getNetwork
-	 *
+	/**
 	 * @return a reference to the network
 	 */
 	const Network& getNetwork() const;
 
-	/**getNumberOfEMRuns
-	 *
+	/**
 	 * @return the number of executed EM iterations
 	 */
 	int getNumberOfEMRuns() const;
 
-	/**getParameterDifference
-	 *
+	/**
 	 * @return the final Parameter difference in EM
 	 */ 
 	float getParameterDifference() const;
 
-	/**getTimeInMicroSeconds
-	 *
+	/**
 	 * @return time in microseconds used to perform EM
 	 */
 	int getTimeInMicroSeconds() const;
 
-	/**saveParameters
-	 *
+	/**
 	 * Stores all network parameters in a file.
-	 * The filename incoorpartes the data and time of its generation
+	 * The filename incorporates the data and time of its generation
 	 */
 	void saveParameters() const;
 
-	/**isEdgePossible
+	/**
+	 * Checks whether an edge can be added to a network without inducing a cycle.
 	 *
-	 * @param sourceID, Identifier of the source node
-	 * @param targetID, Identifier of the target node
+	 * @param sourceID Identifier of the source node.
+	 * @param targetID Identifier of the target node.
+	 * @param addedEdges Edges that have been added as part of a query.
+	 * @param removedEdges Edges that have been removed as part of a query.
+	 *
 	 * @return true, if the edge does not induce a cycle, false otherwise
 	 */
-	bool isEdgePossible(unsigned int sourceID, unsigned int targetID, std::vector<std::pair<unsigned int, unsigned int>>& addedEdges, std::vector<std::pair<unsigned int, unsigned int>>& removedEdges);
-
+	bool isEdgePossible(unsigned int sourceID, unsigned int targetID,
+	                    std::vector<std::pair<unsigned int, unsigned int>>& addedEdges,
+	                    std::vector<std::pair<unsigned int, unsigned int>>& removedEdges);
 
 	/**storeDiscretisedData
 	 *
-	 * @param filename, Name of the file to write the discretised data to
+	 * @param filename Name of the file to write the discretised data to
 	 */
 	void storeDiscretisedData(const std::string& filename) const;	
 	private:
@@ -158,4 +153,5 @@ class NetworkController{
 	//Time in microseconds to perform EM
 	int timeInMicroSeconds_;
 };
+
 #endif
