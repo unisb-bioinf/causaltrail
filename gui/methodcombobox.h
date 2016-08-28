@@ -1,7 +1,7 @@
 #ifndef METHODCOMBOBOX_H
 #define METHODCOMBOBOX_H
 
-#include <QComboBox>
+#include <QtWidgets/QComboBox>
 
 class methodComboBox : public QComboBox
 {

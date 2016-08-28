@@ -1,7 +1,7 @@
 #ifndef LISTWIDGETMULTICOPY_H
 #define LISTWIDGETMULTICOPY_H
 
-#include <QListWidget>
+#include <QtWidgets/QListWidget>
 
 namespace Ui {
 class  ListWidgetMultiCopy;

@@ -1,8 +1,9 @@
 #include "listwidgetmulticopy.h"
-#include "QApplication"
-#include "QClipboard"
-#include "QKeyEvent"
-#include "QKeySequence"
+
+#include <QtWidgets/QApplication>
+#include <QtGui/QClipboard>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QKeySequence>
 
 ListWidgetMultiCopy::ListWidgetMultiCopy(QWidget *parent)
 {

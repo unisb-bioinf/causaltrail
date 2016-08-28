@@ -3,7 +3,7 @@
 
 #include <QtCore/QString>
 #include <QtGui/QCursor>
-#include <QFontMetrics>
+#include <QtGui/QFontMetrics>
 #include <QtWidgets/QGraphicsScene>
 
 #include <cmath>

@@ -1,7 +1,8 @@
 #ifndef QUERYMANAGER_H
 #define QUERYMANAGER_H
-#include "QString"
-#include "QToolButton"
+
+#include <QtCore/QString>
+#include <QtWidgets/QToolButton>
 
 class QueryManager
 {

@@ -1,5 +1,7 @@
 #include "querymanager.h"
-#include "iostream"
+
+#include <iostream>
+
 QueryManager::QueryManager()
     :index_(0)
 {

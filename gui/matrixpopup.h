@@ -1,7 +1,7 @@
 #ifndef MATRIXPOPUP_H
 #define MATRIXPOPUP_H
 
-#include <QWidget>
+#include <QtWidgets/QWidget>
 
 namespace Ui {
 class matrixPopup;

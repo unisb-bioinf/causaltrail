@@ -2,7 +2,7 @@
 #define DATAVIEW_H
 
 #include "../core/Matrix.h"
-#include <QDialog>
+#include <QtWidgets/QDialog>
 
 namespace Ui {
 	class DataView;

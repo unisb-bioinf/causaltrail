@@ -1,7 +1,7 @@
 #ifndef EDGE_H
 #define EDGE_H
 
-#include <QGraphicsObject>
+#include <QtWidgets/QGraphicsObject>
 
 /**
  * This class is based on the Elastic Nodes Example from the Qt documentation:
