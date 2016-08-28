@@ -50,7 +50,7 @@ private:
 
 	const std::vector<unsigned int> getDeselectedSamples() const;
 
-	QSize sizeHint() const;
+	QSize sizeHint() const override;
 };
 
 #endif // DATAVIEW_H

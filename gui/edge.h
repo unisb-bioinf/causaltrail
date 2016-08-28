@@ -36,14 +36,14 @@ public:
      * Reimplementation of the boundingRect() method of QGraphicsObject
      * @return A QRectF() object. Within its top left and bottom right boundary, the edge is located.
      */
-    QRectF boundingRect() const;
+    QRectF boundingRect() const override;
 
     /**
      * @brief shape
      * Reimplementation of the shape() method of QGraphicsObject
      * @return A QPainterPath, which in this case is a polygon that is 5 times as broad as the edge itself to allow distinct and precise selection of the edge using mouseOver/Hover events
      */
-    QPainterPath shape() const;
+    QPainterPath shape() const override;
 
     /**
      * @brief paint
@@ -52,7 +52,7 @@ public:
      * @param option not used
      * @param widget not used
      */
-    void paint (QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paint (QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
     /**
      * @brief sourceNode
@@ -105,19 +105,19 @@ protected:
      * Emits the context signal and adapts the color of the edge to dark blue to represent the context event
      * @param event QGraphicsSceneContextMenuEvent pointer
      */
-    void contextMenuEvent(QGraphicsSceneContextMenuEvent* event);
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
 
     /**
      * @brief hoverEnterEvent
      * Changes the color of the edge to bright blue to indicate the hoverEnter event
      */
-    void hoverEnterEvent(QGraphicsSceneHoverEvent*);
+    void hoverEnterEvent(QGraphicsSceneHoverEvent*) override;
 
     /**
      * @brief hoverLeaveEvent
      * Changes the color of the edge to the original gray to indicate the hoverLeave event
      */
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent*);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent*) override;
 
 private:
     /**

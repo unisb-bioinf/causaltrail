@@ -212,7 +212,7 @@ private:
      *
      * @param event Pointer to QKeyEvent
      */
-    void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent *event) override;
 
     /**
      * Scales the current view depending on the given scaleFactor
@@ -226,7 +226,7 @@ private:
      *
      * @param event Pointer to QWheelEvent
      */
-    void wheelEvent(QWheelEvent *event);
+    void wheelEvent(QWheelEvent *event) override;
 
     /**
      * @brief zoomIn

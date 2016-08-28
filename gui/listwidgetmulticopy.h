@@ -23,7 +23,7 @@ private slots:
 	 * Reimplementation of the keyPressEvent. Reimplements the
 	 * handling of Strg+C to copy all selected lines
 	 */
-    virtual void keyPressEvent(QKeyEvent *event);
+    virtual void keyPressEvent(QKeyEvent *event) override;
 
 };
 
