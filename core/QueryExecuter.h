@@ -7,12 +7,8 @@
 class QueryExecuter{
 
 	public:
-	/**QueryExecuter
-	 * 
-	 * @param c, a reference to  NetworkController
-	 *
-	 * @return
-	 *
+	/**
+	 * @param c A reference to a NetworkController
 	 */
 	explicit QueryExecuter(NetworkController& c);
 
@@ -44,21 +40,20 @@ class QueryExecuter{
 	 */
 	std::pair<float,std::vector<std::string>> execute();
 
-	/**QueryExecuter
-	 * 
-	 * @param nodeID, identifier of the node to be stored
-	 * @param value, value to be stored
-	 *
+	/**
 	 * Stores a pair of nodeID and value reflecting a nonIntervention
+	 *
+	 * @param nodeID identifier of the node to be stored
+	 * @param value value to be stored
+	 *
 	 */
 	 void setNonIntervention(const unsigned int nodeID, const unsigned int value);
 
-	/**setCondition
-	 * 
-	 * @param nodeID, identifier of the node to be stored
-	 * @param value, value to be stored 
-	 *
+	/**
 	 * Stores a pair of nodeID and value reflecting a Condition
+	 *
+	 * @param nodeID Identifier of the node to be stored.
+	 * @param value Value to be stored.
 	 */
 	void setCondition(const unsigned int nodeID,const unsigned int value);
 

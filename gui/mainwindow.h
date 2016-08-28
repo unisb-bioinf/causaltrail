@@ -19,9 +19,10 @@ class MainWindow : public QMainWindow
 
 public:
     /**
-     * @brief MainWindow
      * Constructor of the Mainindow. Initialises the visibility of GUI components
-     * @param parent
+     *
+     * @param config The config object from which settings should be loaded.
+     * @param parent Pointer to a parent widget.
      */
     MainWindow(Config* config, QWidget *parent = 0);
 
@@ -34,41 +35,39 @@ public:
 private:
 
     /**
-     * @brief loadQueriesToHistoryWindow
-	 * Adds all queries contained in the QueryManager of the current NetworkInstance to the QueryHistory ListWidget
-     * @param index Index of the NetworkInstance
+     * Adds all queries contained in the QueryManager of the current NetworkInstance to the QueryHistory ListWidget
+     *
+     * @param net Pointer to the NetworkInstance
      */
     void loadQueriesToHistoryWindow(const NetworkInstance* net);
 
     /**
-     * @brief checkQueriesLeft
-	 * Adapts the buttons controling loading of previous and subsequent query items depending on the current query index
+     * Adapts the buttons controlling loading of previous and subsequent query items depending on the current query index
      */
     void checkQueriesLeft();
 
     /**
      * @brief adaptQueryEvaluationButtons
-     * @param show Flag controlling the appearnce of all button related to query evaluation
+     * @param show Flag controlling the appearance of all button related to query evaluation
      */
     void adaptQueryEvaluationButtons(bool show);
 
     /**
      * @brief initaliseVisibility
-	 * Initialises the visiblity of the GUI components at the start of the programme
+	 * Initialises the visibility of the GUI components at the start of the programme
      */
     void initaliseVisibility();
 
     /**
-     * @brief loadSamples
 	 * Trains the network according to the provided samples and the provided discretisation information.
-     * @param samples
-     * @param controlDiscret
+     *
+     * @param samples File containing the samples.
+     * @param control File containing the discretisation information.
      * @param index Index of the NetworkInstance
      */
     void loadSamples(const QString& samples, const QString& control, unsigned int index);
 
     /**
-     * @brief visualise
 	 * Create the network visualisation of the given network instance
      * @param index Index of the NetworkInstance
      */
@@ -126,15 +125,13 @@ private slots:
 	void interventionValueSelected(QAction*);
 
     /**
-     * @brief discretiseSelection
-     * @param samples name of the file containing the original observations
-	 * @param deselected
+     * @param samples Name of the file containing the original observations
+     * @param deselected The list of samples that should not be considered.
      */
     void discretiseSelection(const QString& samples, const std::vector<uint>& deselected);
 
     /**
-     * @brief on_actionLoad_Samples_triggered
-	 * Calls the loadSamples method
+     * Calls the loadSamples method
      */
     void on_actionLoad_Samples_triggered();
 
@@ -183,18 +180,16 @@ private slots:
     void on_actionLayout_triggered();
 
     /**
-     * @brief Node_double_clicked
 	 * Handles a double click on a node. 
-     * @param id Identifier of the node upon whom the double click was executed
-     * @param name Name of the node upon whom the double click was executed
+     *
+     * @param node The node that was double-clicked
      */
-    void Node_double_clicked(NodeGui*);
+    void Node_double_clicked(NodeGui* node);
 
     /**
-     * @brief Node_context
-	 * Handles a right click on a node, generates the context menu
-     * @param name Name of the node upon whom the right click was performed
-     * @param id Identifier of the node upon whom the right click was performed
+     * Handles a right click on a node, generates the context menu
+     *
+     * @param node The node for which the context menu was requested
      * @param event QGraphicsSceneContextMenuEvent Pointer
      */
     void Node_context(NodeGui* node, QContextMenuEvent* event);

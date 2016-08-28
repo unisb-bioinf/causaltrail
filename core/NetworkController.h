@@ -23,37 +23,34 @@ class NetworkController{
 
 	/**loadNetwork
 	 *
- 	 * @param networkfile, file containing network structure information
+	 * @param networkfile file containing network structure information
 	 * 
 	 * Generates a network representation based on the networkfile. Uses the
 	 * readNetwork method in the network Class
 	 */
 	void loadNetwork(const std::string& networkfile);
 
-	/**loadObservations
-	 *
-	 * @param datafile file containing the raw sample data
-	 * @param control specification how the input data should be discretised
-	 *
+	/**
 	 * Reads the raw sample data and performs the discretisation
+	 *
+	 * @param d The discretiser that should be used.
 	 */
 	void loadObservations(Discretiser& d);
 
 
-	/**loadObservations
-	 *
-	 * @param datafile, file containing the raw sample data
-	 * @param controlFile, controlFile for discretisation
-	 *
+	/**
 	 * Reads the raw sample data and performs the discretisation
+	 *
+	 * @param datafile file containing the raw sample data
+	 * @param controlFile File containing the discretiser parameters
 	 */
 	void loadObservations(const std::string& datafile, const std::string& controlFile);
 
 	/**loadObservations
 	*
-	* @param datafile, file containing the raw sample data
-	* @param controlFile, controlFile for discretisation
-	* @param samplesToDelete, vector containing the column index of samples that should not be read
+	* @param datafile file containing the raw sample data
+	* @param controlFile controlFile for discretisation
+	* @param samplesToDelete vector containing the column index of samples that should not be read
 	*
 	* Reads the raw sample data and performs the discretisation
 	*/

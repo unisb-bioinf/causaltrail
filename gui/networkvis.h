@@ -26,10 +26,10 @@ public slots:
 
 public:
     /**
-     * @brief NetworkVis
      * Constructor of the networkVisualization class
+     *
      * @param parent Pointer to the parent QWidget
-     * @param nc
+     * @param net The network for which the visualisation should be created.
      */
     NetworkVis(QWidget *parent, const Network& net);
 
@@ -110,13 +110,13 @@ public:
 
     /**
      * @brief getAddedEdgeIDs
-     * @return A vector of pairs of identfiers for all added edges
+     * @return A vector of pairs of identifiers for all added edges
      */
     std::vector<std::pair<unsigned int, unsigned int>> getAddedEdgeIDs();
 
     /**
      * @brief getRemovedEdgeIDs
-     * @return A vector of pairs of identfiers for all removed edges
+     * @return A vector of pairs of identifiers for all removed edges
      */
     std::vector<std::pair<unsigned int, unsigned int>> getRemovedEdgeIDs();
 
@@ -208,22 +208,22 @@ private:
     void loadEdges();
 
     /**
-     * @brief keyPressEvent
-     * Calls zoom in and zoom out depending on wheter the "+"-key or "-"-key is pressed
+     * Calls zoom in and zoom out depending on whether the "+"-key or "-"-key is pressed
+     *
      * @param event Pointer to QKeyEvent
      */
     void keyPressEvent(QKeyEvent *event);
 
     /**
-     * @brief scaleView
      * Scales the current view depending on the given scaleFactor
+     *
      * @param scaleFactor ScaleFactor to scale the view
      */
     void scaleView(qreal scaleFactor);
 
     /**
-     * @brief wheelEvent
      * Calls zoom in and zoom out depending on the wheel direction
+     *
      * @param event Pointer to QWheelEvent
      */
     void wheelEvent(QWheelEvent *event);
@@ -251,7 +251,7 @@ private:
 	void forceDirectedLayout();
 
     /**
-     * Computes a graph layout using the graphviz dot command.
+     * Computes a graph layout using the Graphviz dot command.
      */
     bool dotLayout();
 
@@ -263,7 +263,7 @@ private:
 
     /**
      * Helper function that reads a graph in DOT format
-     * and sets the node positions to the foudn positions.
+     * and sets the node positions to the found positions.
      */
     bool readDot_(const QByteArray& data);
 };

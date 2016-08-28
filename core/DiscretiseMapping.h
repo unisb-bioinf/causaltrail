@@ -4,23 +4,23 @@
 #include "Discretisations.h"
 
 /**
- * DiscretiseMapping
- * Mapps already discrete values to a dense integer representation
- **/
+ * Maps already discrete values to a dense integer representation
+ */
 class DiscretiseMapping : public Discretisations
 {
 	public:
-	/**apply
+	/**
+	 * Executes a mapping from discrete values to a
+	 * dense integer representation
 	 *
-	 * @param row, index of the row that should be
+	 * @param row index of the row that should be
 	 * discretised
 	 *
-	 * @param data, struct containing data necessary
+	 * @param data struct containing data necessary
 	 * for the discretisation
 	 *
-	 * Executes a mapping from discrete values to a
-	 * dense integer representation 
 	 */
 	void apply(unsigned int row, Data& data) override;
 };
+
 #endif

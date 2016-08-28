@@ -113,9 +113,9 @@ protected:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent*) override;
 
     /**
-     * @brief contextMenuEvent
      * Handles the contextMenuEvent: Adapts the color of the node and emits the context event
-     * @param event
+	 *
+     * @param event The triggered event.
      */
     void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
 

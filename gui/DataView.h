@@ -17,16 +17,14 @@ class DataView : public QDialog
 
 public:
 	/**
-	 * @brief DataView
 	 * Constructs a DataView object
-	 * @param parent, the parent widget
-	 * @param samples, name of the file containing samples
-	 * @return a DataView object
+	 *
+	 * @param parent the parent widget
+	 * @param samples name of the file containing samples
 	 */
     explicit DataView(QWidget *parent = 0, const QString& samples = "");
 
 	/**
-	 * @brief ~DataView
 	 * Destructor of the DataView object
 	 */
     ~DataView();

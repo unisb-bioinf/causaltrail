@@ -31,9 +31,7 @@ class NetworkInstance : public QWidget {
 	void loadNetwork();
 
     /**
-     * @brief visualize
      * Visualises the network represented by this class
-     * @param tabwidget Pointer to the tabwidget containing the visualization
      */
     void visualize();
 
@@ -128,8 +126,6 @@ class NetworkInstance : public QWidget {
      * Assigns the given values to the member variables of this class to execute an edge removal
      * @param srcId Identifier of the source node
      * @param tarId Identifier of the target node
-     * @param name1 Name of the source node
-     * @param name2 Name of the target node
      */
     void addEdgeRemoval(unsigned int srcId, unsigned int tarId);
 
@@ -142,7 +138,6 @@ class NetworkInstance : public QWidget {
     /**
      * @brief setSelectedNode
      * @param id Identifier of the selected node
-     * @param name Name of the selected node
      */
     void setSelectedNode(unsigned int id);
 
@@ -377,11 +372,8 @@ class NetworkInstance : public QWidget {
 
 	public slots:
 	/**
-	* @brief loadSamples
-	* Load and discretise the specified samples according to the specified controlfile
-	* @param filename Name of the file containing samples
-	* @param controlfile Name of the file containing discretisation control information
-	*/
+	 * Load and discretise the specified samples according to the specified controlfile
+	 */
 	void loadSamples();
 
 	signals:

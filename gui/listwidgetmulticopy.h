@@ -12,14 +12,14 @@ class ListWidgetMultiCopy : public QListWidget
     Q_OBJECT
 public:
 	/**
-	 * @brief ListWidgetMultiCopy Constructor
-	 * @param ParentWidget
+	 * Constructor
+	 *
+	 * @param parent Pointer to parent widget.
 	 */
-    explicit ListWidgetMultiCopy(QWidget *parent = 0);
+    ListWidgetMultiCopy(QWidget* parent = 0);
 
 private slots:
 	/**
-	 * @brief keyPressEvent
 	 * Reimplementation of the keyPressEvent. Reimplements the
 	 * handling of Strg+C to copy all selected lines
 	 */

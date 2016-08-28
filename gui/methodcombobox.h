@@ -21,10 +21,10 @@ signals:
     /**
      * @brief newMethodSelected
      * Emits if the index of the selected item changed
-     * @param Index of the comboBox
-     * @param New item index
+     * @param index The index of the comboBox
+     * @param item Name of the new item
      */
-    void newMethodSelected(unsigned int, const QString&);
+    void newMethodSelected(unsigned int index, const QString& item);
 
 public slots:
     /**
