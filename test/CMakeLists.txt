@@ -1,4 +1,4 @@
-project(CausalAnalysisTest)
+project(CausalAnalysisTest CXX)
 
 include(CausalAnalysisTest.cmake)
 

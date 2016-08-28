@@ -1,6 +1,4 @@
-cmake_minimum_required (VERSION 2.6)
-
-project (Causal-Analysis-core)
+project(CausalAnalysisCore CXX)
 
 add_library(CausalTrailLib
 	Matrix.h

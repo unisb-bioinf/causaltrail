@@ -1,6 +1,4 @@
-cmake_minimum_required (VERSION 2.8.11)
-
-project (Causal-Analysis-gui)
+project(CausalAnalysisGUI CXX)
 
 find_package(Qt5Widgets)
 find_package(Qt5Gui)
