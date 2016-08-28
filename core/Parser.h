@@ -8,93 +8,83 @@ class Parser
 {
 	public:
 
-	/**Parser
+	/**
+	 * Parser for the do-calculus query language
 	 *
-	 * @param userInput, the query entered by the user
-	 * @param networkController, a reference to a NetworkController object
-	 *
-	 * @return a Parser Object
-	 *
+	 * @param userInput the query entered by the user
+	 * @param networkController a reference to a NetworkController object
 	 */ 
 	Parser(std::string userInput, NetworkController& networkController);
 
-	/**parseQuery
-	 *
-	 * @return a QueryExecuter object
-	 *
+	/**
 	 * Parses the given query. Thereby the method generates a QueryExecuter
 	 * object that can execute the parsed query
+	 *
+	 * @return a QueryExecuter object
 	 */
 	QueryExecuter parseQuery();
 
 	private:
 
-	/**parseNonIntervention
-	 *
-	 * @param index, current position in the query token list
-	 *
+	/**
 	 * Parses a NonIntervention
 	 * NonIntervention ::= +(NodeName = Value)
+	 *
+	 * @param index current position in the query token list
 	 */
 	void parseNonIntervention(unsigned int& index);
 
-	/**parseIntervention
-	 *
-	 * @param index, current position in the query token list
-	 *
+	/**
 	 * Parses an Intervention
 	 * Intervention ::= +DoIntervention | +AddEdge | +RemoveEdge
+	 *
+	 * @param index current position in the query token list
 	 */
 	void parseInterventions(unsigned int& index);
-	
-	/**parseCondition
-	 *
-	 * @param index, current position in the query token list
-	 *
+
+	/**
 	 * Parses a Condition
 	 * Condition ::= +(NodeName = Value)
+	 *
+	 * @param index current position in the query token list
 	 */
 	void parseCondition(unsigned int& index);
 
-	/**parseDoIntervention
-	 *
-	 * @param index, current position in the query token list
-	 *
+	/**
 	 * Parses a Do-Intervention
 	 * DoIntervention ::= do NodeName = Value
+	 *
+	 * @param index current position in the query token list
 	 */
 	void parseDoIntervention(unsigned int& index);
 
-	/**parseAddEdge
-	 *
-	 * @param index, current position in the query token list
-	 *
+	/**
 	 * Parses an edge addition
 	 * AddEdge ::= + ( NodeName , NodeName )
+	 *
+	 * @param index current position in the query token list
 	 */
 	void parseAddEdge(unsigned int& index);
 
-	/**parseRemoveEdge
-	 *
-	 * @param index, current position in the query token list
-	 *
+	/**
 	 * Parses an edge removal
 	 * RemoveEdge ::= - ( NodeName , NodeName )
+	 *
+	 * @param index current position in the query token list
 	 */
 	void parseRemoveEdge(unsigned int& index);
 
-	/**parseArgMax
-	 *
-	 * @param index, current position in the query token list
-	 *
+	/**
 	 * parses a MAP query
 	 * ArgMax ::= argmax ( +NodeName ) *Intervention *Condition
+	 *
+	 * @param index current position in the query token list
 	 */
 	void parseArgMax(unsigned int& index);
 
 	/**getNode
 	 *
-	 * @param nodeName, name of the node to be retrieved
+	 * @param nodeName name of the node to be retrieved
 	 *
 	 * @return true, if the node with the given excists, false otherwise
 	 */
@@ -102,8 +92,8 @@ class Parser
 
 	/**getValue
 	 *
-	 * @param nodeName, name of the node that should contain a certain value
-	 * @param valueName, name of the value to be retrieved
+	 * @param nodeName name of the node that should contain a certain value
+	 * @param valueName name of the value to be retrieved
 	 *
 	 * @return true, if the given node contains the given value, false otherwise
 	 */
@@ -111,18 +101,18 @@ class Parser
 
 	/**terminationSymbol
 	 *
-	 * @param index, current position in the query token list
+	 * @param index current position in the query token list
 	 *
-	 * @return true, if the symbol at the given position is a terminal symbol, false otherwise
+	 * @return true if the symbol at the given position is a terminal symbol, false otherwise
 	 * TerminationSymbol = ! | ""
 	 */
 	bool terminationSymbol(const unsigned int index) const;
 
 	/**parseNonIntervention
 	 *
-	 * @param index, current position in the query token list
+	 * @param index current position in the query token list
 	 *
-	 * @return true, if the symbol at the given position is a terminal symbol for MAP queries, false otherwise
+	 * @return true if the symbol at the given position is a terminal symbol for MAP queries, false otherwise
 	 *
  	 * TerminationSymbol = ) 
 	 */
@@ -130,7 +120,7 @@ class Parser
 
 	/**parseNonIntervention
 	 *
-	 * @param nodeName, name of the node for whom we want to know the identifier
+	 * @param nodeName name of the node for whom we want to know the identifier
 	 *
 	 * @return the identifier of the node with the given nodeName
 	 */
@@ -138,8 +128,8 @@ class Parser
 	
 	/**parseNonIntervention
 	 *
-	 * @param nodeName, name of the node in focus
-	 * @param valueName, original representation of a value in the query
+	 * @param nodeName name of the node in focus
+	 * @param valueName original representation of a value in the query
 	 *
 	 * @return the internal integer value for the given node and value in the original representation
 	 */
@@ -154,7 +144,7 @@ class Parser
 	//A reference to the network
 	Network& network_;
 
-	//The QueryExecuter object that is returned once the parsing finished succesfully
+	//The QueryExecuter object that is returned once the parsing finished successfully
 	QueryExecuter qe_;
 };
 
