@@ -602,8 +602,8 @@ const T& Matrix<T>::operator()(unsigned int col, unsigned int row) const
 	if(col > colCount_ || row > rowCount_) {
 		throw std::invalid_argument(
 		    "In Matrix() const, Invalid matrix position" +
-		    boost::lexical_cast<std::string>(col) + " " +
-		    boost::lexical_cast<std::string>(row));
+		    std::to_string(col) + " " +
+		    std::to_string(row));
 	}
 	return data_[col + row * colCount_];
 }
