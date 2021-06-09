@@ -8,6 +8,7 @@
 #include "../core/Network.h"
 
 #include <QtCore/QProcess>
+#include <QtCore/QRandomGenerator>
 #include <QtGui/QWheelEvent>
 #include <QtGui/QKeyEvent>
 #include <QtWidgets/QGridLayout>
@@ -15,6 +16,8 @@
 #ifdef CT_HAS_QT5_SVG
 #include <QtSvg/QSvgGenerator>
 #endif
+
+#include <cmath>
 
 NetworkVis::NetworkVis(QWidget *parent, const Network& net)
     : QGraphicsView(parent),
@@ -79,10 +82,11 @@ void NetworkVis::layoutGraph() {
 }
 
 void NetworkVis::forceDirectedLayout(){
+    auto rand = QRandomGenerator::securelySeeded();
     int limit = 1000;
     for (auto* node : pointerVec_){
-        int randX = -350+ (qrand() % (700));
-        int randY = -350 + (qrand() % (700));
+        int randX = -350 + rand.bounded(700);
+        int randY = -350 + rand.bounded(700);
         node->setPos(randX,randY);
     }
     for (int i = 0; i<limit; i++){
@@ -95,7 +99,7 @@ void NetworkVis::forceDirectedLayout(){
 bool NetworkVis::dotLayout() {
 	QProcess dotProcess(this);
 
-	dotProcess.start("dot");
+	dotProcess.start("dot", QStringList());
 	writeDot_(dotProcess, net_);
 	dotProcess.closeWriteChannel();
 	dotProcess.waitForFinished();
@@ -123,7 +127,7 @@ void NetworkVis::keyPressEvent(QKeyEvent *event)
 
 void NetworkVis::wheelEvent(QWheelEvent *event)
 {
-    scaleView(pow((double)2, event->delta() / 240.0));
+    scaleView(std::pow(2.0, event->angleDelta().y() / 240.0));
 }
 
 void NetworkVis::scaleView(qreal scaleFactor)
