@@ -88,9 +88,9 @@ void DiscretisationSelection::adaptGUIToData() {
 		ui->gridLayout->removeItem(item);
 	}
 
-	ui->gridLayout->addWidget(new QLabel(tr("Variable name")), 0, 0, 0);
-    ui->gridLayout->addWidget(new QLabel(tr("Discretisation method ")), 0, 1, 0);
-	ui->gridLayout->addWidget(new QLabel(tr("Threshold/Number of bins")), 0, 2, 0);
+    ui->gridLayout->addWidget(new QLabel(tr("Variable name")), 0, 0);
+    ui->gridLayout->addWidget(new QLabel(tr("Discretisation method ")), 0, 1);
+    ui->gridLayout->addWidget(new QLabel(tr("Threshold/Number of bins")), 0, 2);
 
     methodComboBox* methodSelection;
     QLineEdit* optionalValue;
@@ -100,10 +100,10 @@ void DiscretisationSelection::adaptGUIToData() {
 	featureNames_.push_back(featureName);
         methodSelection = newMethodSelection((i-1));
         optionalValue = newOptionalValue();
-        ui->gridLayout->addWidget(featureName,i,0,0);
-        ui->gridLayout->addWidget(methodSelection,i,1,0);
+        ui->gridLayout->addWidget(featureName, i, 0);
+        ui->gridLayout->addWidget(methodSelection, i, 1);
         boxes_.push_back(methodSelection);
-        ui->gridLayout->addWidget(optionalValue,i,2,0);
+        ui->gridLayout->addWidget(optionalValue, i, 2);
         optionalValues_.push_back(optionalValue);
     }
     adjustSize();
